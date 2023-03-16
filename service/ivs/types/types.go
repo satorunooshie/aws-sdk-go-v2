@@ -73,8 +73,8 @@ type Channel struct {
 	// recording is enabled. Default: "" (empty string, recording is disabled).
 	RecordingConfigurationArn *string
 
-	// Array of 1-50 maps, each of the form string:string (key:value). See Tagging
-	// Amazon Web Services Resources
+	// Tags attached to the resource. Array of 1-50 maps, each of the form
+	// string:string (key:value). See Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html) for more
 	// information, including restrictions that apply to tags and "Tag naming limits
 	// and requirements"; Amazon IVS has no service-specific constraints beyond what is
@@ -125,8 +125,8 @@ type ChannelSummary struct {
 	// recording is enabled. Default: "" (empty string, recording is disabled).
 	RecordingConfigurationArn *string
 
-	// Array of 1-50 maps, each of the form string:string (key:value). See Tagging
-	// Amazon Web Services Resources
+	// Tags attached to the resource. Array of 1-50 maps, each of the form
+	// string:string (key:value). See Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html) for more
 	// information, including restrictions that apply to tags and "Tag naming limits
 	// and requirements"; Amazon IVS has no service-specific constraints beyond what is
@@ -172,8 +172,8 @@ type PlaybackKeyPair struct {
 	// Playback-key-pair name. The value does not need to be unique.
 	Name *string
 
-	// Array of 1-50 maps, each of the form string:string (key:value). See Tagging
-	// Amazon Web Services Resources
+	// Tags attached to the resource. Array of 1-50 maps, each of the form
+	// string:string (key:value). See Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html) for more
 	// information, including restrictions that apply to tags and "Tag naming limits
 	// and requirements"; Amazon IVS has no service-specific constraints beyond what is
@@ -192,8 +192,8 @@ type PlaybackKeyPairSummary struct {
 	// Playback-key-pair name. The value does not need to be unique.
 	Name *string
 
-	// Array of 1-50 maps, each of the form string:string (key:value). See Tagging
-	// Amazon Web Services Resources
+	// Tags attached to the resource. Array of 1-50 maps, each of the form
+	// string:string (key:value). See Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html) for more
 	// information, including restrictions that apply to tags and "Tag naming limits
 	// and requirements"; Amazon IVS has no service-specific constraints beyond what is
@@ -226,8 +226,13 @@ type RecordingConfiguration struct {
 	// Recording-configuration name. The value does not need to be unique.
 	Name *string
 
-	// Array of 1-50 maps, each of the form string:string (key:value). See Tagging
-	// Amazon Web Services Resources
+	// If a broadcast disconnects and then reconnects within the specified interval,
+	// the multiple streams will be considered a single broadcast and merged together.
+	// Default: 0.
+	RecordingReconnectWindowSeconds int32
+
+	// Tags attached to the resource. Array of 1-50 maps, each of the form
+	// string:string (key:value). See Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html) for more
 	// information, including restrictions that apply to tags and "Tag naming limits
 	// and requirements"; Amazon IVS has no service-specific constraints beyond what is
@@ -265,8 +270,8 @@ type RecordingConfigurationSummary struct {
 	// Recording-configuration name. The value does not need to be unique.
 	Name *string
 
-	// Array of 1-50 maps, each of the form string:string (key:value). See Tagging
-	// Amazon Web Services Resources
+	// Tags attached to the resource. Array of 1-50 maps, each of the form
+	// string:string (key:value). See Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html) for more
 	// information, including restrictions that apply to tags and "Tag naming limits
 	// and requirements"; Amazon IVS has no service-specific constraints beyond what is
@@ -304,7 +309,9 @@ type Stream struct {
 	// returned as a string.
 	StartTime *time.Time
 
-	// The stream’s state.
+	// The stream’s state. Do not rely on the OFFLINE state, as the API may not return
+	// it; instead, a "NotBroadcasting" error will indicate that the stream is not
+	// live.
 	State StreamState
 
 	// Unique identifier for a live or previously live stream in the specified channel.
@@ -355,8 +362,8 @@ type StreamKey struct {
 	// Channel ARN for the stream.
 	ChannelArn *string
 
-	// Array of 1-50 maps, each of the form string:string (key:value). See Tagging
-	// Amazon Web Services Resources
+	// Tags attached to the resource. Array of 1-50 maps, each of the form
+	// string:string (key:value). See Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html) for more
 	// information, including restrictions that apply to tags and "Tag naming limits
 	// and requirements"; Amazon IVS has no service-specific constraints beyond what is
@@ -378,8 +385,8 @@ type StreamKeySummary struct {
 	// Channel ARN for the stream.
 	ChannelArn *string
 
-	// Array of 1-50 maps, each of the form string:string (key:value). See Tagging
-	// Amazon Web Services Resources
+	// Tags attached to the resource. Array of 1-50 maps, each of the form
+	// string:string (key:value). See Tagging Amazon Web Services Resources
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html) for more
 	// information, including restrictions that apply to tags and "Tag naming limits
 	// and requirements"; Amazon IVS has no service-specific constraints beyond what is
@@ -456,7 +463,9 @@ type StreamSummary struct {
 	// returned as a string.
 	StartTime *time.Time
 
-	// The stream’s state.
+	// The stream’s state. Do not rely on the OFFLINE state, as the API may not return
+	// it; instead, a "NotBroadcasting" error will indicate that the stream is not
+	// live.
 	State StreamState
 
 	// Unique identifier for a live or previously live stream in the specified channel.

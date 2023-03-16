@@ -1419,6 +1419,11 @@ func awsRestjson1_serializeDocumentDashPackage(v *types.DashPackage, value smith
 		ok.Boolean(v.IncludeEncoderConfigurationInSegments)
 	}
 
+	if v.IncludeIframeOnlyStream {
+		ok := object.Key("includeIframeOnlyStream")
+		ok.Boolean(v.IncludeIframeOnlyStream)
+	}
+
 	if v.PeriodTriggers != nil {
 		ok := object.Key("periodTriggers")
 		if err := awsRestjson1_serializeDocument__listOf__PeriodTriggersElement(v.PeriodTriggers, ok); err != nil {
@@ -1446,6 +1451,23 @@ func awsRestjson1_serializeDocumentEgressAccessLogs(v *types.EgressAccessLogs, v
 	if v.LogGroupName != nil {
 		ok := object.Key("logGroupName")
 		ok.String(*v.LogGroupName)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentEncryptionContractConfiguration(v *types.EncryptionContractConfiguration, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if len(v.PresetSpeke20Audio) > 0 {
+		ok := object.Key("presetSpeke20Audio")
+		ok.String(string(v.PresetSpeke20Audio))
+	}
+
+	if len(v.PresetSpeke20Video) > 0 {
+		ok := object.Key("presetSpeke20Video")
+		ok.String(string(v.PresetSpeke20Video))
 	}
 
 	return nil
@@ -1612,6 +1634,13 @@ func awsRestjson1_serializeDocumentMssPackage(v *types.MssPackage, value smithyj
 func awsRestjson1_serializeDocumentSpekeKeyProvider(v *types.SpekeKeyProvider, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
+
+	if v.EncryptionContractConfiguration != nil {
+		ok := object.Key("encryptionContractConfiguration")
+		if err := awsRestjson1_serializeDocumentEncryptionContractConfiguration(v.EncryptionContractConfiguration, ok); err != nil {
+			return err
+		}
+	}
 
 	if v.RoleArn != nil {
 		ok := object.Key("roleArn")

@@ -18,8 +18,8 @@ type AttachmentItem struct {
 
 	// Describes the MIME file type of the attachment. For a list of supported file
 	// types, see Feature specifications
-	// (https://docs.aws.amazon.com/connect/latest/adminguide/amazon-connect-service-limits.html#feature-limits)
-	// in the Amazon Connect Administrator Guide.
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/feature-limits.html) in
+	// the Amazon Connect Administrator Guide.
 	ContentType *string
 
 	// Status of the attachment.
@@ -51,6 +51,10 @@ type Item struct {
 	// Provides information about the attachments.
 	Attachments []AttachmentItem
 
+	// The contactId on which the transcript item was originally sent. This field is
+	// populated only when the transcript item is from the current chat session.
+	ContactId *string
+
 	// The content of the message or event.
 	Content *string
 
@@ -63,14 +67,51 @@ type Item struct {
 	// The ID of the item.
 	Id *string
 
+	// The metadata related to the message. Currently this supports only information
+	// related to message receipts.
+	MessageMetadata *MessageMetadata
+
 	// The ID of the sender in the session.
 	ParticipantId *string
 
 	// The role of the sender. For example, is it a customer, agent, or system.
 	ParticipantRole ParticipantRole
 
+	// The contactId on which the transcript item was originally sent. This field is
+	// only populated for persistent chats when the transcript item is from the past
+	// chat session. For more information, see Enable persistent chat
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/chat-persistence.html).
+	RelatedContactId *string
+
 	// Type of the item: message or event.
 	Type ChatItemType
+
+	noSmithyDocumentSerde
+}
+
+// Contains metadata related to a message.
+type MessageMetadata struct {
+
+	// The identifier of the message that contains the metadata information.
+	MessageId *string
+
+	// The list of receipt information for a message for different recipients.
+	Receipts []Receipt
+
+	noSmithyDocumentSerde
+}
+
+// The receipt for the message delivered to the recipient.
+type Receipt struct {
+
+	// The time when the message was delivered to the recipient.
+	DeliveredTimestamp *string
+
+	// The time when the message was read by the recipient.
+	ReadTimestamp *string
+
+	// The identifier of the recipient of the message.
+	RecipientParticipantId *string
 
 	noSmithyDocumentSerde
 }

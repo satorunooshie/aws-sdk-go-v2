@@ -28,6 +28,26 @@ func (AgentUpdateStatus) Values() []AgentUpdateStatus {
 	}
 }
 
+type ApplicationProtocol string
+
+// Enum values for ApplicationProtocol
+const (
+	ApplicationProtocolHttp  ApplicationProtocol = "http"
+	ApplicationProtocolHttp2 ApplicationProtocol = "http2"
+	ApplicationProtocolGrpc  ApplicationProtocol = "grpc"
+)
+
+// Values returns all known values for ApplicationProtocol. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ApplicationProtocol) Values() []ApplicationProtocol {
+	return []ApplicationProtocol{
+		"http",
+		"http2",
+		"grpc",
+	}
+}
+
 type AssignPublicIp string
 
 // Enum values for AssignPublicIp
@@ -995,8 +1015,9 @@ type TaskDefinitionStatus string
 
 // Enum values for TaskDefinitionStatus
 const (
-	TaskDefinitionStatusActive   TaskDefinitionStatus = "ACTIVE"
-	TaskDefinitionStatusInactive TaskDefinitionStatus = "INACTIVE"
+	TaskDefinitionStatusActive           TaskDefinitionStatus = "ACTIVE"
+	TaskDefinitionStatusInactive         TaskDefinitionStatus = "INACTIVE"
+	TaskDefinitionStatusDeleteInProgress TaskDefinitionStatus = "DELETE_IN_PROGRESS"
 )
 
 // Values returns all known values for TaskDefinitionStatus. Note that this can be
@@ -1006,6 +1027,7 @@ func (TaskDefinitionStatus) Values() []TaskDefinitionStatus {
 	return []TaskDefinitionStatus{
 		"ACTIVE",
 		"INACTIVE",
+		"DELETE_IN_PROGRESS",
 	}
 }
 
@@ -1045,9 +1067,12 @@ type TaskStopCode string
 
 // Enum values for TaskStopCode
 const (
-	TaskStopCodeTaskFailedToStart        TaskStopCode = "TaskFailedToStart"
-	TaskStopCodeEssentialContainerExited TaskStopCode = "EssentialContainerExited"
-	TaskStopCodeUserInitiated            TaskStopCode = "UserInitiated"
+	TaskStopCodeTaskFailedToStart         TaskStopCode = "TaskFailedToStart"
+	TaskStopCodeEssentialContainerExited  TaskStopCode = "EssentialContainerExited"
+	TaskStopCodeUserInitiated             TaskStopCode = "UserInitiated"
+	TaskStopCodeServiceSchedulerInitiated TaskStopCode = "ServiceSchedulerInitiated"
+	TaskStopCodeSpotInterruption          TaskStopCode = "SpotInterruption"
+	TaskStopCodeTerminationNotice         TaskStopCode = "TerminationNotice"
 )
 
 // Values returns all known values for TaskStopCode. Note that this can be expanded
@@ -1058,6 +1083,9 @@ func (TaskStopCode) Values() []TaskStopCode {
 		"TaskFailedToStart",
 		"EssentialContainerExited",
 		"UserInitiated",
+		"ServiceSchedulerInitiated",
+		"SpotInterruption",
+		"TerminationNotice",
 	}
 }
 

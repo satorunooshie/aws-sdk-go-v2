@@ -105,7 +105,7 @@ import (
 // for this service.
 //
 // You must have a service-linked role when you update any of
-// the following service properties. If you specified a custom IAM role when you
+// the following service properties. If you specified a custom role when you
 // created the service, Amazon ECS automatically replaces the roleARN
 // (https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_Service.html#ECS-Type-Service-roleArn)
 // associated with the service with the ARN of your service-linked role. For more
@@ -266,6 +266,17 @@ type UpdateServiceInput struct {
 	// tasks, set forceNewDeployment to true, so that Amazon ECS starts new tasks with
 	// the updated tags.
 	PropagateTags types.PropagateTags
+
+	// The configuration for this service to discover and connect to services, and be
+	// discovered by, and connected from, other services within a namespace. Tasks that
+	// run in a namespace can use short names to connect to services in the namespace.
+	// Tasks can connect to services across all of the clusters in the namespace. Tasks
+	// connect through a managed proxy container that collects logs and metrics for
+	// increased visibility. Only the tasks that Amazon ECS services create are
+	// supported with Service Connect. For more information, see Service Connect
+	// (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect.html)
+	// in the Amazon Elastic Container Service Developer Guide.
+	ServiceConnectConfiguration *types.ServiceConnectConfiguration
 
 	// The details for the service discovery registries to assign to this service. For
 	// more information, see Service Discovery

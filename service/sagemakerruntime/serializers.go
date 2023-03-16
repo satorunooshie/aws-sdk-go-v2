@@ -85,6 +85,11 @@ func awsRestjson1_serializeOpHttpBindingsInvokeEndpointInput(v *InvokeEndpointIn
 		encoder.SetHeader(locationName).String(*v.CustomAttributes)
 	}
 
+	if v.EnableExplanations != nil && len(*v.EnableExplanations) > 0 {
+		locationName := "X-Amzn-Sagemaker-Enable-Explanations"
+		encoder.SetHeader(locationName).String(*v.EnableExplanations)
+	}
+
 	if v.EndpointName == nil || len(*v.EndpointName) == 0 {
 		return &smithy.SerializationError{Err: fmt.Errorf("input member EndpointName must not be empty")}
 	}
@@ -195,6 +200,11 @@ func awsRestjson1_serializeOpHttpBindingsInvokeEndpointAsyncInput(v *InvokeEndpo
 	if v.InputLocation != nil && len(*v.InputLocation) > 0 {
 		locationName := "X-Amzn-Sagemaker-Inputlocation"
 		encoder.SetHeader(locationName).String(*v.InputLocation)
+	}
+
+	if v.InvocationTimeoutSeconds != nil {
+		locationName := "X-Amzn-Sagemaker-Invocationtimeoutseconds"
+		encoder.SetHeader(locationName).Integer(*v.InvocationTimeoutSeconds)
 	}
 
 	if v.RequestTTLSeconds != nil {

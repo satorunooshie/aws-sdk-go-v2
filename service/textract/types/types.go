@@ -81,9 +81,13 @@ type Block struct {
 	// or a check box that's detected on a document page. Use the value of
 	// SelectionStatus to determine the status of the selection element.
 	//
+	// * SIGNATURE -
+	// The location and confidene score of a signature detected on a document page. Can
+	// be returned as part of a Key-Value pair or a detected cell.
+	//
 	// * QUERY - A
 	// question asked during the call of AnalyzeDocument. Contains an alias and an ID
-	// that attachs it to its answer.
+	// that attaches it to its answer.
 	//
 	// * QUERY_RESULT - A response to a question asked
 	// during the call of analyze document. Comes with an alias and ID for ease of
@@ -123,12 +127,14 @@ type Block struct {
 	// single operation.
 	Id *string
 
-	// The page on which a block was detected. Page is returned by asynchronous
-	// operations. Page values greater than 1 are only returned for multipage documents
-	// that are in PDF or TIFF format. A scanned image (JPEG/PNG), even if it contains
-	// multiple document pages, is considered to be a single-page document. The value
-	// of Page is always 1. Synchronous operations don't return Page because every
-	// input document is considered to be a single-page document.
+	// The page on which a block was detected. Page is returned by synchronous and
+	// asynchronous operations. Page values greater than 1 are only returned for
+	// multipage documents that are in PDF or TIFF format. A scanned image (JPEG/PNG)
+	// provided to an asynchronous operation, even if it contains multiple document
+	// pages, is considered a single-page document. This means that for scanned images
+	// the value of Page is always 1. Synchronous operations operations will also
+	// return a Page value of 1 because every input document is considered to be a
+	// single-page document.
 	Page *int32
 
 	//
@@ -199,6 +205,15 @@ type BoundingBox struct {
 	noSmithyDocumentSerde
 }
 
+// A structure that holds information regarding a detected signature on a page.
+type DetectedSignature struct {
+
+	// The page a detected signature was found on.
+	Page *int32
+
+	noSmithyDocumentSerde
+}
+
 // The input document, either as bytes or as an S3 object. You pass image bytes to
 // an Amazon Textract API operation by using the Bytes property. For example, you
 // would use the Bytes property to pass a document loaded from a local file system.
@@ -228,9 +243,29 @@ type Document struct {
 	noSmithyDocumentSerde
 }
 
+// Summary information about documents grouped by the same document type.
+type DocumentGroup struct {
+
+	// A list of the detected signatures found in a document group.
+	DetectedSignatures []DetectedSignature
+
+	// An array that contains information about the pages of a document, defined by
+	// logical boundary.
+	SplitDocuments []SplitDocument
+
+	// The type of document that Amazon Textract has detected. See LINK for a list of
+	// all types returned by Textract.
+	Type *string
+
+	// A list of any expected signatures not found in a document group.
+	UndetectedSignatures []UndetectedSignature
+
+	noSmithyDocumentSerde
+}
+
 // The Amazon S3 bucket that contains the document to be processed. It's used by
-// asynchronous operations such as StartDocumentTextDetection. The input document
-// can be an image file in JPEG or PNG format. It can also be a file in PDF format.
+// asynchronous operations. The input document can be an image file in JPEG or PNG
+// format. It can also be a file in PDF format.
 type DocumentLocation struct {
 
 	// The Amazon S3 bucket that contains the input document.
@@ -244,6 +279,43 @@ type DocumentMetadata struct {
 
 	// The number of pages that are detected in the document.
 	Pages *int32
+
+	noSmithyDocumentSerde
+}
+
+// Returns the kind of currency detected.
+type ExpenseCurrency struct {
+
+	// Currency code for detected currency. the current supported codes are:
+	//
+	// * USD
+	//
+	// *
+	// EUR
+	//
+	// * GBP
+	//
+	// * CAD
+	//
+	// * INR
+	//
+	// * JPY
+	//
+	// * CHF
+	//
+	// * AUD
+	//
+	// * CNY
+	//
+	// * BZR
+	//
+	// * SEK
+	//
+	// * HKD
+	Code *string
+
+	// Percentage confideence in the detected currency.
+	Confidence *float32
 
 	noSmithyDocumentSerde
 }
@@ -269,6 +341,10 @@ type ExpenseDetection struct {
 // The structure holding all the information returned by AnalyzeExpense
 type ExpenseDocument struct {
 
+	// This is a block object, the same as reported when DetectDocumentText is run on a
+	// document. It provides word level recognition of text.
+	Blocks []Block
+
 	// Denotes which invoice or receipt in the document the information is coming from.
 	// First document will be 1, the second 2, and so on.
 	ExpenseIndex *int32
@@ -286,6 +362,14 @@ type ExpenseDocument struct {
 // LabelDetection, and ValueDetection
 type ExpenseField struct {
 
+	// Shows the kind of currency, both the code and confidence associated with any
+	// monatary value detected.
+	Currency *ExpenseCurrency
+
+	// Shows which group a response object belongs to, such as whether an address line
+	// belongs to the vendor's address or the recipent's address.
+	GroupProperties []ExpenseGroupProperty
+
 	// The explicitly stated label of a detected element.
 	LabelDetection *ExpenseDetection
 
@@ -302,6 +386,20 @@ type ExpenseField struct {
 	noSmithyDocumentSerde
 }
 
+// Shows the group that a certain key belongs to. This helps differentiate between
+// names and addresses for different organizations, that can be hard to determine
+// via JSON response.
+type ExpenseGroupProperty struct {
+
+	// Provides a group Id number, which will be the same for each in the group.
+	Id *string
+
+	// Informs you on whether the expense group is a name or an address.
+	Types []string
+
+	noSmithyDocumentSerde
+}
+
 // An object used to store information about the Type detected by Amazon Textract.
 type ExpenseType struct {
 
@@ -310,6 +408,22 @@ type ExpenseType struct {
 
 	// The word or line of text detected by Amazon Textract.
 	Text *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains information extracted by an analysis operation after using
+// StartLendingAnalysis.
+type Extraction struct {
+
+	// The structure holding all the information returned by AnalyzeExpense
+	ExpenseDocument *ExpenseDocument
+
+	// The structure that lists each document processed in an AnalyzeID operation.
+	IdentityDocument *IdentityDocument
+
+	// Holds the structured data returned by AnalyzeDocument for lending documents.
+	LendingDocument *LendingDocument
 
 	noSmithyDocumentSerde
 }
@@ -384,6 +498,9 @@ type HumanLoopDataAttributes struct {
 // The structure that lists each document processed in an AnalyzeID operation.
 type IdentityDocument struct {
 
+	// Individual word recognition, as returned by document detection.
+	Blocks []Block
+
 	// Denotes the placement of a document in the IdentityDocument list. The first
 	// document is marked 1, the second 2 and so on.
 	DocumentIndex *int32
@@ -404,6 +521,83 @@ type IdentityDocumentField struct {
 
 	// Used to contain the information detected by an AnalyzeID operation.
 	ValueDetection *AnalyzeIDDetections
+
+	noSmithyDocumentSerde
+}
+
+// The results extracted for a lending document.
+type LendingDetection struct {
+
+	// The confidence level for the text of a detected value in a lending document.
+	Confidence *float32
+
+	// Information about where the following items are located on a document page:
+	// detected page, text, key-value pairs, tables, table cells, and selection
+	// elements.
+	Geometry *Geometry
+
+	// The selection status of a selection element, such as an option button or check
+	// box.
+	SelectionStatus SelectionStatus
+
+	// The text extracted for a detected value in a lending document.
+	Text *string
+
+	noSmithyDocumentSerde
+}
+
+// Holds the structured data returned by AnalyzeDocument for lending documents.
+type LendingDocument struct {
+
+	// An array of LendingField objects.
+	LendingFields []LendingField
+
+	// A list of signatures detected in a lending document.
+	SignatureDetections []SignatureDetection
+
+	noSmithyDocumentSerde
+}
+
+// Holds the normalized key-value pairs returned by AnalyzeDocument, including the
+// document type, detected text, and geometry.
+type LendingField struct {
+
+	// The results extracted for a lending document.
+	KeyDetection *LendingDetection
+
+	// The type of the lending document.
+	Type *string
+
+	// An array of LendingDetection objects.
+	ValueDetections []LendingDetection
+
+	noSmithyDocumentSerde
+}
+
+// Contains the detections for each page analyzed through the Analyze Lending API.
+type LendingResult struct {
+
+	// An array of Extraction to hold structured data. e.g. normalized key value pairs
+	// instead of raw OCR detections .
+	Extractions []Extraction
+
+	// The page number for a page, with regard to whole submission.
+	Page *int32
+
+	// The classifier result for a given page.
+	PageClassification *PageClassification
+
+	noSmithyDocumentSerde
+}
+
+// Contains information regarding DocumentGroups and UndetectedDocumentTypes.
+type LendingSummary struct {
+
+	// Contains an array of all DocumentGroup objects.
+	DocumentGroups []DocumentGroup
+
+	// UndetectedDocumentTypes.
+	UndetectedDocumentTypes []string
 
 	noSmithyDocumentSerde
 }
@@ -446,8 +640,7 @@ type NormalizedValue struct {
 }
 
 // The Amazon Simple Notification Service (Amazon SNS) topic to which Amazon
-// Textract publishes the completion status of an asynchronous document operation,
-// such as StartDocumentTextDetection.
+// Textract publishes the completion status of an asynchronous document operation.
 type NotificationChannel struct {
 
 	// The Amazon Resource Name (ARN) of an IAM role that gives Amazon Textract
@@ -469,7 +662,7 @@ type NotificationChannel struct {
 // optional parameter which lets you adjust where your output will be placed. By
 // default, Amazon Textract will store the results internally and can only be
 // accessed by the Get API operations. With OutputConfig enabled, you can set the
-// name of the bucket the output will be sent to and the file prefix of the results
+// name of the bucket the output will be sent to the file prefix of the results
 // where you can download your results. Additionally, you can set the KMSKeyID
 // parameter to a customer master key (CMK) to encrypt your output. Without this
 // parameter set Amazon Textract will encrypt server-side using the AWS managed CMK
@@ -496,6 +689,26 @@ type OutputConfig struct {
 	noSmithyDocumentSerde
 }
 
+// The class assigned to a Page object detected in an input document. Contains
+// information regarding the predicted type/class of a document's page and the page
+// number that the Page object was detected on.
+type PageClassification struct {
+
+	// The page number the value was detected on, relative to Amazon Textract's
+	// starting position.
+	//
+	// This member is required.
+	PageNumber []Prediction
+
+	// The class, or document type, assigned to a detected Page object. The class, or
+	// document type, assigned to a detected Page object.
+	//
+	// This member is required.
+	PageType []Prediction
+
+	noSmithyDocumentSerde
+}
+
 // The X and Y coordinates of a point on a document page. The X and Y values that
 // are returned are ratios of the overall document page size. For example, if the
 // input document is 700 x 200 and the operation returns X=0.5 and Y=0.25, then the
@@ -510,6 +723,20 @@ type Point struct {
 
 	// The value of the Y coordinate for a point on a Polygon.
 	Y float32
+
+	noSmithyDocumentSerde
+}
+
+// Contains information regarding predicted values returned by Amazon Textract
+// operations, including the predicted value and the confidence in the predicted
+// value.
+type Prediction struct {
+
+	// Amazon Textract's confidence in its predicted value.
+	Confidence *float32
+
+	// The predicted value of a detected object.
+	Value *string
 
 	noSmithyDocumentSerde
 }
@@ -537,24 +764,24 @@ type Query struct {
 	// Alias attached to the query, for ease of location.
 	Alias *string
 
-	// List of pages associated with the query. The following is a list of rules for
-	// using this parameter.
+	// Pages is a parameter that the user inputs to specify which pages to apply a
+	// query to. The following is a list of rules for using this parameter.
 	//
-	// * If a page is not specified, it is set to ["1"] by
-	// default.
+	// * If a
+	// page is not specified, it is set to ["1"] by default.
 	//
-	// * The following characters are allowed in the parameter's string: 0 1
-	// 2 3 4 5 6 7 8 9 - *. No whitespace is allowed.
+	// * The following
+	// characters are allowed in the parameter's string: 0 1 2 3 4 5 6 7 8 9 - *. No
+	// whitespace is allowed.
 	//
-	// * When using * to indicate all
-	// pages, it must be the only element in the string.
+	// * When using * to indicate all pages, it must be the
+	// only element in the list.
 	//
-	// * You can use page intervals,
-	// such as [“1-3”, “1-1”, “4-*”]. Where * indicates last page of document.
+	// * You can use page intervals, such as [“1-3”, “1-1”,
+	// “4-*”]. Where * indicates last page of document.
 	//
-	// *
-	// Specified pages must be greater than 0 and less than or equal to the number of
-	// pages in the document.
+	// * Specified pages must be
+	// greater than 0 and less than or equal to the number of pages in the document.
 	Pages []string
 
 	noSmithyDocumentSerde
@@ -598,6 +825,43 @@ type S3Object struct {
 
 	// If the bucket has versioning enabled, you can specify the object version.
 	Version *string
+
+	noSmithyDocumentSerde
+}
+
+// Information regarding a detected signature on a page.
+type SignatureDetection struct {
+
+	// The confidence, from 0 to 100, in the predicted values for a detected signature.
+	Confidence *float32
+
+	// Information about where the following items are located on a document page:
+	// detected page, text, key-value pairs, tables, table cells, and selection
+	// elements.
+	Geometry *Geometry
+
+	noSmithyDocumentSerde
+}
+
+// Contains information about the pages of a document, defined by logical boundary.
+type SplitDocument struct {
+
+	// The index for a given document in a DocumentGroup of a specific Type.
+	Index *int32
+
+	// An array of page numbers for a for a given document, ordered by logical
+	// boundary.
+	Pages []int32
+
+	noSmithyDocumentSerde
+}
+
+// A structure containing information about an undetected signature on a page where
+// it was expected but not found.
+type UndetectedSignature struct {
+
+	// The page where a signature was expected but not found.
+	Page *int32
 
 	noSmithyDocumentSerde
 }

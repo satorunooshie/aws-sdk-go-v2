@@ -34,8 +34,28 @@ type AccountModification struct {
 	noSmithyDocumentSerde
 }
 
+// Describes the properties of the certificate-based authentication you want to use
+// with your WorkSpaces.
+type CertificateBasedAuthProperties struct {
+
+	// The Amazon Resource Name (ARN) of the Amazon Web Services Certificate Manager
+	// Private CA resource.
+	CertificateAuthorityArn *string
+
+	// The status of the certificate-based authentication properties.
+	Status CertificateBasedAuthStatusEnum
+
+	noSmithyDocumentSerde
+}
+
 // Describes an Amazon WorkSpaces client.
 type ClientProperties struct {
+
+	// Specifies whether users can upload diagnostic log files of Amazon WorkSpaces
+	// client directly to WorkSpaces to troubleshoot issues when using the WorkSpaces
+	// client. When enabled, the log files will be sent to WorkSpaces automatically and
+	// will be applied to all users in the specified directory.
+	LogUploadEnabled LogUploadEnum
 
 	// Specifies whether users can cache their credentials on the Amazon WorkSpaces
 	// client. When enabled, users can choose to reconnect to their WorkSpaces without
@@ -282,6 +302,22 @@ type DefaultWorkspaceCreationProperties struct {
 	noSmithyDocumentSerde
 }
 
+// Describes the standby WorkSpace that could not be created.
+type FailedCreateStandbyWorkspacesRequest struct {
+
+	// The error code that is returned if the standby WorkSpace could not be created.
+	ErrorCode *string
+
+	// The text of the error message that is returned if the standby WorkSpace could
+	// not be created.
+	ErrorMessage *string
+
+	// Information about the standby WorkSpace that could not be created.
+	StandbyWorkspaceRequest *StandbyWorkspace
+
+	noSmithyDocumentSerde
+}
+
 // Describes a WorkSpace that cannot be created.
 type FailedCreateWorkspaceRequest struct {
 
@@ -482,6 +518,28 @@ type OperatingSystem struct {
 	noSmithyDocumentSerde
 }
 
+// Information about the standby WorkSpace.
+type PendingCreateStandbyWorkspacesRequest struct {
+
+	// The identifier of the directory for the standby WorkSpace.
+	DirectoryId *string
+
+	// The operational state of the standby WorkSpace.
+	State WorkspaceState
+
+	// Describes the standby WorkSpace that was created. Because this operation is
+	// asynchronous, the identifier returned is not immediately available for use with
+	// other operations. For example, if you call  DescribeWorkspaces
+	// (https://docs.aws.amazon.com/workspaces/latest/api/API_DescribeWorkspaces.html)
+	// before the WorkSpace is created, the information returned can be incomplete.
+	UserName *string
+
+	// The identifier of the standby WorkSpace.
+	WorkspaceId *string
+
+	noSmithyDocumentSerde
+}
+
 // Describes the information used to reboot a WorkSpace.
 type RebootRequest struct {
 
@@ -499,6 +557,25 @@ type RebuildRequest struct {
 	// The identifier of the WorkSpace.
 	//
 	// This member is required.
+	WorkspaceId *string
+
+	noSmithyDocumentSerde
+}
+
+// Describes the related WorkSpace. The related WorkSpace could be a standby
+// WorkSpace or primary WorkSpace related to the specified WorkSpace.
+type RelatedWorkspaceProperties struct {
+
+	// The Region of the related WorkSpace.
+	Region *string
+
+	// Indicates the state of the WorkSpace.
+	State WorkspaceState
+
+	// Indicates the type of WorkSpace.
+	Type StandbyWorkspaceRelationshipType
+
+	// The identifier of the related WorkSpace.
 	WorkspaceId *string
 
 	noSmithyDocumentSerde
@@ -583,6 +660,28 @@ type Snapshot struct {
 
 	// The time when the snapshot was created.
 	SnapshotTime *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Describes a standby WorkSpace.
+type StandbyWorkspace struct {
+
+	// The identifier of the directory for the standby WorkSpace.
+	//
+	// This member is required.
+	DirectoryId *string
+
+	// The identifier of the standby WorkSpace.
+	//
+	// This member is required.
+	PrimaryWorkspaceId *string
+
+	// The tags associated with the standby WorkSpace.
+	Tags []Tag
+
+	// The volume encryption key of the standby WorkSpace.
+	VolumeEncryptionKey *string
 
 	noSmithyDocumentSerde
 }
@@ -682,6 +781,9 @@ type Workspace struct {
 	// The modification states of the WorkSpace.
 	ModificationStates []ModificationState
 
+	// The standby WorkSpace or primary WorkSpace related to the specified WorkSpace.
+	RelatedWorkspaces []RelatedWorkspaceProperties
+
 	// Indicates whether the data stored on the root volume is encrypted.
 	RootVolumeEncryptionEnabled *bool
 
@@ -755,6 +857,9 @@ type WorkspaceBundle struct {
 	// The identifier of the bundle.
 	BundleId *string
 
+	// The type of WorkSpace bundle.
+	BundleType BundleType
+
 	// The compute type of the bundle. For more information, see Amazon WorkSpaces
 	// Bundles (http://aws.amazon.com/workspaces/details/#Amazon_WorkSpaces_Bundles).
 	ComputeType *ComputeType
@@ -780,6 +885,9 @@ type WorkspaceBundle struct {
 
 	// The size of the root volume.
 	RootStorage *RootStorage
+
+	// The state of the WorkSpace bundle.
+	State WorkspaceBundleState
 
 	// The size of the user volume.
 	UserStorage *UserStorage
@@ -865,6 +973,11 @@ type WorkspaceDirectory struct {
 
 	// The directory alias.
 	Alias *string
+
+	// The certificate-based authentication properties used to authenticate SAML 2.0
+	// Identity Provider (IdP) user identities to Active Directory for WorkSpaces
+	// login.
+	CertificateBasedAuthProperties *CertificateBasedAuthProperties
 
 	// The user name for the service account.
 	CustomerUserName *string
@@ -981,6 +1094,20 @@ type WorkspaceProperties struct {
 	// (http://aws.amazon.com/workspaces/details/#Amazon_WorkSpaces_Bundles).
 	ComputeTypeName Compute
 
+	// The protocol. For more information, see  Protocols for Amazon WorkSpaces
+	// (https://docs.aws.amazon.com/workspaces/latest/adminguide/amazon-workspaces-protocols.html).
+	//
+	// *
+	// Only available for WorkSpaces created with PCoIP bundles.
+	//
+	// * The Protocols
+	// property is case sensitive. Ensure you use PCOIP or WSP.
+	//
+	// * Unavailable for
+	// Windows 7 WorkSpaces and WorkSpaces using GPU-based bundles (Graphics,
+	// GraphicsPro, Graphics.g4dn, and GraphicsPro.g4dn).
+	Protocols []Protocol
+
 	// The size of the root volume. For important information about how to modify the
 	// size of the root and user volumes, see Modify a WorkSpace
 	// (https://docs.aws.amazon.com/workspaces/latest/adminguide/modify-workspaces.html).
@@ -988,6 +1115,9 @@ type WorkspaceProperties struct {
 
 	// The running mode. For more information, see Manage the WorkSpace Running Mode
 	// (https://docs.aws.amazon.com/workspaces/latest/adminguide/running-mode.html).
+	// The MANUAL value is only supported by Amazon WorkSpaces Core. Contact your
+	// account team to be allow-listed to use this value. For more information, see
+	// Amazon WorkSpaces Core (http://aws.amazon.com/workspaces/core/).
 	RunningMode RunningMode
 
 	// The time after a user logs off when WorkSpaces are automatically stopped.

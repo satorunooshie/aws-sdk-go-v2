@@ -63,9 +63,13 @@ type GetResponsePlanOutput struct {
 	// The long format name of the response plan. Can contain spaces.
 	DisplayName *string
 
-	// The contacts and escalation plans that the response plan engages during an
-	// incident.
+	// The Amazon Resource Name (ARN) for the contacts and escalation plans that the
+	// response plan engages during an incident.
 	Engagements []string
+
+	// Information about third-party services integrated into the Incident Manager
+	// response plan.
+	Integrations []types.Integration
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata

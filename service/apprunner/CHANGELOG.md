@@ -1,3 +1,81 @@
+# v1.17.4 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.3 (2023-02-28)
+
+* No change notes available for this release.
+
+# v1.17.2 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.17.1 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.0 (2023-02-17)
+
+* **Feature**: This release supports removing MaxSize limit for AutoScalingConfiguration.
+
+# v1.16.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.16.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+* **Feature**: This release adds support of securely referencing secrets and configuration data that are stored in Secrets Manager and SSM Parameter Store by adding them as environment secrets in your App Runner service.
+
+# v1.15.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.0 (2022-10-31)
+
+* **Feature**: This release adds support for private App Runner services. Services may now be configured to be made private and only accessible from a VPC. The changes include a new VpcIngressConnection resource and several new and modified APIs.
+
+# v1.14.0 (2022-10-28)
+
+* **Feature**: AWS App Runner adds .NET 6, Go 1, PHP 8.1 and Ruby 3.1 runtimes.
+
+# v1.13.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.0 (2022-09-23)
+
+* **Feature**: AWS App Runner adds a Node.js 16 runtime.
+
+# v1.12.15 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.14 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.13 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.12 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.12.11 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

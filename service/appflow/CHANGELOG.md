@@ -1,3 +1,89 @@
+# v1.25.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2023-02-23)
+
+* **Feature**: This release enables the customers to choose whether to use Private Link for Metadata and Authorization call when using a private Salesforce connections
+
+# v1.24.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.24.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.24.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.0 (2023-01-19)
+
+* **Feature**: Adding support for Salesforce Pardot connector in Amazon AppFlow.
+
+# v1.23.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.22.0 (2022-12-16)
+
+* **Feature**: This release updates the ListConnectorEntities API action so that it returns paginated responses that customers can retrieve with next tokens.
+
+# v1.21.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.0 (2022-11-22)
+
+* **Feature**: Adding support for Amazon AppFlow to transfer the data to Amazon Redshift databases through Amazon Redshift Data API service. This feature will support the Redshift destination connector on both public and private accessible Amazon Redshift Clusters and Amazon Redshift Serverless.
+
+# v1.20.0 (2022-11-18)
+
+* **Feature**: AppFlow provides a new API called UpdateConnectorRegistration to update a custom connector that customers have previously registered. With this API, customers no longer need to unregister and then register a connector to make an update.
+
+# v1.19.0 (2022-11-17)
+
+* **Feature**: AppFlow simplifies the preparation and cataloging of SaaS data into the AWS Glue Data Catalog where your data can be discovered and accessed by AWS analytics and ML services. AppFlow now also supports data field partitioning and file size optimization to improve query performance and reduce cost.
+
+# v1.18.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.0 (2022-10-13)
+
+* **Feature**: With this update, you can choose which Salesforce API is used by Amazon AppFlow to transfer data to or from your Salesforce account. You can choose the Salesforce REST API or Bulk API 2.0. You can also choose for Amazon AppFlow to pick the API automatically.
+
+# v1.17.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.0 (2022-09-14)
+
+* **Feature**: Fixed a bug in the API client generation which caused some operation parameters to be incorrectly generated as value types instead of pointer types. The service API always required these affected parameters to be nilable. This fixes the SDK client to match the expectations of the the service API.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.10 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.9 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.16.8 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

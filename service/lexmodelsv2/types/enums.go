@@ -119,6 +119,7 @@ type BotFilterName string
 // Enum values for BotFilterName
 const (
 	BotFilterNameBotName BotFilterName = "BotName"
+	BotFilterNameBotType BotFilterName = "BotType"
 )
 
 // Values returns all known values for BotFilterName. Note that this can be
@@ -127,6 +128,7 @@ const (
 func (BotFilterName) Values() []BotFilterName {
 	return []BotFilterName{
 		"BotName",
+		"BotType",
 	}
 }
 
@@ -134,8 +136,9 @@ type BotFilterOperator string
 
 // Enum values for BotFilterOperator
 const (
-	BotFilterOperatorContains BotFilterOperator = "CO"
-	BotFilterOperatorEquals   BotFilterOperator = "EQ"
+	BotFilterOperatorContains  BotFilterOperator = "CO"
+	BotFilterOperatorEquals    BotFilterOperator = "EQ"
+	BotFilterOperatorNotEquals BotFilterOperator = "NE"
 )
 
 // Values returns all known values for BotFilterOperator. Note that this can be
@@ -145,6 +148,7 @@ func (BotFilterOperator) Values() []BotFilterOperator {
 	return []BotFilterOperator{
 		"CO",
 		"EQ",
+		"NE",
 	}
 }
 
@@ -289,6 +293,7 @@ const (
 	BotStatusFailed     BotStatus = "Failed"
 	BotStatusVersioning BotStatus = "Versioning"
 	BotStatusImporting  BotStatus = "Importing"
+	BotStatusUpdating   BotStatus = "Updating"
 )
 
 // Values returns all known values for BotStatus. Note that this can be expanded in
@@ -303,6 +308,25 @@ func (BotStatus) Values() []BotStatus {
 		"Failed",
 		"Versioning",
 		"Importing",
+		"Updating",
+	}
+}
+
+type BotType string
+
+// Enum values for BotType
+const (
+	BotTypeBot        BotType = "Bot"
+	BotTypeBotNetwork BotType = "BotNetwork"
+)
+
+// Values returns all known values for BotType. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (BotType) Values() []BotType {
+	return []BotType{
+		"Bot",
+		"BotNetwork",
 	}
 }
 
@@ -425,6 +449,28 @@ func (Effect) Values() []Effect {
 	return []Effect{
 		"Allow",
 		"Deny",
+	}
+}
+
+type ErrorCode string
+
+// Enum values for ErrorCode
+const (
+	ErrorCodeDuplicateInput        ErrorCode = "DUPLICATE_INPUT"
+	ErrorCodeResourceDoesNotExist  ErrorCode = "RESOURCE_DOES_NOT_EXIST"
+	ErrorCodeResourceAlreadyExists ErrorCode = "RESOURCE_ALREADY_EXISTS"
+	ErrorCodeInternalServerFailure ErrorCode = "INTERNAL_SERVER_FAILURE"
+)
+
+// Values returns all known values for ErrorCode. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (ErrorCode) Values() []ErrorCode {
+	return []ErrorCode{
+		"DUPLICATE_INPUT",
+		"RESOURCE_DOES_NOT_EXIST",
+		"RESOURCE_ALREADY_EXISTS",
+		"INTERNAL_SERVER_FAILURE",
 	}
 }
 
@@ -718,6 +764,32 @@ func (ObfuscationSettingType) Values() []ObfuscationSettingType {
 	}
 }
 
+type PromptAttempt string
+
+// Enum values for PromptAttempt
+const (
+	PromptAttemptInitial PromptAttempt = "Initial"
+	PromptAttemptRetry1  PromptAttempt = "Retry1"
+	PromptAttemptRetry2  PromptAttempt = "Retry2"
+	PromptAttemptRetry3  PromptAttempt = "Retry3"
+	PromptAttemptRetry4  PromptAttempt = "Retry4"
+	PromptAttemptRetry5  PromptAttempt = "Retry5"
+)
+
+// Values returns all known values for PromptAttempt. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (PromptAttempt) Values() []PromptAttempt {
+	return []PromptAttempt{
+		"Initial",
+		"Retry1",
+		"Retry2",
+		"Retry3",
+		"Retry4",
+		"Retry5",
+	}
+}
+
 type SearchOrder string
 
 // Enum values for SearchOrder
@@ -831,6 +903,7 @@ const (
 	SlotTypeCategoryCustom          SlotTypeCategory = "Custom"
 	SlotTypeCategoryExtended        SlotTypeCategory = "Extended"
 	SlotTypeCategoryExternalGrammar SlotTypeCategory = "ExternalGrammar"
+	SlotTypeCategoryComposite       SlotTypeCategory = "Composite"
 )
 
 // Values returns all known values for SlotTypeCategory. Note that this can be
@@ -841,6 +914,7 @@ func (SlotTypeCategory) Values() []SlotTypeCategory {
 		"Custom",
 		"Extended",
 		"ExternalGrammar",
+		"Composite",
 	}
 }
 
@@ -904,6 +978,7 @@ type SlotValueResolutionStrategy string
 const (
 	SlotValueResolutionStrategyOriginalValue SlotValueResolutionStrategy = "OriginalValue"
 	SlotValueResolutionStrategyTopResolution SlotValueResolutionStrategy = "TopResolution"
+	SlotValueResolutionStrategyConcatenation SlotValueResolutionStrategy = "Concatenation"
 )
 
 // Values returns all known values for SlotValueResolutionStrategy. Note that this
@@ -913,6 +988,7 @@ func (SlotValueResolutionStrategy) Values() []SlotValueResolutionStrategy {
 	return []SlotValueResolutionStrategy{
 		"OriginalValue",
 		"TopResolution",
+		"Concatenation",
 	}
 }
 

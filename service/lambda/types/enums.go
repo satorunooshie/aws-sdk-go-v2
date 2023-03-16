@@ -74,6 +74,24 @@ func (EventSourcePosition) Values() []EventSourcePosition {
 	}
 }
 
+type FullDocument string
+
+// Enum values for FullDocument
+const (
+	FullDocumentUpdateLookup FullDocument = "UpdateLookup"
+	FullDocumentDefault      FullDocument = "Default"
+)
+
+// Values returns all known values for FullDocument. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (FullDocument) Values() []FullDocument {
+	return []FullDocument{
+		"UpdateLookup",
+		"Default",
+	}
+}
+
 type FunctionResponseType string
 
 // Enum values for FunctionResponseType
@@ -178,6 +196,17 @@ const (
 	LastUpdateStatusReasonCodeImageDeleted                LastUpdateStatusReasonCode = "ImageDeleted"
 	LastUpdateStatusReasonCodeImageAccessDenied           LastUpdateStatusReasonCode = "ImageAccessDenied"
 	LastUpdateStatusReasonCodeInvalidImage                LastUpdateStatusReasonCode = "InvalidImage"
+	LastUpdateStatusReasonCodeKMSKeyAccessDenied          LastUpdateStatusReasonCode = "KMSKeyAccessDenied"
+	LastUpdateStatusReasonCodeKMSKeyNotFound              LastUpdateStatusReasonCode = "KMSKeyNotFound"
+	LastUpdateStatusReasonCodeInvalidStateKMSKey          LastUpdateStatusReasonCode = "InvalidStateKMSKey"
+	LastUpdateStatusReasonCodeDisabledKMSKey              LastUpdateStatusReasonCode = "DisabledKMSKey"
+	LastUpdateStatusReasonCodeEFSIOError                  LastUpdateStatusReasonCode = "EFSIOError"
+	LastUpdateStatusReasonCodeEFSMountConnectivityError   LastUpdateStatusReasonCode = "EFSMountConnectivityError"
+	LastUpdateStatusReasonCodeEFSMountFailure             LastUpdateStatusReasonCode = "EFSMountFailure"
+	LastUpdateStatusReasonCodeEFSMountTimeout             LastUpdateStatusReasonCode = "EFSMountTimeout"
+	LastUpdateStatusReasonCodeInvalidRuntime              LastUpdateStatusReasonCode = "InvalidRuntime"
+	LastUpdateStatusReasonCodeInvalidZipFileException     LastUpdateStatusReasonCode = "InvalidZipFileException"
+	LastUpdateStatusReasonCodeFunctionError               LastUpdateStatusReasonCode = "FunctionError"
 )
 
 // Values returns all known values for LastUpdateStatusReasonCode. Note that this
@@ -195,6 +224,17 @@ func (LastUpdateStatusReasonCode) Values() []LastUpdateStatusReasonCode {
 		"ImageDeleted",
 		"ImageAccessDenied",
 		"InvalidImage",
+		"KMSKeyAccessDenied",
+		"KMSKeyNotFound",
+		"InvalidStateKMSKey",
+		"DisabledKMSKey",
+		"EFSIOError",
+		"EFSMountConnectivityError",
+		"EFSMountFailure",
+		"EFSMountTimeout",
+		"InvalidRuntime",
+		"InvalidZipFileException",
+		"FunctionError",
 	}
 }
 
@@ -286,6 +326,7 @@ const (
 	RuntimeRuby27       Runtime = "ruby2.7"
 	RuntimeProvided     Runtime = "provided"
 	RuntimeProvidedal2  Runtime = "provided.al2"
+	RuntimeNodejs18x    Runtime = "nodejs18.x"
 )
 
 // Values returns all known values for Runtime. Note that this can be expanded in
@@ -320,6 +361,43 @@ func (Runtime) Values() []Runtime {
 		"ruby2.7",
 		"provided",
 		"provided.al2",
+		"nodejs18.x",
+	}
+}
+
+type SnapStartApplyOn string
+
+// Enum values for SnapStartApplyOn
+const (
+	SnapStartApplyOnPublishedVersions SnapStartApplyOn = "PublishedVersions"
+	SnapStartApplyOnNone              SnapStartApplyOn = "None"
+)
+
+// Values returns all known values for SnapStartApplyOn. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (SnapStartApplyOn) Values() []SnapStartApplyOn {
+	return []SnapStartApplyOn{
+		"PublishedVersions",
+		"None",
+	}
+}
+
+type SnapStartOptimizationStatus string
+
+// Enum values for SnapStartOptimizationStatus
+const (
+	SnapStartOptimizationStatusOn  SnapStartOptimizationStatus = "On"
+	SnapStartOptimizationStatusOff SnapStartOptimizationStatus = "Off"
+)
+
+// Values returns all known values for SnapStartOptimizationStatus. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (SnapStartOptimizationStatus) Values() []SnapStartOptimizationStatus {
+	return []SnapStartOptimizationStatus{
+		"On",
+		"Off",
 	}
 }
 
@@ -392,6 +470,17 @@ const (
 	StateReasonCodeImageDeleted                StateReasonCode = "ImageDeleted"
 	StateReasonCodeImageAccessDenied           StateReasonCode = "ImageAccessDenied"
 	StateReasonCodeInvalidImage                StateReasonCode = "InvalidImage"
+	StateReasonCodeKMSKeyAccessDenied          StateReasonCode = "KMSKeyAccessDenied"
+	StateReasonCodeKMSKeyNotFound              StateReasonCode = "KMSKeyNotFound"
+	StateReasonCodeInvalidStateKMSKey          StateReasonCode = "InvalidStateKMSKey"
+	StateReasonCodeDisabledKMSKey              StateReasonCode = "DisabledKMSKey"
+	StateReasonCodeEFSIOError                  StateReasonCode = "EFSIOError"
+	StateReasonCodeEFSMountConnectivityError   StateReasonCode = "EFSMountConnectivityError"
+	StateReasonCodeEFSMountFailure             StateReasonCode = "EFSMountFailure"
+	StateReasonCodeEFSMountTimeout             StateReasonCode = "EFSMountTimeout"
+	StateReasonCodeInvalidRuntime              StateReasonCode = "InvalidRuntime"
+	StateReasonCodeInvalidZipFileException     StateReasonCode = "InvalidZipFileException"
+	StateReasonCodeFunctionError               StateReasonCode = "FunctionError"
 )
 
 // Values returns all known values for StateReasonCode. Note that this can be
@@ -412,6 +501,17 @@ func (StateReasonCode) Values() []StateReasonCode {
 		"ImageDeleted",
 		"ImageAccessDenied",
 		"InvalidImage",
+		"KMSKeyAccessDenied",
+		"KMSKeyNotFound",
+		"InvalidStateKMSKey",
+		"DisabledKMSKey",
+		"EFSIOError",
+		"EFSMountConnectivityError",
+		"EFSMountFailure",
+		"EFSMountTimeout",
+		"InvalidRuntime",
+		"InvalidZipFileException",
+		"FunctionError",
 	}
 }
 
@@ -424,6 +524,7 @@ const (
 	ThrottleReasonReservedFunctionConcurrentInvocationLimitExceeded ThrottleReason = "ReservedFunctionConcurrentInvocationLimitExceeded"
 	ThrottleReasonReservedFunctionInvocationRateLimitExceeded       ThrottleReason = "ReservedFunctionInvocationRateLimitExceeded"
 	ThrottleReasonCallerRateLimitExceeded                           ThrottleReason = "CallerRateLimitExceeded"
+	ThrottleReasonConcurrentSnapshotCreateLimitExceeded             ThrottleReason = "ConcurrentSnapshotCreateLimitExceeded"
 )
 
 // Values returns all known values for ThrottleReason. Note that this can be
@@ -436,6 +537,7 @@ func (ThrottleReason) Values() []ThrottleReason {
 		"ReservedFunctionConcurrentInvocationLimitExceeded",
 		"ReservedFunctionInvocationRateLimitExceeded",
 		"CallerRateLimitExceeded",
+		"ConcurrentSnapshotCreateLimitExceeded",
 	}
 }
 
@@ -454,5 +556,25 @@ func (TracingMode) Values() []TracingMode {
 	return []TracingMode{
 		"Active",
 		"PassThrough",
+	}
+}
+
+type UpdateRuntimeOn string
+
+// Enum values for UpdateRuntimeOn
+const (
+	UpdateRuntimeOnAuto           UpdateRuntimeOn = "Auto"
+	UpdateRuntimeOnManual         UpdateRuntimeOn = "Manual"
+	UpdateRuntimeOnFunctionUpdate UpdateRuntimeOn = "FunctionUpdate"
+)
+
+// Values returns all known values for UpdateRuntimeOn. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (UpdateRuntimeOn) Values() []UpdateRuntimeOn {
+	return []UpdateRuntimeOn{
+		"Auto",
+		"Manual",
+		"FunctionUpdate",
 	}
 }

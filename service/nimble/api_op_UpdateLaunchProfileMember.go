@@ -30,7 +30,7 @@ func (c *Client) UpdateLaunchProfileMember(ctx context.Context, params *UpdateLa
 
 type UpdateLaunchProfileMemberInput struct {
 
-	// The Launch Profile ID.
+	// The ID of the launch profile used to control access from the streaming session.
 	//
 	// This member is required.
 	LaunchProfileId *string
@@ -40,7 +40,7 @@ type UpdateLaunchProfileMemberInput struct {
 	// This member is required.
 	Persona types.LaunchProfilePersona
 
-	// The principal ID. This currently supports a Amazon Web Services SSO UserId.
+	// The principal ID. This currently supports a IAM Identity Center UserId.
 	//
 	// This member is required.
 	PrincipalId *string
@@ -51,8 +51,9 @@ type UpdateLaunchProfileMemberInput struct {
 	StudioId *string
 
 	// Unique, case-sensitive identifier that you provide to ensure the idempotency of
-	// the request. If you don’t specify a client token, the AWS SDK automatically
-	// generates a client token and uses it for the request to ensure idempotency.
+	// the request. If you don’t specify a client token, the Amazon Web Services SDK
+	// automatically generates a client token and uses it for the request to ensure
+	// idempotency.
 	ClientToken *string
 
 	noSmithyDocumentSerde

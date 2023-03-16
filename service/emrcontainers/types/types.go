@@ -77,7 +77,7 @@ type ContainerInfo interface {
 	isContainerInfo()
 }
 
-// The information about the EKS cluster.
+// The information about the Amazon EKS cluster.
 type ContainerInfoMemberEksInfo struct {
 	Value EksInfo
 
@@ -94,7 +94,8 @@ type ContainerProvider struct {
 	// This member is required.
 	Id *string
 
-	// The type of the container provider. EKS is the only supported type as of now.
+	// The type of the container provider. Amazon EKS is the only supported type as of
+	// now.
 	//
 	// This member is required.
 	Type ContainerProviderType
@@ -105,10 +106,10 @@ type ContainerProvider struct {
 	noSmithyDocumentSerde
 }
 
-// The information about the EKS cluster.
+// The information about the Amazon EKS cluster.
 type EksInfo struct {
 
-	// The namespaces of the EKS cluster.
+	// The namespaces of the Amazon EKS cluster.
 	Namespace *string
 
 	noSmithyDocumentSerde
@@ -180,8 +181,12 @@ type Endpoint struct {
 	noSmithyDocumentSerde
 }
 
-// Specify the driver that the job runs on.
+// Specify the driver that the job runs on. Exactly one of the two available job
+// drivers is required, either sparkSqlJobDriver or sparkSubmitJobDriver.
 type JobDriver struct {
+
+	// The job driver for job type.
+	SparkSqlJobDriver *SparkSqlJobDriver
 
 	// The job driver parameters specified for spark submit.
 	SparkSubmitJobDriver *SparkSubmitJobDriver
@@ -229,6 +234,12 @@ type JobRun struct {
 	// The release version of Amazon EMR.
 	ReleaseLabel *string
 
+	// The configuration of the retry policy that the job runs on.
+	RetryPolicyConfiguration *RetryPolicyConfiguration
+
+	// The current status of the retry policy executed on the job.
+	RetryPolicyExecution *RetryPolicyExecution
+
 	// The state of the job run.
 	State JobRunState
 
@@ -240,6 +251,76 @@ type JobRun struct {
 
 	// The ID of the job run's virtual cluster.
 	VirtualClusterId *string
+
+	noSmithyDocumentSerde
+}
+
+// This entity describes a job template. Job template stores values of StartJobRun
+// API request in a template and can be used to start a job run. Job template
+// allows two use cases: avoid repeating recurring StartJobRun API request values,
+// enforcing certain values in StartJobRun API request.
+type JobTemplate struct {
+
+	// The job template data which holds values of StartJobRun API request.
+	//
+	// This member is required.
+	JobTemplateData *JobTemplateData
+
+	// The ARN of the job template.
+	Arn *string
+
+	// The date and time when the job template was created.
+	CreatedAt *time.Time
+
+	// The user who created the job template.
+	CreatedBy *string
+
+	// The error message in case the decryption of job template fails.
+	DecryptionError *string
+
+	// The ID of the job template.
+	Id *string
+
+	// The KMS key ARN used to encrypt the job template.
+	KmsKeyArn *string
+
+	// The name of the job template.
+	Name *string
+
+	// The tags assigned to the job template.
+	Tags map[string]string
+
+	noSmithyDocumentSerde
+}
+
+// The values of StartJobRun API requests used in job runs started using the job
+// template.
+type JobTemplateData struct {
+
+	// The execution role ARN of the job run.
+	//
+	// This member is required.
+	ExecutionRoleArn *string
+
+	// Specify the driver that the job runs on. Exactly one of the two available job
+	// drivers is required, either sparkSqlJobDriver or sparkSubmitJobDriver.
+	//
+	// This member is required.
+	JobDriver *JobDriver
+
+	// The release version of Amazon EMR.
+	//
+	// This member is required.
+	ReleaseLabel *string
+
+	// The configuration settings that are used to override defaults configuration.
+	ConfigurationOverrides *ParametricConfigurationOverrides
+
+	// The tags assigned to jobs started using the job template.
+	JobTags map[string]string
+
+	// The configuration of parameters existing in the job template.
+	ParameterConfiguration map[string]TemplateParameterConfiguration
 
 	noSmithyDocumentSerde
 }
@@ -259,6 +340,82 @@ type MonitoringConfiguration struct {
 	noSmithyDocumentSerde
 }
 
+// A configuration for CloudWatch monitoring. You can configure your jobs to send
+// log information to CloudWatch Logs. This data type allows job template
+// parameters to be specified within.
+type ParametricCloudWatchMonitoringConfiguration struct {
+
+	// The name of the log group for log publishing.
+	LogGroupName *string
+
+	// The specified name prefix for log streams.
+	LogStreamNamePrefix *string
+
+	noSmithyDocumentSerde
+}
+
+// A configuration specification to be used to override existing configurations.
+// This data type allows job template parameters to be specified within.
+type ParametricConfigurationOverrides struct {
+
+	// The configurations for the application running by the job run.
+	ApplicationConfiguration []Configuration
+
+	// The configurations for monitoring.
+	MonitoringConfiguration *ParametricMonitoringConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// Configuration setting for monitoring. This data type allows job template
+// parameters to be specified within.
+type ParametricMonitoringConfiguration struct {
+
+	// Monitoring configurations for CloudWatch.
+	CloudWatchMonitoringConfiguration *ParametricCloudWatchMonitoringConfiguration
+
+	// Monitoring configurations for the persistent application UI.
+	PersistentAppUI *string
+
+	// Amazon S3 configuration for monitoring log publishing.
+	S3MonitoringConfiguration *ParametricS3MonitoringConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// Amazon S3 configuration for monitoring log publishing. You can configure your
+// jobs to send log information to Amazon S3. This data type allows job template
+// parameters to be specified within.
+type ParametricS3MonitoringConfiguration struct {
+
+	// Amazon S3 destination URI for log publishing.
+	LogUri *string
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of the retry policy that the job runs on.
+type RetryPolicyConfiguration struct {
+
+	// The maximum number of attempts on the job's driver.
+	//
+	// This member is required.
+	MaxAttempts *int32
+
+	noSmithyDocumentSerde
+}
+
+// The current status of the retry policy executed on the job.
+type RetryPolicyExecution struct {
+
+	// The current number of attempts made on the driver of the job.
+	//
+	// This member is required.
+	CurrentAttemptCount *int32
+
+	noSmithyDocumentSerde
+}
+
 // Amazon S3 configuration for monitoring log publishing. You can configure your
 // jobs to send log information to Amazon S3.
 type S3MonitoringConfiguration struct {
@@ -267,6 +424,18 @@ type S3MonitoringConfiguration struct {
 	//
 	// This member is required.
 	LogUri *string
+
+	noSmithyDocumentSerde
+}
+
+// The job driver for job type.
+type SparkSqlJobDriver struct {
+
+	// The SQL file to be executed.
+	EntryPoint *string
+
+	// The Spark parameters to be included in the Spark SQL command.
+	SparkSqlParameters *string
 
 	noSmithyDocumentSerde
 }
@@ -288,12 +457,25 @@ type SparkSubmitJobDriver struct {
 	noSmithyDocumentSerde
 }
 
+// The configuration of a job template parameter.
+type TemplateParameterConfiguration struct {
+
+	// The default value for the job template parameter.
+	DefaultValue *string
+
+	// The type of the job template parameter. Allowed values are: ‘STRING’, ‘NUMBER’.
+	Type TemplateParameterDataType
+
+	noSmithyDocumentSerde
+}
+
 // This entity describes a virtual cluster. A virtual cluster is a Kubernetes
 // namespace that Amazon EMR is registered with. Amazon EMR uses virtual clusters
 // to run jobs and host endpoints. Multiple virtual clusters can be backed by the
 // same physical cluster. However, each virtual cluster maps to one namespace on an
-// EKS cluster. Virtual clusters do not create any active resources that contribute
-// to your bill or that require lifecycle management outside the service.
+// Amazon EKS cluster. Virtual clusters do not create any active resources that
+// contribute to your bill or that require lifecycle management outside the
+// service.
 type VirtualCluster struct {
 
 	// The ARN of the virtual cluster.

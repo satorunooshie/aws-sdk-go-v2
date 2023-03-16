@@ -1,3 +1,84 @@
+# v1.17.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.17.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.17.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.17.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.16.5 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.4 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.3 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.16.2 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.16.1 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.16.0 (2022-11-08)
+
+* **Feature**: Support added for requesting elliptic curve certificate key algorithm types P-256 (EC_prime256v1) and P-384 (EC_secp384r1).
+
+# v1.15.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.0 (2022-09-29)
+
+* **Feature**: This update returns additional certificate details such as certificate SANs and allows sorting in the ListCertificates API.
+
+# v1.14.18 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.17 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.16 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.15 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.14.14 (2022-08-30)
 
 * No change notes available for this release.

@@ -6528,14 +6528,14 @@ func awsAwsjson11_serializeDocumentSchemaAttributeType(v *types.SchemaAttributeT
 		ok.String(string(v.AttributeDataType))
 	}
 
-	if v.DeveloperOnlyAttribute {
+	if v.DeveloperOnlyAttribute != nil {
 		ok := object.Key("DeveloperOnlyAttribute")
-		ok.Boolean(v.DeveloperOnlyAttribute)
+		ok.Boolean(*v.DeveloperOnlyAttribute)
 	}
 
-	if v.Mutable {
+	if v.Mutable != nil {
 		ok := object.Key("Mutable")
-		ok.Boolean(v.Mutable)
+		ok.Boolean(*v.Mutable)
 	}
 
 	if v.Name != nil {
@@ -6550,9 +6550,9 @@ func awsAwsjson11_serializeDocumentSchemaAttributeType(v *types.SchemaAttributeT
 		}
 	}
 
-	if v.Required {
+	if v.Required != nil {
 		ok := object.Key("Required")
-		ok.Boolean(v.Required)
+		ok.Boolean(*v.Required)
 	}
 
 	if v.StringAttributeConstraints != nil {
@@ -7942,6 +7942,11 @@ func awsAwsjson11_serializeOpDocumentCreateUserPoolClientInput(v *CreateUserPool
 		}
 	}
 
+	if v.AuthSessionValidity != nil {
+		ok := object.Key("AuthSessionValidity")
+		ok.Integer(*v.AuthSessionValidity)
+	}
+
 	if v.CallbackURLs != nil {
 		ok := object.Key("CallbackURLs")
 		if err := awsAwsjson11_serializeDocumentCallbackURLsListType(v.CallbackURLs, ok); err != nil {
@@ -8093,6 +8098,11 @@ func awsAwsjson11_serializeOpDocumentCreateUserPoolInput(v *CreateUserPoolInput,
 		if err := awsAwsjson11_serializeDocumentVerifiedAttributesListType(v.AutoVerifiedAttributes, ok); err != nil {
 			return err
 		}
+	}
+
+	if len(v.DeletionProtection) > 0 {
+		ok := object.Key("DeletionProtection")
+		ok.String(string(v.DeletionProtection))
 	}
 
 	if v.DeviceConfiguration != nil {
@@ -9532,6 +9542,11 @@ func awsAwsjson11_serializeOpDocumentUpdateUserPoolClientInput(v *UpdateUserPool
 		}
 	}
 
+	if v.AuthSessionValidity != nil {
+		ok := object.Key("AuthSessionValidity")
+		ok.Integer(*v.AuthSessionValidity)
+	}
+
 	if v.CallbackURLs != nil {
 		ok := object.Key("CallbackURLs")
 		if err := awsAwsjson11_serializeDocumentCallbackURLsListType(v.CallbackURLs, ok); err != nil {
@@ -9676,6 +9691,11 @@ func awsAwsjson11_serializeOpDocumentUpdateUserPoolInput(v *UpdateUserPoolInput,
 		if err := awsAwsjson11_serializeDocumentVerifiedAttributesListType(v.AutoVerifiedAttributes, ok); err != nil {
 			return err
 		}
+	}
+
+	if len(v.DeletionProtection) > 0 {
+		ok := object.Key("DeletionProtection")
+		ok.String(string(v.DeletionProtection))
 	}
 
 	if v.DeviceConfiguration != nil {

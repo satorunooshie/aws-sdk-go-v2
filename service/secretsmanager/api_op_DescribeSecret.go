@@ -14,6 +14,10 @@ import (
 
 // Retrieves the details of a secret. It does not include the encrypted secret
 // value. Secrets Manager only returns fields that have a value in the response.
+// Secrets Manager generates a CloudTrail log entry when you call this action. Do
+// not include sensitive information in request parameters because it might be
+// logged. For more information, see Logging Secrets Manager events with CloudTrail
+// (https://docs.aws.amazon.com/secretsmanager/latest/userguide/retrieve-ct-entries.html).
 // Required permissions: secretsmanager:DescribeSecret. For more information, see
 // IAM policy actions for Secrets Manager
 // (https://docs.aws.amazon.com/secretsmanager/latest/userguide/reference_iam-permissions.html#reference_iam-permissions_actions)
@@ -86,6 +90,11 @@ type DescribeSecretOutput struct {
 	// The name of the secret.
 	Name *string
 
+	// The next date and time that Secrets Manager will rotate the secret, rounded to
+	// the nearest hour. If the secret isn't configured for rotation, Secrets Manager
+	// returns null.
+	NextRotationDate *time.Time
+
 	// The ID of the service that created this secret. For more information, see
 	// Secrets managed by other Amazon Web Services services
 	// (https://docs.aws.amazon.com/secretsmanager/latest/userguide/service-linked-secrets.html).
@@ -109,7 +118,7 @@ type DescribeSecretOutput struct {
 
 	// Specifies whether automatic rotation is turned on for this secret. To turn on
 	// rotation, use RotateSecret. To turn off rotation, use CancelRotateSecret.
-	RotationEnabled bool
+	RotationEnabled *bool
 
 	// The ARN of the Lambda function that Secrets Manager invokes to rotate the
 	// secret.

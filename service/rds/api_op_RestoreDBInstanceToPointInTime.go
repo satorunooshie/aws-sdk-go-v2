@@ -53,6 +53,12 @@ type RestoreDBInstanceToPointInTimeInput struct {
 	// This member is required.
 	TargetDBInstanceIdentifier *string
 
+	// The amount of storage (in gibibytes) to allocate initially for the DB instance.
+	// Follow the allocation rules specified in CreateDBInstance. Be sure to allocate
+	// enough storage for your new DB instance so that the restore operation can
+	// succeed. You can also allocate additional storage for future growth.
+	AllocatedStorage *int32
+
 	// A value that indicates whether minor version upgrades are applied automatically
 	// to the DB instance during the maintenance window. This setting doesn't apply to
 	// RDS Custom.
@@ -166,7 +172,7 @@ type RestoreDBInstanceToPointInTimeInput struct {
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html) in
 	// the Amazon RDS User Guide. For more information about CoIPs, see Customer-owned
 	// IP addresses
-	// (https://docs.aws.amazon.com/outposts/latest/userguide/outposts-networking-components.html#ip-addressing)
+	// (https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing)
 	// in the Amazon Web Services Outposts User Guide.
 	EnableCustomerOwnedIp *bool
 
@@ -299,9 +305,14 @@ type RestoreDBInstanceToPointInTimeInput struct {
 	// The resource ID of the source DB instance from which to restore.
 	SourceDbiResourceId *string
 
+	// Specifies the storage throughput value for the DB instance. This setting doesn't
+	// apply to RDS Custom or Amazon Aurora.
+	StorageThroughput *int32
+
 	// Specifies the storage type to be associated with the DB instance. Valid values:
-	// standard | gp2 | io1 If you specify io1, you must also include a value for the
-	// Iops parameter. Default: io1 if the Iops parameter is specified, otherwise gp2
+	// gp2 | gp3 | io1 | standard If you specify io1 or gp3, you must also include a
+	// value for the Iops parameter. Default: io1 if the Iops parameter is specified,
+	// otherwise gp2
 	StorageType *string
 
 	// A list of tags. For more information, see Tagging Amazon RDS Resources

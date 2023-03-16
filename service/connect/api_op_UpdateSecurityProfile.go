@@ -29,8 +29,9 @@ func (c *Client) UpdateSecurityProfile(ctx context.Context, params *UpdateSecuri
 
 type UpdateSecurityProfileInput struct {
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	//
 	// This member is required.
 	InstanceId *string
@@ -40,11 +41,21 @@ type UpdateSecurityProfileInput struct {
 	// This member is required.
 	SecurityProfileId *string
 
+	// The list of tags that a security profile uses to restrict access to resources in
+	// Amazon Connect.
+	AllowedAccessControlTags map[string]string
+
 	// The description of the security profile.
 	Description *string
 
-	// The permissions granted to a security profile.
+	// The permissions granted to a security profile. For a list of valid permissions,
+	// see List of security profile permissions
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/security-profile-list.html).
 	Permissions []string
+
+	// The list of resources that a security profile applies tag restrictions to in
+	// Amazon Connect.
+	TagRestrictedResources []string
 
 	noSmithyDocumentSerde
 }

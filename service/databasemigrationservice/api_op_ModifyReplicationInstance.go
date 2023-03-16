@@ -64,6 +64,13 @@ type ModifyReplicationInstanceInput struct {
 	//
 	// * DMS has enabled automatic
 	// patching for the given engine version.
+	//
+	// When AutoMinorVersionUpgrade is enabled,
+	// DMS uses the current default engine version when you modify a replication
+	// instance. For example, if you set EngineVersion to a lower version number than
+	// the current default version, DMS uses the default version. If
+	// AutoMinorVersionUpgrade isn’t enabled when you modify a replication instance,
+	// DMS uses the engine version specified by the EngineVersion parameter.
 	AutoMinorVersionUpgrade *bool
 
 	// The engine version number of the replication instance. When modifying a major
@@ -73,6 +80,11 @@ type ModifyReplicationInstanceInput struct {
 	// Specifies whether the replication instance is a Multi-AZ deployment. You can't
 	// set the AvailabilityZone parameter if the Multi-AZ parameter is set to true.
 	MultiAZ *bool
+
+	// The type of IP address protocol used by a replication instance, such as IPv4
+	// only or Dual-stack that supports both IPv4 and IPv6 addressing. IPv6 only is not
+	// yet supported.
+	NetworkType *string
 
 	// The weekly time range (in UTC) during which system maintenance can occur, which
 	// might result in an outage. Changing this parameter does not result in an outage,

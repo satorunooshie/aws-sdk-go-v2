@@ -1,3 +1,76 @@
+# v1.19.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.19.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+* **Dependency Update**: Upgrade smithy to 1.27.2 and correct empty query list serialization.
+
+# v1.19.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.19.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.18.5 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.4 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.3 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.18.2 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.18.1 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.18.0 (2022-10-26)
+
+* **Feature**: Added a new cluster-level attribute to set the capacity range for Neptune Serverless instances.
+
+# v1.17.14 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.13 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.12 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.11 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.10 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.9 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.17.8 (2022-08-30)
 
 * No change notes available for this release.

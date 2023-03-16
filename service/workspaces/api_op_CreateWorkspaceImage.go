@@ -70,13 +70,13 @@ type CreateWorkspaceImageOutput struct {
 	// The operating system that the image is running.
 	OperatingSystem *types.OperatingSystem
 
-	// The identifier of the AWS account that owns the image.
+	// The identifier of the Amazon Web Services account that owns the image.
 	OwnerAccountId *string
 
 	// Specifies whether the image is running on dedicated hardware. When Bring Your
 	// Own License (BYOL) is enabled, this value is set to DEDICATED. For more
 	// information, see  Bring Your Own Windows Desktop Images.
-	// (https://docs.aws.amazon.com/workspaces/latest/adminguide/byol-windows-images.htm)
+	// (https://docs.aws.amazon.com/workspaces/latest/adminguide/byol-windows-images.htm).
 	RequiredTenancy types.WorkspaceImageRequiredTenancy
 
 	// The availability status of the image.

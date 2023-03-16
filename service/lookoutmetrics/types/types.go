@@ -598,6 +598,20 @@ type FileFormatDescriptor struct {
 	noSmithyDocumentSerde
 }
 
+// Describes a filter for choosing a subset of dimension values. Each filter
+// consists of the dimension that you want to include and the condition statement.
+// The condition statement is specified in the FilterOperation object.
+type Filter struct {
+
+	// The value that you want to include in the filter.
+	DimensionValue *string
+
+	// The condition to apply.
+	FilterOperation FilterOperation
+
+	noSmithyDocumentSerde
+}
+
 // Aggregated details about the measures contributing to the anomaly group, and the
 // measures potentially impacted by the anomaly group.
 type InterMetricImpactDetails struct {
@@ -708,6 +722,21 @@ type MetricSetDataQualityMetric struct {
 	noSmithyDocumentSerde
 }
 
+// Describes a list of filters for choosing a subset of dimension values. Each
+// filter consists of the dimension and one of its values that you want to include.
+// When multiple dimensions or values are specified, the dimensions are joined with
+// an AND operation and the values are joined with an OR operation.
+type MetricSetDimensionFilter struct {
+
+	// The list of filters that you are applying.
+	FilterList []Filter
+
+	// The dimension that you want to filter on.
+	Name *string
+
+	noSmithyDocumentSerde
+}
+
 // Contains information about a dataset.
 type MetricSetSummary struct {
 
@@ -775,7 +804,7 @@ type RDSSourceConfig struct {
 	DatabaseName *string
 
 	// The port number where the database can be accessed.
-	DatabasePort int32
+	DatabasePort *int32
 
 	// The Amazon Resource Name (ARN) of the role.
 	RoleArn *string
@@ -806,7 +835,7 @@ type RedshiftSourceConfig struct {
 	DatabaseName *string
 
 	// The port number where the database can be accessed.
-	DatabasePort int32
+	DatabasePort *int32
 
 	// The Amazon Resource Name (ARN) of the role providing access to the database.
 	RoleArn *string

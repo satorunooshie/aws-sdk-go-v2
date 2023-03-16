@@ -51,8 +51,24 @@ type UpdateAddonInput struct {
 	// the request.
 	ClientRequestToken *string
 
-	// How to resolve parameter value conflicts when applying the new version of the
-	// add-on to the cluster.
+	// The set of configuration values for the add-on that's created. The values that
+	// you provide are validated against the schema in DescribeAddonConfiguration
+	// (https://docs.aws.amazon.com/eks/latest/APIReference/API_DescribeAddonConfiguration.html).
+	ConfigurationValues *string
+
+	// How to resolve field value conflicts for an Amazon EKS add-on if you've changed
+	// a value from the Amazon EKS default value. Conflicts are handled based on the
+	// option you choose:
+	//
+	// * None – Amazon EKS doesn't change the value. The update
+	// might fail.
+	//
+	// * Overwrite – Amazon EKS overwrites the changed value back to the
+	// Amazon EKS default value.
+	//
+	// * Preserve – Amazon EKS preserves the value. If you
+	// choose this option, we recommend that you test any field and value changes on a
+	// non-production cluster before updating the add-on on your production cluster.
 	ResolveConflicts types.ResolveConflicts
 
 	// The Amazon Resource Name (ARN) of an existing IAM role to bind to the add-on's

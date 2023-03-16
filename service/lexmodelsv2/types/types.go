@@ -93,6 +93,22 @@ type AggregatedUtterancesSummary struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies the allowed input types.
+type AllowedInputTypes struct {
+
+	// Indicates whether audio input is allowed.
+	//
+	// This member is required.
+	AllowAudioInput *bool
+
+	// Indicates whether DTMF input is allowed.
+	//
+	// This member is required.
+	AllowDTMFInput *bool
+
+	noSmithyDocumentSerde
+}
+
 // The object containing information that associates the recommended intent/slot
 // type with a conversation.
 type AssociatedTranscript struct {
@@ -122,14 +138,32 @@ type AssociatedTranscriptFilter struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies the audio and DTMF input specification.
+type AudioAndDTMFInputSpecification struct {
+
+	// Time for which a bot waits before assuming that the customer isn't going to
+	// speak or press a key. This timeout is shared between Audio and DTMF inputs.
+	//
+	// This member is required.
+	StartTimeoutMs *int32
+
+	// Specifies the settings on audio input.
+	AudioSpecification *AudioSpecification
+
+	// Specifies the settings on DTMF input.
+	DtmfSpecification *DTMFSpecification
+
+	noSmithyDocumentSerde
+}
+
 // The location of audio log files collected when conversation logging is enabled
 // for a bot.
 type AudioLogDestination struct {
 
 	// The Amazon S3 bucket where the audio log files are stored. The IAM role
 	// specified in the roleArn parameter of the CreateBot
-	// (https://docs.aws.amazon.com/lexv2/latest/dg/API_CreateBot.html) operation must
-	// have permission to write to this bucket.
+	// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_CreateBot.html)
+	// operation must have permission to write to this bucket.
 	//
 	// This member is required.
 	S3Bucket *S3BucketLogDestination
@@ -152,6 +186,24 @@ type AudioLogSetting struct {
 	//
 	// This member is required.
 	Enabled bool
+
+	noSmithyDocumentSerde
+}
+
+// Specifies the audio input specifications.
+type AudioSpecification struct {
+
+	// Time for which a bot waits after the customer stops speaking to assume the
+	// utterance is finished.
+	//
+	// This member is required.
+	EndTimeoutMs *int32
+
+	// Time for how long Amazon Lex waits before speech input is truncated and the
+	// speech is returned to application.
+	//
+	// This member is required.
+	MaxLengthMs *int32
 
 	noSmithyDocumentSerde
 }
@@ -189,12 +241,13 @@ type BotAliasLocaleSettings struct {
 }
 
 // Summary information about bot aliases returned from the ListBotAliases
-// (https://docs.aws.amazon.com/lexv2/latest/dg/API_ListBotAliases.html) operation.
+// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_ListBotAliases.html)
+// operation.
 type BotAliasSummary struct {
 
 	// The unique identifier assigned to the bot alias. You can use this ID to get
 	// detailed information about the alias using the DescribeBotAlias
-	// (https://docs.aws.amazon.com/lexv2/latest/dg/API_DescribeBotAlias.html)
+	// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_DescribeBotAlias.html)
 	// operation.
 	BotAliasId *string
 
@@ -425,7 +478,8 @@ type BotLocaleSortBy struct {
 }
 
 // Summary information about bot locales returned by the ListBotLocales
-// (https://docs.aws.amazon.com/lexv2/latest/dg/API_ListBotLocales.html) operation.
+// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_ListBotLocales.html)
+// operation.
 type BotLocaleSummary struct {
 
 	// The current status of the bot locale. When the status is Built the locale is
@@ -446,6 +500,37 @@ type BotLocaleSummary struct {
 
 	// The name of the bot locale.
 	LocaleName *string
+
+	noSmithyDocumentSerde
+}
+
+// A bot that is a member of a network of bots.
+type BotMember struct {
+
+	// The alias ID of a bot that is a member of this network of bots.
+	//
+	// This member is required.
+	BotMemberAliasId *string
+
+	// The alias name of a bot that is a member of this network of bots.
+	//
+	// This member is required.
+	BotMemberAliasName *string
+
+	// The unique ID of a bot that is a member of this network of bots.
+	//
+	// This member is required.
+	BotMemberId *string
+
+	// The unique name of a bot that is a member of this network of bots.
+	//
+	// This member is required.
+	BotMemberName *string
+
+	// The version of a bot that is a member of this network of bots.
+	//
+	// This member is required.
+	BotMemberVersion *string
 
 	noSmithyDocumentSerde
 }
@@ -520,12 +605,14 @@ type BotSortBy struct {
 }
 
 // Summary information about a bot returned by the ListBots
-// (https://docs.aws.amazon.com/lexv2/latest/dg/API_ListBots.html) operation.
+// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_ListBots.html)
+// operation.
 type BotSummary struct {
 
 	// The unique identifier assigned to the bot. Use this ID to get detailed
 	// information about the bot with the DescribeBot
-	// (https://docs.aws.amazon.com/lexv2/latest/dg/API_DescribeBot.html) operation.
+	// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_DescribeBot.html)
+	// operation.
 	BotId *string
 
 	// The name of the bot.
@@ -534,6 +621,9 @@ type BotSummary struct {
 	// The current status of the bot. When the status is Available the bot is ready for
 	// use.
 	BotStatus BotStatus
+
+	// The type of the bot.
+	BotType BotType
 
 	// The description of the bot.
 	Description *string
@@ -575,7 +665,7 @@ type BotVersionSortBy struct {
 }
 
 // Summary information about a bot version returned by the ListBotVersions
-// (https://docs.aws.amazon.com/lexv2/latest/dg/API_ListBotVersions.html)
+// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_ListBotVersions.html)
 // operation.
 type BotVersionSummary struct {
 
@@ -616,7 +706,7 @@ type BuiltInIntentSortBy struct {
 }
 
 // Provides summary information about a built-in intent for the  ListBuiltInIntents
-// (https://docs.aws.amazon.com/lexv2/latest/dg/API_ListBuiltInIntents.html)
+// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_ListBuiltInIntents.html)
 // operation.
 type BuiltInIntentSummary struct {
 
@@ -648,7 +738,7 @@ type BuiltInSlotTypeSortBy struct {
 
 // Provides summary information about a built-in slot type for the
 // ListBuiltInSlotTypes
-// (https://docs.aws.amazon.com/lexv2/latest/dg/API_ListBuiltInSlotTypes.html)
+// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_ListBuiltInSlotTypes.html)
 // operation.
 type BuiltInSlotTypeSummary struct {
 
@@ -708,6 +798,16 @@ type CodeHookSpecification struct {
 	//
 	// This member is required.
 	LambdaCodeHook *LambdaCodeHook
+
+	noSmithyDocumentSerde
+}
+
+// A composite slot is a combination of two or more slots that capture multiple
+// pieces of information in a single user input.
+type CompositeSlotTypeSetting struct {
+
+	// Subslots in the composite slot.
+	SubSlots []SubSlotTypeComposition
 
 	noSmithyDocumentSerde
 }
@@ -804,6 +904,17 @@ type CustomPayload struct {
 	noSmithyDocumentSerde
 }
 
+// The unique entry identifier for the custom vocabulary items.
+type CustomVocabularyEntryId struct {
+
+	// The unique item identifier for the custom vocabulary items.
+	//
+	// This member is required.
+	ItemId *string
+
+	noSmithyDocumentSerde
+}
+
 // Provides the parameters required for exporting a custom vocabulary.
 type CustomVocabularyExportSpecification struct {
 
@@ -843,6 +954,32 @@ type CustomVocabularyImportSpecification struct {
 	//
 	// This member is required.
 	LocaleId *string
+
+	noSmithyDocumentSerde
+}
+
+// The unique custom vocabulary item from the custom vocabulary list.
+type CustomVocabularyItem struct {
+
+	// The unique item identifer for the custom vocabulary item from the custom
+	// vocabulary list.
+	//
+	// This member is required.
+	ItemId *string
+
+	// The unique phrase for the custom vocabulary item from the custom vocabulary
+	// list.
+	//
+	// This member is required.
+	Phrase *string
+
+	// The DisplayAs value for the custom vocabulary item from the custom vocabulary
+	// list.
+	DisplayAs *string
+
+	// The weight assigned for the custom vocabulary item from the custom vocabulary
+	// list.
+	Weight *int32
 
 	noSmithyDocumentSerde
 }
@@ -986,6 +1123,35 @@ type DialogState struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies the DTMF input specifications.
+type DTMFSpecification struct {
+
+	// The DTMF character that clears the accumulated DTMF digits and immediately ends
+	// the input.
+	//
+	// This member is required.
+	DeletionCharacter *string
+
+	// The DTMF character that immediately ends input. If the user does not press this
+	// character, the input ends after the end timeout.
+	//
+	// This member is required.
+	EndCharacter *string
+
+	// How long the bot should wait after the last DTMF character input before assuming
+	// that the input has concluded.
+	//
+	// This member is required.
+	EndTimeoutMs *int32
+
+	// The maximum number of DTMF digits allowed in an utterance.
+	//
+	// This member is required.
+	MaxLength *int32
+
+	noSmithyDocumentSerde
+}
+
 // Settings that specify the dialog code hook that is called by Amazon Lex between
 // eliciting slot values.
 type ElicitationCodeHookInvocationSetting struct {
@@ -1021,7 +1187,8 @@ type EncryptionSetting struct {
 }
 
 // Filters the response form the ListExports
-// (https://docs.aws.amazon.com/lexv2/latest/dg/API_ListExports.html) operation
+// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_ListExports.html)
+// operation
 type ExportFilter struct {
 
 	// The name of the field to use for filtering.
@@ -1109,6 +1276,24 @@ type ExternalSourceSetting struct {
 
 	// Settings required for a slot type based on a grammar that you provide.
 	GrammarSlotTypeSetting *GrammarSlotTypeSetting
+
+	noSmithyDocumentSerde
+}
+
+// The unique failed custom vocabulary item from the custom vocabulary list.
+type FailedCustomVocabularyItem struct {
+
+	// The unique error code for the failed custom vocabulary item from the custom
+	// vocabulary list.
+	ErrorCode ErrorCode
+
+	// The error message for the failed custom vocabulary item from the custom
+	// vocabulary list.
+	ErrorMessage *string
+
+	// The unique item identifer for the failed custom vocabulary item from the custom
+	// vocabulary list.
+	ItemId *string
 
 	noSmithyDocumentSerde
 }
@@ -1270,7 +1455,8 @@ type ImageResponseCard struct {
 }
 
 // Filters the response from the ListImports
-// (https://docs.aws.amazon.com/lexv2/latest/dg/API_ListImports.html) operation.
+// (https://docs.aws.amazon.com/lexv2/latest/APIReference/API_ListImports.html)
+// operation.
 type ImportFilter struct {
 
 	// The name of the field to use for filtering.
@@ -1685,6 +1871,26 @@ type MultipleValuesSetting struct {
 	noSmithyDocumentSerde
 }
 
+// The new custom vocabulary item from the custom vocabulary list.
+type NewCustomVocabularyItem struct {
+
+	// The unique phrase for the new custom vocabulary item from the custom vocabulary
+	// list.
+	//
+	// This member is required.
+	Phrase *string
+
+	// The display as value assigned to the new custom vocabulary item from the custom
+	// vocabulary list.
+	DisplayAs *string
+
+	// The weight assigned to the new custom vocabulary item from the custom vocabulary
+	// list.
+	Weight *int32
+
+	noSmithyDocumentSerde
+}
+
 // Determines whether Amazon Lex obscures slot values in conversation logs.
 type ObfuscationSetting struct {
 
@@ -1717,6 +1923,22 @@ type OutputContext struct {
 	//
 	// This member is required.
 	TurnsToLive *int32
+
+	noSmithyDocumentSerde
+}
+
+// A network of bots.
+type ParentBotNetwork struct {
+
+	// The identifier of the network of bots assigned by Amazon Lex.
+	//
+	// This member is required.
+	BotId *string
+
+	// The version of the network of bots.
+	//
+	// This member is required.
+	BotVersion *string
 
 	noSmithyDocumentSerde
 }
@@ -1847,6 +2069,26 @@ type Principal struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies the settings on a prompt attempt.
+type PromptAttemptSpecification struct {
+
+	// Indicates the allowed input types of the prompt attempt.
+	//
+	// This member is required.
+	AllowedInputTypes *AllowedInputTypes
+
+	// Indicates whether the user can interrupt a speech prompt attempt from the bot.
+	AllowInterrupt *bool
+
+	// Specifies the settings on audio and DTMF input.
+	AudioAndDTMFInputSpecification *AudioAndDTMFInputSpecification
+
+	// Specifies the settings on text input.
+	TextInputSpecification *TextInputSpecification
+
+	noSmithyDocumentSerde
+}
+
 // Specifies a list of message groups that Amazon Lex sends to a user to elicit a
 // response.
 type PromptSpecification struct {
@@ -1868,6 +2110,9 @@ type PromptSpecification struct {
 
 	// Indicates how a message is selected from a message group among retries.
 	MessageSelectionStrategy MessageSelectionStrategy
+
+	// Specifies the advanced settings on each attempt of the prompt.
+	PromptAttemptsSpecification map[string]PromptAttemptSpecification
 
 	noSmithyDocumentSerde
 }
@@ -2292,7 +2537,8 @@ type SlotValue struct {
 	noSmithyDocumentSerde
 }
 
-// Settings that you can use for eliciting a slot value.
+// Specifies the elicitation setting details for constituent sub slots of a
+// composite slot.
 type SlotValueElicitationSetting struct {
 
 	// Specifies whether the slot is required or optional.
@@ -2400,6 +2646,23 @@ type SlotValueSelectionSetting struct {
 	noSmithyDocumentSerde
 }
 
+// Subslot specifications.
+type Specifications struct {
+
+	// The unique identifier assigned to the slot type.
+	//
+	// This member is required.
+	SlotTypeId *string
+
+	// Specifies the elicitation setting details for constituent sub slots of a
+	// composite slot.
+	//
+	// This member is required.
+	ValueElicitationSetting *SubSlotValueElicitationSetting
+
+	noSmithyDocumentSerde
+}
+
 // Defines a Speech Synthesis Markup Language (SSML) prompt.
 type SSMLMessage struct {
 
@@ -2436,6 +2699,80 @@ type StillWaitingResponseSpecification struct {
 	// Indicates that the user can interrupt the response by speaking while the message
 	// is being played.
 	AllowInterrupt *bool
+
+	noSmithyDocumentSerde
+}
+
+// Specifications for the constituent sub slots and the expression for the
+// composite slot.
+type SubSlotSetting struct {
+
+	// The expression text for defining the constituent sub slots in the composite slot
+	// using logical AND and OR operators.
+	Expression *string
+
+	// Specifications for the constituent sub slots of a composite slot.
+	SlotSpecifications map[string]Specifications
+
+	noSmithyDocumentSerde
+}
+
+// Subslot type composition.
+type SubSlotTypeComposition struct {
+
+	// Name of a constituent sub slot inside a composite slot.
+	//
+	// This member is required.
+	Name *string
+
+	// The unique identifier assigned to a slot type. This refers to either a built-in
+	// slot type or the unique slotTypeId of a custom slot type.
+	//
+	// This member is required.
+	SlotTypeId *string
+
+	noSmithyDocumentSerde
+}
+
+// Subslot elicitation settings. DefaultValueSpecification is a list of default
+// values for a constituent sub slot in a composite slot. Default values are used
+// when Amazon Lex hasn't determined a value for a slot. You can specify default
+// values from context variables, session attributes, and defined values. This is
+// similar to DefaultValueSpecification for slots. PromptSpecification is the
+// prompt that Amazon Lex uses to elicit the sub slot value from the user. This is
+// similar to PromptSpecification for slots.
+type SubSlotValueElicitationSetting struct {
+
+	// Specifies a list of message groups that Amazon Lex sends to a user to elicit a
+	// response.
+	//
+	// This member is required.
+	PromptSpecification *PromptSpecification
+
+	// Defines a list of values that Amazon Lex should use as the default value for a
+	// slot.
+	DefaultValueSpecification *SlotDefaultValueSpecification
+
+	// If you know a specific pattern that users might respond to an Amazon Lex request
+	// for a sub slot value, you can provide those utterances to improve accuracy. This
+	// is optional. In most cases Amazon Lex is capable of understanding user
+	// utterances. This is similar to SampleUtterances for slots.
+	SampleUtterances []SampleUtterance
+
+	// Specifies the prompts that Amazon Lex uses while a bot is waiting for customer
+	// input.
+	WaitAndContinueSpecification *WaitAndContinueSpecification
+
+	noSmithyDocumentSerde
+}
+
+// Specifies the text input specifications.
+type TextInputSpecification struct {
+
+	// Time for which a bot waits before re-prompting a customer for text input.
+	//
+	// This member is required.
+	StartTimeoutMs *int32
 
 	noSmithyDocumentSerde
 }

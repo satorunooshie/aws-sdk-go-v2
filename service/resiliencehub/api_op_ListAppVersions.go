@@ -12,7 +12,7 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the different versions for the Resilience Hub applications.
+// Lists the different versions for the AWS Resilience Hub applications.
 func (c *Client) ListAppVersions(ctx context.Context, params *ListAppVersionsInput, optFns ...func(*Options)) (*ListAppVersionsOutput, error) {
 	if params == nil {
 		params = &ListAppVersionsInput{}
@@ -30,11 +30,11 @@ func (c *Client) ListAppVersions(ctx context.Context, params *ListAppVersionsInp
 
 type ListAppVersionsInput struct {
 
-	// The Amazon Resource Name (ARN) of the application. The format for this ARN is:
-	// arn:partition:resiliencehub:region:account:app/app-id. For more information
-	// about ARNs, see  Amazon Resource Names (ARNs)
+	// The Amazon Resource Name (ARN) of the AWS Resilience Hub application. The format
+	// for this ARN is: arn:partition:resiliencehub:region:account:app/app-id. For more
+	// information about ARNs, see  Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the AWS General Reference guide.
 	//
 	// This member is required.
 	AppArn *string
@@ -139,6 +139,11 @@ var _ ListAppVersionsAPIClient = (*Client)(nil)
 
 // ListAppVersionsPaginatorOptions is the paginator options for ListAppVersions
 type ListAppVersionsPaginatorOptions struct {
+	// The maximum number of results to include in the response. If more results exist
+	// than the specified MaxResults value, a token is included in the response so that
+	// the remaining results can be retrieved.
+	Limit int32
+
 	// Set to true if pagination should stop if the service returns a pagination token
 	// that matches the most recent token provided to the service.
 	StopOnDuplicateToken bool
@@ -160,6 +165,9 @@ func NewListAppVersionsPaginator(client ListAppVersionsAPIClient, params *ListAp
 	}
 
 	options := ListAppVersionsPaginatorOptions{}
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
+	}
 
 	for _, fn := range optFns {
 		fn(&options)
@@ -187,6 +195,12 @@ func (p *ListAppVersionsPaginator) NextPage(ctx context.Context, optFns ...func(
 
 	params := *p.params
 	params.NextToken = p.nextToken
+
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListAppVersions(ctx, &params, optFns...)
 	if err != nil {

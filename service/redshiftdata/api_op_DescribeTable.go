@@ -29,6 +29,12 @@ import (
 // is required. When connecting to a serverless workgroup, specify the workgroup
 // name and database name. Also, permission to call the
 // redshift-serverless:GetCredentials operation is required.
+//
+// For more information
+// about the Amazon Redshift Data API and CLI usage examples, see Using the Amazon
+// Redshift Data API
+// (https://docs.aws.amazon.com/redshift/latest/mgmt/data-api.html) in the Amazon
+// Redshift Management Guide.
 func (c *Client) DescribeTable(ctx context.Context, params *DescribeTableInput, optFns ...func(*Options)) (*DescribeTableOutput, error) {
 	if params == nil {
 		params = &DescribeTableInput{}
@@ -90,9 +96,9 @@ type DescribeTableInput struct {
 	// for all schemas in the database are returned
 	Table *string
 
-	// The serverless workgroup name. This parameter is required when connecting to a
-	// serverless workgroup and authenticating using either Secrets Manager or
-	// temporary credentials.
+	// The serverless workgroup name or Amazon Resource Name (ARN). This parameter is
+	// required when connecting to a serverless workgroup and authenticating using
+	// either Secrets Manager or temporary credentials.
 	WorkgroupName *string
 
 	noSmithyDocumentSerde

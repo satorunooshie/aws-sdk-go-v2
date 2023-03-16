@@ -12,7 +12,8 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Returns a list of the notification rule targets for an AWS account.
+// Returns a list of the notification rule targets for an Amazon Web Services
+// account.
 func (c *Client) ListTargets(ctx context.Context, params *ListTargetsInput, optFns ...func(*Options)) (*ListTargetsOutput, error) {
 	if params == nil {
 		params = &ListTargetsInput{}
@@ -38,7 +39,7 @@ type ListTargetsInput struct {
 
 	// A non-negative integer used to limit the number of returned results. The maximum
 	// number of results that can be returned is 100.
-	MaxResults int32
+	MaxResults *int32
 
 	// An enumeration token that, when provided in a request, returns the next batch of
 	// the results.
@@ -159,8 +160,8 @@ func NewListTargetsPaginator(client ListTargetsAPIClient, params *ListTargetsInp
 	}
 
 	options := ListTargetsPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -190,7 +191,11 @@ func (p *ListTargetsPaginator) NextPage(ctx context.Context, optFns ...func(*Opt
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListTargets(ctx, &params, optFns...)
 	if err != nil {

@@ -44,11 +44,17 @@ type UpdatePackagingGroupInput struct {
 
 type UpdatePackagingGroupOutput struct {
 
+	// The approximate asset count of the PackagingGroup.
+	ApproximateAssetCount int32
+
 	// The ARN of the PackagingGroup.
 	Arn *string
 
 	// CDN Authorization credentials
 	Authorization *types.Authorization
+
+	// The time the PackagingGroup was created.
+	CreatedAt *string
 
 	// The fully qualified domain name for Assets in the PackagingGroup.
 	DomainName *string

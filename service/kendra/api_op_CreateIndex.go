@@ -86,8 +86,8 @@ type CreateIndexInput struct {
 	// displayable.
 	UserContextPolicy types.UserContextPolicy
 
-	// Enables fetching access levels of groups and users from an Amazon Web Services
-	// Single Sign On identity source. To configure this, see
+	// Enables fetching access levels of groups and users from an IAM Identity Center
+	// (successor to Single Sign-On) identity source. To configure this, see
 	// UserGroupResolutionConfiguration
 	// (https://docs.aws.amazon.com/kendra/latest/dg/API_UserGroupResolutionConfiguration.html).
 	UserGroupResolutionConfiguration *types.UserGroupResolutionConfiguration
@@ -100,8 +100,8 @@ type CreateIndexInput struct {
 
 type CreateIndexOutput struct {
 
-	// The unique identifier of the index. Use this identifier when you query an index,
-	// set up a data source, or index a document.
+	// The identifier of the index. Use this identifier when you query an index, set up
+	// a data source, or index a document.
 	Id *string
 
 	// Metadata pertaining to the operation's result.

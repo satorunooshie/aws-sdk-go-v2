@@ -1,3 +1,129 @@
+# v1.40.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.40.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.40.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.40.3 (2023-02-15)
+
+* **Documentation**: Database Activity Stream support for RDS for SQL Server.
+
+# v1.40.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+* **Dependency Update**: Upgrade smithy to 1.27.2 and correct empty query list serialization.
+
+# v1.40.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.40.0 (2023-01-10)
+
+* **Feature**: This release adds support for configuring allocated storage on the CreateDBInstanceReadReplica, RestoreDBInstanceFromDBSnapshot, and RestoreDBInstanceToPointInTime APIs.
+
+# v1.39.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+* **Feature**: This release adds support for specifying which certificate authority (CA) to use for a DB instance's server certificate during DB instance creation, as well as other CA enhancements.
+
+# v1.38.0 (2022-12-28)
+
+* **Feature**: This release adds support for Custom Engine Version (CEV) on RDS Custom SQL Server.
+
+# v1.37.0 (2022-12-22)
+
+* **Feature**: Add support for managing master user password in AWS Secrets Manager for the DBInstance and DBCluster.
+
+# v1.36.0 (2022-12-19)
+
+* **Feature**: Add support for --enable-customer-owned-ip to RDS create-db-instance-read-replica API for RDS on Outposts.
+
+# v1.35.1 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.35.0 (2022-12-13)
+
+* **Feature**: This deployment adds ClientPasswordAuthType field to the Auth structure of the DBProxy.
+
+# v1.34.0 (2022-12-12)
+
+* **Feature**: Update the RDS API model to support copying option groups during the CopyDBSnapshot operation
+
+# v1.33.0 (2022-12-06)
+
+* **Feature**: This release adds the BlueGreenDeploymentNotFoundFault to the AddTagsToResource, ListTagsForResource, and RemoveTagsFromResource operations.
+
+# v1.32.0 (2022-12-05)
+
+* **Feature**: This release adds the InvalidDBInstanceStateFault to the RestoreDBClusterFromSnapshot operation.
+
+# v1.31.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.31.0 (2022-11-28)
+
+* **Feature**: This release enables new Aurora and RDS feature called Blue/Green Deployments that makes updates to databases safer, simpler and faster.
+
+# v1.30.1 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.30.0 (2022-11-16)
+
+* **Feature**: This release adds support for container databases (CDBs) to Amazon RDS Custom for Oracle. A CDB contains one PDB at creation. You can add more PDBs using Oracle SQL. You can also customize your database installation by setting the Oracle base, Oracle home, and the OS user name and group.
+
+# v1.29.0 (2022-11-14)
+
+* **Feature**: This release adds support for restoring an RDS Multi-AZ DB cluster snapshot to a Single-AZ deployment or a Multi-AZ DB instance deployment.
+
+# v1.28.1 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.28.0 (2022-11-01)
+
+* **Feature**: Relational Database Service - This release adds support for configuring Storage Throughput on RDS database instances.
+
+# v1.27.0 (2022-10-25)
+
+* **Feature**: Relational Database Service - This release adds support for exporting DB cluster data to Amazon S3.
+
+# v1.26.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.0 (2022-09-19)
+
+* **Feature**: This release adds support for Amazon RDS Proxy with SQL Server compatibility.
+
+# v1.25.6 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.5 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.4 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.25.3 (2022-08-30)
 
 * No change notes available for this release.

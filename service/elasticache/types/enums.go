@@ -8,6 +8,7 @@ type AuthenticationType string
 const (
 	AuthenticationTypePassword   AuthenticationType = "password"
 	AuthenticationTypeNoPassword AuthenticationType = "no-password"
+	AuthenticationTypeIam        AuthenticationType = "iam"
 )
 
 // Values returns all known values for AuthenticationType. Note that this can be
@@ -17,6 +18,7 @@ func (AuthenticationType) Values() []AuthenticationType {
 	return []AuthenticationType{
 		"password",
 		"no-password",
+		"iam",
 	}
 }
 
@@ -152,6 +154,44 @@ func (DestinationType) Values() []DestinationType {
 	}
 }
 
+type InputAuthenticationType string
+
+// Enum values for InputAuthenticationType
+const (
+	InputAuthenticationTypePassword   InputAuthenticationType = "password"
+	InputAuthenticationTypeNoPassword InputAuthenticationType = "no-password-required"
+	InputAuthenticationTypeIam        InputAuthenticationType = "iam"
+)
+
+// Values returns all known values for InputAuthenticationType. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (InputAuthenticationType) Values() []InputAuthenticationType {
+	return []InputAuthenticationType{
+		"password",
+		"no-password-required",
+		"iam",
+	}
+}
+
+type IpDiscovery string
+
+// Enum values for IpDiscovery
+const (
+	IpDiscoveryIpv4 IpDiscovery = "ipv4"
+	IpDiscoveryIpv6 IpDiscovery = "ipv6"
+)
+
+// Values returns all known values for IpDiscovery. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (IpDiscovery) Values() []IpDiscovery {
+	return []IpDiscovery{
+		"ipv4",
+		"ipv6",
+	}
+}
+
 type LogDeliveryConfigurationStatus string
 
 // Enum values for LogDeliveryConfigurationStatus
@@ -228,6 +268,26 @@ func (MultiAZStatus) Values() []MultiAZStatus {
 	return []MultiAZStatus{
 		"enabled",
 		"disabled",
+	}
+}
+
+type NetworkType string
+
+// Enum values for NetworkType
+const (
+	NetworkTypeIpv4      NetworkType = "ipv4"
+	NetworkTypeIpv6      NetworkType = "ipv6"
+	NetworkTypeDualStack NetworkType = "dual_stack"
+)
+
+// Values returns all known values for NetworkType. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (NetworkType) Values() []NetworkType {
+	return []NetworkType{
+		"ipv4",
+		"ipv6",
+		"dual_stack",
 	}
 }
 
@@ -415,6 +475,24 @@ func (SourceType) Values() []SourceType {
 		"replication-group",
 		"user",
 		"user-group",
+	}
+}
+
+type TransitEncryptionMode string
+
+// Enum values for TransitEncryptionMode
+const (
+	TransitEncryptionModePreferred TransitEncryptionMode = "preferred"
+	TransitEncryptionModeRequired  TransitEncryptionMode = "required"
+)
+
+// Values returns all known values for TransitEncryptionMode. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (TransitEncryptionMode) Values() []TransitEncryptionMode {
+	return []TransitEncryptionMode{
+		"preferred",
+		"required",
 	}
 }
 

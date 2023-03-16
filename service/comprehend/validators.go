@@ -110,6 +110,26 @@ func (m *validateOpBatchDetectSyntax) HandleInitialize(ctx context.Context, in m
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpBatchDetectTargetedSentiment struct {
+}
+
+func (*validateOpBatchDetectTargetedSentiment) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpBatchDetectTargetedSentiment) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*BatchDetectTargetedSentimentInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpBatchDetectTargetedSentimentInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpClassifyDocument struct {
 }
 
@@ -145,6 +165,26 @@ func (m *validateOpContainsPiiEntities) HandleInitialize(ctx context.Context, in
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpContainsPiiEntitiesInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpCreateDataset struct {
+}
+
+func (*validateOpCreateDataset) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpCreateDataset) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*CreateDatasetInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpCreateDatasetInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -210,6 +250,26 @@ func (m *validateOpCreateEntityRecognizer) HandleInitialize(ctx context.Context,
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpCreateFlywheel struct {
+}
+
+func (*validateOpCreateFlywheel) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpCreateFlywheel) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*CreateFlywheelInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpCreateFlywheelInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpDeleteDocumentClassifier struct {
 }
 
@@ -270,6 +330,26 @@ func (m *validateOpDeleteEntityRecognizer) HandleInitialize(ctx context.Context,
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpDeleteFlywheel struct {
+}
+
+func (*validateOpDeleteFlywheel) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDeleteFlywheel) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DeleteFlywheelInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDeleteFlywheelInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpDeleteResourcePolicy struct {
 }
 
@@ -285,6 +365,26 @@ func (m *validateOpDeleteResourcePolicy) HandleInitialize(ctx context.Context, i
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpDeleteResourcePolicyInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpDescribeDataset struct {
+}
+
+func (*validateOpDescribeDataset) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDescribeDataset) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DescribeDatasetInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDescribeDatasetInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -425,6 +525,46 @@ func (m *validateOpDescribeEventsDetectionJob) HandleInitialize(ctx context.Cont
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpDescribeEventsDetectionJobInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpDescribeFlywheel struct {
+}
+
+func (*validateOpDescribeFlywheel) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDescribeFlywheel) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DescribeFlywheelInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDescribeFlywheelInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpDescribeFlywheelIteration struct {
+}
+
+func (*validateOpDescribeFlywheelIteration) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDescribeFlywheelIteration) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DescribeFlywheelIterationInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDescribeFlywheelIterationInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -670,6 +810,26 @@ func (m *validateOpDetectSyntax) HandleInitialize(ctx context.Context, in middle
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpDetectTargetedSentiment struct {
+}
+
+func (*validateOpDetectTargetedSentiment) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDetectTargetedSentiment) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DetectTargetedSentimentInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDetectTargetedSentimentInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpImportModel struct {
 }
 
@@ -685,6 +845,26 @@ func (m *validateOpImportModel) HandleInitialize(ctx context.Context, in middlew
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpImportModelInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpListFlywheelIterationHistory struct {
+}
+
+func (*validateOpListFlywheelIterationHistory) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpListFlywheelIterationHistory) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*ListFlywheelIterationHistoryInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpListFlywheelIterationHistoryInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -805,6 +985,26 @@ func (m *validateOpStartEventsDetectionJob) HandleInitialize(ctx context.Context
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpStartEventsDetectionJobInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpStartFlywheelIteration struct {
+}
+
+func (*validateOpStartFlywheelIteration) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpStartFlywheelIteration) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*StartFlywheelIterationInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpStartFlywheelIterationInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -1150,6 +1350,26 @@ func (m *validateOpUpdateEndpoint) HandleInitialize(ctx context.Context, in midd
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpUpdateFlywheel struct {
+}
+
+func (*validateOpUpdateFlywheel) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpUpdateFlywheel) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*UpdateFlywheelInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpUpdateFlywheelInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 func addOpBatchDetectDominantLanguageValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpBatchDetectDominantLanguage{}, middleware.After)
 }
@@ -1170,12 +1390,20 @@ func addOpBatchDetectSyntaxValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpBatchDetectSyntax{}, middleware.After)
 }
 
+func addOpBatchDetectTargetedSentimentValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpBatchDetectTargetedSentiment{}, middleware.After)
+}
+
 func addOpClassifyDocumentValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpClassifyDocument{}, middleware.After)
 }
 
 func addOpContainsPiiEntitiesValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpContainsPiiEntities{}, middleware.After)
+}
+
+func addOpCreateDatasetValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpCreateDataset{}, middleware.After)
 }
 
 func addOpCreateDocumentClassifierValidationMiddleware(stack *middleware.Stack) error {
@@ -1190,6 +1418,10 @@ func addOpCreateEntityRecognizerValidationMiddleware(stack *middleware.Stack) er
 	return stack.Initialize.Add(&validateOpCreateEntityRecognizer{}, middleware.After)
 }
 
+func addOpCreateFlywheelValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpCreateFlywheel{}, middleware.After)
+}
+
 func addOpDeleteDocumentClassifierValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDeleteDocumentClassifier{}, middleware.After)
 }
@@ -1202,8 +1434,16 @@ func addOpDeleteEntityRecognizerValidationMiddleware(stack *middleware.Stack) er
 	return stack.Initialize.Add(&validateOpDeleteEntityRecognizer{}, middleware.After)
 }
 
+func addOpDeleteFlywheelValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDeleteFlywheel{}, middleware.After)
+}
+
 func addOpDeleteResourcePolicyValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDeleteResourcePolicy{}, middleware.After)
+}
+
+func addOpDescribeDatasetValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDescribeDataset{}, middleware.After)
 }
 
 func addOpDescribeDocumentClassificationJobValidationMiddleware(stack *middleware.Stack) error {
@@ -1232,6 +1472,14 @@ func addOpDescribeEntityRecognizerValidationMiddleware(stack *middleware.Stack) 
 
 func addOpDescribeEventsDetectionJobValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDescribeEventsDetectionJob{}, middleware.After)
+}
+
+func addOpDescribeFlywheelValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDescribeFlywheel{}, middleware.After)
+}
+
+func addOpDescribeFlywheelIterationValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDescribeFlywheelIteration{}, middleware.After)
 }
 
 func addOpDescribeKeyPhrasesDetectionJobValidationMiddleware(stack *middleware.Stack) error {
@@ -1282,8 +1530,16 @@ func addOpDetectSyntaxValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDetectSyntax{}, middleware.After)
 }
 
+func addOpDetectTargetedSentimentValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDetectTargetedSentiment{}, middleware.After)
+}
+
 func addOpImportModelValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpImportModel{}, middleware.After)
+}
+
+func addOpListFlywheelIterationHistoryValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpListFlywheelIterationHistory{}, middleware.After)
 }
 
 func addOpListTagsForResourceValidationMiddleware(stack *middleware.Stack) error {
@@ -1308,6 +1564,10 @@ func addOpStartEntitiesDetectionJobValidationMiddleware(stack *middleware.Stack)
 
 func addOpStartEventsDetectionJobValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpStartEventsDetectionJob{}, middleware.After)
+}
+
+func addOpStartFlywheelIterationValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpStartFlywheelIteration{}, middleware.After)
 }
 
 func addOpStartKeyPhrasesDetectionJobValidationMiddleware(stack *middleware.Stack) error {
@@ -1378,6 +1638,10 @@ func addOpUpdateEndpointValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpUpdateEndpoint{}, middleware.After)
 }
 
+func addOpUpdateFlywheelValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpUpdateFlywheel{}, middleware.After)
+}
+
 func validateAugmentedManifestsListItem(v *types.AugmentedManifestsListItem) error {
 	if v == nil {
 		return nil
@@ -1388,6 +1652,189 @@ func validateAugmentedManifestsListItem(v *types.AugmentedManifestsListItem) err
 	}
 	if v.AttributeNames == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("AttributeNames"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDataSecurityConfig(v *types.DataSecurityConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DataSecurityConfig"}
+	if v.VpcConfig != nil {
+		if err := validateVpcConfig(v.VpcConfig); err != nil {
+			invalidParams.AddNested("VpcConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDatasetAugmentedManifestsList(v []types.DatasetAugmentedManifestsListItem) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DatasetAugmentedManifestsList"}
+	for i := range v {
+		if err := validateDatasetAugmentedManifestsListItem(&v[i]); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDatasetAugmentedManifestsListItem(v *types.DatasetAugmentedManifestsListItem) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DatasetAugmentedManifestsListItem"}
+	if v.AttributeNames == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AttributeNames"))
+	}
+	if v.S3Uri == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("S3Uri"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDatasetDocumentClassifierInputDataConfig(v *types.DatasetDocumentClassifierInputDataConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DatasetDocumentClassifierInputDataConfig"}
+	if v.S3Uri == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("S3Uri"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDatasetEntityRecognizerAnnotations(v *types.DatasetEntityRecognizerAnnotations) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DatasetEntityRecognizerAnnotations"}
+	if v.S3Uri == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("S3Uri"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDatasetEntityRecognizerDocuments(v *types.DatasetEntityRecognizerDocuments) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DatasetEntityRecognizerDocuments"}
+	if v.S3Uri == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("S3Uri"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDatasetEntityRecognizerEntityList(v *types.DatasetEntityRecognizerEntityList) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DatasetEntityRecognizerEntityList"}
+	if v.S3Uri == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("S3Uri"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDatasetEntityRecognizerInputDataConfig(v *types.DatasetEntityRecognizerInputDataConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DatasetEntityRecognizerInputDataConfig"}
+	if v.Annotations != nil {
+		if err := validateDatasetEntityRecognizerAnnotations(v.Annotations); err != nil {
+			invalidParams.AddNested("Annotations", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.Documents == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Documents"))
+	} else if v.Documents != nil {
+		if err := validateDatasetEntityRecognizerDocuments(v.Documents); err != nil {
+			invalidParams.AddNested("Documents", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.EntityList != nil {
+		if err := validateDatasetEntityRecognizerEntityList(v.EntityList); err != nil {
+			invalidParams.AddNested("EntityList", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDatasetInputDataConfig(v *types.DatasetInputDataConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DatasetInputDataConfig"}
+	if v.AugmentedManifests != nil {
+		if err := validateDatasetAugmentedManifestsList(v.AugmentedManifests); err != nil {
+			invalidParams.AddNested("AugmentedManifests", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.DocumentClassifierInputDataConfig != nil {
+		if err := validateDatasetDocumentClassifierInputDataConfig(v.DocumentClassifierInputDataConfig); err != nil {
+			invalidParams.AddNested("DocumentClassifierInputDataConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.EntityRecognizerInputDataConfig != nil {
+		if err := validateDatasetEntityRecognizerInputDataConfig(v.EntityRecognizerInputDataConfig); err != nil {
+			invalidParams.AddNested("EntityRecognizerInputDataConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDocumentClassificationConfig(v *types.DocumentClassificationConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DocumentClassificationConfig"}
+	if len(v.Mode) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("Mode"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1437,6 +1884,25 @@ func validateDocumentReaderConfig(v *types.DocumentReaderConfig) error {
 	invalidParams := smithy.InvalidParamsError{Context: "DocumentReaderConfig"}
 	if len(v.DocumentReadAction) == 0 {
 		invalidParams.Add(smithy.NewErrParamRequired("DocumentReadAction"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateEntityRecognitionConfig(v *types.EntityRecognitionConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "EntityRecognitionConfig"}
+	if v.EntityTypes == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("EntityTypes"))
+	} else if v.EntityTypes != nil {
+		if err := validateEntityTypesList(v.EntityTypes); err != nil {
+			invalidParams.AddNested("EntityTypes", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1645,6 +2111,48 @@ func validateTagList(v []types.Tag) error {
 	}
 }
 
+func validateTaskConfig(v *types.TaskConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "TaskConfig"}
+	if len(v.LanguageCode) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("LanguageCode"))
+	}
+	if v.DocumentClassificationConfig != nil {
+		if err := validateDocumentClassificationConfig(v.DocumentClassificationConfig); err != nil {
+			invalidParams.AddNested("DocumentClassificationConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.EntityRecognitionConfig != nil {
+		if err := validateEntityRecognitionConfig(v.EntityRecognitionConfig); err != nil {
+			invalidParams.AddNested("EntityRecognitionConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateUpdateDataSecurityConfig(v *types.UpdateDataSecurityConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "UpdateDataSecurityConfig"}
+	if v.VpcConfig != nil {
+		if err := validateVpcConfig(v.VpcConfig); err != nil {
+			invalidParams.AddNested("VpcConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateVpcConfig(v *types.VpcConfig) error {
 	if v == nil {
 		return nil
@@ -1750,16 +2258,36 @@ func validateOpBatchDetectSyntaxInput(v *BatchDetectSyntaxInput) error {
 	}
 }
 
+func validateOpBatchDetectTargetedSentimentInput(v *BatchDetectTargetedSentimentInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "BatchDetectTargetedSentimentInput"}
+	if v.TextList == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("TextList"))
+	}
+	if len(v.LanguageCode) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("LanguageCode"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpClassifyDocumentInput(v *ClassifyDocumentInput) error {
 	if v == nil {
 		return nil
 	}
 	invalidParams := smithy.InvalidParamsError{Context: "ClassifyDocumentInput"}
-	if v.Text == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("Text"))
-	}
 	if v.EndpointArn == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("EndpointArn"))
+	}
+	if v.DocumentReaderConfig != nil {
+		if err := validateDocumentReaderConfig(v.DocumentReaderConfig); err != nil {
+			invalidParams.AddNested("DocumentReaderConfig", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1778,6 +2306,36 @@ func validateOpContainsPiiEntitiesInput(v *ContainsPiiEntitiesInput) error {
 	}
 	if len(v.LanguageCode) == 0 {
 		invalidParams.Add(smithy.NewErrParamRequired("LanguageCode"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpCreateDatasetInput(v *CreateDatasetInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "CreateDatasetInput"}
+	if v.FlywheelArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FlywheelArn"))
+	}
+	if v.DatasetName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DatasetName"))
+	}
+	if v.InputDataConfig == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("InputDataConfig"))
+	} else if v.InputDataConfig != nil {
+		if err := validateDatasetInputDataConfig(v.InputDataConfig); err != nil {
+			invalidParams.AddNested("InputDataConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.Tags != nil {
+		if err := validateTagList(v.Tags); err != nil {
+			invalidParams.AddNested("Tags", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1832,9 +2390,6 @@ func validateOpCreateEndpointInput(v *CreateEndpointInput) error {
 	if v.EndpointName == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("EndpointName"))
 	}
-	if v.ModelArn == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("ModelArn"))
-	}
 	if v.DesiredInferenceUnits == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("DesiredInferenceUnits"))
 	}
@@ -1879,6 +2434,42 @@ func validateOpCreateEntityRecognizerInput(v *CreateEntityRecognizerInput) error
 	if v.VpcConfig != nil {
 		if err := validateVpcConfig(v.VpcConfig); err != nil {
 			invalidParams.AddNested("VpcConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpCreateFlywheelInput(v *CreateFlywheelInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "CreateFlywheelInput"}
+	if v.FlywheelName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FlywheelName"))
+	}
+	if v.DataAccessRoleArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DataAccessRoleArn"))
+	}
+	if v.TaskConfig != nil {
+		if err := validateTaskConfig(v.TaskConfig); err != nil {
+			invalidParams.AddNested("TaskConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.DataLakeS3Uri == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DataLakeS3Uri"))
+	}
+	if v.DataSecurityConfig != nil {
+		if err := validateDataSecurityConfig(v.DataSecurityConfig); err != nil {
+			invalidParams.AddNested("DataSecurityConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.Tags != nil {
+		if err := validateTagList(v.Tags); err != nil {
+			invalidParams.AddNested("Tags", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {
@@ -1933,6 +2524,21 @@ func validateOpDeleteEntityRecognizerInput(v *DeleteEntityRecognizerInput) error
 	}
 }
 
+func validateOpDeleteFlywheelInput(v *DeleteFlywheelInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DeleteFlywheelInput"}
+	if v.FlywheelArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FlywheelArn"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpDeleteResourcePolicyInput(v *DeleteResourcePolicyInput) error {
 	if v == nil {
 		return nil
@@ -1940,6 +2546,21 @@ func validateOpDeleteResourcePolicyInput(v *DeleteResourcePolicyInput) error {
 	invalidParams := smithy.InvalidParamsError{Context: "DeleteResourcePolicyInput"}
 	if v.ResourceArn == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("ResourceArn"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpDescribeDatasetInput(v *DescribeDatasetInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DescribeDatasetInput"}
+	if v.DatasetArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DatasetArn"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -2045,6 +2666,39 @@ func validateOpDescribeEventsDetectionJobInput(v *DescribeEventsDetectionJobInpu
 	invalidParams := smithy.InvalidParamsError{Context: "DescribeEventsDetectionJobInput"}
 	if v.JobId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("JobId"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpDescribeFlywheelInput(v *DescribeFlywheelInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DescribeFlywheelInput"}
+	if v.FlywheelArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FlywheelArn"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpDescribeFlywheelIterationInput(v *DescribeFlywheelIterationInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DescribeFlywheelIterationInput"}
+	if v.FlywheelArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FlywheelArn"))
+	}
+	if v.FlywheelIterationId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FlywheelIterationId"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -2163,8 +2817,10 @@ func validateOpDetectEntitiesInput(v *DetectEntitiesInput) error {
 		return nil
 	}
 	invalidParams := smithy.InvalidParamsError{Context: "DetectEntitiesInput"}
-	if v.Text == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("Text"))
+	if v.DocumentReaderConfig != nil {
+		if err := validateDocumentReaderConfig(v.DocumentReaderConfig); err != nil {
+			invalidParams.AddNested("DocumentReaderConfig", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -2245,6 +2901,24 @@ func validateOpDetectSyntaxInput(v *DetectSyntaxInput) error {
 	}
 }
 
+func validateOpDetectTargetedSentimentInput(v *DetectTargetedSentimentInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DetectTargetedSentimentInput"}
+	if v.Text == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Text"))
+	}
+	if len(v.LanguageCode) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("LanguageCode"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpImportModelInput(v *ImportModelInput) error {
 	if v == nil {
 		return nil
@@ -2257,6 +2931,21 @@ func validateOpImportModelInput(v *ImportModelInput) error {
 		if err := validateTagList(v.Tags); err != nil {
 			invalidParams.AddNested("Tags", err.(smithy.InvalidParamsError))
 		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpListFlywheelIterationHistoryInput(v *ListFlywheelIterationHistoryInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ListFlywheelIterationHistoryInput"}
+	if v.FlywheelArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FlywheelArn"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -2303,9 +2992,6 @@ func validateOpStartDocumentClassificationJobInput(v *StartDocumentClassificatio
 		return nil
 	}
 	invalidParams := smithy.InvalidParamsError{Context: "StartDocumentClassificationJobInput"}
-	if v.DocumentClassifierArn == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("DocumentClassifierArn"))
-	}
 	if v.InputDataConfig == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("InputDataConfig"))
 	} else if v.InputDataConfig != nil {
@@ -2453,6 +3139,21 @@ func validateOpStartEventsDetectionJobInput(v *StartEventsDetectionJobInput) err
 		if err := validateTagList(v.Tags); err != nil {
 			invalidParams.AddNested("Tags", err.(smithy.InvalidParamsError))
 		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpStartFlywheelIterationInput(v *StartFlywheelIterationInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "StartFlywheelIterationInput"}
+	if v.FlywheelArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FlywheelArn"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -2848,6 +3549,26 @@ func validateOpUpdateEndpointInput(v *UpdateEndpointInput) error {
 	invalidParams := smithy.InvalidParamsError{Context: "UpdateEndpointInput"}
 	if v.EndpointArn == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("EndpointArn"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpUpdateFlywheelInput(v *UpdateFlywheelInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "UpdateFlywheelInput"}
+	if v.FlywheelArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FlywheelArn"))
+	}
+	if v.DataSecurityConfig != nil {
+		if err := validateUpdateDataSecurityConfig(v.DataSecurityConfig); err != nil {
+			invalidParams.AddNested("DataSecurityConfig", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams

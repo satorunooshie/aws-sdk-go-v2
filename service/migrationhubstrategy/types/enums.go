@@ -2,6 +2,28 @@
 
 package types
 
+type AnalysisType string
+
+// Enum values for AnalysisType
+const (
+	AnalysisTypeSourceCodeAnalysis AnalysisType = "SOURCE_CODE_ANALYSIS"
+	AnalysisTypeDatabaseAnalysis   AnalysisType = "DATABASE_ANALYSIS"
+	AnalysisTypeRuntimeAnalysis    AnalysisType = "RUNTIME_ANALYSIS"
+	AnalysisTypeBinaryAnalysis     AnalysisType = "BINARY_ANALYSIS"
+)
+
+// Values returns all known values for AnalysisType. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (AnalysisType) Values() []AnalysisType {
+	return []AnalysisType{
+		"SOURCE_CODE_ANALYSIS",
+		"DATABASE_ANALYSIS",
+		"RUNTIME_ANALYSIS",
+		"BINARY_ANALYSIS",
+	}
+}
+
 type AntipatternReportStatus string
 
 // Enum values for AntipatternReportStatus
@@ -26,12 +48,14 @@ type ApplicationComponentCriteria string
 
 // Enum values for ApplicationComponentCriteria
 const (
-	ApplicationComponentCriteriaNotDefined  ApplicationComponentCriteria = "NOT_DEFINED"
-	ApplicationComponentCriteriaAppName     ApplicationComponentCriteria = "APP_NAME"
-	ApplicationComponentCriteriaServerId    ApplicationComponentCriteria = "SERVER_ID"
-	ApplicationComponentCriteriaAppType     ApplicationComponentCriteria = "APP_TYPE"
-	ApplicationComponentCriteriaStrategy    ApplicationComponentCriteria = "STRATEGY"
-	ApplicationComponentCriteriaDestination ApplicationComponentCriteria = "DESTINATION"
+	ApplicationComponentCriteriaNotDefined     ApplicationComponentCriteria = "NOT_DEFINED"
+	ApplicationComponentCriteriaAppName        ApplicationComponentCriteria = "APP_NAME"
+	ApplicationComponentCriteriaServerId       ApplicationComponentCriteria = "SERVER_ID"
+	ApplicationComponentCriteriaAppType        ApplicationComponentCriteria = "APP_TYPE"
+	ApplicationComponentCriteriaStrategy       ApplicationComponentCriteria = "STRATEGY"
+	ApplicationComponentCriteriaDestination    ApplicationComponentCriteria = "DESTINATION"
+	ApplicationComponentCriteriaAnalysisStatus ApplicationComponentCriteria = "ANALYSIS_STATUS"
+	ApplicationComponentCriteriaErrorCategory  ApplicationComponentCriteria = "ERROR_CATEGORY"
 )
 
 // Values returns all known values for ApplicationComponentCriteria. Note that this
@@ -45,6 +69,28 @@ func (ApplicationComponentCriteria) Values() []ApplicationComponentCriteria {
 		"APP_TYPE",
 		"STRATEGY",
 		"DESTINATION",
+		"ANALYSIS_STATUS",
+		"ERROR_CATEGORY",
+	}
+}
+
+type ApplicationMode string
+
+// Enum values for ApplicationMode
+const (
+	ApplicationModeAll     ApplicationMode = "ALL"
+	ApplicationModeKnown   ApplicationMode = "KNOWN"
+	ApplicationModeUnknown ApplicationMode = "UNKNOWN"
+)
+
+// Values returns all known values for ApplicationMode. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ApplicationMode) Values() []ApplicationMode {
+	return []ApplicationMode{
+		"ALL",
+		"KNOWN",
+		"UNKNOWN",
 	}
 }
 
@@ -52,12 +98,28 @@ type AppType string
 
 // Enum values for AppType
 const (
-	AppTypeDotNetFramework AppType = "DotNetFramework"
-	AppTypeJava            AppType = "Java"
-	AppTypeSqlServer       AppType = "SQLServer"
-	AppTypeIis             AppType = "IIS"
-	AppTypeOracle          AppType = "Oracle"
-	AppTypeOther           AppType = "Other"
+	AppTypeDotNetFramework  AppType = "DotNetFramework"
+	AppTypeJava             AppType = "Java"
+	AppTypeSqlServer        AppType = "SQLServer"
+	AppTypeIis              AppType = "IIS"
+	AppTypeOracle           AppType = "Oracle"
+	AppTypeOther            AppType = "Other"
+	AppTypeTomcat           AppType = "Tomcat"
+	AppTypeJboss            AppType = "JBoss"
+	AppTypeSpring           AppType = "Spring"
+	AppTypeMongodb          AppType = "Mongo DB"
+	AppTypeDb2              AppType = "DB2"
+	AppTypeMariadb          AppType = "Maria DB"
+	AppTypeMysql            AppType = "MySQL"
+	AppTypeSybase           AppType = "Sybase"
+	AppTypePostgresqlserver AppType = "PostgreSQLServer"
+	AppTypeCassandra        AppType = "Cassandra"
+	AppTypeWebsphere        AppType = "IBM WebSphere"
+	AppTypeWeblogic         AppType = "Oracle WebLogic"
+	AppTypeVisualbasic      AppType = "Visual Basic"
+	AppTypeUnknown          AppType = "Unknown"
+	AppTypeDotnetcore       AppType = "DotnetCore"
+	AppTypeDotnet           AppType = "Dotnet"
 )
 
 // Values returns all known values for AppType. Note that this can be expanded in
@@ -71,6 +133,46 @@ func (AppType) Values() []AppType {
 		"IIS",
 		"Oracle",
 		"Other",
+		"Tomcat",
+		"JBoss",
+		"Spring",
+		"Mongo DB",
+		"DB2",
+		"Maria DB",
+		"MySQL",
+		"Sybase",
+		"PostgreSQLServer",
+		"Cassandra",
+		"IBM WebSphere",
+		"Oracle WebLogic",
+		"Visual Basic",
+		"Unknown",
+		"DotnetCore",
+		"Dotnet",
+	}
+}
+
+type AppUnitErrorCategory string
+
+// Enum values for AppUnitErrorCategory
+const (
+	AppUnitErrorCategoryCredentialError   AppUnitErrorCategory = "CREDENTIAL_ERROR"
+	AppUnitErrorCategoryConnectivityError AppUnitErrorCategory = "CONNECTIVITY_ERROR"
+	AppUnitErrorCategoryPermissionError   AppUnitErrorCategory = "PERMISSION_ERROR"
+	AppUnitErrorCategoryUnsupportedError  AppUnitErrorCategory = "UNSUPPORTED_ERROR"
+	AppUnitErrorCategoryOtherError        AppUnitErrorCategory = "OTHER_ERROR"
+)
+
+// Values returns all known values for AppUnitErrorCategory. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (AppUnitErrorCategory) Values() []AppUnitErrorCategory {
+	return []AppUnitErrorCategory{
+		"CREDENTIAL_ERROR",
+		"CONNECTIVITY_ERROR",
+		"PERMISSION_ERROR",
+		"UNSUPPORTED_ERROR",
+		"OTHER_ERROR",
 	}
 }
 
@@ -96,6 +198,26 @@ func (AssessmentStatus) Values() []AssessmentStatus {
 	}
 }
 
+type AuthType string
+
+// Enum values for AuthType
+const (
+	AuthTypeNtlm AuthType = "NTLM"
+	AuthTypeSsh  AuthType = "SSH"
+	AuthTypeCert AuthType = "CERT"
+)
+
+// Values returns all known values for AuthType. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (AuthType) Values() []AuthType {
+	return []AuthType{
+		"NTLM",
+		"SSH",
+		"CERT",
+	}
+}
+
 type AwsManagedTargetDestination string
 
 // Enum values for AwsManagedTargetDestination
@@ -116,6 +238,24 @@ func (AwsManagedTargetDestination) Values() []AwsManagedTargetDestination {
 	}
 }
 
+type BinaryAnalyzerName string
+
+// Enum values for BinaryAnalyzerName
+const (
+	BinaryAnalyzerNameDllAnalyzer      BinaryAnalyzerName = "DLL_ANALYZER"
+	BinaryAnalyzerNameBytecodeAnalyzer BinaryAnalyzerName = "BYTECODE_ANALYZER"
+)
+
+// Values returns all known values for BinaryAnalyzerName. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (BinaryAnalyzerName) Values() []BinaryAnalyzerName {
+	return []BinaryAnalyzerName{
+		"DLL_ANALYZER",
+		"BYTECODE_ANALYZER",
+	}
+}
+
 type CollectorHealth string
 
 // Enum values for CollectorHealth
@@ -131,6 +271,28 @@ func (CollectorHealth) Values() []CollectorHealth {
 	return []CollectorHealth{
 		"COLLECTOR_HEALTHY",
 		"COLLECTOR_UNHEALTHY",
+	}
+}
+
+type Condition string
+
+// Enum values for Condition
+const (
+	ConditionEquals      Condition = "EQUALS"
+	ConditionNotEquals   Condition = "NOT_EQUALS"
+	ConditionContains    Condition = "CONTAINS"
+	ConditionNotContains Condition = "NOT_CONTAINS"
+)
+
+// Values returns all known values for Condition. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (Condition) Values() []Condition {
+	return []Condition{
+		"EQUALS",
+		"NOT_EQUALS",
+		"CONTAINS",
+		"NOT_CONTAINS",
 	}
 }
 
@@ -158,8 +320,9 @@ type DataSourceType string
 
 // Enum values for DataSourceType
 const (
-	DataSourceTypeAds DataSourceType = "ApplicationDiscoveryService"
-	DataSourceTypeMpa DataSourceType = "MPA"
+	DataSourceTypeAds    DataSourceType = "ApplicationDiscoveryService"
+	DataSourceTypeMpa    DataSourceType = "MPA"
+	DataSourceTypeImport DataSourceType = "Import"
 )
 
 // Values returns all known values for DataSourceType. Note that this can be
@@ -169,6 +332,7 @@ func (DataSourceType) Values() []DataSourceType {
 	return []DataSourceType{
 		"ApplicationDiscoveryService",
 		"MPA",
+		"Import",
 	}
 }
 
@@ -176,7 +340,8 @@ type GroupName string
 
 // Enum values for GroupName
 const (
-	GroupNameExternalId GroupName = "ExternalId"
+	GroupNameExternalId         GroupName = "ExternalId"
+	GroupNameExternalSourceType GroupName = "ExternalSourceType"
 )
 
 // Values returns all known values for GroupName. Note that this can be expanded in
@@ -185,6 +350,7 @@ const (
 func (GroupName) Values() []GroupName {
 	return []GroupName{
 		"ExternalId",
+		"ExternalSourceType",
 	}
 }
 
@@ -351,6 +517,22 @@ func (OutputFormat) Values() []OutputFormat {
 	}
 }
 
+type PipelineType string
+
+// Enum values for PipelineType
+const (
+	PipelineTypeAzureDevops PipelineType = "AZURE_DEVOPS"
+)
+
+// Values returns all known values for PipelineType. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (PipelineType) Values() []PipelineType {
+	return []PipelineType{
+		"AZURE_DEVOPS",
+	}
+}
+
 type RecommendationReportStatus string
 
 // Enum values for RecommendationReportStatus
@@ -388,6 +570,52 @@ func (ResourceSubType) Values() []ResourceSubType {
 		"Database",
 		"Process",
 		"DatabaseProcess",
+	}
+}
+
+type RuntimeAnalysisStatus string
+
+// Enum values for RuntimeAnalysisStatus
+const (
+	RuntimeAnalysisStatusAnalysisToBeScheduled RuntimeAnalysisStatus = "ANALYSIS_TO_BE_SCHEDULED"
+	RuntimeAnalysisStatusAnalysisStarted       RuntimeAnalysisStatus = "ANALYSIS_STARTED"
+	RuntimeAnalysisStatusAnalysisSuccess       RuntimeAnalysisStatus = "ANALYSIS_SUCCESS"
+	RuntimeAnalysisStatusAnalysisFailed        RuntimeAnalysisStatus = "ANALYSIS_FAILED"
+)
+
+// Values returns all known values for RuntimeAnalysisStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (RuntimeAnalysisStatus) Values() []RuntimeAnalysisStatus {
+	return []RuntimeAnalysisStatus{
+		"ANALYSIS_TO_BE_SCHEDULED",
+		"ANALYSIS_STARTED",
+		"ANALYSIS_SUCCESS",
+		"ANALYSIS_FAILED",
+	}
+}
+
+type RunTimeAnalyzerName string
+
+// Enum values for RunTimeAnalyzerName
+const (
+	RunTimeAnalyzerNameA2cAnalyzer      RunTimeAnalyzerName = "A2C_ANALYZER"
+	RunTimeAnalyzerNameRehostAnalyzer   RunTimeAnalyzerName = "REHOST_ANALYZER"
+	RunTimeAnalyzerNameEmpPaAnalyzer    RunTimeAnalyzerName = "EMP_PA_ANALYZER"
+	RunTimeAnalyzerNameDatabaseAnalyzer RunTimeAnalyzerName = "DATABASE_ANALYZER"
+	RunTimeAnalyzerNameSctAnalyzer      RunTimeAnalyzerName = "SCT_ANALYZER"
+)
+
+// Values returns all known values for RunTimeAnalyzerName. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (RunTimeAnalyzerName) Values() []RunTimeAnalyzerName {
+	return []RunTimeAnalyzerName{
+		"A2C_ANALYZER",
+		"REHOST_ANALYZER",
+		"EMP_PA_ANALYZER",
+		"DATABASE_ANALYZER",
+		"SCT_ANALYZER",
 	}
 }
 
@@ -445,11 +673,13 @@ type ServerCriteria string
 
 // Enum values for ServerCriteria
 const (
-	ServerCriteriaNotDefined  ServerCriteria = "NOT_DEFINED"
-	ServerCriteriaOsName      ServerCriteria = "OS_NAME"
-	ServerCriteriaStrategy    ServerCriteria = "STRATEGY"
-	ServerCriteriaDestination ServerCriteria = "DESTINATION"
-	ServerCriteriaServerId    ServerCriteria = "SERVER_ID"
+	ServerCriteriaNotDefined     ServerCriteria = "NOT_DEFINED"
+	ServerCriteriaOsName         ServerCriteria = "OS_NAME"
+	ServerCriteriaStrategy       ServerCriteria = "STRATEGY"
+	ServerCriteriaDestination    ServerCriteria = "DESTINATION"
+	ServerCriteriaServerId       ServerCriteria = "SERVER_ID"
+	ServerCriteriaAnalysisStatus ServerCriteria = "ANALYSIS_STATUS"
+	ServerCriteriaErrorCategory  ServerCriteria = "ERROR_CATEGORY"
 )
 
 // Values returns all known values for ServerCriteria. Note that this can be
@@ -462,6 +692,32 @@ func (ServerCriteria) Values() []ServerCriteria {
 		"STRATEGY",
 		"DESTINATION",
 		"SERVER_ID",
+		"ANALYSIS_STATUS",
+		"ERROR_CATEGORY",
+	}
+}
+
+type ServerErrorCategory string
+
+// Enum values for ServerErrorCategory
+const (
+	ServerErrorCategoryConnectivityError ServerErrorCategory = "CONNECTIVITY_ERROR"
+	ServerErrorCategoryCredentialError   ServerErrorCategory = "CREDENTIAL_ERROR"
+	ServerErrorCategoryPermissionError   ServerErrorCategory = "PERMISSION_ERROR"
+	ServerErrorCategoryArchitectureError ServerErrorCategory = "ARCHITECTURE_ERROR"
+	ServerErrorCategoryOtherError        ServerErrorCategory = "OTHER_ERROR"
+)
+
+// Values returns all known values for ServerErrorCategory. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ServerErrorCategory) Values() []ServerErrorCategory {
+	return []ServerErrorCategory{
+		"CONNECTIVITY_ERROR",
+		"CREDENTIAL_ERROR",
+		"PERMISSION_ERROR",
+		"ARCHITECTURE_ERROR",
+		"OTHER_ERROR",
 	}
 }
 
@@ -527,14 +783,39 @@ func (SortOrder) Values() []SortOrder {
 	}
 }
 
+type SourceCodeAnalyzerName string
+
+// Enum values for SourceCodeAnalyzerName
+const (
+	SourceCodeAnalyzerNameCsharpAnalyzer   SourceCodeAnalyzerName = "CSHARP_ANALYZER"
+	SourceCodeAnalyzerNameJavaAnalyzer     SourceCodeAnalyzerName = "JAVA_ANALYZER"
+	SourceCodeAnalyzerNameBytecodeAnalyzer SourceCodeAnalyzerName = "BYTECODE_ANALYZER"
+	SourceCodeAnalyzerNamePortingAssistant SourceCodeAnalyzerName = "PORTING_ASSISTANT"
+)
+
+// Values returns all known values for SourceCodeAnalyzerName. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (SourceCodeAnalyzerName) Values() []SourceCodeAnalyzerName {
+	return []SourceCodeAnalyzerName{
+		"CSHARP_ANALYZER",
+		"JAVA_ANALYZER",
+		"BYTECODE_ANALYZER",
+		"PORTING_ASSISTANT",
+	}
+}
+
 type SrcCodeOrDbAnalysisStatus string
 
 // Enum values for SrcCodeOrDbAnalysisStatus
 const (
-	SrcCodeOrDbAnalysisStatusAnalysisToBeScheduled SrcCodeOrDbAnalysisStatus = "ANALYSIS_TO_BE_SCHEDULED"
-	SrcCodeOrDbAnalysisStatusAnalysisStarted       SrcCodeOrDbAnalysisStatus = "ANALYSIS_STARTED"
-	SrcCodeOrDbAnalysisStatusAnalysisSuccess       SrcCodeOrDbAnalysisStatus = "ANALYSIS_SUCCESS"
-	SrcCodeOrDbAnalysisStatusAnalysisFailed        SrcCodeOrDbAnalysisStatus = "ANALYSIS_FAILED"
+	SrcCodeOrDbAnalysisStatusAnalysisToBeScheduled  SrcCodeOrDbAnalysisStatus = "ANALYSIS_TO_BE_SCHEDULED"
+	SrcCodeOrDbAnalysisStatusAnalysisStarted        SrcCodeOrDbAnalysisStatus = "ANALYSIS_STARTED"
+	SrcCodeOrDbAnalysisStatusAnalysisSuccess        SrcCodeOrDbAnalysisStatus = "ANALYSIS_SUCCESS"
+	SrcCodeOrDbAnalysisStatusAnalysisFailed         SrcCodeOrDbAnalysisStatus = "ANALYSIS_FAILED"
+	SrcCodeOrDbAnalysisStatusAnalysisPartialSuccess SrcCodeOrDbAnalysisStatus = "ANALYSIS_PARTIAL_SUCCESS"
+	SrcCodeOrDbAnalysisStatusUnconfigured           SrcCodeOrDbAnalysisStatus = "UNCONFIGURED"
+	SrcCodeOrDbAnalysisStatusConfigured             SrcCodeOrDbAnalysisStatus = "CONFIGURED"
 )
 
 // Values returns all known values for SrcCodeOrDbAnalysisStatus. Note that this
@@ -546,6 +827,9 @@ func (SrcCodeOrDbAnalysisStatus) Values() []SrcCodeOrDbAnalysisStatus {
 		"ANALYSIS_STARTED",
 		"ANALYSIS_SUCCESS",
 		"ANALYSIS_FAILED",
+		"ANALYSIS_PARTIAL_SUCCESS",
+		"UNCONFIGURED",
+		"CONFIGURED",
 	}
 }
 
@@ -584,6 +868,7 @@ const (
 	StrategyRecommendationRecommended    StrategyRecommendation = "recommended"
 	StrategyRecommendationViableOption   StrategyRecommendation = "viableOption"
 	StrategyRecommendationNotRecommended StrategyRecommendation = "notRecommended"
+	StrategyRecommendationPotential      StrategyRecommendation = "potential"
 )
 
 // Values returns all known values for StrategyRecommendation. Note that this can
@@ -594,6 +879,7 @@ func (StrategyRecommendation) Values() []StrategyRecommendation {
 		"recommended",
 		"viableOption",
 		"notRecommended",
+		"potential",
 	}
 }
 
@@ -648,6 +934,7 @@ const (
 	TargetDestinationAmazonDocumentdb               TargetDestination = "Amazon DocumentDB"
 	TargetDestinationAmazonDynamodb                 TargetDestination = "Amazon DynamoDB"
 	TargetDestinationAmazonRds                      TargetDestination = "Amazon Relational Database Service"
+	TargetDestinationBabelfishAuroraPostgresql      TargetDestination = "Babelfish for Aurora PostgreSQL"
 )
 
 // Values returns all known values for TargetDestination. Note that this can be
@@ -668,6 +955,7 @@ func (TargetDestination) Values() []TargetDestination {
 		"Amazon DocumentDB",
 		"Amazon DynamoDB",
 		"Amazon Relational Database Service",
+		"Babelfish for Aurora PostgreSQL",
 	}
 }
 
@@ -711,6 +999,7 @@ type VersionControl string
 const (
 	VersionControlGithub           VersionControl = "GITHUB"
 	VersionControlGithubEnterprise VersionControl = "GITHUB_ENTERPRISE"
+	VersionControlAzureDevopsGit   VersionControl = "AZURE_DEVOPS_GIT"
 )
 
 // Values returns all known values for VersionControl. Note that this can be
@@ -720,5 +1009,26 @@ func (VersionControl) Values() []VersionControl {
 	return []VersionControl{
 		"GITHUB",
 		"GITHUB_ENTERPRISE",
+		"AZURE_DEVOPS_GIT",
+	}
+}
+
+type VersionControlType string
+
+// Enum values for VersionControlType
+const (
+	VersionControlTypeGithub           VersionControlType = "GITHUB"
+	VersionControlTypeGithubEnterprise VersionControlType = "GITHUB_ENTERPRISE"
+	VersionControlTypeAzureDevopsGit   VersionControlType = "AZURE_DEVOPS_GIT"
+)
+
+// Values returns all known values for VersionControlType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (VersionControlType) Values() []VersionControlType {
+	return []VersionControlType{
+		"GITHUB",
+		"GITHUB_ENTERPRISE",
+		"AZURE_DEVOPS_GIT",
 	}
 }

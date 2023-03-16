@@ -1,3 +1,85 @@
+# v1.35.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.35.0 (2023-03-02)
+
+* **Feature**: A recurring maintenance window is an optional configuration used for rolling out the job document to all devices in the target group observing a predetermined start time, duration, and frequency that the maintenance window occurs.
+
+# v1.34.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.34.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.34.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.34.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.34.0 (2023-01-31)
+
+* **Feature**: Added support for IoT Rules Engine Cloudwatch Logs action batch mode.
+
+# v1.33.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.32.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.32.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.32.0 (2022-11-28)
+
+* **Feature**: Job scheduling enables the scheduled rollout of a Job with start and end times and a customizable end behavior when end time is reached. This is available for continuous and snapshot jobs. Added support for MQTT5 properties to AWS IoT TopicRule Republish Action.
+
+# v1.31.0 (2022-11-11)
+
+* **Feature**: This release add new api listRelatedResourcesForAuditFinding and new member type IssuerCertificates for Iot device device defender Audit.
+
+# v1.30.0 (2022-10-31)
+
+* **Feature**: This release adds the Amazon Location action to IoT Rules Engine.
+
+# v1.29.4 (2022-10-25)
+
+* No change notes available for this release.
+
+# v1.29.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.0 (2022-09-14)
+
+* **Feature**: Fixed a bug in the API client generation which caused some operation parameters to be incorrectly generated as value types instead of pointer types. The service API always required these affected parameters to be nilable. This fixes the SDK client to match the expectations of the the service API.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.6 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.5 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.28.4 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

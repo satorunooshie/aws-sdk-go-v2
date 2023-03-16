@@ -1,3 +1,89 @@
+# v1.15.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.0 (2023-02-22)
+
+* **Feature**: This release lets customers configure Off-peak window and software update related properties for a new/existing domain. It enhances the capabilities of StartServiceSoftwareUpdate API; adds 2 new APIs - ListScheduledActions & UpdateScheduledAction; and allows Auto-tune to make use of Off-peak window.
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.14.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.14.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.0 (2023-01-31)
+
+* **Feature**: Amazon OpenSearch Service adds the option for a VPC endpoint connection between two domains when the local domain uses OpenSearch version 1.3 or 2.3. You can now use remote reindex to copy indices from one VPC domain to another without a reverse proxy.
+
+# v1.13.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.13.0 (2023-01-19)
+
+* **Feature**: This release adds the enhanced dry run option, that checks for validation errors that might occur when deploying configuration changes and provides a summary of these errors, if any. The feature will also indicate whether a blue/green deployment will be required to apply a change.
+
+# v1.12.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.11.5 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.11.4 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.11.3 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.11.2 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.11.1 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.11.0 (2022-11-08)
+
+* **Feature**: Amazon OpenSearch Service now offers managed VPC endpoints to connect to your Amazon OpenSearch Service VPC-enabled domain in a Virtual Private Cloud (VPC). This feature allows you to privately access OpenSearch Service domain without using public IPs or requiring traffic to traverse the Internet.
+
+# v1.10.12 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.11 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.10 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.9 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.8 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.7 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.10.6 (2022-08-30)
 
 * No change notes available for this release.

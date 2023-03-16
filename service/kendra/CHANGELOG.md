@@ -1,3 +1,81 @@
+# v1.38.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.38.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.38.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.38.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.38.2 (2023-02-08)
+
+* No change notes available for this release.
+
+# v1.38.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.38.0 (2023-01-11)
+
+* **Feature**: This release adds support to new document types - RTF, XML, XSLT, MS_EXCEL, CSV, JSON, MD
+
+# v1.37.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.36.3 (2022-12-30)
+
+* No change notes available for this release.
+
+# v1.36.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.36.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.36.0 (2022-11-28)
+
+* **Feature**: Amazon Kendra now supports preview of table information from HTML tables in the search results. The most relevant cells with their corresponding rows, columns are displayed as a preview in the search result. The most relevant table cell or cells are also highlighted in table preview.
+
+# v1.35.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.35.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.35.0 (2022-09-27)
+
+* **Feature**: My AWS Service (placeholder) - Amazon Kendra now provides a data source connector for DropBox. For more information, see https://docs.aws.amazon.com/kendra/latest/dg/data-source-dropbox.html
+
+# v1.34.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.34.0 (2022-09-14)
+
+* **Feature**: This release enables our customer to choose the option of Sharepoint 2019 for the on-premise Sharepoint connector.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.3 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.2 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.33.1 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

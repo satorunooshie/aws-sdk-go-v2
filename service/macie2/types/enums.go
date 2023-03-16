@@ -71,6 +71,24 @@ func (AllowsUnencryptedObjectUploads) Values() []AllowsUnencryptedObjectUploads 
 	}
 }
 
+type AutomatedDiscoveryStatus string
+
+// Enum values for AutomatedDiscoveryStatus
+const (
+	AutomatedDiscoveryStatusEnabled  AutomatedDiscoveryStatus = "ENABLED"
+	AutomatedDiscoveryStatusDisabled AutomatedDiscoveryStatus = "DISABLED"
+)
+
+// Values returns all known values for AutomatedDiscoveryStatus. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (AutomatedDiscoveryStatus) Values() []AutomatedDiscoveryStatus {
+	return []AutomatedDiscoveryStatus{
+		"ENABLED",
+		"DISABLED",
+	}
+}
+
 type AvailabilityCode string
 
 // Enum values for AvailabilityCode
@@ -102,6 +120,27 @@ const (
 func (BucketMetadataErrorCode) Values() []BucketMetadataErrorCode {
 	return []BucketMetadataErrorCode{
 		"ACCESS_DENIED",
+	}
+}
+
+type ClassificationScopeUpdateOperation string
+
+// Enum values for ClassificationScopeUpdateOperation
+const (
+	ClassificationScopeUpdateOperationAdd     ClassificationScopeUpdateOperation = "ADD"
+	ClassificationScopeUpdateOperationReplace ClassificationScopeUpdateOperation = "REPLACE"
+	ClassificationScopeUpdateOperationRemove  ClassificationScopeUpdateOperation = "REMOVE"
+)
+
+// Values returns all known values for ClassificationScopeUpdateOperation. Note
+// that this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (ClassificationScopeUpdateOperation) Values() []ClassificationScopeUpdateOperation {
+	return []ClassificationScopeUpdateOperation{
+		"ADD",
+		"REPLACE",
+		"REMOVE",
 	}
 }
 
@@ -138,6 +177,24 @@ func (DataIdentifierSeverity) Values() []DataIdentifierSeverity {
 		"LOW",
 		"MEDIUM",
 		"HIGH",
+	}
+}
+
+type DataIdentifierType string
+
+// Enum values for DataIdentifierType
+const (
+	DataIdentifierTypeCustom  DataIdentifierType = "CUSTOM"
+	DataIdentifierTypeManaged DataIdentifierType = "MANAGED"
+)
+
+// Values returns all known values for DataIdentifierType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (DataIdentifierType) Values() []DataIdentifierType {
+	return []DataIdentifierType{
+		"CUSTOM",
+		"MANAGED",
 	}
 }
 
@@ -334,6 +391,7 @@ const (
 	FindingTypePolicyIAMUserS3BucketReplicatedExternally FindingType = "Policy:IAMUser/S3BucketReplicatedExternally"
 	FindingTypePolicyIAMUserS3BucketEncryptionDisabled   FindingType = "Policy:IAMUser/S3BucketEncryptionDisabled"
 	FindingTypePolicyIAMUserS3BlockPublicAccessDisabled  FindingType = "Policy:IAMUser/S3BlockPublicAccessDisabled"
+	FindingTypePolicyIAMUserS3BucketSharedWithCloudFront FindingType = "Policy:IAMUser/S3BucketSharedWithCloudFront"
 )
 
 // Values returns all known values for FindingType. Note that this can be expanded
@@ -351,6 +409,7 @@ func (FindingType) Values() []FindingType {
 		"Policy:IAMUser/S3BucketReplicatedExternally",
 		"Policy:IAMUser/S3BucketEncryptionDisabled",
 		"Policy:IAMUser/S3BlockPublicAccessDisabled",
+		"Policy:IAMUser/S3BucketSharedWithCloudFront",
 	}
 }
 
@@ -615,7 +674,8 @@ type OriginType string
 
 // Enum values for OriginType
 const (
-	OriginTypeSensitiveDataDiscoveryJob OriginType = "SENSITIVE_DATA_DISCOVERY_JOB"
+	OriginTypeSensitiveDataDiscoveryJob       OriginType = "SENSITIVE_DATA_DISCOVERY_JOB"
+	OriginTypeAutomatedSensitiveDataDiscovery OriginType = "AUTOMATED_SENSITIVE_DATA_DISCOVERY"
 )
 
 // Values returns all known values for OriginType. Note that this can be expanded
@@ -624,6 +684,7 @@ const (
 func (OriginType) Values() []OriginType {
 	return []OriginType{
 		"SENSITIVE_DATA_DISCOVERY_JOB",
+		"AUTOMATED_SENSITIVE_DATA_DISCOVERY",
 	}
 }
 
@@ -882,6 +943,8 @@ const (
 	StorageClassDeepArchive        StorageClass = "DEEP_ARCHIVE"
 	StorageClassOnezoneIa          StorageClass = "ONEZONE_IA"
 	StorageClassGlacier            StorageClass = "GLACIER"
+	StorageClassGlacierIr          StorageClass = "GLACIER_IR"
+	StorageClassOutposts           StorageClass = "OUTPOSTS"
 )
 
 // Values returns all known values for StorageClass. Note that this can be expanded
@@ -896,6 +959,8 @@ func (StorageClass) Values() []StorageClass {
 		"DEEP_ARCHIVE",
 		"ONEZONE_IA",
 		"GLACIER",
+		"GLACIER_IR",
+		"OUTPOSTS",
 	}
 }
 
@@ -1070,8 +1135,10 @@ type UsageType string
 
 // Enum values for UsageType
 const (
-	UsageTypeDataInventoryEvaluation UsageType = "DATA_INVENTORY_EVALUATION"
-	UsageTypeSensitiveDataDiscovery  UsageType = "SENSITIVE_DATA_DISCOVERY"
+	UsageTypeDataInventoryEvaluation         UsageType = "DATA_INVENTORY_EVALUATION"
+	UsageTypeSensitiveDataDiscovery          UsageType = "SENSITIVE_DATA_DISCOVERY"
+	UsageTypeAutomatedSensitiveDataDiscovery UsageType = "AUTOMATED_SENSITIVE_DATA_DISCOVERY"
+	UsageTypeAutomatedObjectMonitoring       UsageType = "AUTOMATED_OBJECT_MONITORING"
 )
 
 // Values returns all known values for UsageType. Note that this can be expanded in
@@ -1081,6 +1148,8 @@ func (UsageType) Values() []UsageType {
 	return []UsageType{
 		"DATA_INVENTORY_EVALUATION",
 		"SENSITIVE_DATA_DISCOVERY",
+		"AUTOMATED_SENSITIVE_DATA_DISCOVERY",
+		"AUTOMATED_OBJECT_MONITORING",
 	}
 }
 

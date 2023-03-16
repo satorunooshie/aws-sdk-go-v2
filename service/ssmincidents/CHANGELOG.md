@@ -1,3 +1,76 @@
+# v1.20.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.20.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.20.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.19.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.0 (2022-11-16)
+
+* **Feature**: Add support for PagerDuty integrations on ResponsePlan, IncidentRecord, and RelatedItem APIs
+
+# v1.18.0 (2022-11-11)
+
+* **Feature**: RelatedItems now have an ID field which can be used for referencing them else where. Introducing event references in TimelineEvent API and increasing maximum length of "eventData" to 12K characters.
+
+# v1.17.0 (2022-11-02)
+
+* **Feature**: Adds support for tagging replication-set on creation.
+
+# v1.16.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.0 (2022-10-13)
+
+* **Feature**: Update RelatedItem enum to support Tasks
+
+# v1.15.9 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.8 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.7 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.6 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.15.5 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

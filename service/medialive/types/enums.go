@@ -786,6 +786,38 @@ func (DeviceUpdateStatus) Values() []DeviceUpdateStatus {
 	}
 }
 
+type DolbyEProgramSelection string
+
+// Enum values for DolbyEProgramSelection
+const (
+	DolbyEProgramSelectionAllChannels DolbyEProgramSelection = "ALL_CHANNELS"
+	DolbyEProgramSelectionProgram1    DolbyEProgramSelection = "PROGRAM_1"
+	DolbyEProgramSelectionProgram2    DolbyEProgramSelection = "PROGRAM_2"
+	DolbyEProgramSelectionProgram3    DolbyEProgramSelection = "PROGRAM_3"
+	DolbyEProgramSelectionProgram4    DolbyEProgramSelection = "PROGRAM_4"
+	DolbyEProgramSelectionProgram5    DolbyEProgramSelection = "PROGRAM_5"
+	DolbyEProgramSelectionProgram6    DolbyEProgramSelection = "PROGRAM_6"
+	DolbyEProgramSelectionProgram7    DolbyEProgramSelection = "PROGRAM_7"
+	DolbyEProgramSelectionProgram8    DolbyEProgramSelection = "PROGRAM_8"
+)
+
+// Values returns all known values for DolbyEProgramSelection. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (DolbyEProgramSelection) Values() []DolbyEProgramSelection {
+	return []DolbyEProgramSelection{
+		"ALL_CHANNELS",
+		"PROGRAM_1",
+		"PROGRAM_2",
+		"PROGRAM_3",
+		"PROGRAM_4",
+		"PROGRAM_5",
+		"PROGRAM_6",
+		"PROGRAM_7",
+		"PROGRAM_8",
+	}
+}
+
 type DvbSdtOutputSdt string
 
 // Enum values for DvbSdtOutputSdt
@@ -964,6 +996,78 @@ func (DvbSubOcrLanguage) Values() []DvbSubOcrLanguage {
 		"NLD",
 		"POR",
 		"SPA",
+	}
+}
+
+type Eac3AtmosCodingMode string
+
+// Enum values for Eac3AtmosCodingMode
+const (
+	Eac3AtmosCodingModeCodingMode514 Eac3AtmosCodingMode = "CODING_MODE_5_1_4"
+	Eac3AtmosCodingModeCodingMode714 Eac3AtmosCodingMode = "CODING_MODE_7_1_4"
+	Eac3AtmosCodingModeCodingMode916 Eac3AtmosCodingMode = "CODING_MODE_9_1_6"
+)
+
+// Values returns all known values for Eac3AtmosCodingMode. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (Eac3AtmosCodingMode) Values() []Eac3AtmosCodingMode {
+	return []Eac3AtmosCodingMode{
+		"CODING_MODE_5_1_4",
+		"CODING_MODE_7_1_4",
+		"CODING_MODE_9_1_6",
+	}
+}
+
+type Eac3AtmosDrcLine string
+
+// Enum values for Eac3AtmosDrcLine
+const (
+	Eac3AtmosDrcLineFilmLight     Eac3AtmosDrcLine = "FILM_LIGHT"
+	Eac3AtmosDrcLineFilmStandard  Eac3AtmosDrcLine = "FILM_STANDARD"
+	Eac3AtmosDrcLineMusicLight    Eac3AtmosDrcLine = "MUSIC_LIGHT"
+	Eac3AtmosDrcLineMusicStandard Eac3AtmosDrcLine = "MUSIC_STANDARD"
+	Eac3AtmosDrcLineNone          Eac3AtmosDrcLine = "NONE"
+	Eac3AtmosDrcLineSpeech        Eac3AtmosDrcLine = "SPEECH"
+)
+
+// Values returns all known values for Eac3AtmosDrcLine. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (Eac3AtmosDrcLine) Values() []Eac3AtmosDrcLine {
+	return []Eac3AtmosDrcLine{
+		"FILM_LIGHT",
+		"FILM_STANDARD",
+		"MUSIC_LIGHT",
+		"MUSIC_STANDARD",
+		"NONE",
+		"SPEECH",
+	}
+}
+
+type Eac3AtmosDrcRf string
+
+// Enum values for Eac3AtmosDrcRf
+const (
+	Eac3AtmosDrcRfFilmLight     Eac3AtmosDrcRf = "FILM_LIGHT"
+	Eac3AtmosDrcRfFilmStandard  Eac3AtmosDrcRf = "FILM_STANDARD"
+	Eac3AtmosDrcRfMusicLight    Eac3AtmosDrcRf = "MUSIC_LIGHT"
+	Eac3AtmosDrcRfMusicStandard Eac3AtmosDrcRf = "MUSIC_STANDARD"
+	Eac3AtmosDrcRfNone          Eac3AtmosDrcRf = "NONE"
+	Eac3AtmosDrcRfSpeech        Eac3AtmosDrcRf = "SPEECH"
+)
+
+// Values returns all known values for Eac3AtmosDrcRf. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (Eac3AtmosDrcRf) Values() []Eac3AtmosDrcRf {
+	return []Eac3AtmosDrcRf{
+		"FILM_LIGHT",
+		"FILM_STANDARD",
+		"MUSIC_LIGHT",
+		"MUSIC_STANDARD",
+		"NONE",
+		"SPEECH",
 	}
 }
 
@@ -2968,7 +3072,8 @@ type InputDeviceType string
 
 // Enum values for InputDeviceType
 const (
-	InputDeviceTypeHd InputDeviceType = "HD"
+	InputDeviceTypeHd  InputDeviceType = "HD"
+	InputDeviceTypeUhd InputDeviceType = "UHD"
 )
 
 // Values returns all known values for InputDeviceType. Note that this can be
@@ -2977,6 +3082,7 @@ const (
 func (InputDeviceType) Values() []InputDeviceType {
 	return []InputDeviceType{
 		"HD",
+		"UHD",
 	}
 }
 
@@ -4088,6 +4194,40 @@ func (NielsenWatermarksDistributionTypes) Values() []NielsenWatermarksDistributi
 	}
 }
 
+type NielsenWatermarkTimezones string
+
+// Enum values for NielsenWatermarkTimezones
+const (
+	NielsenWatermarkTimezonesAmericaPuertoRico NielsenWatermarkTimezones = "AMERICA_PUERTO_RICO"
+	NielsenWatermarkTimezonesUsAlaska          NielsenWatermarkTimezones = "US_ALASKA"
+	NielsenWatermarkTimezonesUsArizona         NielsenWatermarkTimezones = "US_ARIZONA"
+	NielsenWatermarkTimezonesUsCentral         NielsenWatermarkTimezones = "US_CENTRAL"
+	NielsenWatermarkTimezonesUsEastern         NielsenWatermarkTimezones = "US_EASTERN"
+	NielsenWatermarkTimezonesUsHawaii          NielsenWatermarkTimezones = "US_HAWAII"
+	NielsenWatermarkTimezonesUsMountain        NielsenWatermarkTimezones = "US_MOUNTAIN"
+	NielsenWatermarkTimezonesUsPacific         NielsenWatermarkTimezones = "US_PACIFIC"
+	NielsenWatermarkTimezonesUsSamoa           NielsenWatermarkTimezones = "US_SAMOA"
+	NielsenWatermarkTimezonesUtc               NielsenWatermarkTimezones = "UTC"
+)
+
+// Values returns all known values for NielsenWatermarkTimezones. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (NielsenWatermarkTimezones) Values() []NielsenWatermarkTimezones {
+	return []NielsenWatermarkTimezones{
+		"AMERICA_PUERTO_RICO",
+		"US_ALASKA",
+		"US_ARIZONA",
+		"US_CENTRAL",
+		"US_EASTERN",
+		"US_HAWAII",
+		"US_MOUNTAIN",
+		"US_PACIFIC",
+		"US_SAMOA",
+		"UTC",
+	}
+}
+
 type OfferingDurationUnits string
 
 // Enum values for OfferingDurationUnits
@@ -4582,6 +4722,24 @@ func (Scte35DeviceRestrictions) Values() []Scte35DeviceRestrictions {
 	}
 }
 
+type Scte35InputMode string
+
+// Enum values for Scte35InputMode
+const (
+	Scte35InputModeFixed        Scte35InputMode = "FIXED"
+	Scte35InputModeFollowActive Scte35InputMode = "FOLLOW_ACTIVE"
+)
+
+// Values returns all known values for Scte35InputMode. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (Scte35InputMode) Values() []Scte35InputMode {
+	return []Scte35InputMode{
+		"FIXED",
+		"FOLLOW_ACTIVE",
+	}
+}
+
 type Scte35NoRegionalBlackoutFlag string
 
 // Enum values for Scte35NoRegionalBlackoutFlag
@@ -4910,6 +5068,60 @@ func (TemporalFilterStrength) Values() []TemporalFilterStrength {
 		"STRENGTH_14",
 		"STRENGTH_15",
 		"STRENGTH_16",
+	}
+}
+
+type TimecodeBurninFontSize string
+
+// Enum values for TimecodeBurninFontSize
+const (
+	TimecodeBurninFontSizeExtraSmall10 TimecodeBurninFontSize = "EXTRA_SMALL_10"
+	TimecodeBurninFontSizeLarge48      TimecodeBurninFontSize = "LARGE_48"
+	TimecodeBurninFontSizeMedium32     TimecodeBurninFontSize = "MEDIUM_32"
+	TimecodeBurninFontSizeSmall16      TimecodeBurninFontSize = "SMALL_16"
+)
+
+// Values returns all known values for TimecodeBurninFontSize. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (TimecodeBurninFontSize) Values() []TimecodeBurninFontSize {
+	return []TimecodeBurninFontSize{
+		"EXTRA_SMALL_10",
+		"LARGE_48",
+		"MEDIUM_32",
+		"SMALL_16",
+	}
+}
+
+type TimecodeBurninPosition string
+
+// Enum values for TimecodeBurninPosition
+const (
+	TimecodeBurninPositionBottomCenter TimecodeBurninPosition = "BOTTOM_CENTER"
+	TimecodeBurninPositionBottomLeft   TimecodeBurninPosition = "BOTTOM_LEFT"
+	TimecodeBurninPositionBottomRight  TimecodeBurninPosition = "BOTTOM_RIGHT"
+	TimecodeBurninPositionMiddleCenter TimecodeBurninPosition = "MIDDLE_CENTER"
+	TimecodeBurninPositionMiddleLeft   TimecodeBurninPosition = "MIDDLE_LEFT"
+	TimecodeBurninPositionMiddleRight  TimecodeBurninPosition = "MIDDLE_RIGHT"
+	TimecodeBurninPositionTopCenter    TimecodeBurninPosition = "TOP_CENTER"
+	TimecodeBurninPositionTopLeft      TimecodeBurninPosition = "TOP_LEFT"
+	TimecodeBurninPositionTopRight     TimecodeBurninPosition = "TOP_RIGHT"
+)
+
+// Values returns all known values for TimecodeBurninPosition. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (TimecodeBurninPosition) Values() []TimecodeBurninPosition {
+	return []TimecodeBurninPosition{
+		"BOTTOM_CENTER",
+		"BOTTOM_LEFT",
+		"BOTTOM_RIGHT",
+		"MIDDLE_CENTER",
+		"MIDDLE_LEFT",
+		"MIDDLE_RIGHT",
+		"TOP_CENTER",
+		"TOP_LEFT",
+		"TOP_RIGHT",
 	}
 }
 

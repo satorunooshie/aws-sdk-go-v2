@@ -26,23 +26,27 @@ import (
 // estimation of model parameters during training. Hyperparameters can be tuned to
 // optimize this learning process. For a list of hyperparameters for each training
 // algorithm provided by SageMaker, see Algorithms
-// (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html).
+// (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html). Do not include any
+// security-sensitive information including account access IDs, secrets or tokens
+// in any hyperparameter field. If the use of security-sensitive credentials are
+// detected, SageMaker will reject your training job request and return an
+// exception error.
 //
-// * InputDataConfig
-// - Describes the training dataset and the Amazon S3, EFS, or FSx location where
-// it is stored.
+// * InputDataConfig - Describes the input required by the
+// training job and the Amazon S3, EFS, or FSx location where it is stored.
 //
-// * OutputDataConfig - Identifies the Amazon S3 bucket where you
-// want SageMaker to save the results of model training.
+// *
+// OutputDataConfig - Identifies the Amazon S3 bucket where you want SageMaker to
+// save the results of model training.
 //
-// * ResourceConfig -
-// Identifies the resources, ML compute instances, and ML storage volumes to deploy
-// for model training. In distributed training, you specify more than one
-// instance.
+// * ResourceConfig - Identifies the
+// resources, ML compute instances, and ML storage volumes to deploy for model
+// training. In distributed training, you specify more than one instance.
 //
-// * EnableManagedSpotTraining - Optimize the cost of training machine
-// learning models by up to 80% by using Amazon EC2 Spot instances. For more
-// information, see Managed Spot Training
+// *
+// EnableManagedSpotTraining - Optimize the cost of training machine learning
+// models by up to 80% by using Amazon EC2 Spot instances. For more information,
+// see Managed Spot Training
 // (https://docs.aws.amazon.com/sagemaker/latest/dg/model-managed-spot-training.html).
 //
 // *
@@ -142,14 +146,15 @@ type CreateTrainingJobInput struct {
 	// checkpoint data.
 	CheckpointConfig *types.CheckpointConfig
 
-	// Configuration information for the Debugger hook parameters, metric and tensor
-	// collections, and storage paths. To learn more about how to configure the
-	// DebugHookConfig parameter, see Use the SageMaker and Debugger Configuration API
-	// Operations to Create, Update, and Debug Your Training Job
+	// Configuration information for the Amazon SageMaker Debugger hook parameters,
+	// metric and tensor collections, and storage paths. To learn more about how to
+	// configure the DebugHookConfig parameter, see Use the SageMaker and Debugger
+	// Configuration API Operations to Create, Update, and Debug Your Training Job
 	// (https://docs.aws.amazon.com/sagemaker/latest/dg/debugger-createtrainingjob-api.html).
 	DebugHookConfig *types.DebugHookConfig
 
-	// Configuration information for Debugger rules for debugging output tensors.
+	// Configuration information for Amazon SageMaker Debugger rules for debugging
+	// output tensors.
 	DebugRuleConfigurations []types.DebugRuleConfiguration
 
 	// To encrypt all communications between ML compute instances in distributed
@@ -199,7 +204,10 @@ type CreateTrainingJobInput struct {
 	// Algorithms (https://docs.aws.amazon.com/sagemaker/latest/dg/algos.html). You can
 	// specify a maximum of 100 hyperparameters. Each hyperparameter is a key-value
 	// pair. Each key and value is limited to 256 characters, as specified by the
-	// Length Constraint.
+	// Length Constraint. Do not include any security-sensitive information including
+	// account access IDs, secrets or tokens in any hyperparameter field. If the use of
+	// security-sensitive credentials are detected, SageMaker will reject your training
+	// job request and return an exception error.
 	HyperParameters map[string]string
 
 	// An array of Channel objects. Each channel is a named input source.
@@ -216,12 +224,12 @@ type CreateTrainingJobInput struct {
 	// be downloaded.
 	InputDataConfig []types.Channel
 
-	// Configuration information for Debugger system monitoring, framework profiling,
-	// and storage paths.
+	// Configuration information for Amazon SageMaker Debugger system monitoring,
+	// framework profiling, and storage paths.
 	ProfilerConfig *types.ProfilerConfig
 
-	// Configuration information for Debugger rules for profiling system and framework
-	// metrics.
+	// Configuration information for Amazon SageMaker Debugger rules for profiling
+	// system and framework metrics.
 	ProfilerRuleConfigurations []types.ProfilerRuleConfiguration
 
 	// The number of times to retry the job when the job fails due to an
@@ -234,7 +242,8 @@ type CreateTrainingJobInput struct {
 	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html).
 	Tags []types.Tag
 
-	// Configuration of storage locations for the Debugger TensorBoard output data.
+	// Configuration of storage locations for the Amazon SageMaker Debugger TensorBoard
+	// output data.
 	TensorBoardOutputConfig *types.TensorBoardOutputConfig
 
 	// A VpcConfig object that specifies the VPC that you want your training job to

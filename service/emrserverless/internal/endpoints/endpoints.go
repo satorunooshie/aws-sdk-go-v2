@@ -139,14 +139,74 @@ var defaultPartitions = endpoints.Partitions{
 				Region: "ap-northeast-1",
 			}: endpoints.Endpoint{},
 			endpoints.EndpointKey{
+				Region: "ap-northeast-2",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region: "ap-south-1",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region: "ap-southeast-1",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region: "ap-southeast-2",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region: "ca-central-1",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region:  "ca-central-1",
+				Variant: endpoints.FIPSVariant,
+			}: {
+				Hostname: "emr-serverless-fips.ca-central-1.amazonaws.com",
+			},
+			endpoints.EndpointKey{
+				Region: "eu-central-1",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region: "eu-north-1",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
 				Region: "eu-west-1",
 			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region: "eu-west-2",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region: "eu-west-3",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region: "fips-ca-central-1",
+			}: endpoints.Endpoint{
+				Hostname: "emr-serverless-fips.ca-central-1.amazonaws.com",
+				CredentialScope: endpoints.CredentialScope{
+					Region: "ca-central-1",
+				},
+				Deprecated: aws.TrueTernary,
+			},
 			endpoints.EndpointKey{
 				Region: "fips-us-east-1",
 			}: endpoints.Endpoint{
 				Hostname: "emr-serverless-fips.us-east-1.amazonaws.com",
 				CredentialScope: endpoints.CredentialScope{
 					Region: "us-east-1",
+				},
+				Deprecated: aws.TrueTernary,
+			},
+			endpoints.EndpointKey{
+				Region: "fips-us-east-2",
+			}: endpoints.Endpoint{
+				Hostname: "emr-serverless-fips.us-east-2.amazonaws.com",
+				CredentialScope: endpoints.CredentialScope{
+					Region: "us-east-2",
+				},
+				Deprecated: aws.TrueTernary,
+			},
+			endpoints.EndpointKey{
+				Region: "fips-us-west-1",
+			}: endpoints.Endpoint{
+				Hostname: "emr-serverless-fips.us-west-1.amazonaws.com",
+				CredentialScope: endpoints.CredentialScope{
+					Region: "us-west-1",
 				},
 				Deprecated: aws.TrueTernary,
 			},
@@ -160,6 +220,9 @@ var defaultPartitions = endpoints.Partitions{
 				Deprecated: aws.TrueTernary,
 			},
 			endpoints.EndpointKey{
+				Region: "sa-east-1",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
 				Region: "us-east-1",
 			}: endpoints.Endpoint{},
 			endpoints.EndpointKey{
@@ -167,6 +230,24 @@ var defaultPartitions = endpoints.Partitions{
 				Variant: endpoints.FIPSVariant,
 			}: {
 				Hostname: "emr-serverless-fips.us-east-1.amazonaws.com",
+			},
+			endpoints.EndpointKey{
+				Region: "us-east-2",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region:  "us-east-2",
+				Variant: endpoints.FIPSVariant,
+			}: {
+				Hostname: "emr-serverless-fips.us-east-2.amazonaws.com",
+			},
+			endpoints.EndpointKey{
+				Region: "us-west-1",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region:  "us-west-1",
+				Variant: endpoints.FIPSVariant,
+			}: {
+				Hostname: "emr-serverless-fips.us-west-1.amazonaws.com",
 			},
 			endpoints.EndpointKey{
 				Region: "us-west-2",

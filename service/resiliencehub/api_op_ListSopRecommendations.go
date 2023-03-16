@@ -12,8 +12,8 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the standard operating procedure (SOP) recommendations for the Resilience
-// Hub applications.
+// Lists the standard operating procedure (SOP) recommendations for the AWS
+// Resilience Hub applications.
 func (c *Client) ListSopRecommendations(ctx context.Context, params *ListSopRecommendationsInput, optFns ...func(*Options)) (*ListSopRecommendationsOutput, error) {
 	if params == nil {
 		params = &ListSopRecommendationsInput{}
@@ -35,7 +35,7 @@ type ListSopRecommendationsInput struct {
 	// arn:partition:resiliencehub:region:account:app-assessment/app-id. For more
 	// information about ARNs, see  Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the AWS General Reference guide.
 	//
 	// This member is required.
 	AssessmentArn *string
@@ -53,8 +53,8 @@ type ListSopRecommendationsInput struct {
 
 type ListSopRecommendationsOutput struct {
 
-	// The standard operating procedure (SOP) recommendations for the Resilience Hub
-	// applications.
+	// The standard operating procedure (SOP) recommendations for the AWS Resilience
+	// Hub applications.
 	//
 	// This member is required.
 	SopRecommendations []types.SopRecommendation
@@ -142,6 +142,11 @@ var _ ListSopRecommendationsAPIClient = (*Client)(nil)
 // ListSopRecommendationsPaginatorOptions is the paginator options for
 // ListSopRecommendations
 type ListSopRecommendationsPaginatorOptions struct {
+	// The maximum number of results to include in the response. If more results exist
+	// than the specified MaxResults value, a token is included in the response so that
+	// the remaining results can be retrieved.
+	Limit int32
+
 	// Set to true if pagination should stop if the service returns a pagination token
 	// that matches the most recent token provided to the service.
 	StopOnDuplicateToken bool
@@ -163,6 +168,9 @@ func NewListSopRecommendationsPaginator(client ListSopRecommendationsAPIClient, 
 	}
 
 	options := ListSopRecommendationsPaginatorOptions{}
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
+	}
 
 	for _, fn := range optFns {
 		fn(&options)
@@ -190,6 +198,12 @@ func (p *ListSopRecommendationsPaginator) NextPage(ctx context.Context, optFns .
 
 	params := *p.params
 	params.NextToken = p.nextToken
+
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListSopRecommendations(ctx, &params, optFns...)
 	if err != nil {

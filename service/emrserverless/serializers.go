@@ -142,6 +142,11 @@ func awsRestjson1_serializeOpDocumentCreateApplicationInput(v *CreateApplication
 	object := value.Object()
 	defer object.Close()
 
+	if len(v.Architecture) > 0 {
+		ok := object.Key("architecture")
+		ok.String(string(v.Architecture))
+	}
+
 	if v.AutoStartConfiguration != nil {
 		ok := object.Key("autoStartConfiguration")
 		if err := awsRestjson1_serializeDocumentAutoStartConfig(v.AutoStartConfiguration, ok); err != nil {
@@ -159,6 +164,13 @@ func awsRestjson1_serializeOpDocumentCreateApplicationInput(v *CreateApplication
 	if v.ClientToken != nil {
 		ok := object.Key("clientToken")
 		ok.String(*v.ClientToken)
+	}
+
+	if v.ImageConfiguration != nil {
+		ok := object.Key("imageConfiguration")
+		if err := awsRestjson1_serializeDocumentImageConfigurationInput(v.ImageConfiguration, ok); err != nil {
+			return err
+		}
 	}
 
 	if v.InitialCapacity != nil {
@@ -202,6 +214,13 @@ func awsRestjson1_serializeOpDocumentCreateApplicationInput(v *CreateApplication
 	if v.Type != nil {
 		ok := object.Key("type")
 		ok.String(*v.Type)
+	}
+
+	if v.WorkerTypeSpecifications != nil {
+		ok := object.Key("workerTypeSpecifications")
+		if err := awsRestjson1_serializeDocumentWorkerTypeSpecificationInputMap(v.WorkerTypeSpecifications, ok); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -316,6 +335,73 @@ func awsRestjson1_serializeOpHttpBindingsGetApplicationInput(v *GetApplicationIn
 	}
 	if v.ApplicationId != nil {
 		if err := encoder.SetURI("applicationId").String(*v.ApplicationId); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+type awsRestjson1_serializeOpGetDashboardForJobRun struct {
+}
+
+func (*awsRestjson1_serializeOpGetDashboardForJobRun) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsRestjson1_serializeOpGetDashboardForJobRun) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*GetDashboardForJobRunInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	opPath, opQuery := httpbinding.SplitURI("/applications/{applicationId}/jobruns/{jobRunId}/dashboard")
+	request.URL.Path = smithyhttp.JoinPath(request.URL.Path, opPath)
+	request.URL.RawQuery = smithyhttp.JoinRawQuery(request.URL.RawQuery, opQuery)
+	request.Method = "GET"
+	restEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if err := awsRestjson1_serializeOpHttpBindingsGetDashboardForJobRunInput(input, restEncoder); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = restEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+func awsRestjson1_serializeOpHttpBindingsGetDashboardForJobRunInput(v *GetDashboardForJobRunInput, encoder *httpbinding.Encoder) error {
+	if v == nil {
+		return fmt.Errorf("unsupported serialization of nil %T", v)
+	}
+
+	if v.ApplicationId == nil || len(*v.ApplicationId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member applicationId must not be empty")}
+	}
+	if v.ApplicationId != nil {
+		if err := encoder.SetURI("applicationId").String(*v.ApplicationId); err != nil {
+			return err
+		}
+	}
+
+	if v.JobRunId == nil || len(*v.JobRunId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member jobRunId must not be empty")}
+	}
+	if v.JobRunId != nil {
+		if err := encoder.SetURI("jobRunId").String(*v.JobRunId); err != nil {
 			return err
 		}
 	}
@@ -739,9 +825,9 @@ func awsRestjson1_serializeOpDocumentStartJobRunInput(v *StartJobRunInput, value
 		ok.String(*v.ExecutionRoleArn)
 	}
 
-	if v.ExecutionTimeoutMinutes != 0 {
+	if v.ExecutionTimeoutMinutes != nil {
 		ok := object.Key("executionTimeoutMinutes")
-		ok.Long(v.ExecutionTimeoutMinutes)
+		ok.Long(*v.ExecutionTimeoutMinutes)
 	}
 
 	if v.JobDriver != nil {
@@ -1044,6 +1130,11 @@ func awsRestjson1_serializeOpDocumentUpdateApplicationInput(v *UpdateApplication
 	object := value.Object()
 	defer object.Close()
 
+	if len(v.Architecture) > 0 {
+		ok := object.Key("architecture")
+		ok.String(string(v.Architecture))
+	}
+
 	if v.AutoStartConfiguration != nil {
 		ok := object.Key("autoStartConfiguration")
 		if err := awsRestjson1_serializeDocumentAutoStartConfig(v.AutoStartConfiguration, ok); err != nil {
@@ -1063,6 +1154,13 @@ func awsRestjson1_serializeOpDocumentUpdateApplicationInput(v *UpdateApplication
 		ok.String(*v.ClientToken)
 	}
 
+	if v.ImageConfiguration != nil {
+		ok := object.Key("imageConfiguration")
+		if err := awsRestjson1_serializeDocumentImageConfigurationInput(v.ImageConfiguration, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.InitialCapacity != nil {
 		ok := object.Key("initialCapacity")
 		if err := awsRestjson1_serializeDocumentInitialCapacityConfigMap(v.InitialCapacity, ok); err != nil {
@@ -1080,6 +1178,13 @@ func awsRestjson1_serializeOpDocumentUpdateApplicationInput(v *UpdateApplication
 	if v.NetworkConfiguration != nil {
 		ok := object.Key("networkConfiguration")
 		if err := awsRestjson1_serializeDocumentNetworkConfiguration(v.NetworkConfiguration, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.WorkerTypeSpecifications != nil {
+		ok := object.Key("workerTypeSpecifications")
+		if err := awsRestjson1_serializeDocumentWorkerTypeSpecificationInputMap(v.WorkerTypeSpecifications, ok); err != nil {
 			return err
 		}
 	}
@@ -1204,6 +1309,18 @@ func awsRestjson1_serializeDocumentHive(v *types.Hive, value smithyjson.Value) e
 	if v.Query != nil {
 		ok := object.Key("query")
 		ok.String(*v.Query)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentImageConfigurationInput(v *types.ImageConfigurationInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.ImageUri != nil {
+		ok := object.Key("imageUri")
+		ok.String(*v.ImageUri)
 	}
 
 	return nil
@@ -1451,5 +1568,33 @@ func awsRestjson1_serializeDocumentWorkerResourceConfig(v *types.WorkerResourceC
 		ok.String(*v.Memory)
 	}
 
+	return nil
+}
+
+func awsRestjson1_serializeDocumentWorkerTypeSpecificationInput(v *types.WorkerTypeSpecificationInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.ImageConfiguration != nil {
+		ok := object.Key("imageConfiguration")
+		if err := awsRestjson1_serializeDocumentImageConfigurationInput(v.ImageConfiguration, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentWorkerTypeSpecificationInputMap(v map[string]types.WorkerTypeSpecificationInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	for key := range v {
+		om := object.Key(key)
+		mapVar := v[key]
+		if err := awsRestjson1_serializeDocumentWorkerTypeSpecificationInput(&mapVar, om); err != nil {
+			return err
+		}
+	}
 	return nil
 }

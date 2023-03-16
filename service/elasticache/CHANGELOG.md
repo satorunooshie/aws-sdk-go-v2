@@ -1,3 +1,80 @@
+# v1.26.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.26.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+* **Dependency Update**: Upgrade smithy to 1.27.2 and correct empty query list serialization.
+
+# v1.26.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.26.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.25.0 (2022-12-28)
+
+* **Feature**: This release allows you to modify the encryption in transit setting, for existing Redis clusters. You can now change the TLS configuration of your Redis clusters without the need to re-build or re-provision the clusters or impact application availability.
+
+# v1.24.3 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.2 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.1 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.24.0 (2022-11-16)
+
+* **Feature**: for Redis now supports AWS Identity and Access Management authentication access to Redis clusters starting with redis-engine version 7.0
+
+# v1.23.1 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.23.0 (2022-11-07)
+
+* **Feature**: Added support for IPv6 and dual stack for Memcached and Redis clusters. Customers can now launch new Redis and Memcached clusters with IPv6 and dual stack networking support.
+
+# v1.22.12 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.11 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.10 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.9 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.8 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.7 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.22.6 (2022-08-30)
 
 * No change notes available for this release.

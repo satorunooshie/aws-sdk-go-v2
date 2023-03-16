@@ -1,3 +1,92 @@
+# v1.19.7 (2023-03-14)
+
+* No change notes available for this release.
+
+# v1.19.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.19.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.19.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.19.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.18.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.0 (2022-11-30)
+
+* **Feature**: This release adds support for S3 cross account access points. IAM Access Analyzer will now produce public or cross account findings when it detects bucket delegation to external account access points.
+
+# v1.17.3 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.17.2 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.17.1 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.17.0 (2022-10-25)
+
+* **Feature**: This release adds support for six new resource types in IAM Access Analyzer to help you easily identify public and cross-account access to your AWS resources. Updated service API, documentation, and paginators.
+
+# v1.16.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.0 (2022-10-03)
+
+* **Feature**: AWS IAM Access Analyzer policy validation introduces new checks for role trust policies. As customers author a policy, IAM Access Analyzer policy validation evaluates the policy for any issues to make it easier for customers to author secure policies.
+
+# v1.15.18 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.17 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.16 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.15 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.15.14 (2022-08-30)
 
 * No change notes available for this release.

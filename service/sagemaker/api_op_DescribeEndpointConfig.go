@@ -71,9 +71,17 @@ type DescribeEndpointConfigOutput struct {
 	// Configuration to control how SageMaker captures inference data.
 	DataCaptureConfig *types.DataCaptureConfig
 
+	// The configuration parameters for an explainer.
+	ExplainerConfig *types.ExplainerConfig
+
 	// Amazon Web Services KMS key ID Amazon SageMaker uses to encrypt data when
 	// storing it on the ML storage volume attached to the instance.
 	KmsKeyId *string
+
+	// An array of ProductionVariant objects, one for each model that you want to host
+	// at this endpoint in shadow mode with production traffic replicated from the
+	// model specified on ProductionVariants.
+	ShadowProductionVariants []types.ProductionVariant
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata

@@ -31,21 +31,28 @@ func (c *Client) DescribeQuery(ctx context.Context, params *DescribeQueryInput, 
 
 type DescribeQueryInput struct {
 
-	// The ARN (or the ID suffix of the ARN) of an event data store on which the
-	// specified query was run.
-	//
-	// This member is required.
-	EventDataStore *string
-
 	// The query ID.
 	//
 	// This member is required.
 	QueryId *string
 
+	// The ARN (or the ID suffix of the ARN) of an event data store on which the
+	// specified query was run.
+	//
+	// Deprecated: EventDataStore is no longer required by DescribeQueryRequest
+	EventDataStore *string
+
 	noSmithyDocumentSerde
 }
 
 type DescribeQueryOutput struct {
+
+	// The URI for the S3 bucket where CloudTrail delivered query results, if
+	// applicable.
+	DeliveryS3Uri *string
+
+	// The delivery status.
+	DeliveryStatus types.DeliveryStatus
 
 	// The error message returned if a query failed.
 	ErrorMessage *string

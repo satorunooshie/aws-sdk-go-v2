@@ -270,9 +270,9 @@ func awsRestjson1_serializeOpDocumentCreateDeploymentStrategyInput(v *CreateDepl
 	object := value.Object()
 	defer object.Close()
 
-	{
+	if v.DeploymentDurationInMinutes != nil {
 		ok := object.Key("DeploymentDurationInMinutes")
-		ok.Integer(v.DeploymentDurationInMinutes)
+		ok.Integer(*v.DeploymentDurationInMinutes)
 	}
 
 	if v.Description != nil {
@@ -285,20 +285,20 @@ func awsRestjson1_serializeOpDocumentCreateDeploymentStrategyInput(v *CreateDepl
 		ok.Integer(v.FinalBakeTimeInMinutes)
 	}
 
-	{
+	if v.GrowthFactor != nil {
 		ok := object.Key("GrowthFactor")
 		switch {
-		case math.IsNaN(float64(v.GrowthFactor)):
+		case math.IsNaN(float64(*v.GrowthFactor)):
 			ok.String("NaN")
 
-		case math.IsInf(float64(v.GrowthFactor), 1):
+		case math.IsInf(float64(*v.GrowthFactor), 1):
 			ok.String("Infinity")
 
-		case math.IsInf(float64(v.GrowthFactor), -1):
+		case math.IsInf(float64(*v.GrowthFactor), -1):
 			ok.String("-Infinity")
 
 		default:
-			ok.Float(v.GrowthFactor)
+			ok.Float(*v.GrowthFactor)
 
 		}
 	}
@@ -485,9 +485,9 @@ func awsRestjson1_serializeOpHttpBindingsCreateExtensionInput(v *CreateExtension
 		return fmt.Errorf("unsupported serialization of nil %T", v)
 	}
 
-	if v.LatestVersionNumber != 0 {
+	if v.LatestVersionNumber != nil {
 		locationName := "Latest-Version-Number"
-		encoder.SetHeader(locationName).Integer(v.LatestVersionNumber)
+		encoder.SetHeader(locationName).Integer(*v.LatestVersionNumber)
 	}
 
 	return nil
@@ -596,9 +596,9 @@ func awsRestjson1_serializeOpDocumentCreateExtensionAssociationInput(v *CreateEx
 		ok.String(*v.ExtensionIdentifier)
 	}
 
-	if v.ExtensionVersionNumber != 0 {
+	if v.ExtensionVersionNumber != nil {
 		ok := object.Key("ExtensionVersionNumber")
-		ok.Integer(v.ExtensionVersionNumber)
+		ok.Integer(*v.ExtensionVersionNumber)
 	}
 
 	if v.Parameters != nil {
@@ -709,9 +709,14 @@ func awsRestjson1_serializeOpHttpBindingsCreateHostedConfigurationVersionInput(v
 		encoder.SetHeader(locationName).String(*v.Description)
 	}
 
-	if v.LatestVersionNumber != 0 {
+	if v.LatestVersionNumber != nil {
 		locationName := "Latest-Version-Number"
-		encoder.SetHeader(locationName).Integer(v.LatestVersionNumber)
+		encoder.SetHeader(locationName).Integer(*v.LatestVersionNumber)
+	}
+
+	if v.VersionLabel != nil && len(*v.VersionLabel) > 0 {
+		locationName := "Versionlabel"
+		encoder.SetHeader(locationName).String(*v.VersionLabel)
 	}
 
 	return nil
@@ -1022,8 +1027,8 @@ func awsRestjson1_serializeOpHttpBindingsDeleteExtensionInput(v *DeleteExtension
 		}
 	}
 
-	if v.VersionNumber != 0 {
-		encoder.SetQuery("version").Integer(v.VersionNumber)
+	if v.VersionNumber != nil {
+		encoder.SetQuery("version").Integer(*v.VersionNumber)
 	}
 
 	return nil
@@ -1424,8 +1429,11 @@ func awsRestjson1_serializeOpHttpBindingsGetDeploymentInput(v *GetDeploymentInpu
 		}
 	}
 
-	{
-		if err := encoder.SetURI("DeploymentNumber").Integer(v.DeploymentNumber); err != nil {
+	if v.DeploymentNumber == nil {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member DeploymentNumber must not be empty")}
+	}
+	if v.DeploymentNumber != nil {
+		if err := encoder.SetURI("DeploymentNumber").Integer(*v.DeploymentNumber); err != nil {
 			return err
 		}
 	}
@@ -1622,8 +1630,8 @@ func awsRestjson1_serializeOpHttpBindingsGetExtensionInput(v *GetExtensionInput,
 		}
 	}
 
-	if v.VersionNumber != 0 {
-		encoder.SetQuery("version_number").Integer(v.VersionNumber)
+	if v.VersionNumber != nil {
+		encoder.SetQuery("version_number").Integer(*v.VersionNumber)
 	}
 
 	return nil
@@ -1806,8 +1814,8 @@ func awsRestjson1_serializeOpHttpBindingsListApplicationsInput(v *ListApplicatio
 		return fmt.Errorf("unsupported serialization of nil %T", v)
 	}
 
-	if v.MaxResults != 0 {
-		encoder.SetQuery("max_results").Integer(v.MaxResults)
+	if v.MaxResults != nil {
+		encoder.SetQuery("max_results").Integer(*v.MaxResults)
 	}
 
 	if v.NextToken != nil {
@@ -1872,8 +1880,8 @@ func awsRestjson1_serializeOpHttpBindingsListConfigurationProfilesInput(v *ListC
 		}
 	}
 
-	if v.MaxResults != 0 {
-		encoder.SetQuery("max_results").Integer(v.MaxResults)
+	if v.MaxResults != nil {
+		encoder.SetQuery("max_results").Integer(*v.MaxResults)
 	}
 
 	if v.NextToken != nil {
@@ -1951,8 +1959,8 @@ func awsRestjson1_serializeOpHttpBindingsListDeploymentsInput(v *ListDeployments
 		}
 	}
 
-	if v.MaxResults != 0 {
-		encoder.SetQuery("max_results").Integer(v.MaxResults)
+	if v.MaxResults != nil {
+		encoder.SetQuery("max_results").Integer(*v.MaxResults)
 	}
 
 	if v.NextToken != nil {
@@ -2008,8 +2016,8 @@ func awsRestjson1_serializeOpHttpBindingsListDeploymentStrategiesInput(v *ListDe
 		return fmt.Errorf("unsupported serialization of nil %T", v)
 	}
 
-	if v.MaxResults != 0 {
-		encoder.SetQuery("max_results").Integer(v.MaxResults)
+	if v.MaxResults != nil {
+		encoder.SetQuery("max_results").Integer(*v.MaxResults)
 	}
 
 	if v.NextToken != nil {
@@ -2074,8 +2082,8 @@ func awsRestjson1_serializeOpHttpBindingsListEnvironmentsInput(v *ListEnvironmen
 		}
 	}
 
-	if v.MaxResults != 0 {
-		encoder.SetQuery("max_results").Integer(v.MaxResults)
+	if v.MaxResults != nil {
+		encoder.SetQuery("max_results").Integer(*v.MaxResults)
 	}
 
 	if v.NextToken != nil {
@@ -2135,12 +2143,12 @@ func awsRestjson1_serializeOpHttpBindingsListExtensionAssociationsInput(v *ListE
 		encoder.SetQuery("extension_identifier").String(*v.ExtensionIdentifier)
 	}
 
-	if v.ExtensionVersionNumber != 0 {
-		encoder.SetQuery("extension_version_number").Integer(v.ExtensionVersionNumber)
+	if v.ExtensionVersionNumber != nil {
+		encoder.SetQuery("extension_version_number").Integer(*v.ExtensionVersionNumber)
 	}
 
-	if v.MaxResults != 0 {
-		encoder.SetQuery("max_results").Integer(v.MaxResults)
+	if v.MaxResults != nil {
+		encoder.SetQuery("max_results").Integer(*v.MaxResults)
 	}
 
 	if v.NextToken != nil {
@@ -2200,8 +2208,8 @@ func awsRestjson1_serializeOpHttpBindingsListExtensionsInput(v *ListExtensionsIn
 		return fmt.Errorf("unsupported serialization of nil %T", v)
 	}
 
-	if v.MaxResults != 0 {
-		encoder.SetQuery("max_results").Integer(v.MaxResults)
+	if v.MaxResults != nil {
+		encoder.SetQuery("max_results").Integer(*v.MaxResults)
 	}
 
 	if v.Name != nil {
@@ -2279,12 +2287,16 @@ func awsRestjson1_serializeOpHttpBindingsListHostedConfigurationVersionsInput(v 
 		}
 	}
 
-	if v.MaxResults != 0 {
-		encoder.SetQuery("max_results").Integer(v.MaxResults)
+	if v.MaxResults != nil {
+		encoder.SetQuery("max_results").Integer(*v.MaxResults)
 	}
 
 	if v.NextToken != nil {
 		encoder.SetQuery("next_token").String(*v.NextToken)
+	}
+
+	if v.VersionLabel != nil {
+		encoder.SetQuery("version_label").String(*v.VersionLabel)
 	}
 
 	return nil
@@ -2450,6 +2462,11 @@ func awsRestjson1_serializeOpDocumentStartDeploymentInput(v *StartDeploymentInpu
 		ok.String(*v.Description)
 	}
 
+	if v.KmsKeyIdentifier != nil {
+		ok := object.Key("KmsKeyIdentifier")
+		ok.String(*v.KmsKeyIdentifier)
+	}
+
 	if v.Tags != nil {
 		ok := object.Key("Tags")
 		if err := awsRestjson1_serializeDocumentTagMap(v.Tags, ok); err != nil {
@@ -2515,8 +2532,11 @@ func awsRestjson1_serializeOpHttpBindingsStopDeploymentInput(v *StopDeploymentIn
 		}
 	}
 
-	{
-		if err := encoder.SetURI("DeploymentNumber").Integer(v.DeploymentNumber); err != nil {
+	if v.DeploymentNumber == nil {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member DeploymentNumber must not be empty")}
+	}
+	if v.DeploymentNumber != nil {
+		if err := encoder.SetURI("DeploymentNumber").Integer(*v.DeploymentNumber); err != nil {
 			return err
 		}
 	}
@@ -2946,9 +2966,9 @@ func awsRestjson1_serializeOpDocumentUpdateDeploymentStrategyInput(v *UpdateDepl
 	object := value.Object()
 	defer object.Close()
 
-	if v.DeploymentDurationInMinutes != 0 {
+	if v.DeploymentDurationInMinutes != nil {
 		ok := object.Key("DeploymentDurationInMinutes")
-		ok.Integer(v.DeploymentDurationInMinutes)
+		ok.Integer(*v.DeploymentDurationInMinutes)
 	}
 
 	if v.Description != nil {
@@ -2956,25 +2976,25 @@ func awsRestjson1_serializeOpDocumentUpdateDeploymentStrategyInput(v *UpdateDepl
 		ok.String(*v.Description)
 	}
 
-	if v.FinalBakeTimeInMinutes != 0 {
+	if v.FinalBakeTimeInMinutes != nil {
 		ok := object.Key("FinalBakeTimeInMinutes")
-		ok.Integer(v.FinalBakeTimeInMinutes)
+		ok.Integer(*v.FinalBakeTimeInMinutes)
 	}
 
-	if v.GrowthFactor != 0 {
+	if v.GrowthFactor != nil {
 		ok := object.Key("GrowthFactor")
 		switch {
-		case math.IsNaN(float64(v.GrowthFactor)):
+		case math.IsNaN(float64(*v.GrowthFactor)):
 			ok.String("NaN")
 
-		case math.IsInf(float64(v.GrowthFactor), 1):
+		case math.IsInf(float64(*v.GrowthFactor), 1):
 			ok.String("Infinity")
 
-		case math.IsInf(float64(v.GrowthFactor), -1):
+		case math.IsInf(float64(*v.GrowthFactor), -1):
 			ok.String("-Infinity")
 
 		default:
-			ok.Float(v.GrowthFactor)
+			ok.Float(*v.GrowthFactor)
 
 		}
 	}
@@ -3181,9 +3201,9 @@ func awsRestjson1_serializeOpDocumentUpdateExtensionInput(v *UpdateExtensionInpu
 		}
 	}
 
-	if v.VersionNumber != 0 {
+	if v.VersionNumber != nil {
 		ok := object.Key("VersionNumber")
-		ok.Integer(v.VersionNumber)
+		ok.Integer(*v.VersionNumber)
 	}
 
 	return nil

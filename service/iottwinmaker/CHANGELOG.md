@@ -1,3 +1,68 @@
+# v1.10.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.10.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.10.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.9.1 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.0 (2022-12-08)
+
+* **Feature**: This release adds the following new features: 1) New APIs for managing a continuous sync of assets and asset models from AWS IoT SiteWise. 2) Support user friendly names for component types (ComponentTypeName) and properties (DisplayName).
+
+# v1.8.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.8.0 (2022-11-16)
+
+* **Feature**: This release adds the following: 1) ExecuteQuery API allows users to query their AWS IoT TwinMaker Knowledge Graph 2) Pricing plan APIs allow users to configure and manage their pricing mode 3) Support for property groups and tabular property values in existing AWS IoT TwinMaker APIs.
+
+# v1.7.16 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.15 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.14 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.13 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.12 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.11 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.7.10 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

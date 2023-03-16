@@ -1,3 +1,97 @@
+# v1.33.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.0 (2023-03-09)
+
+* **Feature**: This release has two changes: add state persistence feature for embedded dashboard and console in GenerateEmbedUrlForRegisteredUser API; add properties for hidden collapsed row dimensions in PivotTableOptions.
+
+# v1.32.2 (2023-03-03)
+
+* No change notes available for this release.
+
+# v1.32.1 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.32.0 (2023-02-21)
+
+* **Feature**: S3 data sources now accept a custom IAM role.
+
+# v1.31.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.31.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.31.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.31.0 (2023-02-02)
+
+* **Feature**: QuickSight support for Radar Chart and Dashboard Publish Options
+
+# v1.30.0 (2023-01-20)
+
+* **Feature**: This release adds support for data bars in QuickSight table and increases pivot table field well limit.
+
+# v1.29.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.28.3 (2022-12-16)
+
+* No change notes available for this release.
+
+# v1.28.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.0 (2022-11-29)
+
+* **Feature**: This release adds new Describe APIs and updates Create and Update APIs to support the data model for Dashboards, Analyses, and Templates.
+
+# v1.27.0 (2022-11-18)
+
+* **Feature**: This release adds the following: 1) Asset management for centralized assets governance 2) QuickSight Q now supports public embedding 3) New Termination protection flag to mitigate accidental deletes 4) Athena data sources now accept a custom IAM role 5) QuickSight supports connectivity to Databricks
+
+# v1.26.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.0 (2022-10-07)
+
+* **Feature**: Amazon QuickSight now supports SecretsManager Secret ARN in place of CredentialPair for DataSource creation and update. This release also has some minor documentation updates and removes CountryCode as a required parameter in GeoSpatialColumnGroup
+
+# v1.25.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2022-09-14)
+
+* **Feature**: Fixed a bug in the API client generation which caused some operation parameters to be incorrectly generated as value types instead of pointer types. The service API always required these affected parameters to be nilable. This fixes the SDK client to match the expectations of the the service API.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.3 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.2 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.24.1 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

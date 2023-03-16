@@ -12,8 +12,11 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists all resources that are associated with specified application. Results are
-// paginated.
+// Lists all of the resources that are associated with the specified application.
+// Results are paginated. If you share an application, and a consumer account
+// associates a tag query to the application, all of the users who can access the
+// application can also view the tag values in all accounts that are associated
+// with it using this API.
 func (c *Client) ListAssociatedResources(ctx context.Context, params *ListAssociatedResourcesInput, optFns ...func(*Options)) (*ListAssociatedResourcesOutput, error) {
 	if params == nil {
 		params = &ListAssociatedResourcesInput{}
@@ -38,7 +41,7 @@ type ListAssociatedResourcesInput struct {
 
 	// The upper bound of the number of results to return (cannot exceed 25). If this
 	// parameter is omitted, it defaults to 25. This value is optional.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token to use to get the next page of results after a previous API call.
 	NextToken *string
@@ -160,8 +163,8 @@ func NewListAssociatedResourcesPaginator(client ListAssociatedResourcesAPIClient
 	}
 
 	options := ListAssociatedResourcesPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -191,7 +194,11 @@ func (p *ListAssociatedResourcesPaginator) NextPage(ctx context.Context, optFns 
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListAssociatedResources(ctx, &params, optFns...)
 	if err != nil {

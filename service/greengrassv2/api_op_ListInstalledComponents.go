@@ -61,7 +61,7 @@ type ListInstalledComponentsInput struct {
 	CoreDeviceThingName *string
 
 	// The maximum number of results to be returned per paginated request.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token to be used for the next set of paginated results.
 	NextToken *string
@@ -85,10 +85,12 @@ type ListInstalledComponentsInput struct {
 
 type ListInstalledComponentsOutput struct {
 
-	// A list that summarizes each component on the core device. Accuracy of the
-	// lastStatusChangeTimestamp response depends on Greengrass nucleus v2.7.0. It
-	// performs best on Greengrass nucleus v2.7.0 and can be inaccurate on earlier
-	// versions.
+	// A list that summarizes each component on the core device. Greengrass nucleus
+	// v2.7.0 or later is required to get an accurate lastStatusChangeTimestamp
+	// response. This response can be inaccurate in earlier Greengrass nucleus
+	// versions. Greengrass nucleus v2.8.0 or later is required to get an accurate
+	// lastInstallationSource and lastReportedTimestamp response. This response can be
+	// inaccurate or null in earlier Greengrass nucleus versions.
 	InstalledComponents []types.InstalledComponent
 
 	// The token for the next set of results, or null if there are no additional
@@ -200,8 +202,8 @@ func NewListInstalledComponentsPaginator(client ListInstalledComponentsAPIClient
 	}
 
 	options := ListInstalledComponentsPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -231,7 +233,11 @@ func (p *ListInstalledComponentsPaginator) NextPage(ctx context.Context, optFns 
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListInstalledComponents(ctx, &params, optFns...)
 	if err != nil {

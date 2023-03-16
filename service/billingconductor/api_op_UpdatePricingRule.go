@@ -43,6 +43,9 @@ type UpdatePricingRuleInput struct {
 	// The new name of the pricing rule. The name must be unique to each pricing rule.
 	Name *string
 
+	// The set of tiering configurations for the pricing rule.
+	Tiering *types.UpdateTieringInput
+
 	// The new pricing rule type.
 	Type types.PricingRuleType
 
@@ -57,6 +60,10 @@ type UpdatePricingRuleOutput struct {
 	// The pricing plans count that this pricing rule is associated with.
 	AssociatedPricingPlanCount int64
 
+	// The seller of services provided by Amazon Web Services, their affiliates, or
+	// third-party providers selling services via Amazon Web Services Marketplace.
+	BillingEntity *string
+
 	// The new description for the pricing rule.
 	Description *string
 
@@ -69,7 +76,14 @@ type UpdatePricingRuleOutput struct {
 	// The new name of the pricing rule. The name must be unique to each pricing rule.
 	Name *string
 
-	// The scope of pricing rule that indicates if it is globally applicable, or is
+	// Operation refers to the specific Amazon Web Services covered by this line item.
+	// This describes the specific usage of the line item. If the Scope attribute is
+	// set to SKU, this attribute indicates which operation the PricingRule is
+	// modifying. For example, a value of RunInstances:0202 indicates the operation of
+	// running an Amazon EC2 instance.
+	Operation *string
+
+	// The scope of pricing rule that indicates if it's globally applicable, or it's
 	// service-specific.
 	Scope types.PricingRuleScope
 
@@ -77,8 +91,18 @@ type UpdatePricingRuleOutput struct {
 	// the PricingRule is applicable for.
 	Service *string
 
+	// The set of tiering configurations for the pricing rule.
+	Tiering *types.UpdateTieringInput
+
 	// The new pricing rule type.
 	Type types.PricingRuleType
+
+	// Usage type is the unit that each service uses to measure the usage of a specific
+	// type of resource. If the Scope attribute is set to SKU, this attribute indicates
+	// which usage type the PricingRule is modifying. For example,
+	// USW2-BoxUsage:m2.2xlarge describes an M2 High Memory Double Extra Large instance
+	// in the US West (Oregon) Region.
+	UsageType *string
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata

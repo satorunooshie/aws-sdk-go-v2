@@ -1,3 +1,89 @@
+# v1.28.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.28.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.28.2 (2023-02-07)
+
+* **Documentation**: Updated the documentation for the ImportCertificate API call, and added examples.
+
+# v1.28.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.27.0 (2022-12-27)
+
+* **Feature**: Add additional operations to throw ThrottlingExceptions
+
+# v1.26.0 (2022-12-21)
+
+* **Feature**: This release adds support for Decrypt as a workflow step type.
+
+# v1.25.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2022-11-18)
+
+* **Feature**: Adds a NONE encryption algorithm type to AS2 connectors, providing support for skipping encryption of the AS2 message body when a HTTPS URL is also specified.
+
+# v1.24.0 (2022-11-16)
+
+* **Feature**: Allow additional operations to throw ThrottlingException
+
+# v1.23.3 (2022-11-08)
+
+* No change notes available for this release.
+
+# v1.23.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.0 (2022-10-13)
+
+* **Feature**: This release adds an option for customers to configure workflows that are triggered when files are only partially received from a client due to premature session disconnect.
+
+# v1.22.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.0 (2022-09-14)
+
+* **Feature**: This release introduces the ability to have multiple server host keys for any of your Transfer Family servers that use the SFTP protocol.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.8 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.7 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.21.6 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

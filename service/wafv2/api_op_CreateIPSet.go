@@ -33,20 +33,20 @@ func (c *Client) CreateIPSet(ctx context.Context, params *CreateIPSetInput, optF
 type CreateIPSetInput struct {
 
 	// Contains an array of strings that specifies zero or more IP addresses or blocks
-	// of IP addresses in Classless Inter-Domain Routing (CIDR) notation. WAF supports
-	// all IPv4 and IPv6 CIDR ranges except for /0. Example address strings:
-	//
-	// * To
-	// configure WAF to allow, block, or count requests that originated from the IP
-	// address 192.0.2.44, specify 192.0.2.44/32.
-	//
-	// * To configure WAF to allow, block,
-	// or count requests that originated from IP addresses from 192.0.2.0 to
-	// 192.0.2.255, specify 192.0.2.0/24.
+	// of IP addresses. All addresses must be specified using Classless Inter-Domain
+	// Routing (CIDR) notation. WAF supports all IPv4 and IPv6 CIDR ranges except for
+	// /0. Example address strings:
 	//
 	// * To configure WAF to allow, block, or count
-	// requests that originated from the IP address
-	// 1111:0000:0000:0000:0000:0000:0000:0111, specify
+	// requests that originated from the IP address 192.0.2.44, specify
+	// 192.0.2.44/32.
+	//
+	// * To configure WAF to allow, block, or count requests that
+	// originated from IP addresses from 192.0.2.0 to 192.0.2.255, specify
+	// 192.0.2.0/24.
+	//
+	// * To configure WAF to allow, block, or count requests that
+	// originated from the IP address 1111:0000:0000:0000:0000:0000:0000:0111, specify
 	// 1111:0000:0000:0000:0000:0000:0000:0111/128.
 	//
 	// * To configure WAF to allow,
@@ -87,15 +87,15 @@ type CreateIPSetInput struct {
 
 	// Specifies whether this is for an Amazon CloudFront distribution or for a
 	// regional application. A regional application can be an Application Load Balancer
-	// (ALB), an Amazon API Gateway REST API, an AppSync GraphQL API, or an Amazon
-	// Cognito user pool. To work with CloudFront, you must also specify the Region US
-	// East (N. Virginia) as follows:
+	// (ALB), an Amazon API Gateway REST API, an AppSync GraphQL API, a Amazon Cognito
+	// user pool, or an App Runner service. To work with CloudFront, you must also
+	// specify the Region US East (N. Virginia) as follows:
 	//
-	// * CLI - Specify the Region when you use the
-	// CloudFront scope: --scope=CLOUDFRONT --region=us-east-1.
+	// * CLI - Specify the Region
+	// when you use the CloudFront scope: --scope=CLOUDFRONT --region=us-east-1.
 	//
-	// * API and SDKs - For
-	// all calls, use the Region endpoint us-east-1.
+	// * API
+	// and SDKs - For all calls, use the Region endpoint us-east-1.
 	//
 	// This member is required.
 	Scope types.Scope

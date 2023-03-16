@@ -1,3 +1,76 @@
+# v1.27.2 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.1 (2023-03-03)
+
+* **Documentation**: Documentation updates for Amazon Macie
+
+# v1.27.0 (2023-02-23)
+
+* **Feature**: This release adds support for a new finding type, Policy:IAMUser/S3BucketSharedWithCloudFront, and S3 bucket metadata that indicates if a bucket is shared with an Amazon CloudFront OAI or OAC.
+
+# v1.26.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.26.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.26.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.25.0 (2022-12-21)
+
+* **Feature**: This release adds support for analyzing Amazon S3 objects that use the S3 Glacier Instant Retrieval (Glacier_IR) storage class.
+
+# v1.24.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.0 (2022-11-29)
+
+* **Feature**: Added support for configuring Macie to continually sample objects from S3 buckets and inspect them for sensitive data. Results appear in statistics, findings, and other data that Macie provides.
+
+# v1.23.6 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.5 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.4 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.3 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.2 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.1 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.23.0 (2022-08-30)
 
 * **Feature**: This release of the Amazon Macie API adds support for using allow lists to define specific text and text patterns to ignore when inspecting data sources for sensitive data.

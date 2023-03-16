@@ -199,6 +199,10 @@ type CloudFormationCostEstimationResourceCollectionFilter struct {
 // that are specified by an Amazon Web Services CloudFormation stack.
 type CloudFormationHealth struct {
 
+	// Number of resources that DevOps Guru is monitoring in your account that are
+	// specified by an Amazon Web Services CloudFormation stack.
+	AnalyzedResourceCount *int64
+
 	// Information about the health of the Amazon Web Services resources in your
 	// account that are specified by an Amazon Web Services CloudFormation stack,
 	// including the number of open proactive, open reactive insights, and the Mean
@@ -293,7 +297,7 @@ type CostEstimationResourceCollectionFilter struct {
 	// the resources are related. For example, you can assign the same tag to an Amazon
 	// DynamoDB table resource that you assign to an Lambda function. For more
 	// information about using tags, see the Tagging best practices
-	// (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)
+	// (https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html)
 	// whitepaper. Each Amazon Web Services tag has two parts.
 	//
 	// * A tag key (for
@@ -307,11 +311,13 @@ type CostEstimationResourceCollectionFilter struct {
 	// Together
 	// these are known as key-value pairs. The string used for a key in a tag that you
 	// use to define your resource coverage must begin with the prefix Devops-guru-.
-	// The tag key might be Devops-guru-deployment-application or
-	// Devops-guru-rds-application. While keys are case-sensitive, the case of key
-	// characters don't matter to DevOps Guru. For example, DevOps Guru works with a
-	// key named devops-guru-rds and a key named DevOps-Guru-RDS. Possible key/value
-	// pairs in your application might be Devops-Guru-production-application/RDS or
+	// The tag key might be DevOps-Guru-deployment-application or
+	// devops-guru-rds-application. When you create a key, the case of characters in
+	// the key can be whatever you choose. After you create a key, it is
+	// case-sensitive. For example, DevOps Guru works with a key named devops-guru-rds
+	// and a key named DevOps-Guru-RDS, and these act as two different keys. Possible
+	// key/value pairs in your application might be
+	// Devops-Guru-production-application/RDS or
 	// Devops-Guru-production-application/containers.
 	Tags []TagCostEstimationResourceCollectionFilter
 
@@ -470,6 +476,15 @@ type InsightTimeRange struct {
 
 	// The time when the behavior described in an insight ended.
 	EndTime *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Specifies one or more service names that are used to list anomalies.
+type ListAnomaliesForInsightFilters struct {
+
+	// A collection of the names of Amazon Web Services services.
+	ServiceCollection *ServiceCollection
 
 	noSmithyDocumentSerde
 }
@@ -649,8 +664,20 @@ type LogsAnomalyDetectionIntegrationConfig struct {
 // DevOps Guru to access that resource.
 type MonitoredResourceIdentifier struct {
 
+	// The time at which DevOps Guru last updated this resource.
+	LastUpdated *time.Time
+
 	// The name of the resource being monitored.
 	MonitoredResourceName *string
+
+	// A collection of Amazon Web Services resources supported by DevOps Guru. The two
+	// types of Amazon Web Services resource collections supported are Amazon Web
+	// Services CloudFormation stacks and Amazon Web Services resources that contain
+	// the same Amazon Web Services tag. DevOps Guru can be configured to analyze the
+	// Amazon Web Services resources that are defined in the stacks or that are tagged
+	// using the same tag key. You can specify up to 500 Amazon Web Services
+	// CloudFormation stacks.
+	ResourceCollection *ResourceCollection
 
 	// The permission status of a resource.
 	ResourcePermission ResourcePermission
@@ -716,6 +743,32 @@ type NotificationChannelConfig struct {
 	//
 	// This member is required.
 	Sns *SnsChannelConfig
+
+	// The filter configurations for the Amazon SNS notification topic you use with
+	// DevOps Guru. If you do not provide filter configurations, the default
+	// configurations are to receive notifications for all message types of High or
+	// Medium severity.
+	Filters *NotificationFilterConfig
+
+	noSmithyDocumentSerde
+}
+
+// The filter configurations for the Amazon SNS notification topic you use with
+// DevOps Guru. You can choose to specify which events or message types to receive
+// notifications for. You can also choose to specify which severity levels to
+// receive notifications for.
+type NotificationFilterConfig struct {
+
+	// The events that you want to receive notifications for. For example, you can
+	// choose to receive notifications only when the severity level is upgraded or a
+	// new insight is created.
+	MessageTypes []NotificationMessageType
+
+	// The severity levels that you want to receive notifications for. For example, you
+	// can choose to receive notifications only for insights with HIGH and MEDIUM
+	// severity levels. For more information, see Understanding insight severities
+	// (https://docs.aws.amazon.com/devops-guru/latest/userguide/working-with-insights.html#understanding-insights-severities).
+	Severities []InsightSeverity
 
 	noSmithyDocumentSerde
 }
@@ -1070,6 +1123,9 @@ type ProactiveAnomaly struct {
 	// related anomalies.
 	AssociatedInsightId *string
 
+	// A description of the proactive anomaly.
+	Description *string
+
 	// The ID of a proactive anomaly.
 	Id *string
 
@@ -1131,6 +1187,9 @@ type ProactiveAnomalySummary struct {
 	// The ID of the insight that contains this anomaly. An insight is composed of
 	// related anomalies.
 	AssociatedInsightId *string
+
+	// A description of the proactive anomaly.
+	Description *string
 
 	// The ID of the anomaly.
 	Id *string
@@ -1717,7 +1776,7 @@ type ResourceCollection struct {
 	// are related. For example, you can assign the same tag to an Amazon DynamoDB
 	// table resource that you assign to an Lambda function. For more information about
 	// using tags, see the Tagging best practices
-	// (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)
+	// (https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html)
 	// whitepaper. Each Amazon Web Services tag has two parts.
 	//
 	// * A tag key (for
@@ -1731,11 +1790,13 @@ type ResourceCollection struct {
 	// Together
 	// these are known as key-value pairs. The string used for a key in a tag that you
 	// use to define your resource coverage must begin with the prefix Devops-guru-.
-	// The tag key might be Devops-guru-deployment-application or
-	// Devops-guru-rds-application. While keys are case-sensitive, the case of key
-	// characters don't matter to DevOps Guru. For example, DevOps Guru works with a
-	// key named devops-guru-rds and a key named DevOps-Guru-RDS. Possible key/value
-	// pairs in your application might be Devops-Guru-production-application/RDS or
+	// The tag key might be DevOps-Guru-deployment-application or
+	// devops-guru-rds-application. When you create a key, the case of characters in
+	// the key can be whatever you choose. After you create a key, it is
+	// case-sensitive. For example, DevOps Guru works with a key named devops-guru-rds
+	// and a key named DevOps-Guru-RDS, and these act as two different keys. Possible
+	// key/value pairs in your application might be
+	// Devops-Guru-production-application/RDS or
 	// Devops-Guru-production-application/containers.
 	Tags []TagCollection
 
@@ -1760,7 +1821,7 @@ type ResourceCollectionFilter struct {
 	// are related. For example, you can assign the same tag to an Amazon DynamoDB
 	// table resource that you assign to an Lambda function. For more information about
 	// using tags, see the Tagging best practices
-	// (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)
+	// (https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html)
 	// whitepaper. Each Amazon Web Services tag has two parts.
 	//
 	// * A tag key (for
@@ -1774,19 +1835,24 @@ type ResourceCollectionFilter struct {
 	// Together
 	// these are known as key-value pairs. The string used for a key in a tag that you
 	// use to define your resource coverage must begin with the prefix Devops-guru-.
-	// The tag key might be Devops-guru-deployment-application or
-	// Devops-guru-rds-application. While keys are case-sensitive, the case of key
-	// characters don't matter to DevOps Guru. For example, DevOps Guru works with a
-	// key named devops-guru-rds and a key named DevOps-Guru-RDS. Possible key/value
-	// pairs in your application might be Devops-Guru-production-application/RDS or
+	// The tag key might be DevOps-Guru-deployment-application or
+	// devops-guru-rds-application. When you create a key, the case of characters in
+	// the key can be whatever you choose. After you create a key, it is
+	// case-sensitive. For example, DevOps Guru works with a key named devops-guru-rds
+	// and a key named DevOps-Guru-RDS, and these act as two different keys. Possible
+	// key/value pairs in your application might be
+	// Devops-Guru-production-application/RDS or
 	// Devops-Guru-production-application/containers.
 	Tags []TagCollectionFilter
 
 	noSmithyDocumentSerde
 }
 
-// Specifies one or more severity values and one or more status values that are
-// used to search for insights.
+// Specifies values used to filter responses when searching for insights. You can
+// use a ResourceCollection, ServiceCollection, array of severities, and an array
+// of status values. Each filter type contains one or more values to search for. If
+// you specify multiple filter types, the filter types are joined with an AND, and
+// the request returns only results that match all of the specified filters.
 type SearchInsightsFilters struct {
 
 	// A collection of Amazon Web Services resources supported by DevOps Guru. The two
@@ -1847,6 +1913,10 @@ type ServiceCollection struct {
 
 // Represents the health of an Amazon Web Services service.
 type ServiceHealth struct {
+
+	// Number of resources that DevOps Guru is monitoring in an analyzed Amazon Web
+	// Services service.
+	AnalyzedResourceCount *int64
 
 	// Represents the health of an Amazon Web Services service. This is a
 	// ServiceInsightHealth that contains the number of open proactive and reactive
@@ -1956,13 +2026,13 @@ type StartTimeRange struct {
 	noSmithyDocumentSerde
 }
 
-// A collection of Amazon Web Services stags. Tags help you identify and organize
+// A collection of Amazon Web Services tags. Tags help you identify and organize
 // your Amazon Web Services resources. Many Amazon Web Services services support
 // tagging, so you can assign the same tag to resources from different services to
 // indicate that the resources are related. For example, you can assign the same
 // tag to an Amazon DynamoDB table resource that you assign to an Lambda function.
 // For more information about using tags, see the Tagging best practices
-// (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)
+// (https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html)
 // whitepaper. Each Amazon Web Services tag has two parts.
 //
 // * A tag key (for
@@ -1976,11 +2046,13 @@ type StartTimeRange struct {
 // Together
 // these are known as key-value pairs. The string used for a key in a tag that you
 // use to define your resource coverage must begin with the prefix Devops-guru-.
-// The tag key might be Devops-guru-deployment-application or
-// Devops-guru-rds-application. While keys are case-sensitive, the case of key
-// characters don't matter to DevOps Guru. For example, DevOps Guru works with a
-// key named devops-guru-rds and a key named DevOps-Guru-RDS. Possible key/value
-// pairs in your application might be Devops-Guru-production-application/RDS or
+// The tag key might be DevOps-Guru-deployment-application or
+// devops-guru-rds-application. When you create a key, the case of characters in
+// the key can be whatever you choose. After you create a key, it is
+// case-sensitive. For example, DevOps Guru works with a key named devops-guru-rds
+// and a key named DevOps-Guru-RDS, and these act as two different keys. Possible
+// key/value pairs in your application might be
+// Devops-Guru-production-application/RDS or
 // Devops-Guru-production-application/containers.
 type TagCollection struct {
 
@@ -1989,10 +2061,11 @@ type TagCollection struct {
 	// account and Region tagged with this key make up your DevOps Guru application and
 	// analysis boundary. The string used for a key in a tag that you use to define
 	// your resource coverage must begin with the prefix Devops-guru-. The tag key
-	// might be Devops-guru-deployment-application or Devops-guru-rds-application.
-	// While keys are case-sensitive, the case of key characters don't matter to DevOps
-	// Guru. For example, DevOps Guru works with a key named devops-guru-rds and a key
-	// named DevOps-Guru-RDS. Possible key/value pairs in your application might be
+	// might be DevOps-Guru-deployment-application or devops-guru-rds-application. When
+	// you create a key, the case of characters in the key can be whatever you choose.
+	// After you create a key, it is case-sensitive. For example, DevOps Guru works
+	// with a key named devops-guru-rds and a key named DevOps-Guru-RDS, and these act
+	// as two different keys. Possible key/value pairs in your application might be
 	// Devops-Guru-production-application/RDS or
 	// Devops-Guru-production-application/containers.
 	//
@@ -2022,10 +2095,11 @@ type TagCollectionFilter struct {
 	// account and Region tagged with this key make up your DevOps Guru application and
 	// analysis boundary. The string used for a key in a tag that you use to define
 	// your resource coverage must begin with the prefix Devops-guru-. The tag key
-	// might be Devops-guru-deployment-application or Devops-guru-rds-application.
-	// While keys are case-sensitive, the case of key characters don't matter to DevOps
-	// Guru. For example, DevOps Guru works with a key named devops-guru-rds and a key
-	// named DevOps-Guru-RDS. Possible key/value pairs in your application might be
+	// might be DevOps-Guru-deployment-application or devops-guru-rds-application. When
+	// you create a key, the case of characters in the key can be whatever you choose.
+	// After you create a key, it is case-sensitive. For example, DevOps Guru works
+	// with a key named devops-guru-rds and a key named DevOps-Guru-RDS, and these act
+	// as two different keys. Possible key/value pairs in your application might be
 	// Devops-Guru-production-application/RDS or
 	// Devops-Guru-production-application/containers.
 	//
@@ -2060,10 +2134,11 @@ type TagCostEstimationResourceCollectionFilter struct {
 	// account and Region tagged with this key make up your DevOps Guru application and
 	// analysis boundary. The string used for a key in a tag that you use to define
 	// your resource coverage must begin with the prefix Devops-guru-. The tag key
-	// might be Devops-guru-deployment-application or Devops-guru-rds-application.
-	// While keys are case-sensitive, the case of key characters don't matter to DevOps
-	// Guru. For example, DevOps Guru works with a key named devops-guru-rds and a key
-	// named DevOps-Guru-RDS. Possible key/value pairs in your application might be
+	// might be DevOps-Guru-deployment-application or devops-guru-rds-application. When
+	// you create a key, the case of characters in the key can be whatever you choose.
+	// After you create a key, it is case-sensitive. For example, DevOps Guru works
+	// with a key named devops-guru-rds and a key named DevOps-Guru-RDS, and these act
+	// as two different keys. Possible key/value pairs in your application might be
 	// Devops-Guru-production-application/RDS or
 	// Devops-Guru-production-application/containers.
 	//
@@ -2087,15 +2162,20 @@ type TagCostEstimationResourceCollectionFilter struct {
 // that are specified by an Amazon Web Services tag key.
 type TagHealth struct {
 
+	// Number of resources that DevOps Guru is monitoring in your account that are
+	// specified by an Amazon Web Services tag.
+	AnalyzedResourceCount *int64
+
 	// An Amazon Web Services tag key that is used to identify the Amazon Web Services
 	// resources that DevOps Guru analyzes. All Amazon Web Services resources in your
 	// account and Region tagged with this key make up your DevOps Guru application and
 	// analysis boundary. The string used for a key in a tag that you use to define
 	// your resource coverage must begin with the prefix Devops-guru-. The tag key
-	// might be Devops-guru-deployment-application or Devops-guru-rds-application.
-	// While keys are case-sensitive, the case of key characters don't matter to DevOps
-	// Guru. For example, DevOps Guru works with a key named devops-guru-rds and a key
-	// named DevOps-Guru-RDS. Possible key/value pairs in your application might be
+	// might be DevOps-Guru-deployment-application or devops-guru-rds-application. When
+	// you create a key, the case of characters in the key can be whatever you choose.
+	// After you create a key, it is case-sensitive. For example, DevOps Guru works
+	// with a key named devops-guru-rds and a key named DevOps-Guru-RDS, and these act
+	// as two different keys. Possible key/value pairs in your application might be
 	// Devops-Guru-production-application/RDS or
 	// Devops-Guru-production-application/containers.
 	AppBoundaryKey *string
@@ -2155,7 +2235,7 @@ type UpdateResourceCollectionFilter struct {
 	// the resources are related. For example, you can assign the same tag to an Amazon
 	// DynamoDB table resource that you assign to an Lambda function. For more
 	// information about using tags, see the Tagging best practices
-	// (https://d1.awsstatic.com/whitepapers/aws-tagging-best-practices.pdf)
+	// (https://docs.aws.amazon.com/whitepapers/latest/tagging-best-practices/tagging-best-practices.html)
 	// whitepaper. Each Amazon Web Services tag has two parts.
 	//
 	// * A tag key (for
@@ -2169,11 +2249,13 @@ type UpdateResourceCollectionFilter struct {
 	// Together
 	// these are known as key-value pairs. The string used for a key in a tag that you
 	// use to define your resource coverage must begin with the prefix Devops-guru-.
-	// The tag key might be Devops-guru-deployment-application or
-	// Devops-guru-rds-application. While keys are case-sensitive, the case of key
-	// characters don't matter to DevOps Guru. For example, DevOps Guru works with a
-	// key named devops-guru-rds and a key named DevOps-Guru-RDS. Possible key/value
-	// pairs in your application might be Devops-Guru-production-application/RDS or
+	// The tag key might be DevOps-Guru-deployment-application or
+	// devops-guru-rds-application. When you create a key, the case of characters in
+	// the key can be whatever you choose. After you create a key, it is
+	// case-sensitive. For example, DevOps Guru works with a key named devops-guru-rds
+	// and a key named DevOps-Guru-RDS, and these act as two different keys. Possible
+	// key/value pairs in your application might be
+	// Devops-Guru-production-application/RDS or
 	// Devops-Guru-production-application/containers.
 	Tags []UpdateTagCollectionFilter
 
@@ -2205,10 +2287,11 @@ type UpdateTagCollectionFilter struct {
 	// account and Region tagged with this key make up your DevOps Guru application and
 	// analysis boundary. The string used for a key in a tag that you use to define
 	// your resource coverage must begin with the prefix Devops-guru-. The tag key
-	// might be Devops-guru-deployment-application or Devops-guru-rds-application.
-	// While keys are case-sensitive, the case of key characters don't matter to DevOps
-	// Guru. For example, DevOps Guru works with a key named devops-guru-rds and a key
-	// named DevOps-Guru-RDS. Possible key/value pairs in your application might be
+	// might be DevOps-Guru-deployment-application or devops-guru-rds-application. When
+	// you create a key, the case of characters in the key can be whatever you choose.
+	// After you create a key, it is case-sensitive. For example, DevOps Guru works
+	// with a key named devops-guru-rds and a key named DevOps-Guru-RDS, and these act
+	// as two different keys. Possible key/value pairs in your application might be
 	// Devops-Guru-production-application/RDS or
 	// Devops-Guru-production-application/containers.
 	//

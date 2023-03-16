@@ -60,11 +60,12 @@ type CreateTrailInput struct {
 
 	// Specifies a log group name using an Amazon Resource Name (ARN), a unique
 	// identifier that represents the log group to which CloudTrail logs will be
-	// delivered. Not required unless you specify CloudWatchLogsRoleArn.
+	// delivered. You must use a log group that exists in your account. Not required
+	// unless you specify CloudWatchLogsRoleArn.
 	CloudWatchLogsLogGroupArn *string
 
 	// Specifies the role for the CloudWatch Logs endpoint to assume to write to a
-	// user's log group.
+	// user's log group. You must use a role that exists in your account.
 	CloudWatchLogsRoleArn *string
 
 	// Specifies whether log file integrity validation is enabled. The default is
@@ -91,12 +92,12 @@ type CreateTrailInput struct {
 	// Specifies whether the trail is created for all accounts in an organization in
 	// Organizations, or only for the current Amazon Web Services account. The default
 	// is false, and cannot be true unless the call is made on behalf of an Amazon Web
-	// Services account that is the management account for an organization in
-	// Organizations.
+	// Services account that is the management account or delegated administrator
+	// account for an organization in Organizations.
 	IsOrganizationTrail *bool
 
 	// Specifies the KMS key ID to use to encrypt the logs delivered by CloudTrail. The
-	// value can be an alias name prefixed by "alias/", a fully specified ARN to an
+	// value can be an alias name prefixed by alias/, a fully specified ARN to an
 	// alias, a fully specified ARN to a key, or a globally unique identifier.
 	// CloudTrail also supports KMS multi-Region keys. For more information about
 	// multi-Region keys, see Using multi-Region keys
@@ -154,7 +155,7 @@ type CreateTrailOutput struct {
 	// Specifies whether the trail is an organization trail.
 	IsOrganizationTrail *bool
 
-	// Specifies the KMS key ID that encrypts the logs delivered by CloudTrail. The
+	// Specifies the KMS key ID that encrypts the events delivered by CloudTrail. The
 	// value is a fully specified ARN to a KMS key in the following format.
 	// arn:aws:kms:us-east-2:123456789012:key/12345678-1234-1234-1234-123456789012
 	KmsKeyId *string

@@ -12,7 +12,7 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the alarm recommendations for a AWS Resilience Hub application.
+// Lists the alarm recommendations for an AWS Resilience Hub application.
 func (c *Client) ListAlarmRecommendations(ctx context.Context, params *ListAlarmRecommendationsInput, optFns ...func(*Options)) (*ListAlarmRecommendationsOutput, error) {
 	if params == nil {
 		params = &ListAlarmRecommendationsInput{}
@@ -34,7 +34,7 @@ type ListAlarmRecommendationsInput struct {
 	// arn:partition:resiliencehub:region:account:app-assessment/app-id. For more
 	// information about ARNs, see  Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the AWS General Reference guide.
 	//
 	// This member is required.
 	AssessmentArn *string
@@ -53,7 +53,7 @@ type ListAlarmRecommendationsInput struct {
 type ListAlarmRecommendationsOutput struct {
 
 	// The alarm recommendations for an AWS Resilience Hub application, returned as an
-	// object. This object includes application component names, descriptions,
+	// object. This object includes Application Component names, descriptions,
 	// information about whether a recommendation has already been implemented or not,
 	// prerequisites, and more.
 	//
@@ -143,6 +143,11 @@ var _ ListAlarmRecommendationsAPIClient = (*Client)(nil)
 // ListAlarmRecommendationsPaginatorOptions is the paginator options for
 // ListAlarmRecommendations
 type ListAlarmRecommendationsPaginatorOptions struct {
+	// The maximum number of results to include in the response. If more results exist
+	// than the specified MaxResults value, a token is included in the response so that
+	// the remaining results can be retrieved.
+	Limit int32
+
 	// Set to true if pagination should stop if the service returns a pagination token
 	// that matches the most recent token provided to the service.
 	StopOnDuplicateToken bool
@@ -165,6 +170,9 @@ func NewListAlarmRecommendationsPaginator(client ListAlarmRecommendationsAPIClie
 	}
 
 	options := ListAlarmRecommendationsPaginatorOptions{}
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
+	}
 
 	for _, fn := range optFns {
 		fn(&options)
@@ -192,6 +200,12 @@ func (p *ListAlarmRecommendationsPaginator) NextPage(ctx context.Context, optFns
 
 	params := *p.params
 	params.NextToken = p.nextToken
+
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListAlarmRecommendations(ctx, &params, optFns...)
 	if err != nil {

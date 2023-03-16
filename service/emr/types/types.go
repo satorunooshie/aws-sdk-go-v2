@@ -577,6 +577,25 @@ type Configuration struct {
 	noSmithyDocumentSerde
 }
 
+// The credentials that you can use to connect to cluster endpoints. Credentials
+// consist of a username and a password.
+//
+// The following types satisfy this interface:
+//
+//	CredentialsMemberUsernamePassword
+type Credentials interface {
+	isCredentials()
+}
+
+// The username and password that you use to connect to cluster endpoints.
+type CredentialsMemberUsernamePassword struct {
+	Value UsernamePassword
+
+	noSmithyDocumentSerde
+}
+
+func (*CredentialsMemberUsernamePassword) isCredentials() {}
+
 // Configuration of requested EBS block device associated with the instance group.
 type EbsBlockDevice struct {
 
@@ -864,6 +883,9 @@ type InstanceFleet struct {
 	// greater than TargetSpotCapacity.
 	ProvisionedSpotCapacity *int32
 
+	// The resize specification for the instance fleet.
+	ResizeSpecifications *InstanceFleetResizingSpecifications
+
 	// The current status of the instance fleet.
 	Status *InstanceFleetStatus
 
@@ -928,6 +950,9 @@ type InstanceFleetConfig struct {
 	// The friendly name of the instance fleet.
 	Name *string
 
+	// The resize specification for the instance fleet.
+	ResizeSpecifications *InstanceFleetResizingSpecifications
+
 	// The target capacity of On-Demand units for the instance fleet, which determines
 	// how many On-Demand Instances to provision. When the instance fleet launches,
 	// Amazon EMR tries to provision On-Demand Instances as specified by
@@ -974,6 +999,9 @@ type InstanceFleetModifyConfig struct {
 	// This member is required.
 	InstanceFleetId *string
 
+	// The resize specification for the instance fleet.
+	ResizeSpecifications *InstanceFleetResizingSpecifications
+
 	// The target capacity of On-Demand units for the instance fleet. For more
 	// information see InstanceFleetConfig$TargetOnDemandCapacity.
 	TargetOnDemandCapacity *int32
@@ -988,7 +1016,7 @@ type InstanceFleetModifyConfig struct {
 // The launch specification for Spot Instances in the fleet, which determines the
 // defined duration, provisioning timeout behavior, and allocation strategy. The
 // instance fleet configuration is available only in Amazon EMR versions 4.8.0 and
-// later, excluding 5.0.x versions. On-Demand and Spot Instance allocation
+// later, excluding 5.0.x versions. On-Demand and Spot instance allocation
 // strategies are available in Amazon EMR version 5.12.1 and later.
 type InstanceFleetProvisioningSpecifications struct {
 
@@ -999,9 +1027,23 @@ type InstanceFleetProvisioningSpecifications struct {
 	// 5.12.1 and later.
 	OnDemandSpecification *OnDemandProvisioningSpecification
 
-	// The launch specification for Spot Instances in the fleet, which determines the
+	// The launch specification for Spot instances in the fleet, which determines the
 	// defined duration, provisioning timeout behavior, and allocation strategy.
 	SpotSpecification *SpotProvisioningSpecification
+
+	noSmithyDocumentSerde
+}
+
+// The resize specification for On-Demand and Spot Instances in the fleet.
+type InstanceFleetResizingSpecifications struct {
+
+	// The resize specification for On-Demand Instances in the instance fleet, which
+	// contains the resize timeout period.
+	OnDemandResizeSpecification *OnDemandResizingSpecification
+
+	// The resize specification for Spot Instances in the instance fleet, which
+	// contains the resize timeout period.
+	SpotResizeSpecification *SpotResizingSpecification
 
 	noSmithyDocumentSerde
 }
@@ -2031,6 +2073,24 @@ type OnDemandProvisioningSpecification struct {
 	noSmithyDocumentSerde
 }
 
+// The resize specification for On-Demand Instances in the instance fleet, which
+// contains the resize timeout period.
+type OnDemandResizingSpecification struct {
+
+	// On-Demand resize timeout in minutes. If On-Demand Instances are not provisioned
+	// within this time, the resize workflow stops. The minimum value is 5 minutes, and
+	// the maximum value is 10,080 minutes (7 days). The timeout applies to all resize
+	// workflows on the Instance Fleet. The resize could be triggered by Amazon EMR
+	// Managed Scaling or by the customer (via Amazon EMR Console, Amazon EMR CLI
+	// modify-instance-fleet or Amazon EMR SDK ModifyInstanceFleet API) or by Amazon
+	// EMR due to Amazon EC2 Spot Reclamation.
+	//
+	// This member is required.
+	TimeoutDurationMinutes *int32
+
+	noSmithyDocumentSerde
+}
+
 // The Amazon Linux release specified for a cluster in the RunJobFlow request.
 type OSRelease struct {
 
@@ -2229,7 +2289,7 @@ type SessionMappingDetail struct {
 	// (https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/API_User.html#singlesignon-Type-User-UserName)
 	// and DisplayName
 	// (https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/API_Group.html#singlesignon-Type-Group-DisplayName)
-	// in the Amazon Web Services SSO Identity Store API Reference.
+	// in the IAM Identity Center Identity Store API Reference.
 	IdentityName *string
 
 	// Specifies whether the identity mapped to the Amazon EMR Studio is a user or a
@@ -2256,15 +2316,15 @@ type SessionMappingSummary struct {
 	// The time the session mapping was created.
 	CreationTime *time.Time
 
-	// The globally unique identifier (GUID) of the user or group from the Amazon Web
-	// Services SSO Identity Store.
+	// The globally unique identifier (GUID) of the user or group from the IAM Identity
+	// Center Identity Store.
 	IdentityId *string
 
 	// The name of the user or group. For more information, see UserName
 	// (https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/API_User.html#singlesignon-Type-User-UserName)
 	// and DisplayName
 	// (https://docs.aws.amazon.com/singlesignon/latest/IdentityStoreAPIReference/API_Group.html#singlesignon-Type-Group-DisplayName)
-	// in the Amazon Web Services SSO Identity Store API Reference.
+	// in the IAM Identity Center Identity Store API Reference.
 	IdentityName *string
 
 	// Specifies whether the identity mapped to the Amazon EMR Studio is a user or a
@@ -2365,7 +2425,7 @@ type SpotProvisioningSpecification struct {
 	// This member is required.
 	TimeoutAction SpotProvisioningTimeoutAction
 
-	// The spot provisioning timeout period in minutes. If Spot Instances are not
+	// The Spot provisioning timeout period in minutes. If Spot Instances are not
 	// provisioned within this time period, the TimeOutAction is taken. Minimum value
 	// is 5 and maximum value is 1440. The timeout applies only during initial
 	// provisioning, when the cluster is first created.
@@ -2391,6 +2451,24 @@ type SpotProvisioningSpecification struct {
 	// used the feature, we will continue to support Spot Instances with a defined
 	// duration until December 31, 2022.
 	BlockDurationMinutes *int32
+
+	noSmithyDocumentSerde
+}
+
+// The resize specification for Spot Instances in the instance fleet, which
+// contains the resize timeout period.
+type SpotResizingSpecification struct {
+
+	// Spot resize timeout in minutes. If Spot Instances are not provisioned within
+	// this time, the resize workflow will stop provisioning of Spot instances. Minimum
+	// value is 5 minutes and maximum value is 10,080 minutes (7 days). The timeout
+	// applies to all resize workflows on the Instance Fleet. The resize could be
+	// triggered by Amazon EMR Managed Scaling or by the customer (via Amazon EMR
+	// Console, Amazon EMR CLI modify-instance-fleet or Amazon EMR SDK
+	// ModifyInstanceFleet API) or by Amazon EMR due to Amazon EC2 Spot Reclamation.
+	//
+	// This member is required.
+	TimeoutDurationMinutes *int32
 
 	noSmithyDocumentSerde
 }
@@ -2590,8 +2668,8 @@ type StepTimeline struct {
 // Details for an Amazon EMR Studio including ID, creation time, name, and so on.
 type Studio struct {
 
-	// Specifies whether the Amazon EMR Studio authenticates users using IAM or Amazon
-	// Web Services SSO.
+	// Specifies whether the Amazon EMR Studio authenticates users using IAM or IAM
+	// Identity Center.
 	AuthMode AuthMode
 
 	// The time the Amazon EMR Studio was created.
@@ -2658,8 +2736,8 @@ type Studio struct {
 // with the Studio.
 type StudioSummary struct {
 
-	// Specifies whether the Studio authenticates users using IAM or Amazon Web
-	// Services SSO.
+	// Specifies whether the Studio authenticates users using IAM or IAM Identity
+	// Center.
 	AuthMode AuthMode
 
 	// The time when the Amazon EMR Studio was created.
@@ -2718,6 +2796,20 @@ type Tag struct {
 	noSmithyDocumentSerde
 }
 
+// The username and password that you use to connect to cluster endpoints.
+type UsernamePassword struct {
+
+	// The password associated with the temporary credentials that you use to connect
+	// to cluster endpoints.
+	Password *string
+
+	// The username associated with the temporary credentials that you use to connect
+	// to cluster endpoints.
+	Username *string
+
+	noSmithyDocumentSerde
+}
+
 // EBS volume specifications such as volume type, IOPS, size (GiB) and throughput
 // (MiB/s) that are requested for the EBS volume attached to an EC2 instance in the
 // cluster.
@@ -2729,7 +2821,8 @@ type VolumeSpecification struct {
 	// This member is required.
 	SizeInGB *int32
 
-	// The volume type. Volume types supported are gp2, io1, and standard.
+	// The volume type. Volume types supported are gp3, gp2, io1, st1, sc1, and
+	// standard.
 	//
 	// This member is required.
 	VolumeType *string
@@ -2745,3 +2838,14 @@ type VolumeSpecification struct {
 }
 
 type noSmithyDocumentSerde = smithydocument.NoSerde
+
+// UnknownUnionMember is returned when a union member is returned over the wire,
+// but has an unknown tag.
+type UnknownUnionMember struct {
+	Tag   string
+	Value []byte
+
+	noSmithyDocumentSerde
+}
+
+func (*UnknownUnionMember) isCredentials() {}

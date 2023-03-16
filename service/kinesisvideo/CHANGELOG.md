@@ -1,3 +1,72 @@
+# v1.15.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.15.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.15.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.1 (2023-01-06)
+
+* No change notes available for this release.
+
+# v1.15.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.14.0 (2022-12-19)
+
+* **Feature**: Amazon Kinesis Video Streams offers capabilities to stream video and audio in real-time via WebRTC to the cloud for storage, playback, and analytical processing. Customers can use our enhanced WebRTC SDK and cloud APIs to enable real-time streaming, as well as media ingestion to the cloud.
+
+# v1.13.1 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.0 (2022-12-12)
+
+* **Feature**: This release adds support for public preview of Kinesis Video Stream at Edge enabling customers to provide configuration for the Kinesis Video Stream EdgeAgent running on an on-premise IoT device. Customers can now locally record from cameras and stream videos to the cloud on configured schedule.
+
+# v1.12.17 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.16 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.15 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.14 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.13 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.12 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.11 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.12.10 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

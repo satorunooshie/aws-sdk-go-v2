@@ -1,3 +1,80 @@
+# v1.27.4 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.3 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.27.2 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.0 (2023-01-24)
+
+* **Feature**: Amazon Route 53 now supports the Asia Pacific (Melbourne) Region (ap-southeast-4) for latency records, geoproximity records, and private DNS for Amazon VPCs in that region.
+
+# v1.26.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.25.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2022-11-21)
+
+* **Feature**: Amazon Route 53 now supports the Asia Pacific (Hyderabad) Region (ap-south-2) for latency records, geoproximity records, and private DNS for Amazon VPCs in that region.
+
+# v1.24.0 (2022-11-15)
+
+* **Feature**: Amazon Route 53 now supports the Europe (Spain) Region (eu-south-2) for latency records, geoproximity records, and private DNS for Amazon VPCs in that region.
+
+# v1.23.0 (2022-11-08)
+
+* **Feature**: Amazon Route 53 now supports the Europe (Zurich) Region (eu-central-2) for latency records, geoproximity records, and private DNS for Amazon VPCs in that region.
+
+# v1.22.4 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.3 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.2 (2022-09-21)
+
+* **Bug Fix**: Updated GetChange to sanitize /change/ prefix of the changeId returned from the service.
+
+# v1.22.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.0 (2022-09-14)
+
+* **Feature**: Amazon Route 53 now supports the Middle East (UAE) Region (me-central-1) for latency records, geoproximity records, and private DNS for Amazon VPCs in that region.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.11 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.10 (2022-09-01)
+
+* **Documentation**: Documentation updates for Amazon Route 53.
+
+# v1.21.9 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.21.8 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

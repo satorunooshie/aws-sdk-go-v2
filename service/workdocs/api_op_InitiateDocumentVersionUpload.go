@@ -35,13 +35,8 @@ func (c *Client) InitiateDocumentVersionUpload(ctx context.Context, params *Init
 
 type InitiateDocumentVersionUploadInput struct {
 
-	// The ID of the parent folder.
-	//
-	// This member is required.
-	ParentFolderId *string
-
-	// Amazon WorkDocs authentication token. Not required when using AWS administrator
-	// credentials to access the API.
+	// Amazon WorkDocs authentication token. Not required when using Amazon Web
+	// Services administrator credentials to access the API.
 	AuthenticationToken *string
 
 	// The timestamp when the content of the document was originally created.
@@ -61,6 +56,9 @@ type InitiateDocumentVersionUploadInput struct {
 
 	// The name of the document.
 	Name *string
+
+	// The ID of the parent folder.
+	ParentFolderId *string
 
 	noSmithyDocumentSerde
 }
@@ -122,9 +120,6 @@ func (c *Client) addOperationInitiateDocumentVersionUploadMiddlewares(stack *mid
 		return err
 	}
 	if err = smithyhttp.AddCloseResponseBodyMiddleware(stack); err != nil {
-		return err
-	}
-	if err = addOpInitiateDocumentVersionUploadValidationMiddleware(stack); err != nil {
 		return err
 	}
 	if err = stack.Initialize.Add(newServiceMetadataMiddleware_opInitiateDocumentVersionUpload(options.Region), middleware.Before); err != nil {

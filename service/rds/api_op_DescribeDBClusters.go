@@ -23,7 +23,7 @@ import (
 // see  What is Amazon Aurora?
 // (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html)
 // in the Amazon Aurora User Guide. For more information on Multi-AZ DB clusters,
-// see  Multi-AZ deployments with two readable standby DB instances
+// see  Multi-AZ DB cluster deployments
 // (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html)
 // in the Amazon RDS User Guide. This operation can also return information for
 // Amazon Neptune DB instances and Amazon DocumentDB instances.
@@ -44,12 +44,12 @@ func (c *Client) DescribeDBClusters(ctx context.Context, params *DescribeDBClust
 
 type DescribeDBClustersInput struct {
 
-	// The user-supplied DB cluster identifier. If this parameter is specified,
-	// information from only the specific DB cluster is returned. This parameter isn't
-	// case-sensitive. Constraints:
+	// The user-supplied DB cluster identifier or the Amazon Resource Name (ARN) of the
+	// DB cluster. If this parameter is specified, information from only the specific
+	// DB cluster is returned. This parameter isn't case-sensitive. Constraints:
 	//
-	// * If supplied, must match an existing
-	// DBClusterIdentifier.
+	// * If
+	// supplied, must match an existing DBClusterIdentifier.
 	DBClusterIdentifier *string
 
 	// A filter that specifies one or more DB clusters to describe. Supported

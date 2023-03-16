@@ -1,3 +1,81 @@
+# v1.22.2 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.1 (2023-03-07)
+
+* **Documentation**: Documentation update for the release of 3 additional map styles for use with Open Data Maps: Open Data Standard Dark, Open Data Visualization Light & Open Data Visualization Dark.
+
+# v1.22.0 (2023-02-23)
+
+* **Feature**: This release adds support for using Maps APIs with an API Key in addition to AWS Cognito. This includes support for adding, listing, updating and deleting API Keys.
+
+# v1.21.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.21.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.21.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.0 (2023-01-10)
+
+* **Feature**: This release adds support for two new route travel models, Bicycle and Motorcycle which can be used with Grab data source.
+
+# v1.20.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.19.5 (2022-12-15)
+
+* **Documentation**: This release adds support for a new style, "VectorOpenDataStandardLight" which can be used with the new data source, "Open Data Maps (Preview)".
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.4 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.3 (2022-10-25)
+
+* **Documentation**: Added new map styles with satellite imagery for map resources using HERE as a data provider.
+
+# v1.19.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.0 (2022-09-27)
+
+* **Feature**: This release adds place IDs, which are unique identifiers of places, along with a new GetPlace operation, which can be used with place IDs to find a place again later. UnitNumber and UnitType are also added as new properties of places.
+
+# v1.18.6 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.5 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.4 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.3 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.18.2 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

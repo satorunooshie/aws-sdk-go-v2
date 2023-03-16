@@ -2,6 +2,26 @@
 
 package types
 
+type ColumnType string
+
+// Enum values for ColumnType
+const (
+	ColumnTypeNode  ColumnType = "NODE"
+	ColumnTypeEdge  ColumnType = "EDGE"
+	ColumnTypeValue ColumnType = "VALUE"
+)
+
+// Values returns all known values for ColumnType. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (ColumnType) Values() []ColumnType {
+	return []ColumnType{
+		"NODE",
+		"EDGE",
+		"VALUE",
+	}
+}
+
 type ComponentUpdateType string
 
 // Enum values for ComponentUpdateType
@@ -26,8 +46,11 @@ type ErrorCode string
 
 // Enum values for ErrorCode
 const (
-	ErrorCodeValidationError ErrorCode = "VALIDATION_ERROR"
-	ErrorCodeInternalFailure ErrorCode = "INTERNAL_FAILURE"
+	ErrorCodeValidationError       ErrorCode = "VALIDATION_ERROR"
+	ErrorCodeInternalFailure       ErrorCode = "INTERNAL_FAILURE"
+	ErrorCodeSyncInitializingError ErrorCode = "SYNC_INITIALIZING_ERROR"
+	ErrorCodeSyncCreatingError     ErrorCode = "SYNC_CREATING_ERROR"
+	ErrorCodeSyncProcessingError   ErrorCode = "SYNC_PROCESSING_ERROR"
 )
 
 // Values returns all known values for ErrorCode. Note that this can be expanded in
@@ -37,6 +60,25 @@ func (ErrorCode) Values() []ErrorCode {
 	return []ErrorCode{
 		"VALIDATION_ERROR",
 		"INTERNAL_FAILURE",
+		"SYNC_INITIALIZING_ERROR",
+		"SYNC_CREATING_ERROR",
+		"SYNC_PROCESSING_ERROR",
+	}
+}
+
+type GroupType string
+
+// Enum values for GroupType
+const (
+	GroupTypeTabular GroupType = "TABULAR"
+)
+
+// Values returns all known values for GroupType. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (GroupType) Values() []GroupType {
+	return []GroupType{
+		"TABULAR",
 	}
 }
 
@@ -53,6 +95,24 @@ const (
 func (InterpolationType) Values() []InterpolationType {
 	return []InterpolationType{
 		"LINEAR",
+	}
+}
+
+type Order string
+
+// Enum values for Order
+const (
+	OrderAscending  Order = "ASCENDING"
+	OrderDescending Order = "DESCENDING"
+)
+
+// Values returns all known values for Order. Note that this can be expanded in the
+// future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (Order) Values() []Order {
+	return []Order{
+		"ASCENDING",
+		"DESCENDING",
 	}
 }
 
@@ -89,6 +149,68 @@ func (ParentEntityUpdateType) Values() []ParentEntityUpdateType {
 	return []ParentEntityUpdateType{
 		"UPDATE",
 		"DELETE",
+	}
+}
+
+type PricingMode string
+
+// Enum values for PricingMode
+const (
+	PricingModeBasic        PricingMode = "BASIC"
+	PricingModeStandard     PricingMode = "STANDARD"
+	PricingModeTieredBundle PricingMode = "TIERED_BUNDLE"
+)
+
+// Values returns all known values for PricingMode. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (PricingMode) Values() []PricingMode {
+	return []PricingMode{
+		"BASIC",
+		"STANDARD",
+		"TIERED_BUNDLE",
+	}
+}
+
+type PricingTier string
+
+// Enum values for PricingTier
+const (
+	PricingTierTier1 PricingTier = "TIER_1"
+	PricingTierTier2 PricingTier = "TIER_2"
+	PricingTierTier3 PricingTier = "TIER_3"
+	PricingTierTier4 PricingTier = "TIER_4"
+)
+
+// Values returns all known values for PricingTier. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (PricingTier) Values() []PricingTier {
+	return []PricingTier{
+		"TIER_1",
+		"TIER_2",
+		"TIER_3",
+		"TIER_4",
+	}
+}
+
+type PropertyGroupUpdateType string
+
+// Enum values for PropertyGroupUpdateType
+const (
+	PropertyGroupUpdateTypeUpdate PropertyGroupUpdateType = "UPDATE"
+	PropertyGroupUpdateTypeDelete PropertyGroupUpdateType = "DELETE"
+	PropertyGroupUpdateTypeCreate PropertyGroupUpdateType = "CREATE"
+)
+
+// Values returns all known values for PropertyGroupUpdateType. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (PropertyGroupUpdateType) Values() []PropertyGroupUpdateType {
+	return []PropertyGroupUpdateType{
+		"UPDATE",
+		"DELETE",
+		"CREATE",
 	}
 }
 
@@ -154,6 +276,72 @@ func (State) Values() []State {
 	}
 }
 
+type SyncJobState string
+
+// Enum values for SyncJobState
+const (
+	SyncJobStateCreating     SyncJobState = "CREATING"
+	SyncJobStateInitializing SyncJobState = "INITIALIZING"
+	SyncJobStateActive       SyncJobState = "ACTIVE"
+	SyncJobStateDeleting     SyncJobState = "DELETING"
+	SyncJobStateError        SyncJobState = "ERROR"
+)
+
+// Values returns all known values for SyncJobState. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (SyncJobState) Values() []SyncJobState {
+	return []SyncJobState{
+		"CREATING",
+		"INITIALIZING",
+		"ACTIVE",
+		"DELETING",
+		"ERROR",
+	}
+}
+
+type SyncResourceState string
+
+// Enum values for SyncResourceState
+const (
+	SyncResourceStateInitializing SyncResourceState = "INITIALIZING"
+	SyncResourceStateProcessing   SyncResourceState = "PROCESSING"
+	SyncResourceStateDeleted      SyncResourceState = "DELETED"
+	SyncResourceStateInSync       SyncResourceState = "IN_SYNC"
+	SyncResourceStateError        SyncResourceState = "ERROR"
+)
+
+// Values returns all known values for SyncResourceState. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (SyncResourceState) Values() []SyncResourceState {
+	return []SyncResourceState{
+		"INITIALIZING",
+		"PROCESSING",
+		"DELETED",
+		"IN_SYNC",
+		"ERROR",
+	}
+}
+
+type SyncResourceType string
+
+// Enum values for SyncResourceType
+const (
+	SyncResourceTypeEntity        SyncResourceType = "ENTITY"
+	SyncResourceTypeComponentType SyncResourceType = "COMPONENT_TYPE"
+)
+
+// Values returns all known values for SyncResourceType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (SyncResourceType) Values() []SyncResourceType {
+	return []SyncResourceType{
+		"ENTITY",
+		"COMPONENT_TYPE",
+	}
+}
+
 type Type string
 
 // Enum values for Type
@@ -181,5 +369,29 @@ func (Type) Values() []Type {
 		"DOUBLE",
 		"LIST",
 		"MAP",
+	}
+}
+
+type UpdateReason string
+
+// Enum values for UpdateReason
+const (
+	UpdateReasonDefault           UpdateReason = "DEFAULT"
+	UpdateReasonPricingTierUpdate UpdateReason = "PRICING_TIER_UPDATE"
+	UpdateReasonEntityCountUpdate UpdateReason = "ENTITY_COUNT_UPDATE"
+	UpdateReasonPricingModeUpdate UpdateReason = "PRICING_MODE_UPDATE"
+	UpdateReasonOverwritten       UpdateReason = "OVERWRITTEN"
+)
+
+// Values returns all known values for UpdateReason. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (UpdateReason) Values() []UpdateReason {
+	return []UpdateReason{
+		"DEFAULT",
+		"PRICING_TIER_UPDATE",
+		"ENTITY_COUNT_UPDATE",
+		"PRICING_MODE_UPDATE",
+		"OVERWRITTEN",
 	}
 }

@@ -38,11 +38,28 @@ func (ChannelState) Values() []ChannelState {
 	}
 }
 
+type LogType string
+
+// Enum values for LogType
+const (
+	LogTypeAsRun LogType = "AS_RUN"
+)
+
+// Values returns all known values for LogType. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (LogType) Values() []LogType {
+	return []LogType{
+		"AS_RUN",
+	}
+}
+
 type MessageType string
 
 // Enum values for MessageType
 const (
 	MessageTypeSpliceInsert MessageType = "SPLICE_INSERT"
+	MessageTypeTimeSignal   MessageType = "TIME_SIGNAL"
 )
 
 // Values returns all known values for MessageType. Note that this can be expanded
@@ -51,6 +68,7 @@ const (
 func (MessageType) Values() []MessageType {
 	return []MessageType{
 		"SPLICE_INSERT",
+		"TIME_SIGNAL",
 	}
 }
 

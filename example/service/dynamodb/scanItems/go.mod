@@ -3,10 +3,10 @@ module github.com/aws/aws-sdk-go-v2/example/service/dynamodb/listItems
 go 1.15
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.16.12
-	github.com/aws/aws-sdk-go-v2/config v1.17.3
-	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.9.14
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.16.2
+	github.com/aws/aws-sdk-go-v2 v1.17.6
+	github.com/aws/aws-sdk-go-v2/config v1.18.17
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.10.18
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.19.1
 )
 
 replace github.com/aws/aws-sdk-go-v2 => ../../../../

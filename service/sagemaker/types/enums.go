@@ -442,6 +442,38 @@ func (AuthMode) Values() []AuthMode {
 	}
 }
 
+type AutoMLAlgorithm string
+
+// Enum values for AutoMLAlgorithm
+const (
+	AutoMLAlgorithmXgboost       AutoMLAlgorithm = "xgboost"
+	AutoMLAlgorithmLinearLearner AutoMLAlgorithm = "linear-learner"
+	AutoMLAlgorithmMlp           AutoMLAlgorithm = "mlp"
+	AutoMLAlgorithmLightgbm      AutoMLAlgorithm = "lightgbm"
+	AutoMLAlgorithmCatboost      AutoMLAlgorithm = "catboost"
+	AutoMLAlgorithmRandomforest  AutoMLAlgorithm = "randomforest"
+	AutoMLAlgorithmExtraTrees    AutoMLAlgorithm = "extra-trees"
+	AutoMLAlgorithmNnTorch       AutoMLAlgorithm = "nn-torch"
+	AutoMLAlgorithmFastai        AutoMLAlgorithm = "fastai"
+)
+
+// Values returns all known values for AutoMLAlgorithm. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (AutoMLAlgorithm) Values() []AutoMLAlgorithm {
+	return []AutoMLAlgorithm{
+		"xgboost",
+		"linear-learner",
+		"mlp",
+		"lightgbm",
+		"catboost",
+		"randomforest",
+		"extra-trees",
+		"nn-torch",
+		"fastai",
+	}
+}
+
 type AutoMLChannelType string
 
 // Enum values for AutoMLChannelType
@@ -554,11 +586,19 @@ type AutoMLMetricEnum string
 
 // Enum values for AutoMLMetricEnum
 const (
-	AutoMLMetricEnumAccuracy AutoMLMetricEnum = "Accuracy"
-	AutoMLMetricEnumMse      AutoMLMetricEnum = "MSE"
-	AutoMLMetricEnumF1       AutoMLMetricEnum = "F1"
-	AutoMLMetricEnumF1Macro  AutoMLMetricEnum = "F1macro"
-	AutoMLMetricEnumAuc      AutoMLMetricEnum = "AUC"
+	AutoMLMetricEnumAccuracy         AutoMLMetricEnum = "Accuracy"
+	AutoMLMetricEnumMse              AutoMLMetricEnum = "MSE"
+	AutoMLMetricEnumF1               AutoMLMetricEnum = "F1"
+	AutoMLMetricEnumF1Macro          AutoMLMetricEnum = "F1macro"
+	AutoMLMetricEnumAuc              AutoMLMetricEnum = "AUC"
+	AutoMLMetricEnumRmse             AutoMLMetricEnum = "RMSE"
+	AutoMLMetricEnumMae              AutoMLMetricEnum = "MAE"
+	AutoMLMetricEnumR2               AutoMLMetricEnum = "R2"
+	AutoMLMetricEnumBalancedAccuracy AutoMLMetricEnum = "BalancedAccuracy"
+	AutoMLMetricEnumPrecision        AutoMLMetricEnum = "Precision"
+	AutoMLMetricEnumPrecisionMacro   AutoMLMetricEnum = "PrecisionMacro"
+	AutoMLMetricEnumRecall           AutoMLMetricEnum = "Recall"
+	AutoMLMetricEnumRecallMacro      AutoMLMetricEnum = "RecallMacro"
 )
 
 // Values returns all known values for AutoMLMetricEnum. Note that this can be
@@ -571,6 +611,14 @@ func (AutoMLMetricEnum) Values() []AutoMLMetricEnum {
 		"F1",
 		"F1macro",
 		"AUC",
+		"RMSE",
+		"MAE",
+		"R2",
+		"BalancedAccuracy",
+		"Precision",
+		"PrecisionMacro",
+		"Recall",
+		"RecallMacro",
 	}
 }
 
@@ -592,6 +640,7 @@ const (
 	AutoMLMetricExtendedEnumRecall           AutoMLMetricExtendedEnum = "Recall"
 	AutoMLMetricExtendedEnumRecallMacro      AutoMLMetricExtendedEnum = "RecallMacro"
 	AutoMLMetricExtendedEnumLogLoss          AutoMLMetricExtendedEnum = "LogLoss"
+	AutoMLMetricExtendedEnumInferenceLatency AutoMLMetricExtendedEnum = "InferenceLatency"
 )
 
 // Values returns all known values for AutoMLMetricExtendedEnum. Note that this can
@@ -613,6 +662,27 @@ func (AutoMLMetricExtendedEnum) Values() []AutoMLMetricExtendedEnum {
 		"Recall",
 		"RecallMacro",
 		"LogLoss",
+		"InferenceLatency",
+	}
+}
+
+type AutoMLMode string
+
+// Enum values for AutoMLMode
+const (
+	AutoMLModeAuto                 AutoMLMode = "AUTO"
+	AutoMLModeEnsembling           AutoMLMode = "ENSEMBLING"
+	AutoMLModeHyperparameterTuning AutoMLMode = "HYPERPARAMETER_TUNING"
+)
+
+// Values returns all known values for AutoMLMode. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (AutoMLMode) Values() []AutoMLMode {
+	return []AutoMLMode{
+		"AUTO",
+		"ENSEMBLING",
+		"HYPERPARAMETER_TUNING",
 	}
 }
 
@@ -845,6 +915,180 @@ func (CaptureStatus) Values() []CaptureStatus {
 	}
 }
 
+type ClarifyFeatureType string
+
+// Enum values for ClarifyFeatureType
+const (
+	ClarifyFeatureTypeNumerical   ClarifyFeatureType = "numerical"
+	ClarifyFeatureTypeCategorical ClarifyFeatureType = "categorical"
+	ClarifyFeatureTypeText        ClarifyFeatureType = "text"
+)
+
+// Values returns all known values for ClarifyFeatureType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ClarifyFeatureType) Values() []ClarifyFeatureType {
+	return []ClarifyFeatureType{
+		"numerical",
+		"categorical",
+		"text",
+	}
+}
+
+type ClarifyTextGranularity string
+
+// Enum values for ClarifyTextGranularity
+const (
+	ClarifyTextGranularityToken     ClarifyTextGranularity = "token"
+	ClarifyTextGranularitySentence  ClarifyTextGranularity = "sentence"
+	ClarifyTextGranularityParagraph ClarifyTextGranularity = "paragraph"
+)
+
+// Values returns all known values for ClarifyTextGranularity. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ClarifyTextGranularity) Values() []ClarifyTextGranularity {
+	return []ClarifyTextGranularity{
+		"token",
+		"sentence",
+		"paragraph",
+	}
+}
+
+type ClarifyTextLanguage string
+
+// Enum values for ClarifyTextLanguage
+const (
+	ClarifyTextLanguageAfrikaans       ClarifyTextLanguage = "af"
+	ClarifyTextLanguageAlbanian        ClarifyTextLanguage = "sq"
+	ClarifyTextLanguageArabic          ClarifyTextLanguage = "ar"
+	ClarifyTextLanguageArmenian        ClarifyTextLanguage = "hy"
+	ClarifyTextLanguageBasque          ClarifyTextLanguage = "eu"
+	ClarifyTextLanguageBengali         ClarifyTextLanguage = "bn"
+	ClarifyTextLanguageBulgarian       ClarifyTextLanguage = "bg"
+	ClarifyTextLanguageCatalan         ClarifyTextLanguage = "ca"
+	ClarifyTextLanguageChinese         ClarifyTextLanguage = "zh"
+	ClarifyTextLanguageCroatian        ClarifyTextLanguage = "hr"
+	ClarifyTextLanguageCzech           ClarifyTextLanguage = "cs"
+	ClarifyTextLanguageDanish          ClarifyTextLanguage = "da"
+	ClarifyTextLanguageDutch           ClarifyTextLanguage = "nl"
+	ClarifyTextLanguageEnglish         ClarifyTextLanguage = "en"
+	ClarifyTextLanguageEstonian        ClarifyTextLanguage = "et"
+	ClarifyTextLanguageFinnish         ClarifyTextLanguage = "fi"
+	ClarifyTextLanguageFrench          ClarifyTextLanguage = "fr"
+	ClarifyTextLanguageGerman          ClarifyTextLanguage = "de"
+	ClarifyTextLanguageGreek           ClarifyTextLanguage = "el"
+	ClarifyTextLanguageGujarati        ClarifyTextLanguage = "gu"
+	ClarifyTextLanguageHebrew          ClarifyTextLanguage = "he"
+	ClarifyTextLanguageHindi           ClarifyTextLanguage = "hi"
+	ClarifyTextLanguageHungarian       ClarifyTextLanguage = "hu"
+	ClarifyTextLanguageIcelandic       ClarifyTextLanguage = "is"
+	ClarifyTextLanguageIndonesian      ClarifyTextLanguage = "id"
+	ClarifyTextLanguageIrish           ClarifyTextLanguage = "ga"
+	ClarifyTextLanguageItalian         ClarifyTextLanguage = "it"
+	ClarifyTextLanguageKannada         ClarifyTextLanguage = "kn"
+	ClarifyTextLanguageKyrgyz          ClarifyTextLanguage = "ky"
+	ClarifyTextLanguageLatvian         ClarifyTextLanguage = "lv"
+	ClarifyTextLanguageLithuanian      ClarifyTextLanguage = "lt"
+	ClarifyTextLanguageLuxembourgish   ClarifyTextLanguage = "lb"
+	ClarifyTextLanguageMacedonian      ClarifyTextLanguage = "mk"
+	ClarifyTextLanguageMalayalam       ClarifyTextLanguage = "ml"
+	ClarifyTextLanguageMarathi         ClarifyTextLanguage = "mr"
+	ClarifyTextLanguageNepali          ClarifyTextLanguage = "ne"
+	ClarifyTextLanguageNorwegianBokmal ClarifyTextLanguage = "nb"
+	ClarifyTextLanguagePersian         ClarifyTextLanguage = "fa"
+	ClarifyTextLanguagePolish          ClarifyTextLanguage = "pl"
+	ClarifyTextLanguagePortuguese      ClarifyTextLanguage = "pt"
+	ClarifyTextLanguageRomanian        ClarifyTextLanguage = "ro"
+	ClarifyTextLanguageRussian         ClarifyTextLanguage = "ru"
+	ClarifyTextLanguageSanskrit        ClarifyTextLanguage = "sa"
+	ClarifyTextLanguageSerbian         ClarifyTextLanguage = "sr"
+	ClarifyTextLanguageSetswana        ClarifyTextLanguage = "tn"
+	ClarifyTextLanguageSinhala         ClarifyTextLanguage = "si"
+	ClarifyTextLanguageSlovak          ClarifyTextLanguage = "sk"
+	ClarifyTextLanguageSlovenian       ClarifyTextLanguage = "sl"
+	ClarifyTextLanguageSpanish         ClarifyTextLanguage = "es"
+	ClarifyTextLanguageSwedish         ClarifyTextLanguage = "sv"
+	ClarifyTextLanguageTagalog         ClarifyTextLanguage = "tl"
+	ClarifyTextLanguageTamil           ClarifyTextLanguage = "ta"
+	ClarifyTextLanguageTatar           ClarifyTextLanguage = "tt"
+	ClarifyTextLanguageTelugu          ClarifyTextLanguage = "te"
+	ClarifyTextLanguageTurkish         ClarifyTextLanguage = "tr"
+	ClarifyTextLanguageUkrainian       ClarifyTextLanguage = "uk"
+	ClarifyTextLanguageUrdu            ClarifyTextLanguage = "ur"
+	ClarifyTextLanguageYoruba          ClarifyTextLanguage = "yo"
+	ClarifyTextLanguageLigurian        ClarifyTextLanguage = "lij"
+	ClarifyTextLanguageMultiLanguage   ClarifyTextLanguage = "xx"
+)
+
+// Values returns all known values for ClarifyTextLanguage. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ClarifyTextLanguage) Values() []ClarifyTextLanguage {
+	return []ClarifyTextLanguage{
+		"af",
+		"sq",
+		"ar",
+		"hy",
+		"eu",
+		"bn",
+		"bg",
+		"ca",
+		"zh",
+		"hr",
+		"cs",
+		"da",
+		"nl",
+		"en",
+		"et",
+		"fi",
+		"fr",
+		"de",
+		"el",
+		"gu",
+		"he",
+		"hi",
+		"hu",
+		"is",
+		"id",
+		"ga",
+		"it",
+		"kn",
+		"ky",
+		"lv",
+		"lt",
+		"lb",
+		"mk",
+		"ml",
+		"mr",
+		"ne",
+		"nb",
+		"fa",
+		"pl",
+		"pt",
+		"ro",
+		"ru",
+		"sa",
+		"sr",
+		"tn",
+		"si",
+		"sk",
+		"sl",
+		"es",
+		"sv",
+		"tl",
+		"ta",
+		"tt",
+		"te",
+		"tr",
+		"uk",
+		"ur",
+		"yo",
+		"lij",
+		"xx",
+	}
+}
+
 type CodeRepositorySortBy string
 
 // Enum values for CodeRepositorySortBy
@@ -906,6 +1150,24 @@ func (CompilationJobStatus) Values() []CompilationJobStatus {
 		"STARTING",
 		"STOPPING",
 		"STOPPED",
+	}
+}
+
+type CompleteOnConvergence string
+
+// Enum values for CompleteOnConvergence
+const (
+	CompleteOnConvergenceDisabled CompleteOnConvergence = "Disabled"
+	CompleteOnConvergenceEnabled  CompleteOnConvergence = "Enabled"
+)
+
+// Values returns all known values for CompleteOnConvergence. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (CompleteOnConvergence) Values() []CompleteOnConvergence {
+	return []CompleteOnConvergence{
+		"Disabled",
+		"Enabled",
 	}
 }
 
@@ -1283,6 +1545,24 @@ func (EndpointStatus) Values() []EndpointStatus {
 	}
 }
 
+type ExecutionRoleIdentityConfig string
+
+// Enum values for ExecutionRoleIdentityConfig
+const (
+	ExecutionRoleIdentityConfigUserProfileName ExecutionRoleIdentityConfig = "USER_PROFILE_NAME"
+	ExecutionRoleIdentityConfigDisabled        ExecutionRoleIdentityConfig = "DISABLED"
+)
+
+// Values returns all known values for ExecutionRoleIdentityConfig. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (ExecutionRoleIdentityConfig) Values() []ExecutionRoleIdentityConfig {
+	return []ExecutionRoleIdentityConfig{
+		"USER_PROFILE_NAME",
+		"DISABLED",
+	}
+}
+
 type ExecutionStatus string
 
 // Enum values for ExecutionStatus
@@ -1393,6 +1673,24 @@ func (FeatureGroupStatus) Values() []FeatureGroupStatus {
 	}
 }
 
+type FeatureStatus string
+
+// Enum values for FeatureStatus
+const (
+	FeatureStatusEnabled  FeatureStatus = "ENABLED"
+	FeatureStatusDisabled FeatureStatus = "DISABLED"
+)
+
+// Values returns all known values for FeatureStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (FeatureStatus) Values() []FeatureStatus {
+	return []FeatureStatus{
+		"ENABLED",
+		"DISABLED",
+	}
+}
+
 type FeatureType string
 
 // Enum values for FeatureType
@@ -1500,6 +1798,118 @@ func (Framework) Values() []Framework {
 		"TFLITE",
 		"DARKNET",
 		"SKLEARN",
+	}
+}
+
+type HubContentSortBy string
+
+// Enum values for HubContentSortBy
+const (
+	HubContentSortByHubContentName   HubContentSortBy = "HubContentName"
+	HubContentSortByCreationTime     HubContentSortBy = "CreationTime"
+	HubContentSortByHubContentStatus HubContentSortBy = "HubContentStatus"
+)
+
+// Values returns all known values for HubContentSortBy. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (HubContentSortBy) Values() []HubContentSortBy {
+	return []HubContentSortBy{
+		"HubContentName",
+		"CreationTime",
+		"HubContentStatus",
+	}
+}
+
+type HubContentStatus string
+
+// Enum values for HubContentStatus
+const (
+	HubContentStatusAvailable    HubContentStatus = "Available"
+	HubContentStatusImporting    HubContentStatus = "Importing"
+	HubContentStatusDeleting     HubContentStatus = "Deleting"
+	HubContentStatusImportFailed HubContentStatus = "ImportFailed"
+	HubContentStatusDeleteFailed HubContentStatus = "DeleteFailed"
+)
+
+// Values returns all known values for HubContentStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (HubContentStatus) Values() []HubContentStatus {
+	return []HubContentStatus{
+		"Available",
+		"Importing",
+		"Deleting",
+		"ImportFailed",
+		"DeleteFailed",
+	}
+}
+
+type HubContentType string
+
+// Enum values for HubContentType
+const (
+	HubContentTypeModel    HubContentType = "Model"
+	HubContentTypeNotebook HubContentType = "Notebook"
+)
+
+// Values returns all known values for HubContentType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (HubContentType) Values() []HubContentType {
+	return []HubContentType{
+		"Model",
+		"Notebook",
+	}
+}
+
+type HubSortBy string
+
+// Enum values for HubSortBy
+const (
+	HubSortByHubName        HubSortBy = "HubName"
+	HubSortByCreationTime   HubSortBy = "CreationTime"
+	HubSortByHubStatus      HubSortBy = "HubStatus"
+	HubSortByAccountIdOwner HubSortBy = "AccountIdOwner"
+)
+
+// Values returns all known values for HubSortBy. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (HubSortBy) Values() []HubSortBy {
+	return []HubSortBy{
+		"HubName",
+		"CreationTime",
+		"HubStatus",
+		"AccountIdOwner",
+	}
+}
+
+type HubStatus string
+
+// Enum values for HubStatus
+const (
+	HubStatusInService    HubStatus = "InService"
+	HubStatusCreating     HubStatus = "Creating"
+	HubStatusUpdating     HubStatus = "Updating"
+	HubStatusDeleting     HubStatus = "Deleting"
+	HubStatusCreateFailed HubStatus = "CreateFailed"
+	HubStatusUpdateFailed HubStatus = "UpdateFailed"
+	HubStatusDeleteFailed HubStatus = "DeleteFailed"
+)
+
+// Values returns all known values for HubStatus. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (HubStatus) Values() []HubStatus {
+	return []HubStatus{
+		"InService",
+		"Creating",
+		"Updating",
+		"Deleting",
+		"CreateFailed",
+		"UpdateFailed",
+		"DeleteFailed",
 	}
 }
 
@@ -1629,8 +2039,10 @@ type HyperParameterTuningJobStrategyType string
 
 // Enum values for HyperParameterTuningJobStrategyType
 const (
-	HyperParameterTuningJobStrategyTypeBayesian HyperParameterTuningJobStrategyType = "Bayesian"
-	HyperParameterTuningJobStrategyTypeRandom   HyperParameterTuningJobStrategyType = "Random"
+	HyperParameterTuningJobStrategyTypeBayesian  HyperParameterTuningJobStrategyType = "Bayesian"
+	HyperParameterTuningJobStrategyTypeRandom    HyperParameterTuningJobStrategyType = "Random"
+	HyperParameterTuningJobStrategyTypeHyperband HyperParameterTuningJobStrategyType = "Hyperband"
+	HyperParameterTuningJobStrategyTypeGrid      HyperParameterTuningJobStrategyType = "Grid"
 )
 
 // Values returns all known values for HyperParameterTuningJobStrategyType. Note
@@ -1641,6 +2053,8 @@ func (HyperParameterTuningJobStrategyType) Values() []HyperParameterTuningJobStr
 	return []HyperParameterTuningJobStrategyType{
 		"Bayesian",
 		"Random",
+		"Hyperband",
+		"Grid",
 	}
 }
 
@@ -1806,6 +2220,71 @@ func (InferenceExecutionMode) Values() []InferenceExecutionMode {
 	return []InferenceExecutionMode{
 		"Serial",
 		"Direct",
+	}
+}
+
+type InferenceExperimentStatus string
+
+// Enum values for InferenceExperimentStatus
+const (
+	InferenceExperimentStatusCreating  InferenceExperimentStatus = "Creating"
+	InferenceExperimentStatusCreated   InferenceExperimentStatus = "Created"
+	InferenceExperimentStatusUpdating  InferenceExperimentStatus = "Updating"
+	InferenceExperimentStatusRunning   InferenceExperimentStatus = "Running"
+	InferenceExperimentStatusStarting  InferenceExperimentStatus = "Starting"
+	InferenceExperimentStatusStopping  InferenceExperimentStatus = "Stopping"
+	InferenceExperimentStatusCompleted InferenceExperimentStatus = "Completed"
+	InferenceExperimentStatusCancelled InferenceExperimentStatus = "Cancelled"
+)
+
+// Values returns all known values for InferenceExperimentStatus. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (InferenceExperimentStatus) Values() []InferenceExperimentStatus {
+	return []InferenceExperimentStatus{
+		"Creating",
+		"Created",
+		"Updating",
+		"Running",
+		"Starting",
+		"Stopping",
+		"Completed",
+		"Cancelled",
+	}
+}
+
+type InferenceExperimentStopDesiredState string
+
+// Enum values for InferenceExperimentStopDesiredState
+const (
+	InferenceExperimentStopDesiredStateCompleted InferenceExperimentStopDesiredState = "Completed"
+	InferenceExperimentStopDesiredStateCancelled InferenceExperimentStopDesiredState = "Cancelled"
+)
+
+// Values returns all known values for InferenceExperimentStopDesiredState. Note
+// that this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (InferenceExperimentStopDesiredState) Values() []InferenceExperimentStopDesiredState {
+	return []InferenceExperimentStopDesiredState{
+		"Completed",
+		"Cancelled",
+	}
+}
+
+type InferenceExperimentType string
+
+// Enum values for InferenceExperimentType
+const (
+	InferenceExperimentTypeShadowMode InferenceExperimentType = "ShadowMode"
+)
+
+// Values returns all known values for InferenceExperimentType. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (InferenceExperimentType) Values() []InferenceExperimentType {
+	return []InferenceExperimentType{
+		"ShadowMode",
 	}
 }
 
@@ -1976,6 +2455,26 @@ func (InstanceType) Values() []InstanceType {
 		"ml.g5.12xlarge",
 		"ml.g5.24xlarge",
 		"ml.g5.48xlarge",
+	}
+}
+
+type JobType string
+
+// Enum values for JobType
+const (
+	JobTypeTraining       JobType = "TRAINING"
+	JobTypeInference      JobType = "INFERENCE"
+	JobTypeNotebookKernel JobType = "NOTEBOOK_KERNEL"
+)
+
+// Values returns all known values for JobType. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (JobType) Values() []JobType {
+	return []JobType{
+		"TRAINING",
+		"INFERENCE",
+		"NOTEBOOK_KERNEL",
 	}
 }
 
@@ -2284,6 +2783,180 @@ func (ModelCacheSetting) Values() []ModelCacheSetting {
 	}
 }
 
+type ModelCardExportJobSortBy string
+
+// Enum values for ModelCardExportJobSortBy
+const (
+	ModelCardExportJobSortByName         ModelCardExportJobSortBy = "Name"
+	ModelCardExportJobSortByCreationTime ModelCardExportJobSortBy = "CreationTime"
+	ModelCardExportJobSortByStatus       ModelCardExportJobSortBy = "Status"
+)
+
+// Values returns all known values for ModelCardExportJobSortBy. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ModelCardExportJobSortBy) Values() []ModelCardExportJobSortBy {
+	return []ModelCardExportJobSortBy{
+		"Name",
+		"CreationTime",
+		"Status",
+	}
+}
+
+type ModelCardExportJobSortOrder string
+
+// Enum values for ModelCardExportJobSortOrder
+const (
+	ModelCardExportJobSortOrderAscending  ModelCardExportJobSortOrder = "Ascending"
+	ModelCardExportJobSortOrderDescending ModelCardExportJobSortOrder = "Descending"
+)
+
+// Values returns all known values for ModelCardExportJobSortOrder. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (ModelCardExportJobSortOrder) Values() []ModelCardExportJobSortOrder {
+	return []ModelCardExportJobSortOrder{
+		"Ascending",
+		"Descending",
+	}
+}
+
+type ModelCardExportJobStatus string
+
+// Enum values for ModelCardExportJobStatus
+const (
+	ModelCardExportJobStatusInProgress ModelCardExportJobStatus = "InProgress"
+	ModelCardExportJobStatusCompleted  ModelCardExportJobStatus = "Completed"
+	ModelCardExportJobStatusFailed     ModelCardExportJobStatus = "Failed"
+)
+
+// Values returns all known values for ModelCardExportJobStatus. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ModelCardExportJobStatus) Values() []ModelCardExportJobStatus {
+	return []ModelCardExportJobStatus{
+		"InProgress",
+		"Completed",
+		"Failed",
+	}
+}
+
+type ModelCardProcessingStatus string
+
+// Enum values for ModelCardProcessingStatus
+const (
+	ModelCardProcessingStatusDeleteInprogress  ModelCardProcessingStatus = "DeleteInProgress"
+	ModelCardProcessingStatusDeletePending     ModelCardProcessingStatus = "DeletePending"
+	ModelCardProcessingStatusContentDeleted    ModelCardProcessingStatus = "ContentDeleted"
+	ModelCardProcessingStatusExportjobsDeleted ModelCardProcessingStatus = "ExportJobsDeleted"
+	ModelCardProcessingStatusDeleteCompleted   ModelCardProcessingStatus = "DeleteCompleted"
+	ModelCardProcessingStatusDeleteFailed      ModelCardProcessingStatus = "DeleteFailed"
+)
+
+// Values returns all known values for ModelCardProcessingStatus. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (ModelCardProcessingStatus) Values() []ModelCardProcessingStatus {
+	return []ModelCardProcessingStatus{
+		"DeleteInProgress",
+		"DeletePending",
+		"ContentDeleted",
+		"ExportJobsDeleted",
+		"DeleteCompleted",
+		"DeleteFailed",
+	}
+}
+
+type ModelCardSortBy string
+
+// Enum values for ModelCardSortBy
+const (
+	ModelCardSortByName         ModelCardSortBy = "Name"
+	ModelCardSortByCreationTime ModelCardSortBy = "CreationTime"
+)
+
+// Values returns all known values for ModelCardSortBy. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ModelCardSortBy) Values() []ModelCardSortBy {
+	return []ModelCardSortBy{
+		"Name",
+		"CreationTime",
+	}
+}
+
+type ModelCardSortOrder string
+
+// Enum values for ModelCardSortOrder
+const (
+	ModelCardSortOrderAscending  ModelCardSortOrder = "Ascending"
+	ModelCardSortOrderDescending ModelCardSortOrder = "Descending"
+)
+
+// Values returns all known values for ModelCardSortOrder. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ModelCardSortOrder) Values() []ModelCardSortOrder {
+	return []ModelCardSortOrder{
+		"Ascending",
+		"Descending",
+	}
+}
+
+type ModelCardStatus string
+
+// Enum values for ModelCardStatus
+const (
+	ModelCardStatusDraft         ModelCardStatus = "Draft"
+	ModelCardStatusPendingreview ModelCardStatus = "PendingReview"
+	ModelCardStatusApproved      ModelCardStatus = "Approved"
+	ModelCardStatusArchived      ModelCardStatus = "Archived"
+)
+
+// Values returns all known values for ModelCardStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ModelCardStatus) Values() []ModelCardStatus {
+	return []ModelCardStatus{
+		"Draft",
+		"PendingReview",
+		"Approved",
+		"Archived",
+	}
+}
+
+type ModelCardVersionSortBy string
+
+// Enum values for ModelCardVersionSortBy
+const (
+	ModelCardVersionSortByVersion ModelCardVersionSortBy = "Version"
+)
+
+// Values returns all known values for ModelCardVersionSortBy. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ModelCardVersionSortBy) Values() []ModelCardVersionSortBy {
+	return []ModelCardVersionSortBy{
+		"Version",
+	}
+}
+
+type ModelInfrastructureType string
+
+// Enum values for ModelInfrastructureType
+const (
+	ModelInfrastructureTypeRealTimeInference ModelInfrastructureType = "RealTimeInference"
+)
+
+// Values returns all known values for ModelInfrastructureType. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ModelInfrastructureType) Values() []ModelInfrastructureType {
+	return []ModelInfrastructureType{
+		"RealTimeInference",
+	}
+}
+
 type ModelMetadataFilterType string
 
 // Enum values for ModelMetadataFilterType
@@ -2427,6 +3100,87 @@ func (ModelSortKey) Values() []ModelSortKey {
 	return []ModelSortKey{
 		"Name",
 		"CreationTime",
+	}
+}
+
+type ModelVariantAction string
+
+// Enum values for ModelVariantAction
+const (
+	ModelVariantActionRetain  ModelVariantAction = "Retain"
+	ModelVariantActionRemove  ModelVariantAction = "Remove"
+	ModelVariantActionPromote ModelVariantAction = "Promote"
+)
+
+// Values returns all known values for ModelVariantAction. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ModelVariantAction) Values() []ModelVariantAction {
+	return []ModelVariantAction{
+		"Retain",
+		"Remove",
+		"Promote",
+	}
+}
+
+type ModelVariantStatus string
+
+// Enum values for ModelVariantStatus
+const (
+	ModelVariantStatusCreating  ModelVariantStatus = "Creating"
+	ModelVariantStatusUpdating  ModelVariantStatus = "Updating"
+	ModelVariantStatusInService ModelVariantStatus = "InService"
+	ModelVariantStatusDeleting  ModelVariantStatus = "Deleting"
+	ModelVariantStatusDeleted   ModelVariantStatus = "Deleted"
+)
+
+// Values returns all known values for ModelVariantStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ModelVariantStatus) Values() []ModelVariantStatus {
+	return []ModelVariantStatus{
+		"Creating",
+		"Updating",
+		"InService",
+		"Deleting",
+		"Deleted",
+	}
+}
+
+type MonitoringAlertHistorySortKey string
+
+// Enum values for MonitoringAlertHistorySortKey
+const (
+	MonitoringAlertHistorySortKeyCreationTime MonitoringAlertHistorySortKey = "CreationTime"
+	MonitoringAlertHistorySortKeyStatus       MonitoringAlertHistorySortKey = "Status"
+)
+
+// Values returns all known values for MonitoringAlertHistorySortKey. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (MonitoringAlertHistorySortKey) Values() []MonitoringAlertHistorySortKey {
+	return []MonitoringAlertHistorySortKey{
+		"CreationTime",
+		"Status",
+	}
+}
+
+type MonitoringAlertStatus string
+
+// Enum values for MonitoringAlertStatus
+const (
+	MonitoringAlertStatusInAlert MonitoringAlertStatus = "InAlert"
+	MonitoringAlertStatusOk      MonitoringAlertStatus = "OK"
+)
+
+// Values returns all known values for MonitoringAlertStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (MonitoringAlertStatus) Values() []MonitoringAlertStatus {
+	return []MonitoringAlertStatus{
+		"InAlert",
+		"OK",
 	}
 }
 
@@ -3073,6 +3827,24 @@ func (ProcessingS3UploadMode) Values() []ProcessingS3UploadMode {
 	}
 }
 
+type Processor string
+
+// Enum values for Processor
+const (
+	ProcessorCpu Processor = "CPU"
+	ProcessorGpu Processor = "GPU"
+)
+
+// Values returns all known values for Processor. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (Processor) Values() []Processor {
+	return []Processor{
+		"CPU",
+		"GPU",
+	}
+}
+
 type ProductionVariantAcceleratorType string
 
 // Enum values for ProductionVariantAcceleratorType
@@ -3188,6 +3960,63 @@ const (
 	ProductionVariantInstanceTypeMlG524xlarge   ProductionVariantInstanceType = "ml.g5.24xlarge"
 	ProductionVariantInstanceTypeMlG548xlarge   ProductionVariantInstanceType = "ml.g5.48xlarge"
 	ProductionVariantInstanceTypeMlP4d24xlarge  ProductionVariantInstanceType = "ml.p4d.24xlarge"
+	ProductionVariantInstanceTypeMlC7gLarge     ProductionVariantInstanceType = "ml.c7g.large"
+	ProductionVariantInstanceTypeMlC7gXlarge    ProductionVariantInstanceType = "ml.c7g.xlarge"
+	ProductionVariantInstanceTypeMlC7g2xlarge   ProductionVariantInstanceType = "ml.c7g.2xlarge"
+	ProductionVariantInstanceTypeMlC7g4xlarge   ProductionVariantInstanceType = "ml.c7g.4xlarge"
+	ProductionVariantInstanceTypeMlC7g8xlarge   ProductionVariantInstanceType = "ml.c7g.8xlarge"
+	ProductionVariantInstanceTypeMlC7g12xlarge  ProductionVariantInstanceType = "ml.c7g.12xlarge"
+	ProductionVariantInstanceTypeMlC7g16xlarge  ProductionVariantInstanceType = "ml.c7g.16xlarge"
+	ProductionVariantInstanceTypeMlM6gLarge     ProductionVariantInstanceType = "ml.m6g.large"
+	ProductionVariantInstanceTypeMlM6gXlarge    ProductionVariantInstanceType = "ml.m6g.xlarge"
+	ProductionVariantInstanceTypeMlM6g2xlarge   ProductionVariantInstanceType = "ml.m6g.2xlarge"
+	ProductionVariantInstanceTypeMlM6g4xlarge   ProductionVariantInstanceType = "ml.m6g.4xlarge"
+	ProductionVariantInstanceTypeMlM6g8xlarge   ProductionVariantInstanceType = "ml.m6g.8xlarge"
+	ProductionVariantInstanceTypeMlM6g12xlarge  ProductionVariantInstanceType = "ml.m6g.12xlarge"
+	ProductionVariantInstanceTypeMlM6g16xlarge  ProductionVariantInstanceType = "ml.m6g.16xlarge"
+	ProductionVariantInstanceTypeMlM6gdLarge    ProductionVariantInstanceType = "ml.m6gd.large"
+	ProductionVariantInstanceTypeMlM6gdXlarge   ProductionVariantInstanceType = "ml.m6gd.xlarge"
+	ProductionVariantInstanceTypeMlM6gd2xlarge  ProductionVariantInstanceType = "ml.m6gd.2xlarge"
+	ProductionVariantInstanceTypeMlM6gd4xlarge  ProductionVariantInstanceType = "ml.m6gd.4xlarge"
+	ProductionVariantInstanceTypeMlM6gd8xlarge  ProductionVariantInstanceType = "ml.m6gd.8xlarge"
+	ProductionVariantInstanceTypeMlM6gd12xlarge ProductionVariantInstanceType = "ml.m6gd.12xlarge"
+	ProductionVariantInstanceTypeMlM6gd16xlarge ProductionVariantInstanceType = "ml.m6gd.16xlarge"
+	ProductionVariantInstanceTypeMlC6gLarge     ProductionVariantInstanceType = "ml.c6g.large"
+	ProductionVariantInstanceTypeMlC6gXlarge    ProductionVariantInstanceType = "ml.c6g.xlarge"
+	ProductionVariantInstanceTypeMlC6g2xlarge   ProductionVariantInstanceType = "ml.c6g.2xlarge"
+	ProductionVariantInstanceTypeMlC6g4xlarge   ProductionVariantInstanceType = "ml.c6g.4xlarge"
+	ProductionVariantInstanceTypeMlC6g8xlarge   ProductionVariantInstanceType = "ml.c6g.8xlarge"
+	ProductionVariantInstanceTypeMlC6g12xlarge  ProductionVariantInstanceType = "ml.c6g.12xlarge"
+	ProductionVariantInstanceTypeMlC6g16xlarge  ProductionVariantInstanceType = "ml.c6g.16xlarge"
+	ProductionVariantInstanceTypeMlC6gdLarge    ProductionVariantInstanceType = "ml.c6gd.large"
+	ProductionVariantInstanceTypeMlC6gdXlarge   ProductionVariantInstanceType = "ml.c6gd.xlarge"
+	ProductionVariantInstanceTypeMlC6gd2xlarge  ProductionVariantInstanceType = "ml.c6gd.2xlarge"
+	ProductionVariantInstanceTypeMlC6gd4xlarge  ProductionVariantInstanceType = "ml.c6gd.4xlarge"
+	ProductionVariantInstanceTypeMlC6gd8xlarge  ProductionVariantInstanceType = "ml.c6gd.8xlarge"
+	ProductionVariantInstanceTypeMlC6gd12xlarge ProductionVariantInstanceType = "ml.c6gd.12xlarge"
+	ProductionVariantInstanceTypeMlC6gd16xlarge ProductionVariantInstanceType = "ml.c6gd.16xlarge"
+	ProductionVariantInstanceTypeMlC6gnLarge    ProductionVariantInstanceType = "ml.c6gn.large"
+	ProductionVariantInstanceTypeMlC6gnXlarge   ProductionVariantInstanceType = "ml.c6gn.xlarge"
+	ProductionVariantInstanceTypeMlC6gn2xlarge  ProductionVariantInstanceType = "ml.c6gn.2xlarge"
+	ProductionVariantInstanceTypeMlC6gn4xlarge  ProductionVariantInstanceType = "ml.c6gn.4xlarge"
+	ProductionVariantInstanceTypeMlC6gn8xlarge  ProductionVariantInstanceType = "ml.c6gn.8xlarge"
+	ProductionVariantInstanceTypeMlC6gn12xlarge ProductionVariantInstanceType = "ml.c6gn.12xlarge"
+	ProductionVariantInstanceTypeMlC6gn16xlarge ProductionVariantInstanceType = "ml.c6gn.16xlarge"
+	ProductionVariantInstanceTypeMlR6gLarge     ProductionVariantInstanceType = "ml.r6g.large"
+	ProductionVariantInstanceTypeMlR6gXlarge    ProductionVariantInstanceType = "ml.r6g.xlarge"
+	ProductionVariantInstanceTypeMlR6g2xlarge   ProductionVariantInstanceType = "ml.r6g.2xlarge"
+	ProductionVariantInstanceTypeMlR6g4xlarge   ProductionVariantInstanceType = "ml.r6g.4xlarge"
+	ProductionVariantInstanceTypeMlR6g8xlarge   ProductionVariantInstanceType = "ml.r6g.8xlarge"
+	ProductionVariantInstanceTypeMlR6g12xlarge  ProductionVariantInstanceType = "ml.r6g.12xlarge"
+	ProductionVariantInstanceTypeMlR6g16xlarge  ProductionVariantInstanceType = "ml.r6g.16xlarge"
+	ProductionVariantInstanceTypeMlR6gdLarge    ProductionVariantInstanceType = "ml.r6gd.large"
+	ProductionVariantInstanceTypeMlR6gdXlarge   ProductionVariantInstanceType = "ml.r6gd.xlarge"
+	ProductionVariantInstanceTypeMlR6gd2xlarge  ProductionVariantInstanceType = "ml.r6gd.2xlarge"
+	ProductionVariantInstanceTypeMlR6gd4xlarge  ProductionVariantInstanceType = "ml.r6gd.4xlarge"
+	ProductionVariantInstanceTypeMlR6gd8xlarge  ProductionVariantInstanceType = "ml.r6gd.8xlarge"
+	ProductionVariantInstanceTypeMlR6gd12xlarge ProductionVariantInstanceType = "ml.r6gd.12xlarge"
+	ProductionVariantInstanceTypeMlR6gd16xlarge ProductionVariantInstanceType = "ml.r6gd.16xlarge"
+	ProductionVariantInstanceTypeMlP4de24xlarge ProductionVariantInstanceType = "ml.p4de.24xlarge"
 )
 
 // Values returns all known values for ProductionVariantInstanceType. Note that
@@ -3280,6 +4109,63 @@ func (ProductionVariantInstanceType) Values() []ProductionVariantInstanceType {
 		"ml.g5.24xlarge",
 		"ml.g5.48xlarge",
 		"ml.p4d.24xlarge",
+		"ml.c7g.large",
+		"ml.c7g.xlarge",
+		"ml.c7g.2xlarge",
+		"ml.c7g.4xlarge",
+		"ml.c7g.8xlarge",
+		"ml.c7g.12xlarge",
+		"ml.c7g.16xlarge",
+		"ml.m6g.large",
+		"ml.m6g.xlarge",
+		"ml.m6g.2xlarge",
+		"ml.m6g.4xlarge",
+		"ml.m6g.8xlarge",
+		"ml.m6g.12xlarge",
+		"ml.m6g.16xlarge",
+		"ml.m6gd.large",
+		"ml.m6gd.xlarge",
+		"ml.m6gd.2xlarge",
+		"ml.m6gd.4xlarge",
+		"ml.m6gd.8xlarge",
+		"ml.m6gd.12xlarge",
+		"ml.m6gd.16xlarge",
+		"ml.c6g.large",
+		"ml.c6g.xlarge",
+		"ml.c6g.2xlarge",
+		"ml.c6g.4xlarge",
+		"ml.c6g.8xlarge",
+		"ml.c6g.12xlarge",
+		"ml.c6g.16xlarge",
+		"ml.c6gd.large",
+		"ml.c6gd.xlarge",
+		"ml.c6gd.2xlarge",
+		"ml.c6gd.4xlarge",
+		"ml.c6gd.8xlarge",
+		"ml.c6gd.12xlarge",
+		"ml.c6gd.16xlarge",
+		"ml.c6gn.large",
+		"ml.c6gn.xlarge",
+		"ml.c6gn.2xlarge",
+		"ml.c6gn.4xlarge",
+		"ml.c6gn.8xlarge",
+		"ml.c6gn.12xlarge",
+		"ml.c6gn.16xlarge",
+		"ml.r6g.large",
+		"ml.r6g.xlarge",
+		"ml.r6g.2xlarge",
+		"ml.r6g.4xlarge",
+		"ml.r6g.8xlarge",
+		"ml.r6g.12xlarge",
+		"ml.r6g.16xlarge",
+		"ml.r6gd.large",
+		"ml.r6gd.xlarge",
+		"ml.r6gd.2xlarge",
+		"ml.r6gd.4xlarge",
+		"ml.r6gd.8xlarge",
+		"ml.r6gd.12xlarge",
+		"ml.r6gd.16xlarge",
+		"ml.p4de.24xlarge",
 	}
 }
 
@@ -3415,6 +4301,22 @@ func (RecommendationJobType) Values() []RecommendationJobType {
 	}
 }
 
+type RecommendationStepType string
+
+// Enum values for RecommendationStepType
+const (
+	RecommendationStepTypeBenchmark RecommendationStepType = "BENCHMARK"
+)
+
+// Values returns all known values for RecommendationStepType. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (RecommendationStepType) Values() []RecommendationStepType {
+	return []RecommendationStepType{
+		"BENCHMARK",
+	}
+}
+
 type RecordWrapper string
 
 // Enum values for RecordWrapper
@@ -3510,6 +4412,9 @@ const (
 	ResourceTypeFeatureGroup             ResourceType = "FeatureGroup"
 	ResourceTypeProject                  ResourceType = "Project"
 	ResourceTypeFeatureMetadata          ResourceType = "FeatureMetadata"
+	ResourceTypeHyperParameterTuningJob  ResourceType = "HyperParameterTuningJob"
+	ResourceTypeModelCard                ResourceType = "ModelCard"
+	ResourceTypeModel                    ResourceType = "Model"
 )
 
 // Values returns all known values for ResourceType. Note that this can be expanded
@@ -3529,6 +4434,9 @@ func (ResourceType) Values() []ResourceType {
 		"FeatureGroup",
 		"Project",
 		"FeatureMetadata",
+		"HyperParameterTuningJob",
+		"ModelCard",
+		"Model",
 	}
 }
 
@@ -3887,6 +4795,26 @@ func (SortExperimentsBy) Values() []SortExperimentsBy {
 	}
 }
 
+type SortInferenceExperimentsBy string
+
+// Enum values for SortInferenceExperimentsBy
+const (
+	SortInferenceExperimentsByName         SortInferenceExperimentsBy = "Name"
+	SortInferenceExperimentsByCreationTime SortInferenceExperimentsBy = "CreationTime"
+	SortInferenceExperimentsByStatus       SortInferenceExperimentsBy = "Status"
+)
+
+// Values returns all known values for SortInferenceExperimentsBy. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (SortInferenceExperimentsBy) Values() []SortInferenceExperimentsBy {
+	return []SortInferenceExperimentsBy{
+		"Name",
+		"CreationTime",
+		"Status",
+	}
+}
+
 type SortLineageGroupsBy string
 
 // Enum values for SortLineageGroupsBy
@@ -3992,6 +4920,52 @@ func (SortTrialsBy) Values() []SortTrialsBy {
 	return []SortTrialsBy{
 		"Name",
 		"CreationTime",
+	}
+}
+
+type SpaceSortKey string
+
+// Enum values for SpaceSortKey
+const (
+	SpaceSortKeyCreationTime     SpaceSortKey = "CreationTime"
+	SpaceSortKeyLastModifiedTime SpaceSortKey = "LastModifiedTime"
+)
+
+// Values returns all known values for SpaceSortKey. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (SpaceSortKey) Values() []SpaceSortKey {
+	return []SpaceSortKey{
+		"CreationTime",
+		"LastModifiedTime",
+	}
+}
+
+type SpaceStatus string
+
+// Enum values for SpaceStatus
+const (
+	SpaceStatusDeleting     SpaceStatus = "Deleting"
+	SpaceStatusFailed       SpaceStatus = "Failed"
+	SpaceStatusInService    SpaceStatus = "InService"
+	SpaceStatusPending      SpaceStatus = "Pending"
+	SpaceStatusUpdating     SpaceStatus = "Updating"
+	SpaceStatusUpdateFailed SpaceStatus = "Update_Failed"
+	SpaceStatusDeleteFailed SpaceStatus = "Delete_Failed"
+)
+
+// Values returns all known values for SpaceStatus. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (SpaceStatus) Values() []SpaceStatus {
+	return []SpaceStatus{
+		"Deleting",
+		"Failed",
+		"InService",
+		"Pending",
+		"Updating",
+		"Update_Failed",
+		"Delete_Failed",
 	}
 }
 
@@ -4108,6 +5082,24 @@ func (StudioLifecycleConfigSortKey) Values() []StudioLifecycleConfigSortKey {
 		"CreationTime",
 		"LastModifiedTime",
 		"Name",
+	}
+}
+
+type TableFormat string
+
+// Enum values for TableFormat
+const (
+	TableFormatGlue    TableFormat = "Glue"
+	TableFormatIceberg TableFormat = "Iceberg"
+)
+
+// Values returns all known values for TableFormat. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (TableFormat) Values() []TableFormat {
+	return []TableFormat{
+		"Glue",
+		"Iceberg",
 	}
 }
 
@@ -4360,6 +5352,8 @@ const (
 	TrainingInstanceTypeMlG512xlarge   TrainingInstanceType = "ml.g5.12xlarge"
 	TrainingInstanceTypeMlG524xlarge   TrainingInstanceType = "ml.g5.24xlarge"
 	TrainingInstanceTypeMlG548xlarge   TrainingInstanceType = "ml.g5.48xlarge"
+	TrainingInstanceTypeMlTrn12xlarge  TrainingInstanceType = "ml.trn1.2xlarge"
+	TrainingInstanceTypeMlTrn132xlarge TrainingInstanceType = "ml.trn1.32xlarge"
 )
 
 // Values returns all known values for TrainingInstanceType. Note that this can be
@@ -4414,6 +5408,8 @@ func (TrainingInstanceType) Values() []TrainingInstanceType {
 		"ml.g5.12xlarge",
 		"ml.g5.24xlarge",
 		"ml.g5.48xlarge",
+		"ml.trn1.2xlarge",
+		"ml.trn1.32xlarge",
 	}
 }
 
@@ -4478,6 +5474,24 @@ func (TrainingJobStatus) Values() []TrainingJobStatus {
 		"Failed",
 		"Stopping",
 		"Stopped",
+	}
+}
+
+type TrainingRepositoryAccessMode string
+
+// Enum values for TrainingRepositoryAccessMode
+const (
+	TrainingRepositoryAccessModePlatform TrainingRepositoryAccessMode = "Platform"
+	TrainingRepositoryAccessModeVpc      TrainingRepositoryAccessMode = "Vpc"
+)
+
+// Values returns all known values for TrainingRepositoryAccessMode. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (TrainingRepositoryAccessMode) Values() []TrainingRepositoryAccessMode {
+	return []TrainingRepositoryAccessMode{
+		"Platform",
+		"Vpc",
 	}
 }
 
@@ -4694,6 +5708,50 @@ func (VariantStatus) Values() []VariantStatus {
 		"Deleting",
 		"ActivatingTraffic",
 		"Baking",
+	}
+}
+
+type VendorGuidance string
+
+// Enum values for VendorGuidance
+const (
+	VendorGuidanceNotProvided  VendorGuidance = "NOT_PROVIDED"
+	VendorGuidanceStable       VendorGuidance = "STABLE"
+	VendorGuidanceToBeArchived VendorGuidance = "TO_BE_ARCHIVED"
+	VendorGuidanceArchived     VendorGuidance = "ARCHIVED"
+)
+
+// Values returns all known values for VendorGuidance. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (VendorGuidance) Values() []VendorGuidance {
+	return []VendorGuidance{
+		"NOT_PROVIDED",
+		"STABLE",
+		"TO_BE_ARCHIVED",
+		"ARCHIVED",
+	}
+}
+
+type WarmPoolResourceStatus string
+
+// Enum values for WarmPoolResourceStatus
+const (
+	WarmPoolResourceStatusAvailable  WarmPoolResourceStatus = "Available"
+	WarmPoolResourceStatusTerminated WarmPoolResourceStatus = "Terminated"
+	WarmPoolResourceStatusReused     WarmPoolResourceStatus = "Reused"
+	WarmPoolResourceStatusInuse      WarmPoolResourceStatus = "InUse"
+)
+
+// Values returns all known values for WarmPoolResourceStatus. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (WarmPoolResourceStatus) Values() []WarmPoolResourceStatus {
+	return []WarmPoolResourceStatus{
+		"Available",
+		"Terminated",
+		"Reused",
+		"InUse",
 	}
 }
 

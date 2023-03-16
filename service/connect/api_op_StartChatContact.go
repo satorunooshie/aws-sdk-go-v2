@@ -64,8 +64,9 @@ type StartChatContactInput struct {
 	// This member is required.
 	ContactFlowId *string
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	//
 	// This member is required.
 	InstanceId *string
@@ -88,14 +89,26 @@ type StartChatContactInput struct {
 	ChatDurationInMinutes *int32
 
 	// A unique, case-sensitive identifier that you provide to ensure the idempotency
-	// of the request.
+	// of the request. If not provided, the Amazon Web Services SDK populates this
+	// field. For more information about idempotency, see Making retries safe with
+	// idempotent APIs
+	// (https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/).
 	ClientToken *string
 
 	// The initial message to be sent to the newly created chat.
 	InitialMessage *types.ChatMessage
 
-	// The supported chat message content types. Content types can be text/plain or
-	// both text/plain and text/markdown.
+	// Enable persistent chats. For more information about enabling persistent chat,
+	// and for example use cases and how to configure for them, see Enable persistent
+	// chat
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/chat-persistence.html).
+	PersistentChat *types.PersistentChat
+
+	// The supported chat message content types. Content types must always contain
+	// text/plain. You can then put any other supported type in the list. For example,
+	// all the following lists are valid because they contain text/plain: [text/plain,
+	// text/markdown, application/json], [text/markdown, text/plain], [text/plain,
+	// application/json].
 	SupportedMessagingContentTypes []string
 
 	noSmithyDocumentSerde
@@ -105,6 +118,10 @@ type StartChatContactOutput struct {
 
 	// The identifier of this contact within the Amazon Connect instance.
 	ContactId *string
+
+	// The contactId from which a persistent chat session is started. This field is
+	// populated only for persistent chats.
+	ContinuedFromContactId *string
 
 	// The identifier for a chat participant. The participantId for a chat participant
 	// is the same throughout the chat lifecycle.

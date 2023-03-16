@@ -7,13 +7,19 @@ import (
 	"time"
 )
 
-// The Proton pipeline service role and repository data shared across the Amazon
-// Web Services account.
+// Proton settings that are used for multiple services in the Amazon Web Services
+// account.
 type AccountSettings struct {
 
-	// The repository configured in the Amazon Web Services account for pipeline
-	// provisioning. Required it if you have environments configured for self-managed
-	// provisioning with services that include pipelines.
+	// The Amazon Resource Name (ARN) of the service role that Proton uses for
+	// provisioning pipelines. Proton assumes this role for CodeBuild-based
+	// provisioning.
+	PipelineCodebuildRoleArn *string
+
+	// The linked repository for pipeline provisioning. Required if you have
+	// environments configured for self-managed provisioning with services that include
+	// pipelines. A linked repository is a repository that has been registered with
+	// Proton. For more information, see CreateRepository.
 	PipelineProvisioningRepository *RepositoryBranch
 
 	// The Amazon Resource Name (ARN) of the service role you want to use for
@@ -58,8 +64,8 @@ type CompatibleEnvironmentTemplateInput struct {
 
 // Detailed data of an Proton component resource. For more information about
 // components, see Proton components
-// (https://docs.aws.amazon.com/proton/latest/adminguide/ag-components.html) in the
-// Proton Administrator Guide.
+// (https://docs.aws.amazon.com/proton/latest/userguide/ag-components.html) in the
+// Proton User Guide.
 type Component struct {
 
 	// The Amazon Resource Name (ARN) of the component.
@@ -123,8 +129,8 @@ type Component struct {
 
 // Summary data of an Proton component resource. For more information about
 // components, see Proton components
-// (https://docs.aws.amazon.com/proton/latest/adminguide/ag-components.html) in the
-// Proton Administrator Guide.
+// (https://docs.aws.amazon.com/proton/latest/userguide/ag-components.html) in the
+// Proton User Guide.
 type ComponentSummary struct {
 
 	// The Amazon Resource Name (ARN) of the component.
@@ -173,6 +179,40 @@ type ComponentSummary struct {
 	// The name of the service that serviceInstanceName is associated with. Provided
 	// when a component is attached to a service instance.
 	ServiceName *string
+
+	noSmithyDocumentSerde
+}
+
+// Summary counts of each Proton resource type.
+type CountsSummary struct {
+
+	// The total number of components in the Amazon Web Services account. The semantics
+	// of the components field are different from the semantics of results for other
+	// infrastructure-provisioning resources. That's because at this time components
+	// don't have associated templates, therefore they don't have the concept of
+	// staleness. The components object will only contain total and failed members.
+	Components *ResourceCountsSummary
+
+	// The total number of environment templates in the Amazon Web Services account.
+	EnvironmentTemplates *ResourceCountsSummary
+
+	// The staleness counts for Proton environments in the Amazon Web Services account.
+	// The environments object will only contain total members.
+	Environments *ResourceCountsSummary
+
+	// The staleness counts for Proton pipelines in the Amazon Web Services account.
+	Pipelines *ResourceCountsSummary
+
+	// The staleness counts for Proton service instances in the Amazon Web Services
+	// account.
+	ServiceInstances *ResourceCountsSummary
+
+	// The total number of service templates in the Amazon Web Services account. The
+	// serviceTemplates object will only contain total members.
+	ServiceTemplates *ResourceCountsSummary
+
+	// The staleness counts for Proton services in the Amazon Web Services account.
+	Services *ResourceCountsSummary
 
 	noSmithyDocumentSerde
 }
@@ -226,14 +266,18 @@ type Environment struct {
 	// This member is required.
 	TemplateName *string
 
+	// The Amazon Resource Name (ARN) of the IAM service role that allows Proton to
+	// provision infrastructure using CodeBuild-based provisioning on your behalf.
+	CodebuildRoleArn *string
+
 	// The Amazon Resource Name (ARN) of the IAM service role that Proton uses when
 	// provisioning directly defined components in this environment. It determines the
 	// scope of infrastructure that a component can provision. The environment must
 	// have a componentRoleArn to allow directly defined components to be associated
 	// with the environment. For more information about components, see Proton
 	// components
-	// (https://docs.aws.amazon.com/proton/latest/adminguide/ag-components.html) in the
-	// Proton Administrator Guide.
+	// (https://docs.aws.amazon.com/proton/latest/userguide/ag-components.html) in the
+	// Proton User Guide.
 	ComponentRoleArn *string
 
 	// An environment deployment status message.
@@ -258,8 +302,10 @@ type Environment struct {
 	// provisioned and managed infrastructure.
 	Provisioning Provisioning
 
-	// The infrastructure repository that you use to host your rendered infrastructure
-	// templates for self-managed provisioning.
+	// The linked repository that you use to host your rendered infrastructure
+	// templates for self-managed provisioning. A linked repository is a repository
+	// that has been registered with Proton. For more information, see
+	// CreateRepository.
 	ProvisioningRepository *RepositoryBranch
 
 	// The environment spec.
@@ -320,14 +366,19 @@ type EnvironmentAccountConnection struct {
 	// This member is required.
 	Status EnvironmentAccountConnectionStatus
 
+	// The Amazon Resource Name (ARN) of an IAM service role in the environment
+	// account. Proton uses this role to provision infrastructure resources using
+	// CodeBuild-based provisioning in the associated environment account.
+	CodebuildRoleArn *string
+
 	// The Amazon Resource Name (ARN) of the IAM service role that Proton uses when
 	// provisioning directly defined components in the associated environment account.
 	// It determines the scope of infrastructure that a component can provision in the
 	// account. The environment account connection must have a componentRoleArn to
 	// allow directly defined components to be associated with any environments running
 	// in the account. For more information about components, see Proton components
-	// (https://docs.aws.amazon.com/proton/latest/adminguide/ag-components.html) in the
-	// Proton Administrator Guide.
+	// (https://docs.aws.amazon.com/proton/latest/userguide/ag-components.html) in the
+	// Proton User Guide.
 	ComponentRoleArn *string
 
 	noSmithyDocumentSerde
@@ -390,8 +441,8 @@ type EnvironmentAccountConnectionSummary struct {
 	// account. The environment account connection must have a componentRoleArn to
 	// allow directly defined components to be associated with any environments running
 	// in the account. For more information about components, see Proton components
-	// (https://docs.aws.amazon.com/proton/latest/adminguide/ag-components.html) in the
-	// Proton Administrator Guide.
+	// (https://docs.aws.amazon.com/proton/latest/userguide/ag-components.html) in the
+	// Proton User Guide.
 	ComponentRoleArn *string
 
 	noSmithyDocumentSerde
@@ -452,8 +503,8 @@ type EnvironmentSummary struct {
 	// have a componentRoleArn to allow directly defined components to be associated
 	// with the environment. For more information about components, see Proton
 	// components
-	// (https://docs.aws.amazon.com/proton/latest/adminguide/ag-components.html) in the
-	// Proton Administrator Guide.
+	// (https://docs.aws.amazon.com/proton/latest/userguide/ag-components.html) in the
+	// Proton User Guide.
 	ComponentRoleArn *string
 
 	// An environment deployment status message.
@@ -685,6 +736,22 @@ type EnvironmentTemplateVersionSummary struct {
 	noSmithyDocumentSerde
 }
 
+// A filtering criterion to scope down the result list of the ListServiceInstances
+// action.
+type ListServiceInstancesFilter struct {
+
+	// The name of a filtering criterion.
+	Key ListServiceInstancesFilterBy
+
+	// A value to filter by. With the date/time keys (*At{Before,After}), the value is
+	// a valid RFC 3339 (https://datatracker.ietf.org/doc/html/rfc3339.html) string
+	// with no UTC offset and with an optional fractional precision (for example,
+	// 1985-04-12T23:20:50.52Z).
+	Value *string
+
+	noSmithyDocumentSerde
+}
+
 // An infrastructure as code defined resource output.
 type Output struct {
 
@@ -709,23 +776,24 @@ type ProvisionedResource struct {
 	// The resource provisioning engine. At this time, CLOUDFORMATION can be used for
 	// Amazon Web Services-managed provisioning, and TERRAFORM can be used for
 	// self-managed provisioning. For more information, see Self-managed provisioning
-	// (https://docs.aws.amazon.com/proton/latest/adminguide/ag-works-prov-methods.html#ag-works-prov-methods-self)
-	// in the Proton Administrator Guide.
+	// (https://docs.aws.amazon.com/proton/latest/userguide/ag-works-prov-methods.html#ag-works-prov-methods-self)
+	// in the Proton User Guide.
 	ProvisioningEngine ProvisionedResourceEngine
 
 	noSmithyDocumentSerde
 }
 
-// Detailed data of a repository that has been registered with Proton.
+// Detailed data of a linked repository—a repository that has been registered with
+// Proton.
 type Repository struct {
 
-	// The repository Amazon Resource Name (ARN).
+	// The Amazon Resource Name (ARN) of the linked repository.
 	//
 	// This member is required.
 	Arn *string
 
-	// The repository Amazon Web Services CodeStar connection that connects Proton to
-	// your repository.
+	// The Amazon Resource Name (ARN) of your AWS CodeStar connection that connects
+	// Proton to your repository provider account.
 	//
 	// This member is required.
 	ConnectionArn *string
@@ -746,10 +814,10 @@ type Repository struct {
 	noSmithyDocumentSerde
 }
 
-// Detail data for a repository branch.
+// Detail data for a linked repository branch.
 type RepositoryBranch struct {
 
-	// The Amazon Resource Name (ARN) of the repository branch.
+	// The Amazon Resource Name (ARN) of the linked repository.
 	//
 	// This member is required.
 	Arn *string
@@ -772,7 +840,7 @@ type RepositoryBranch struct {
 	noSmithyDocumentSerde
 }
 
-// Detail input data for a repository branch.
+// Detail input data for a linked repository branch.
 type RepositoryBranchInput struct {
 
 	// The repository branch.
@@ -793,10 +861,11 @@ type RepositoryBranchInput struct {
 	noSmithyDocumentSerde
 }
 
-// Summary data of a repository that has been registered with Proton.
+// Summary data of a linked repository—a repository that has been registered with
+// Proton.
 type RepositorySummary struct {
 
-	// The Amazon Resource Name (ARN) for a repository.
+	// The Amazon Resource Name (ARN) of the linked repository.
 	//
 	// This member is required.
 	Arn *string
@@ -835,7 +904,7 @@ type RepositorySyncAttempt struct {
 	noSmithyDocumentSerde
 }
 
-// The repository sync definition.
+// A repository sync definition.
 type RepositorySyncDefinition struct {
 
 	// The repository branch.
@@ -881,6 +950,33 @@ type RepositorySyncEvent struct {
 
 	// The external ID of the sync event.
 	ExternalId *string
+
+	noSmithyDocumentSerde
+}
+
+// Summary counts of each Proton resource types.
+type ResourceCountsSummary struct {
+
+	// The total number of resources of this type in the Amazon Web Services account.
+	//
+	// This member is required.
+	Total *int32
+
+	// The number of resources of this type in the Amazon Web Services account that
+	// need a major template version update.
+	BehindMajor *int32
+
+	// The number of resources of this type in the Amazon Web Services account that
+	// need a minor template version update.
+	BehindMinor *int32
+
+	// The number of resources of this type in the Amazon Web Services account that
+	// failed to deploy.
+	Failed *int32
+
+	// The number of resources of this type in the Amazon Web Services account that are
+	// up-to-date with their template.
+	UpToDate *int32
 
 	noSmithyDocumentSerde
 }
@@ -1044,10 +1140,8 @@ type Service struct {
 	Pipeline *ServicePipeline
 
 	// The Amazon Resource Name (ARN) of the repository connection. For more
-	// information, see Set up a repository connection
-	// (https://docs.aws.amazon.com/proton/latest/adminguide/setting-up-for-service.html#setting-up-vcontrol)
-	// in the Proton Administrator Guide and Setting up with Proton
-	// (https://docs.aws.amazon.com/proton/latest/userguide/proton-setup.html#setup-repo-connection)
+	// information, see Setting up an AWS CodeStar connection
+	// (https://docs.aws.amazon.com/proton/latest/userguide/setting-up-for-service.html#setting-up-vcontrol)
 	// in the Proton User Guide.
 	RepositoryConnectionArn *string
 
@@ -1437,8 +1531,8 @@ type ServiceTemplateVersion struct {
 	// An array of supported component sources. Components with supported sources can
 	// be attached to service instances based on this service template version. For
 	// more information about components, see Proton components
-	// (https://docs.aws.amazon.com/proton/latest/adminguide/ag-components.html) in the
-	// Proton Administrator Guide.
+	// (https://docs.aws.amazon.com/proton/latest/userguide/ag-components.html) in the
+	// Proton User Guide.
 	SupportedComponentSources []ServiceTemplateSupportedComponentSourceType
 
 	noSmithyDocumentSerde
@@ -1519,7 +1613,7 @@ type TemplateSyncConfig struct {
 	// This member is required.
 	Branch *string
 
-	// The name of the repository, for example myrepos/myrepo.
+	// The repository name (for example, myrepos/myrepo).
 	//
 	// This member is required.
 	RepositoryName *string

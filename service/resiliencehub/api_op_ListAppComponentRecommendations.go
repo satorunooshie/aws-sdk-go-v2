@@ -12,7 +12,7 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the recommendations for an AWS Resilience Hub component.
+// Lists the recommendations for an AWS Resilience Hub Application Component.
 func (c *Client) ListAppComponentRecommendations(ctx context.Context, params *ListAppComponentRecommendationsInput, optFns ...func(*Options)) (*ListAppComponentRecommendationsOutput, error) {
 	if params == nil {
 		params = &ListAppComponentRecommendationsInput{}
@@ -34,7 +34,7 @@ type ListAppComponentRecommendationsInput struct {
 	// arn:partition:resiliencehub:region:account:app-assessment/app-id. For more
 	// information about ARNs, see  Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the AWS General Reference guide.
 	//
 	// This member is required.
 	AssessmentArn *string
@@ -52,9 +52,9 @@ type ListAppComponentRecommendationsInput struct {
 
 type ListAppComponentRecommendationsOutput struct {
 
-	// The recommendations for an Resilience Hub application component, returned as an
-	// object. This object contains component names, configuration recommendations, and
-	// recommendation statuses.
+	// The recommendations for an AWS Resilience Hub Application Component, returned as
+	// an object. This object contains the names of the Application Components,
+	// configuration recommendations, and recommendation statuses.
 	//
 	// This member is required.
 	ComponentRecommendations []types.ComponentRecommendation
@@ -142,6 +142,11 @@ var _ ListAppComponentRecommendationsAPIClient = (*Client)(nil)
 // ListAppComponentRecommendationsPaginatorOptions is the paginator options for
 // ListAppComponentRecommendations
 type ListAppComponentRecommendationsPaginatorOptions struct {
+	// The maximum number of results to include in the response. If more results exist
+	// than the specified MaxResults value, a token is included in the response so that
+	// the remaining results can be retrieved.
+	Limit int32
+
 	// Set to true if pagination should stop if the service returns a pagination token
 	// that matches the most recent token provided to the service.
 	StopOnDuplicateToken bool
@@ -165,6 +170,9 @@ func NewListAppComponentRecommendationsPaginator(client ListAppComponentRecommen
 	}
 
 	options := ListAppComponentRecommendationsPaginatorOptions{}
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
+	}
 
 	for _, fn := range optFns {
 		fn(&options)
@@ -192,6 +200,12 @@ func (p *ListAppComponentRecommendationsPaginator) NextPage(ctx context.Context,
 
 	params := *p.params
 	params.NextToken = p.nextToken
+
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListAppComponentRecommendations(ctx, &params, optFns...)
 	if err != nil {

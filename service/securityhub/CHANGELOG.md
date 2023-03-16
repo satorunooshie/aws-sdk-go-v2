@@ -1,3 +1,89 @@
+# v1.29.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.0 (2023-02-24)
+
+* **Feature**: New Security Hub APIs and updates to existing APIs that help you consolidate control findings and enable and disable controls across all supported standards
+
+# v1.28.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.28.4 (2023-02-21)
+
+* **Documentation**: Documentation updates for AWS Security Hub
+
+# v1.28.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.28.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.0 (2023-01-31)
+
+* **Feature**: New fields have been added to the AWS Security Finding Format. Compliance.SecurityControlId is a unique identifier for a security control across standards. Compliance.AssociatedStandards contains all enabled standards in which a security control is enabled.
+
+# v1.27.1 (2023-01-13)
+
+* No change notes available for this release.
+
+# v1.27.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.26.0 (2022-12-15)
+
+* **Feature**: Added new resource details objects to ASFF, including resources for AwsEc2LaunchTemplate, AwsSageMakerNotebookInstance, AwsWafv2WebAcl and AwsWafv2RuleGroup.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2022-11-29)
+
+* **Feature**: Adding StandardsManagedBy field to DescribeStandards API response
+
+# v1.24.0 (2022-11-17)
+
+* **Feature**: Added SourceLayerArn and SourceLayerHash field for security findings.  Updated AwsLambdaFunction Resource detail
+
+# v1.23.8 (2022-11-11)
+
+* **Documentation**: Documentation updates for Security Hub
+
+# v1.23.7 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.6 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.5 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.4 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.3 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.2 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.23.1 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

@@ -84,12 +84,8 @@ type InputDataConfig struct {
 	ContentType *string
 
 	// The URI of the AWS S3 folder that contains the input files. Amazon Translate
-	// translates all the files in the folder. The folder must be in the same Region as
-	// the API endpoint you are calling. The URI can also point to a single input
-	// document, or it can provide the prefix for a collection of input documents. For
-	// example. if you use the URI S3://bucketName/prefix and the prefix is a single
-	// file, Amazon Translate uses that files as input. If more than one file begins
-	// with the prefix, Amazon Translate uses all of them as input.
+	// translates all the files in the folder and all its sub-folders. The folder must
+	// be in the same Region as the API endpoint you are calling.
 	//
 	// This member is required.
 	S3Uri *string
@@ -246,6 +242,24 @@ type ParallelDataProperties struct {
 	// The language codes for the target languages available in the parallel data file.
 	// All possible target languages are returned as an array.
 	TargetLanguageCodes []string
+
+	noSmithyDocumentSerde
+}
+
+// A key-value pair that adds as a metadata to a resource used by Amazon Translate.
+type Tag struct {
+
+	// The initial part of a key-value pair that forms a tag associated with a given
+	// resource.
+	//
+	// This member is required.
+	Key *string
+
+	// The second part of a key-value pair that forms a tag associated with a given
+	// resource.
+	//
+	// This member is required.
+	Value *string
 
 	noSmithyDocumentSerde
 }
@@ -458,21 +472,22 @@ type TextTranslationJobProperties struct {
 	noSmithyDocumentSerde
 }
 
-// Settings that configure the translation output.
+// Optional settings that configure the translation output. Use these settings for
+// real time translations and asynchronous translation jobs.
 type TranslationSettings struct {
 
-	// You can optionally specify the desired level of formality for real-time
-	// translations to supported target languages. The formality setting controls the
-	// level of formal language usage (also known as register
+	// You can optionally specify the desired level of formality for translations to
+	// supported target languages. The formality setting controls the level of formal
+	// language usage (also known as register
 	// (https://en.wikipedia.org/wiki/Register_(sociolinguistics))) in the translation
 	// output. You can set the value to informal or formal. If you don't specify a
 	// value for formality, or if the target language doesn't support formality, the
-	// translation will ignore the formality setting. Note that asynchronous
-	// translation jobs don't support formality. If you provide a value for formality,
-	// the StartTextTranslationJob API throws an exception (InvalidRequestException).
-	// For target languages that support formality, see Supported Languages and
-	// Language Codes in the Amazon Translate Developer Guide
-	// (https://docs.aws.amazon.com/translate/latest/dg/what-is.html).
+	// translation will ignore the formality setting. If you specify multiple target
+	// languages for the job, translate ignores the formality setting for any
+	// unsupported target language. For a list of target languages that support
+	// formality, see Supported languages
+	// (https://docs.aws.amazon.com/translate/latest/dg/customizing-translations-formality.html#customizing-translations-formality-languages)
+	// in the Amazon Translate Developer Guide.
 	Formality Formality
 
 	// Enable the profanity setting if you want Amazon Translate to mask profane words
@@ -480,9 +495,13 @@ type TranslationSettings struct {
 	// Amazon Translate replaces them with the grawlix string “?$#@$“. This 5-character
 	// sequence is used for each profane word or phrase, regardless of the length or
 	// number of words. Amazon Translate doesn't detect profanity in all of its
-	// supported languages. For languages that support profanity detection, see
-	// Supported Languages and Language Codes in the Amazon Translate Developer Guide
-	// (https://docs.aws.amazon.com/translate/latest/dg/what-is.html).
+	// supported languages. For languages that don't support profanity detection, see
+	// Unsupported languages
+	// (https://docs.aws.amazon.com/translate/latest/dg/customizing-translations-profanity.html#customizing-translations-profanity-languages)
+	// in the Amazon Translate Developer Guide. If you specify multiple target
+	// languages for the job, all the target languages must support profanity masking.
+	// If any of the target languages don't support profanity masking, the translation
+	// job won't mask profanity for any target language.
 	Profanity Profanity
 
 	noSmithyDocumentSerde

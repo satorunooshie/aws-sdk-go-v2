@@ -12,6 +12,8 @@ import (
 type WAFAssociatedItemException struct {
 	Message *string
 
+	ErrorCodeOverride *string
+
 	noSmithyDocumentSerde
 }
 
@@ -24,7 +26,12 @@ func (e *WAFAssociatedItemException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFAssociatedItemException) ErrorCode() string             { return "WAFAssociatedItemException" }
+func (e *WAFAssociatedItemException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFAssociatedItemException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFAssociatedItemException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // The operation failed because you are inspecting the web request body, headers,
@@ -39,6 +46,8 @@ func (e *WAFAssociatedItemException) ErrorFault() smithy.ErrorFault { return smi
 type WAFConfigurationWarningException struct {
 	Message *string
 
+	ErrorCodeOverride *string
+
 	noSmithyDocumentSerde
 }
 
@@ -52,7 +61,10 @@ func (e *WAFConfigurationWarningException) ErrorMessage() string {
 	return *e.Message
 }
 func (e *WAFConfigurationWarningException) ErrorCode() string {
-	return "WAFConfigurationWarningException"
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFConfigurationWarningException"
+	}
+	return *e.ErrorCodeOverride
 }
 func (e *WAFConfigurationWarningException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
@@ -60,6 +72,8 @@ func (e *WAFConfigurationWarningException) ErrorFault() smithy.ErrorFault { retu
 // is a duplicate of an existing one.
 type WAFDuplicateItemException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -73,7 +87,12 @@ func (e *WAFDuplicateItemException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFDuplicateItemException) ErrorCode() string             { return "WAFDuplicateItemException" }
+func (e *WAFDuplicateItemException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFDuplicateItemException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFDuplicateItemException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // The operation failed because the specified version for the managed rule group
@@ -81,6 +100,8 @@ func (e *WAFDuplicateItemException) ErrorFault() smithy.ErrorFault { return smit
 // by calling ListAvailableManagedRuleGroupVersions.
 type WAFExpiredManagedRuleGroupVersionException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -95,7 +116,10 @@ func (e *WAFExpiredManagedRuleGroupVersionException) ErrorMessage() string {
 	return *e.Message
 }
 func (e *WAFExpiredManagedRuleGroupVersionException) ErrorCode() string {
-	return "WAFExpiredManagedRuleGroupVersionException"
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFExpiredManagedRuleGroupVersionException"
+	}
+	return *e.ErrorCodeOverride
 }
 func (e *WAFExpiredManagedRuleGroupVersionException) ErrorFault() smithy.ErrorFault {
 	return smithy.FaultClient
@@ -105,6 +129,8 @@ func (e *WAFExpiredManagedRuleGroupVersionException) ErrorFault() smithy.ErrorFa
 // system problem. Retry your request.
 type WAFInternalErrorException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -118,12 +144,19 @@ func (e *WAFInternalErrorException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFInternalErrorException) ErrorCode() string             { return "WAFInternalErrorException" }
+func (e *WAFInternalErrorException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFInternalErrorException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFInternalErrorException) ErrorFault() smithy.ErrorFault { return smithy.FaultServer }
 
 // The operation isn't valid.
 type WAFInvalidOperationException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -137,7 +170,12 @@ func (e *WAFInvalidOperationException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFInvalidOperationException) ErrorCode() string             { return "WAFInvalidOperationException" }
+func (e *WAFInvalidOperationException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFInvalidOperationException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFInvalidOperationException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // The operation failed because WAF didn't recognize a parameter in the request.
@@ -158,6 +196,8 @@ func (e *WAFInvalidOperationException) ErrorFault() smithy.ErrorFault { return s
 type WAFInvalidParameterException struct {
 	Message *string
 
+	ErrorCodeOverride *string
+
 	Field     ParameterExceptionField
 	Parameter *string
 	Reason    *string
@@ -174,7 +214,12 @@ func (e *WAFInvalidParameterException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFInvalidParameterException) ErrorCode() string             { return "WAFInvalidParameterException" }
+func (e *WAFInvalidParameterException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFInvalidParameterException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFInvalidParameterException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // The operation failed because the specified policy isn't in the proper format.
@@ -202,6 +247,8 @@ func (e *WAFInvalidParameterException) ErrorFault() smithy.ErrorFault { return s
 type WAFInvalidPermissionPolicyException struct {
 	Message *string
 
+	ErrorCodeOverride *string
+
 	noSmithyDocumentSerde
 }
 
@@ -215,7 +262,10 @@ func (e *WAFInvalidPermissionPolicyException) ErrorMessage() string {
 	return *e.Message
 }
 func (e *WAFInvalidPermissionPolicyException) ErrorCode() string {
-	return "WAFInvalidPermissionPolicyException"
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFInvalidPermissionPolicyException"
+	}
+	return *e.ErrorCodeOverride
 }
 func (e *WAFInvalidPermissionPolicyException) ErrorFault() smithy.ErrorFault {
 	return smithy.FaultClient
@@ -225,6 +275,8 @@ func (e *WAFInvalidPermissionPolicyException) ErrorFault() smithy.ErrorFault {
 // valid. Check the resource, and try again.
 type WAFInvalidResourceException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -238,7 +290,12 @@ func (e *WAFInvalidResourceException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFInvalidResourceException) ErrorCode() string             { return "WAFInvalidResourceException" }
+func (e *WAFInvalidResourceException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFInvalidResourceException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFInvalidResourceException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // WAF couldn’t perform the operation because you exceeded your resource limit. For
@@ -248,6 +305,8 @@ func (e *WAFInvalidResourceException) ErrorFault() smithy.ErrorFault { return sm
 // Developer Guide.
 type WAFLimitsExceededException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -261,7 +320,12 @@ func (e *WAFLimitsExceededException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFLimitsExceededException) ErrorCode() string             { return "WAFLimitsExceededException" }
+func (e *WAFLimitsExceededException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFLimitsExceededException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFLimitsExceededException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // The operation failed because you don't have the permissions that your logging
@@ -270,6 +334,8 @@ func (e *WAFLimitsExceededException) ErrorFault() smithy.ErrorFault { return smi
 // Developer Guide.
 type WAFLogDestinationPermissionIssueException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -284,15 +350,23 @@ func (e *WAFLogDestinationPermissionIssueException) ErrorMessage() string {
 	return *e.Message
 }
 func (e *WAFLogDestinationPermissionIssueException) ErrorCode() string {
-	return "WAFLogDestinationPermissionIssueException"
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFLogDestinationPermissionIssueException"
+	}
+	return *e.ErrorCodeOverride
 }
 func (e *WAFLogDestinationPermissionIssueException) ErrorFault() smithy.ErrorFault {
 	return smithy.FaultClient
 }
 
-// WAF couldn’t perform the operation because your resource doesn’t exist.
+// WAF couldn’t perform the operation because your resource doesn't exist. If
+// you've just created a resource that you're using in this operation, you might
+// just need to wait a few minutes. It can take from a few seconds to a number of
+// minutes for changes to propagate.
 type WAFNonexistentItemException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -306,7 +380,12 @@ func (e *WAFNonexistentItemException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFNonexistentItemException) ErrorCode() string             { return "WAFNonexistentItemException" }
+func (e *WAFNonexistentItemException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFNonexistentItemException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFNonexistentItemException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // WAF couldn’t save your changes because you tried to update or delete a resource
@@ -314,6 +393,8 @@ func (e *WAFNonexistentItemException) ErrorFault() smithy.ErrorFault { return sm
 // changes you need to make to the new copy, and retry your operation.
 type WAFOptimisticLockException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -327,7 +408,12 @@ func (e *WAFOptimisticLockException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFOptimisticLockException) ErrorCode() string             { return "WAFOptimisticLockException" }
+func (e *WAFOptimisticLockException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFOptimisticLockException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFOptimisticLockException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // WAF is not able to access the service linked role. This can be caused by a
@@ -340,6 +426,8 @@ func (e *WAFOptimisticLockException) ErrorFault() smithy.ErrorFault { return smi
 // until the role is unlocked.
 type WAFServiceLinkedRoleErrorException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -354,7 +442,10 @@ func (e *WAFServiceLinkedRoleErrorException) ErrorMessage() string {
 	return *e.Message
 }
 func (e *WAFServiceLinkedRoleErrorException) ErrorCode() string {
-	return "WAFServiceLinkedRoleErrorException"
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFServiceLinkedRoleErrorException"
+	}
+	return *e.ErrorCodeOverride
 }
 func (e *WAFServiceLinkedRoleErrorException) ErrorFault() smithy.ErrorFault {
 	return smithy.FaultClient
@@ -364,6 +455,8 @@ func (e *WAFServiceLinkedRoleErrorException) ErrorFault() smithy.ErrorFault {
 // aren't subscribed to it yet.
 type WAFSubscriptionNotFoundException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -378,13 +471,18 @@ func (e *WAFSubscriptionNotFoundException) ErrorMessage() string {
 	return *e.Message
 }
 func (e *WAFSubscriptionNotFoundException) ErrorCode() string {
-	return "WAFSubscriptionNotFoundException"
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFSubscriptionNotFoundException"
+	}
+	return *e.ErrorCodeOverride
 }
 func (e *WAFSubscriptionNotFoundException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // An error occurred during the tagging operation. Retry your request.
 type WAFTagOperationException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -398,13 +496,20 @@ func (e *WAFTagOperationException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFTagOperationException) ErrorCode() string             { return "WAFTagOperationException" }
+func (e *WAFTagOperationException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFTagOperationException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFTagOperationException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // WAF couldn’t perform your tagging operation because of an internal error. Retry
 // your request.
 type WAFTagOperationInternalErrorException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -419,17 +524,24 @@ func (e *WAFTagOperationInternalErrorException) ErrorMessage() string {
 	return *e.Message
 }
 func (e *WAFTagOperationInternalErrorException) ErrorCode() string {
-	return "WAFTagOperationInternalErrorException"
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFTagOperationInternalErrorException"
+	}
+	return *e.ErrorCodeOverride
 }
 func (e *WAFTagOperationInternalErrorException) ErrorFault() smithy.ErrorFault {
 	return smithy.FaultServer
 }
 
-// WAF couldn’t retrieve a resource that you specified for this operation. Verify
-// the resources that you are specifying in your request parameters and then retry
-// the operation.
+// WAF couldn’t retrieve a resource that you specified for this operation. If
+// you've just created a resource that you're using in this operation, you might
+// just need to wait a few minutes. It can take from a few seconds to a number of
+// minutes for changes to propagate. Verify the resources that you are specifying
+// in your request parameters and then retry the operation.
 type WAFUnavailableEntityException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -443,5 +555,10 @@ func (e *WAFUnavailableEntityException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *WAFUnavailableEntityException) ErrorCode() string             { return "WAFUnavailableEntityException" }
+func (e *WAFUnavailableEntityException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "WAFUnavailableEntityException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *WAFUnavailableEntityException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }

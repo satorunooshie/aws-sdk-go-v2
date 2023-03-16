@@ -3,6 +3,7 @@
 package types
 
 import (
+	"github.com/aws/aws-sdk-go-v2/service/iottwinmaker/document"
 	smithydocument "github.com/aws/smithy-go/document"
 	"time"
 )
@@ -42,6 +43,68 @@ type BatchPutPropertyErrorEntry struct {
 	noSmithyDocumentSerde
 }
 
+// Information about pricing bundle.
+type BundleInformation struct {
+
+	// The bundle names.
+	//
+	// This member is required.
+	BundleNames []string
+
+	// The pricing tier.
+	PricingTier PricingTier
+
+	noSmithyDocumentSerde
+}
+
+// A description of the column in the query results.
+type ColumnDescription struct {
+
+	// The name of the column description.
+	Name *string
+
+	// The type of the column description.
+	Type ColumnType
+
+	noSmithyDocumentSerde
+}
+
+type ComponentPropertyGroupRequest struct {
+
+	// The group type.
+	GroupType GroupType
+
+	// The property names.
+	PropertyNames []string
+
+	// The update type.
+	UpdateType PropertyGroupUpdateType
+
+	noSmithyDocumentSerde
+}
+
+// The component property group response.
+type ComponentPropertyGroupResponse struct {
+
+	// The group type.
+	//
+	// This member is required.
+	GroupType GroupType
+
+	// A Boolean value that specifies whether the property group is inherited from a
+	// parent entity
+	//
+	// This member is required.
+	IsInherited *bool
+
+	// The names of properties
+	//
+	// This member is required.
+	PropertyNames []string
+
+	noSmithyDocumentSerde
+}
+
 // An object that sets information about a component type create or update request.
 type ComponentRequest struct {
 
@@ -54,6 +117,9 @@ type ComponentRequest struct {
 	// An object that maps strings to the properties to set in the component type. Each
 	// string in the mapping must be unique to this object.
 	Properties map[string]PropertyRequest
+
+	// The property groups.
+	PropertyGroups map[string]ComponentPropertyGroupRequest
 
 	noSmithyDocumentSerde
 }
@@ -78,8 +144,14 @@ type ComponentResponse struct {
 	// string in the mapping must be unique to this object.
 	Properties map[string]PropertyResponse
 
+	// The property groups.
+	PropertyGroups map[string]ComponentPropertyGroupResponse
+
 	// The status of the component type.
 	Status *Status
+
+	// The syncSource of the sync job, if this entity was created by a sync job.
+	SyncSource *string
 
 	noSmithyDocumentSerde
 }
@@ -107,6 +179,9 @@ type ComponentTypeSummary struct {
 	// This member is required.
 	UpdateDateTime *time.Time
 
+	// The component type name.
+	ComponentTypeName *string
+
 	// The description of the component type.
 	Description *string
 
@@ -124,6 +199,9 @@ type ComponentUpdateRequest struct {
 
 	// The description of the component type.
 	Description *string
+
+	// The property group updates.
+	PropertyGroupUpdates map[string]ComponentPropertyGroupRequest
 
 	// An object that maps strings to the properties to set in the component type
 	// update. Each string in the mapping must be unique to this object.
@@ -417,6 +495,21 @@ type ListEntitiesFilterMemberParentEntityId struct {
 
 func (*ListEntitiesFilterMemberParentEntityId) isListEntitiesFilter() {}
 
+// Filter criteria that orders the return output. It can be sorted in ascending or
+// descending order.
+type OrderBy struct {
+
+	// The property name.
+	//
+	// This member is required.
+	PropertyName *string
+
+	// The set order that filters results.
+	Order Order
+
+	noSmithyDocumentSerde
+}
+
 // The parent entity update request.
 type ParentEntityUpdateRequest struct {
 
@@ -427,6 +520,38 @@ type ParentEntityUpdateRequest struct {
 
 	// The ID of the parent entity.
 	ParentEntityId *string
+
+	noSmithyDocumentSerde
+}
+
+// The pricing plan.
+type PricingPlan struct {
+
+	// The effective date and time of the pricing plan.
+	//
+	// This member is required.
+	EffectiveDateTime *time.Time
+
+	// The pricing mode.
+	//
+	// This member is required.
+	PricingMode PricingMode
+
+	// The set date and time for updating a pricing plan.
+	//
+	// This member is required.
+	UpdateDateTime *time.Time
+
+	// The update reason, for changing a pricing plan.
+	//
+	// This member is required.
+	UpdateReason UpdateReason
+
+	// The billable entity count.
+	BillableEntityCount *int64
+
+	// The pricing plan's bundle information.
+	BundleInformation *BundleInformation
 
 	noSmithyDocumentSerde
 }
@@ -443,6 +568,9 @@ type PropertyDefinitionRequest struct {
 
 	// An object that contains the default value.
 	DefaultValue *DataValue
+
+	// A friendly name for the property.
+	DisplayName *string
 
 	// A Boolean value that specifies whether the property ID comes from an external
 	// data store.
@@ -514,6 +642,9 @@ type PropertyDefinitionResponse struct {
 	// An object that contains the default value.
 	DefaultValue *DataValue
 
+	// A friendly name for the property.
+	DisplayName *string
+
 	noSmithyDocumentSerde
 }
 
@@ -528,6 +659,39 @@ type PropertyFilter struct {
 
 	// The value associated with this property filter.
 	Value *DataValue
+
+	noSmithyDocumentSerde
+}
+
+type PropertyGroupRequest struct {
+
+	// The group type.
+	GroupType GroupType
+
+	// The names of properties.
+	PropertyNames []string
+
+	noSmithyDocumentSerde
+}
+
+// The property group response
+type PropertyGroupResponse struct {
+
+	// The group types.
+	//
+	// This member is required.
+	GroupType GroupType
+
+	// A Boolean value that specifies whether the property group is inherited from a
+	// parent entity
+	//
+	// This member is required.
+	IsInherited *bool
+
+	// The names of properties.
+	//
+	// This member is required.
+	PropertyNames []string
 
 	noSmithyDocumentSerde
 }
@@ -676,6 +840,15 @@ type RelationshipValue struct {
 	noSmithyDocumentSerde
 }
 
+// Represents a single row in the query results.
+type Row struct {
+
+	// The data in a row of query results.
+	RowData []document.Interface
+
+	noSmithyDocumentSerde
+}
+
 // An object that contains information about a scene.
 type SceneSummary struct {
 
@@ -723,6 +896,137 @@ type Status struct {
 	noSmithyDocumentSerde
 }
 
+// The SyncJob status.
+type SyncJobStatus struct {
+
+	// The SyncJob error.
+	Error *ErrorDetails
+
+	// The SyncJob status state.
+	State SyncJobState
+
+	noSmithyDocumentSerde
+}
+
+// The SyncJob summary.
+type SyncJobSummary struct {
+
+	// The SyncJob summary ARN.
+	Arn *string
+
+	// The creation date and time.
+	CreationDateTime *time.Time
+
+	// The SyncJob summaries status.
+	Status *SyncJobStatus
+
+	// The sync source.
+	SyncSource *string
+
+	// The update date and time.
+	UpdateDateTime *time.Time
+
+	// The ID of the workspace that contains the sync job.
+	WorkspaceId *string
+
+	noSmithyDocumentSerde
+}
+
+// The sync resource filter.
+//
+// The following types satisfy this interface:
+//
+//	SyncResourceFilterMemberExternalId
+//	SyncResourceFilterMemberResourceId
+//	SyncResourceFilterMemberResourceType
+//	SyncResourceFilterMemberState
+type SyncResourceFilter interface {
+	isSyncResourceFilter()
+}
+
+// The external Id.
+type SyncResourceFilterMemberExternalId struct {
+	Value string
+
+	noSmithyDocumentSerde
+}
+
+func (*SyncResourceFilterMemberExternalId) isSyncResourceFilter() {}
+
+// The sync resource filter resource Id.
+type SyncResourceFilterMemberResourceId struct {
+	Value string
+
+	noSmithyDocumentSerde
+}
+
+func (*SyncResourceFilterMemberResourceId) isSyncResourceFilter() {}
+
+// The sync resource filter resoucre type
+type SyncResourceFilterMemberResourceType struct {
+	Value SyncResourceType
+
+	noSmithyDocumentSerde
+}
+
+func (*SyncResourceFilterMemberResourceType) isSyncResourceFilter() {}
+
+// The sync resource filter's state.
+type SyncResourceFilterMemberState struct {
+	Value SyncResourceState
+
+	noSmithyDocumentSerde
+}
+
+func (*SyncResourceFilterMemberState) isSyncResourceFilter() {}
+
+// The sync resource status.
+type SyncResourceStatus struct {
+
+	// The status error.
+	Error *ErrorDetails
+
+	// The sync resource status state.
+	State SyncResourceState
+
+	noSmithyDocumentSerde
+}
+
+// The sync resource summary.
+type SyncResourceSummary struct {
+
+	// The external Id.
+	ExternalId *string
+
+	// The resource Id.
+	ResourceId *string
+
+	// The resource type.
+	ResourceType SyncResourceType
+
+	// The sync resource summary status.
+	Status *SyncResourceStatus
+
+	// The update date and time.
+	UpdateDateTime *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// The tabular conditions.
+type TabularConditions struct {
+
+	// Filter criteria that orders the output. It can be sorted in ascending or
+	// descending order.
+	OrderBy []OrderBy
+
+	// You can filter the request using various logical operators and a key-value
+	// format. For example: {"key": "serverType", "value": "webServer"}
+	PropertyFilters []PropertyFilter
+
+	noSmithyDocumentSerde
+}
+
 // An object that contains information about a workspace.
 type WorkspaceSummary struct {
 
@@ -765,3 +1069,4 @@ type UnknownUnionMember struct {
 
 func (*UnknownUnionMember) isListComponentTypesFilter() {}
 func (*UnknownUnionMember) isListEntitiesFilter()       {}
+func (*UnknownUnionMember) isSyncResourceFilter()       {}

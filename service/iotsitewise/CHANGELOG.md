@@ -1,3 +1,65 @@
+# v1.27.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.27.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.27.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.26.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.0 (2022-11-02)
+
+* **Feature**: This release adds the ListAssetModelProperties and ListAssetProperties APIs. You can list all properties that belong to a single asset model or asset using these two new APIs.
+
+# v1.25.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2022-09-14)
+
+* **Feature**: Allow specifying units in Asset Properties
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.3 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.2 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.24.1 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

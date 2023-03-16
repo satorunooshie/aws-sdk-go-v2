@@ -42,10 +42,15 @@ type ListDeploymentsInput struct {
 	HistoryFilter types.DeploymentHistoryFilter
 
 	// The maximum number of results to be returned per paginated request.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token to be used for the next set of paginated results.
 	NextToken *string
+
+	// The parent deployment's target ARN
+	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html)
+	// within a subdeployment.
+	ParentTargetArn *string
 
 	// The ARN
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of
@@ -164,8 +169,8 @@ func NewListDeploymentsPaginator(client ListDeploymentsAPIClient, params *ListDe
 	}
 
 	options := ListDeploymentsPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -195,7 +200,11 @@ func (p *ListDeploymentsPaginator) NextPage(ctx context.Context, optFns ...func(
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListDeployments(ctx, &params, optFns...)
 	if err != nil {

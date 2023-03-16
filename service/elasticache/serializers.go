@@ -4175,10 +4175,26 @@ func (m *awsAwsquery_serializeOpTestFailover) HandleSerialize(ctx context.Contex
 
 	return next.HandleSerialize(ctx, in)
 }
-func awsAwsquery_serializeDocumentAvailabilityZonesList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
+func awsAwsquery_serializeDocumentAuthenticationMode(v *types.AuthenticationMode, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.Passwords != nil {
+		objectKey := object.Key("Passwords")
+		if err := awsAwsquery_serializeDocumentPasswordListInput(v.Passwords, objectKey); err != nil {
+			return err
+		}
 	}
+
+	if len(v.Type) > 0 {
+		objectKey := object.Key("Type")
+		objectKey.String(string(v.Type))
+	}
+
+	return nil
+}
+
+func awsAwsquery_serializeDocumentAvailabilityZonesList(v []string, value query.Value) error {
 	array := value.Array("AvailabilityZone")
 
 	for i := range v {
@@ -4189,9 +4205,6 @@ func awsAwsquery_serializeDocumentAvailabilityZonesList(v []string, value query.
 }
 
 func awsAwsquery_serializeDocumentCacheClusterIdList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4202,9 +4215,6 @@ func awsAwsquery_serializeDocumentCacheClusterIdList(v []string, value query.Val
 }
 
 func awsAwsquery_serializeDocumentCacheNodeIdsList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("CacheNodeId")
 
 	for i := range v {
@@ -4215,9 +4225,6 @@ func awsAwsquery_serializeDocumentCacheNodeIdsList(v []string, value query.Value
 }
 
 func awsAwsquery_serializeDocumentCacheSecurityGroupNameList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("CacheSecurityGroupName")
 
 	for i := range v {
@@ -4288,9 +4295,6 @@ func awsAwsquery_serializeDocumentCustomerNodeEndpoint(v *types.CustomerNodeEndp
 }
 
 func awsAwsquery_serializeDocumentCustomerNodeEndpointList(v []types.CustomerNodeEndpoint, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4343,9 +4347,6 @@ func awsAwsquery_serializeDocumentFilter(v *types.Filter, value query.Value) err
 }
 
 func awsAwsquery_serializeDocumentFilterList(v []types.Filter, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4358,9 +4359,6 @@ func awsAwsquery_serializeDocumentFilterList(v []types.Filter, value query.Value
 }
 
 func awsAwsquery_serializeDocumentFilterValueList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4371,9 +4369,6 @@ func awsAwsquery_serializeDocumentFilterValueList(v []string, value query.Value)
 }
 
 func awsAwsquery_serializeDocumentGlobalNodeGroupIdList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("GlobalNodeGroupId")
 
 	for i := range v {
@@ -4384,9 +4379,6 @@ func awsAwsquery_serializeDocumentGlobalNodeGroupIdList(v []string, value query.
 }
 
 func awsAwsquery_serializeDocumentKeyList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4443,9 +4435,6 @@ func awsAwsquery_serializeDocumentLogDeliveryConfigurationRequest(v *types.LogDe
 }
 
 func awsAwsquery_serializeDocumentLogDeliveryConfigurationRequestList(v []types.LogDeliveryConfigurationRequest, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("LogDeliveryConfigurationRequest")
 
 	for i := range v {
@@ -4504,9 +4493,6 @@ func awsAwsquery_serializeDocumentNodeGroupConfiguration(v *types.NodeGroupConfi
 }
 
 func awsAwsquery_serializeDocumentNodeGroupConfigurationList(v []types.NodeGroupConfiguration, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("NodeGroupConfiguration")
 
 	for i := range v {
@@ -4519,9 +4505,6 @@ func awsAwsquery_serializeDocumentNodeGroupConfigurationList(v []types.NodeGroup
 }
 
 func awsAwsquery_serializeDocumentNodeGroupsToRemoveList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("NodeGroupToRemove")
 
 	for i := range v {
@@ -4532,9 +4515,6 @@ func awsAwsquery_serializeDocumentNodeGroupsToRemoveList(v []string, value query
 }
 
 func awsAwsquery_serializeDocumentNodeGroupsToRetainList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("NodeGroupToRetain")
 
 	for i := range v {
@@ -4545,9 +4525,6 @@ func awsAwsquery_serializeDocumentNodeGroupsToRetainList(v []string, value query
 }
 
 func awsAwsquery_serializeDocumentOutpostArnsList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("OutpostArn")
 
 	for i := range v {
@@ -4575,9 +4552,6 @@ func awsAwsquery_serializeDocumentParameterNameValue(v *types.ParameterNameValue
 }
 
 func awsAwsquery_serializeDocumentParameterNameValueList(v []types.ParameterNameValue, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("ParameterNameValue")
 
 	for i := range v {
@@ -4590,9 +4564,6 @@ func awsAwsquery_serializeDocumentParameterNameValueList(v []types.ParameterName
 }
 
 func awsAwsquery_serializeDocumentPasswordListInput(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4603,9 +4574,6 @@ func awsAwsquery_serializeDocumentPasswordListInput(v []string, value query.Valu
 }
 
 func awsAwsquery_serializeDocumentPreferredAvailabilityZoneList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("PreferredAvailabilityZone")
 
 	for i := range v {
@@ -4616,9 +4584,6 @@ func awsAwsquery_serializeDocumentPreferredAvailabilityZoneList(v []string, valu
 }
 
 func awsAwsquery_serializeDocumentPreferredOutpostArnList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("PreferredOutpostArn")
 
 	for i := range v {
@@ -4653,9 +4618,6 @@ func awsAwsquery_serializeDocumentRegionalConfiguration(v *types.RegionalConfigu
 }
 
 func awsAwsquery_serializeDocumentRegionalConfigurationList(v []types.RegionalConfiguration, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("RegionalConfiguration")
 
 	for i := range v {
@@ -4668,9 +4630,6 @@ func awsAwsquery_serializeDocumentRegionalConfigurationList(v []types.RegionalCo
 }
 
 func awsAwsquery_serializeDocumentRemoveReplicasList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4681,9 +4640,6 @@ func awsAwsquery_serializeDocumentRemoveReplicasList(v []string, value query.Val
 }
 
 func awsAwsquery_serializeDocumentReplicaConfigurationList(v []types.ConfigureShard, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("ConfigureShard")
 
 	for i := range v {
@@ -4696,9 +4652,6 @@ func awsAwsquery_serializeDocumentReplicaConfigurationList(v []types.ConfigureSh
 }
 
 func awsAwsquery_serializeDocumentReplicationGroupIdList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4728,9 +4681,6 @@ func awsAwsquery_serializeDocumentReshardingConfiguration(v *types.ReshardingCon
 }
 
 func awsAwsquery_serializeDocumentReshardingConfigurationList(v []types.ReshardingConfiguration, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("ReshardingConfiguration")
 
 	for i := range v {
@@ -4743,9 +4693,6 @@ func awsAwsquery_serializeDocumentReshardingConfigurationList(v []types.Reshardi
 }
 
 func awsAwsquery_serializeDocumentSecurityGroupIdsList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("SecurityGroupId")
 
 	for i := range v {
@@ -4756,9 +4703,6 @@ func awsAwsquery_serializeDocumentSecurityGroupIdsList(v []string, value query.V
 }
 
 func awsAwsquery_serializeDocumentServiceUpdateStatusList(v []types.ServiceUpdateStatus, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4769,9 +4713,6 @@ func awsAwsquery_serializeDocumentServiceUpdateStatusList(v []types.ServiceUpdat
 }
 
 func awsAwsquery_serializeDocumentSnapshotArnsList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("SnapshotArn")
 
 	for i := range v {
@@ -4782,9 +4723,6 @@ func awsAwsquery_serializeDocumentSnapshotArnsList(v []string, value query.Value
 }
 
 func awsAwsquery_serializeDocumentSubnetIdentifierList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("SubnetIdentifier")
 
 	for i := range v {
@@ -4812,9 +4750,6 @@ func awsAwsquery_serializeDocumentTag(v *types.Tag, value query.Value) error {
 }
 
 func awsAwsquery_serializeDocumentTagList(v []types.Tag, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("Tag")
 
 	for i := range v {
@@ -4844,9 +4779,6 @@ func awsAwsquery_serializeDocumentTimeRangeFilter(v *types.TimeRangeFilter, valu
 }
 
 func awsAwsquery_serializeDocumentUpdateActionStatusList(v []types.UpdateActionStatus, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4857,9 +4789,6 @@ func awsAwsquery_serializeDocumentUpdateActionStatusList(v []types.UpdateActionS
 }
 
 func awsAwsquery_serializeDocumentUserGroupIdList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4870,9 +4799,6 @@ func awsAwsquery_serializeDocumentUserGroupIdList(v []string, value query.Value)
 }
 
 func awsAwsquery_serializeDocumentUserGroupIdListInput(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4883,9 +4809,6 @@ func awsAwsquery_serializeDocumentUserGroupIdListInput(v []string, value query.V
 }
 
 func awsAwsquery_serializeDocumentUserIdListInput(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5095,11 +5018,21 @@ func awsAwsquery_serializeOpDocumentCreateCacheClusterInput(v *CreateCacheCluste
 		objectKey.String(*v.EngineVersion)
 	}
 
+	if len(v.IpDiscovery) > 0 {
+		objectKey := object.Key("IpDiscovery")
+		objectKey.String(string(v.IpDiscovery))
+	}
+
 	if v.LogDeliveryConfigurations != nil {
 		objectKey := object.Key("LogDeliveryConfigurations")
 		if err := awsAwsquery_serializeDocumentLogDeliveryConfigurationRequestList(v.LogDeliveryConfigurations, objectKey); err != nil {
 			return err
 		}
+	}
+
+	if len(v.NetworkType) > 0 {
+		objectKey := object.Key("NetworkType")
+		objectKey.String(string(v.NetworkType))
 	}
 
 	if v.NotificationTopicArn != nil {
@@ -5372,6 +5305,11 @@ func awsAwsquery_serializeOpDocumentCreateReplicationGroupInput(v *CreateReplica
 		objectKey.String(*v.GlobalReplicationGroupId)
 	}
 
+	if len(v.IpDiscovery) > 0 {
+		objectKey := object.Key("IpDiscovery")
+		objectKey.String(string(v.IpDiscovery))
+	}
+
 	if v.KmsKeyId != nil {
 		objectKey := object.Key("KmsKeyId")
 		objectKey.String(*v.KmsKeyId)
@@ -5387,6 +5325,11 @@ func awsAwsquery_serializeOpDocumentCreateReplicationGroupInput(v *CreateReplica
 	if v.MultiAZEnabled != nil {
 		objectKey := object.Key("MultiAZEnabled")
 		objectKey.Boolean(*v.MultiAZEnabled)
+	}
+
+	if len(v.NetworkType) > 0 {
+		objectKey := object.Key("NetworkType")
+		objectKey.String(string(v.NetworkType))
 	}
 
 	if v.NodeGroupConfiguration != nil {
@@ -5489,6 +5432,11 @@ func awsAwsquery_serializeOpDocumentCreateReplicationGroupInput(v *CreateReplica
 		objectKey.Boolean(*v.TransitEncryptionEnabled)
 	}
 
+	if len(v.TransitEncryptionMode) > 0 {
+		objectKey := object.Key("TransitEncryptionMode")
+		objectKey.String(string(v.TransitEncryptionMode))
+	}
+
 	if v.UserGroupIds != nil {
 		objectKey := object.Key("UserGroupIds")
 		if err := awsAwsquery_serializeDocumentUserGroupIdListInput(v.UserGroupIds, objectKey); err != nil {
@@ -5571,6 +5519,13 @@ func awsAwsquery_serializeOpDocumentCreateUserInput(v *CreateUserInput, value qu
 	if v.AccessString != nil {
 		objectKey := object.Key("AccessString")
 		objectKey.String(*v.AccessString)
+	}
+
+	if v.AuthenticationMode != nil {
+		objectKey := object.Key("AuthenticationMode")
+		if err := awsAwsquery_serializeDocumentAuthenticationMode(v.AuthenticationMode, objectKey); err != nil {
+			return err
+		}
 	}
 
 	if v.Engine != nil {
@@ -6562,6 +6517,11 @@ func awsAwsquery_serializeOpDocumentModifyCacheClusterInput(v *ModifyCacheCluste
 		objectKey.String(*v.EngineVersion)
 	}
 
+	if len(v.IpDiscovery) > 0 {
+		objectKey := object.Key("IpDiscovery")
+		objectKey.String(string(v.IpDiscovery))
+	}
+
 	if v.LogDeliveryConfigurations != nil {
 		objectKey := object.Key("LogDeliveryConfigurations")
 		if err := awsAwsquery_serializeDocumentLogDeliveryConfigurationRequestList(v.LogDeliveryConfigurations, objectKey); err != nil {
@@ -6752,6 +6712,11 @@ func awsAwsquery_serializeOpDocumentModifyReplicationGroupInput(v *ModifyReplica
 		objectKey.String(*v.EngineVersion)
 	}
 
+	if len(v.IpDiscovery) > 0 {
+		objectKey := object.Key("IpDiscovery")
+		objectKey.String(string(v.IpDiscovery))
+	}
+
 	if v.LogDeliveryConfigurations != nil {
 		objectKey := object.Key("LogDeliveryConfigurations")
 		if err := awsAwsquery_serializeDocumentLogDeliveryConfigurationRequestList(v.LogDeliveryConfigurations, objectKey); err != nil {
@@ -6824,6 +6789,16 @@ func awsAwsquery_serializeOpDocumentModifyReplicationGroupInput(v *ModifyReplica
 	if v.SnapshotWindow != nil {
 		objectKey := object.Key("SnapshotWindow")
 		objectKey.String(*v.SnapshotWindow)
+	}
+
+	if v.TransitEncryptionEnabled != nil {
+		objectKey := object.Key("TransitEncryptionEnabled")
+		objectKey.Boolean(*v.TransitEncryptionEnabled)
+	}
+
+	if len(v.TransitEncryptionMode) > 0 {
+		objectKey := object.Key("TransitEncryptionMode")
+		objectKey.String(string(v.TransitEncryptionMode))
 	}
 
 	if v.UserGroupIdsToAdd != nil {
@@ -6924,6 +6899,13 @@ func awsAwsquery_serializeOpDocumentModifyUserInput(v *ModifyUserInput, value qu
 	if v.AppendAccessString != nil {
 		objectKey := object.Key("AppendAccessString")
 		objectKey.String(*v.AppendAccessString)
+	}
+
+	if v.AuthenticationMode != nil {
+		objectKey := object.Key("AuthenticationMode")
+		if err := awsAwsquery_serializeDocumentAuthenticationMode(v.AuthenticationMode, objectKey); err != nil {
+			return err
+		}
 	}
 
 	if v.NoPasswordRequired != nil {

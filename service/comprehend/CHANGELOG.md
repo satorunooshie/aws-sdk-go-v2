@@ -1,3 +1,72 @@
+# v1.22.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.0 (2023-02-28)
+
+* **Feature**: Amazon Comprehend now supports flywheels to help you train and manage new model versions for custom models.
+
+# v1.21.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.21.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.21.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.20.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.0 (2022-12-01)
+
+* **Feature**: Comprehend now supports semi-structured documents (such as PDF files or image files) as inputs for custom analysis using the synchronous APIs (ClassifyDocument and DetectEntities).
+
+# v1.19.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.0 (2022-09-21)
+
+* **Feature**: Amazon Comprehend now supports synchronous mode for targeted sentiment API operations.
+
+# v1.18.12 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.11 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.10 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.9 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.18.8 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

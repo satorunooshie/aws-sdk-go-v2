@@ -2436,6 +2436,11 @@ func awsAwsjson10_serializeDocumentStatefulEngineOptions(v *types.StatefulEngine
 		ok.String(string(v.RuleOrder))
 	}
 
+	if len(v.StreamExceptionPolicy) > 0 {
+		ok := object.Key("StreamExceptionPolicy")
+		ok.String(string(v.StreamExceptionPolicy))
+	}
+
 	return nil
 }
 
@@ -2488,9 +2493,9 @@ func awsAwsjson10_serializeDocumentStatefulRuleGroupReference(v *types.StatefulR
 		}
 	}
 
-	if v.Priority != 0 {
+	if v.Priority != nil {
 		ok := object.Key("Priority")
-		ok.Integer(v.Priority)
+		ok.Integer(*v.Priority)
 	}
 
 	if v.ResourceArn != nil {
@@ -2636,6 +2641,11 @@ func awsAwsjson10_serializeDocumentStatelessRulesAndCustomActions(v *types.State
 func awsAwsjson10_serializeDocumentSubnetMapping(v *types.SubnetMapping, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
+
+	if len(v.IPAddressType) > 0 {
+		ok := object.Key("IPAddressType")
+		ok.String(string(v.IPAddressType))
+	}
 
 	if v.SubnetId != nil {
 		ok := object.Key("SubnetId")

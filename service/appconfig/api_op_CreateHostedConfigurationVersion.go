@@ -58,7 +58,12 @@ type CreateHostedConfigurationVersionInput struct {
 	// overwritten when creating multiple hosted configuration versions in rapid
 	// succession, specify the version number of the latest hosted configuration
 	// version.
-	LatestVersionNumber int32
+	LatestVersionNumber *int32
+
+	// An optional, user-defined label for the AppConfig hosted configuration version.
+	// This value must contain at least one non-numeric character. For example,
+	// "v2.2.0".
+	VersionLabel *string
 
 	noSmithyDocumentSerde
 }
@@ -81,6 +86,9 @@ type CreateHostedConfigurationVersionOutput struct {
 
 	// A description of the configuration.
 	Description *string
+
+	// A user-defined label for an AppConfig hosted configuration version.
+	VersionLabel *string
 
 	// The configuration version.
 	VersionNumber int32

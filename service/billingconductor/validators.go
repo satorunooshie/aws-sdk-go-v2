@@ -290,6 +290,26 @@ func (m *validateOpDisassociatePricingRules) HandleInitialize(ctx context.Contex
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpListCustomLineItemVersions struct {
+}
+
+func (*validateOpListCustomLineItemVersions) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpListCustomLineItemVersions) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*ListCustomLineItemVersionsInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpListCustomLineItemVersionsInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpListPricingPlansAssociatedWithPricingRule struct {
 }
 
@@ -546,6 +566,10 @@ func addOpDisassociatePricingRulesValidationMiddleware(stack *middleware.Stack) 
 	return stack.Initialize.Add(&validateOpDisassociatePricingRules{}, middleware.After)
 }
 
+func addOpListCustomLineItemVersionsValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpListCustomLineItemVersions{}, middleware.After)
+}
+
 func addOpListPricingPlansAssociatedWithPricingRuleValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpListPricingPlansAssociatedWithPricingRule{}, middleware.After)
 }
@@ -616,6 +640,40 @@ func validateComputationPreference(v *types.ComputationPreference) error {
 	}
 }
 
+func validateCreateFreeTierConfig(v *types.CreateFreeTierConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "CreateFreeTierConfig"}
+	if v.Activated == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Activated"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateCreateTieringInput(v *types.CreateTieringInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "CreateTieringInput"}
+	if v.FreeTier == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FreeTier"))
+	} else if v.FreeTier != nil {
+		if err := validateCreateFreeTierConfig(v.FreeTier); err != nil {
+			invalidParams.AddNested("FreeTier", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateCustomLineItemBillingPeriodRange(v *types.CustomLineItemBillingPeriodRange) error {
 	if v == nil {
 		return nil
@@ -623,9 +681,6 @@ func validateCustomLineItemBillingPeriodRange(v *types.CustomLineItemBillingPeri
 	invalidParams := smithy.InvalidParamsError{Context: "CustomLineItemBillingPeriodRange"}
 	if v.InclusiveStartBillingPeriod == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("InclusiveStartBillingPeriod"))
-	}
-	if v.ExclusiveEndBillingPeriod == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("ExclusiveEndBillingPeriod"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -733,6 +788,40 @@ func validateUpdateCustomLineItemPercentageChargeDetails(v *types.UpdateCustomLi
 	invalidParams := smithy.InvalidParamsError{Context: "UpdateCustomLineItemPercentageChargeDetails"}
 	if v.PercentageValue == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("PercentageValue"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateUpdateFreeTierConfig(v *types.UpdateFreeTierConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "UpdateFreeTierConfig"}
+	if v.Activated == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Activated"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateUpdateTieringInput(v *types.UpdateTieringInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "UpdateTieringInput"}
+	if v.FreeTier == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("FreeTier"))
+	} else if v.FreeTier != nil {
+		if err := validateUpdateFreeTierConfig(v.FreeTier); err != nil {
+			invalidParams.AddNested("FreeTier", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -914,8 +1003,10 @@ func validateOpCreatePricingRuleInput(v *CreatePricingRuleInput) error {
 	if len(v.Type) == 0 {
 		invalidParams.Add(smithy.NewErrParamRequired("Type"))
 	}
-	if v.ModifierPercentage == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("ModifierPercentage"))
+	if v.Tiering != nil {
+		if err := validateCreateTieringInput(v.Tiering); err != nil {
+			invalidParams.AddNested("Tiering", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1017,6 +1108,21 @@ func validateOpDisassociatePricingRulesInput(v *DisassociatePricingRulesInput) e
 	}
 	if v.PricingRuleArns == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("PricingRuleArns"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpListCustomLineItemVersionsInput(v *ListCustomLineItemVersionsInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ListCustomLineItemVersionsInput"}
+	if v.Arn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Arn"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1188,6 +1294,11 @@ func validateOpUpdatePricingRuleInput(v *UpdatePricingRuleInput) error {
 	invalidParams := smithy.InvalidParamsError{Context: "UpdatePricingRuleInput"}
 	if v.Arn == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("Arn"))
+	}
+	if v.Tiering != nil {
+		if err := validateUpdateTieringInput(v.Tiering); err != nil {
+			invalidParams.AddNested("Tiering", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams

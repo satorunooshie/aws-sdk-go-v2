@@ -21,22 +21,25 @@ import (
 // signature is verified by using the public key in the same asymmetric KMS key.
 // For information about asymmetric KMS keys, see Asymmetric KMS keys
 // (https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html)
-// in the Key Management Service Developer Guide. To verify a digital signature,
-// you can use the Verify operation. Specify the same asymmetric KMS key, message,
-// and signing algorithm that were used to produce the signature. You can also
+// in the Key Management Service Developer Guide. To use the Verify operation,
+// specify the same asymmetric KMS key, message, and signing algorithm that were
+// used to produce the signature. The message type does not need to be the same as
+// the one used for signing, but it must indicate whether the value of the Message
+// parameter should be hashed as part of the verification process. You can also
 // verify the digital signature by using the public key of the KMS key outside of
 // KMS. Use the GetPublicKey operation to download the public key in the asymmetric
-// KMS key and then use the public key to verify the signature outside of KMS. To
-// verify a signature outside of KMS with an SM2 public key, you must specify the
-// distinguishing ID. By default, KMS uses 1234567812345678 as the distinguishing
-// ID. For more information, see Offline verification with SM2 key pairs
-// (https://docs.aws.amazon.com/kms/latest/developerguide/asymmetric-key-specs.html#key-spec-sm-offline-verification)
-// in Key Management Service Developer Guide. The advantage of using the Verify
-// operation is that it is performed within KMS. As a result, it's easy to call,
-// the operation is performed within the FIPS boundary, it is logged in CloudTrail,
-// and you can use key policy and IAM policy to determine who is authorized to use
-// the KMS key to verify signatures. The KMS key that you use for this operation
-// must be in a compatible key state. For details, see Key states of KMS keys
+// KMS key and then use the public key to verify the signature outside of KMS. The
+// advantage of using the Verify operation is that it is performed within KMS. As a
+// result, it's easy to call, the operation is performed within the FIPS boundary,
+// it is logged in CloudTrail, and you can use key policy and IAM policy to
+// determine who is authorized to use the KMS key to verify signatures. To verify a
+// signature outside of KMS with an SM2 public key (China Regions only), you must
+// specify the distinguishing ID. By default, KMS uses 1234567812345678 as the
+// distinguishing ID. For more information, see Offline verification with SM2 key
+// pairs
+// (https://docs.aws.amazon.com/kms/latest/developerguide/asymmetric-key-specs.html#key-spec-sm-offline-verification).
+// The KMS key that you use for this operation must be in a compatible key state.
+// For details, see Key states of KMS keys
 // (https://docs.aws.amazon.com/kms/latest/developerguide/key-state.html) in the
 // Key Management Service Developer Guide. Cross-account use: Yes. To perform this
 // operation with a KMS key in a different Amazon Web Services account, specify the
@@ -116,11 +119,34 @@ type VerifyInput struct {
 	// in the Key Management Service Developer Guide.
 	GrantTokens []string
 
-	// Tells KMS whether the value of the Message parameter is a message or message
-	// digest. The default value, RAW, indicates a message. To indicate a message
-	// digest, enter DIGEST. Use the DIGEST value only when the value of the Message
-	// parameter is a message digest. If you use the DIGEST value with a raw message,
-	// the security of the verification operation can be compromised.
+	// Tells KMS whether the value of the Message parameter should be hashed as part of
+	// the signing algorithm. Use RAW for unhashed messages; use DIGEST for message
+	// digests, which are already hashed. When the value of MessageType is RAW, KMS
+	// uses the standard signing algorithm, which begins with a hash function. When the
+	// value is DIGEST, KMS skips the hashing step in the signing algorithm. Use the
+	// DIGEST value only when the value of the Message parameter is a message digest.
+	// If you use the DIGEST value with an unhashed message, the security of the
+	// verification operation can be compromised. When the value of MessageTypeis
+	// DIGEST, the length of the Message value must match the length of hashed messages
+	// for the specified signing algorithm. You can submit a message digest and omit
+	// the MessageType or specify RAW so the digest is hashed again while signing.
+	// However, if the signed message is hashed once while signing, but twice while
+	// verifying, verification fails, even when the message hasn't changed. The hashing
+	// algorithm in that Verify uses is based on the SigningAlgorithm value.
+	//
+	// * Signing
+	// algorithms that end in SHA_256 use the SHA_256 hashing algorithm.
+	//
+	// * Signing
+	// algorithms that end in SHA_384 use the SHA_384 hashing algorithm.
+	//
+	// * Signing
+	// algorithms that end in SHA_512 use the SHA_512 hashing algorithm.
+	//
+	// * SM2DSA uses
+	// the SM3 hashing algorithm. For details, see Offline verification with SM2 key
+	// pairs
+	// (https://docs.aws.amazon.com/kms/latest/developerguide/asymmetric-key-specs.html#key-spec-sm-offline-verification).
 	MessageType types.MessageType
 
 	noSmithyDocumentSerde

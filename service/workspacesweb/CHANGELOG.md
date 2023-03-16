@@ -1,3 +1,68 @@
+# v1.9.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.9.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.9.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.0 (2023-01-09)
+
+* **Feature**: This release adds support for a new portal authentication type: AWS IAM Identity Center (successor to AWS Single Sign-On).
+
+# v1.8.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.7.4 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.3 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.0 (2022-10-19)
+
+* **Feature**: WorkSpaces Web now supports user access logging for recording session start, stop, and URL navigation.
+
+# v1.6.15 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.6.14 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.6.13 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.6.12 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.6.11 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

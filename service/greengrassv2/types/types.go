@@ -376,12 +376,18 @@ type Deployment struct {
 	// Whether or not the deployment is the latest revision for its target.
 	IsLatestForTarget bool
 
+	// The parent deployment's target ARN
+	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html)
+	// within a subdeployment.
+	ParentTargetArn *string
+
 	// The revision number of the deployment.
 	RevisionId *string
 
 	// The ARN
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) of
-	// the target IoT thing or thing group.
+	// the target IoT thing or thing group. When creating a subdeployment, the
+	// targetARN can only be a thing group.
 	TargetArn *string
 
 	noSmithyDocumentSerde
@@ -420,7 +426,7 @@ type DeploymentComponentUpdatePolicy struct {
 	// The amount of time in seconds that each component on a device has to report that
 	// it's safe to update. If the component waits for longer than this timeout, then
 	// the deployment proceeds on the device. Default: 60
-	TimeoutInSeconds int32
+	TimeoutInSeconds *int32
 
 	noSmithyDocumentSerde
 }
@@ -441,7 +447,7 @@ type DeploymentConfigurationValidationPolicy struct {
 	// The amount of time in seconds that a component can validate its configuration
 	// updates. If the validation time exceeds this timeout, then the deployment
 	// proceeds for the device. Default: 30
-	TimeoutInSeconds int32
+	TimeoutInSeconds *int32
 
 	noSmithyDocumentSerde
 }
@@ -566,6 +572,31 @@ type EffectiveDeployment struct {
 	// The reason code for the update, if the job was updated.
 	Reason *string
 
+	// The status details that explain why a deployment has an error. This response
+	// will be null if the deployment is in a success state.
+	StatusDetails *EffectiveDeploymentStatusDetails
+
+	noSmithyDocumentSerde
+}
+
+// Contains all error-related information for the deployment record. The status
+// details will be null if the deployment is in a success state. Greengrass nucleus
+// v2.8.0 or later is required to get an accurate errorStack and errorTypes
+// response. This field will not be returned for earlier Greengrass nucleus
+// versions.
+type EffectiveDeploymentStatusDetails struct {
+
+	// Contains an ordered list of short error codes that range from the most generic
+	// error to the most specific one. The error codes describe the reason for failure
+	// whenever the coreDeviceExecutionStatus is in a failed state. The response will
+	// be an empty list if there is no error.
+	ErrorStack []string
+
+	// Contains tags which describe the error. You can use the error types to classify
+	// errors to assist with remediating the failure. The response will be an empty
+	// list if there is no error.
+	ErrorTypes []string
+
 	noSmithyDocumentSerde
 }
 
@@ -581,6 +612,16 @@ type InstalledComponent struct {
 	// Whether or not the component is a root component.
 	IsRoot bool
 
+	// The most recent deployment source that brought the component to the Greengrass
+	// core device. For a thing group deployment or thing deployment, the source will
+	// be the The ID of the deployment. and for local deployments it will be LOCAL.
+	LastInstallationSource *string
+
+	// The last time the Greengrass core device sent a message containing a certain
+	// component to the Amazon Web Services Cloud. A component does not need to see a
+	// state change for this field to update.
+	LastReportedTimestamp *time.Time
+
 	// The status of how current the data is. This response is based off of component
 	// state changes. The status reflects component disruptions and deployments. If a
 	// component only sees a configuration update during a deployment, it might not
@@ -590,8 +631,15 @@ type InstalledComponent struct {
 	// The lifecycle state of the component.
 	LifecycleState InstalledComponentLifecycleState
 
-	// The details about the lifecycle state of the component.
+	// A detailed response about the lifecycle state of the component that explains the
+	// reason why a component has an error or is broken.
 	LifecycleStateDetails *string
+
+	// The status codes that indicate the reason for failure whenever the
+	// lifecycleState has an error or is in a broken state. Greengrass nucleus v2.8.0
+	// or later is required to get an accurate lifecycleStatusCodes response. This
+	// response can be inaccurate in earlier Greengrass nucleus versions.
+	LifecycleStatusCodes []string
 
 	noSmithyDocumentSerde
 }
@@ -655,7 +703,7 @@ type IoTJobExecutionsRolloutConfig struct {
 
 	// The maximum number of devices that receive a pending job notification, per
 	// minute.
-	MaximumPerMinute int32
+	MaximumPerMinute *int32
 
 	noSmithyDocumentSerde
 }
@@ -692,11 +740,11 @@ type IoTJobRateIncreaseCriteria struct {
 
 	// The number of devices to receive the job notification before the rollout rate
 	// increases.
-	NumberOfNotifiedThings int32
+	NumberOfNotifiedThings *int32
 
 	// The number of devices to successfully run the configuration job before the
 	// rollout rate increases.
-	NumberOfSucceededThings int32
+	NumberOfSucceededThings *int32
 
 	noSmithyDocumentSerde
 }
@@ -709,7 +757,7 @@ type IoTJobTimeoutConfig struct {
 	// change to a terminal state before the time expires, then the job status is set
 	// to TIMED_OUT. The timeout interval must be between 1 minute and 7 days (10080
 	// minutes).
-	InProgressTimeoutInMinutes int64
+	InProgressTimeoutInMinutes *int64
 
 	noSmithyDocumentSerde
 }
@@ -722,11 +770,11 @@ type LambdaContainerParams struct {
 	Devices []LambdaDeviceMount
 
 	// The memory size of the container, expressed in kilobytes. Default: 16384 (16 MB)
-	MemorySizeInKB int32
+	MemorySizeInKB *int32
 
 	// Whether or not the container can read information from the device's /sys folder.
 	// Default: false
-	MountROSysfs bool
+	MountROSysfs *bool
 
 	// The list of volumes that the container can access.
 	Volumes []LambdaVolumeMount
@@ -745,7 +793,7 @@ type LambdaDeviceMount struct {
 
 	// Whether or not to add the component's system user as an owner of the device.
 	// Default: false
-	AddGroupOwner bool
+	AddGroupOwner *bool
 
 	// The permission to access the device: read/only (ro) or read/write (rw). Default:
 	// ro
@@ -804,16 +852,16 @@ type LambdaExecutionParameters struct {
 
 	// The maximum amount of time in seconds that a non-pinned Lambda function can idle
 	// before the IoT Greengrass Core software stops its process.
-	MaxIdleTimeInSeconds int32
+	MaxIdleTimeInSeconds *int32
 
 	// The maximum number of instances that a non-pinned Lambda function can run at the
 	// same time.
-	MaxInstancesCount int32
+	MaxInstancesCount *int32
 
 	// The maximum size of the message queue for the Lambda function component. The IoT
 	// Greengrass core stores messages in a FIFO (first-in-first-out) queue until it
 	// can run the Lambda function to consume each message.
-	MaxQueueSize int32
+	MaxQueueSize *int32
 
 	// Whether or not the Lambda function is pinned, or long-lived.
 	//
@@ -827,15 +875,15 @@ type LambdaExecutionParameters struct {
 	// of the function.
 	//
 	// Default: true
-	Pinned bool
+	Pinned *bool
 
 	// The interval in seconds at which a pinned (also known as long-lived) Lambda
 	// function component sends status updates to the Lambda manager component.
-	StatusTimeoutInSeconds int32
+	StatusTimeoutInSeconds *int32
 
 	// The maximum amount of time in seconds that the Lambda function can process a
 	// work item.
-	TimeoutInSeconds int32
+	TimeoutInSeconds *int32
 
 	noSmithyDocumentSerde
 }
@@ -904,7 +952,7 @@ type LambdaVolumeMount struct {
 
 	// Whether or not to add the IoT Greengrass user group as an owner of the volume.
 	// Default: false
-	AddGroupOwner bool
+	AddGroupOwner *bool
 
 	// The permission to access the volume: read/only (ro) or read/write (rw). Default:
 	// ro

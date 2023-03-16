@@ -40,6 +40,9 @@ type CreateProjectInput struct {
 	// scheduling a run.
 	DefaultJobTimeoutMinutes *int32
 
+	// The VPC security groups and subnets that are attached to a project.
+	VpcConfig *types.VpcConfig
+
 	noSmithyDocumentSerde
 }
 

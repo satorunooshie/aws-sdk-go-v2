@@ -710,6 +710,11 @@ func awsRestjson1_serializeOpDocumentCreatePricingRuleInput(v *CreatePricingRule
 	object := value.Object()
 	defer object.Close()
 
+	if v.BillingEntity != nil {
+		ok := object.Key("BillingEntity")
+		ok.String(*v.BillingEntity)
+	}
+
 	if v.Description != nil {
 		ok := object.Key("Description")
 		ok.String(*v.Description)
@@ -738,6 +743,11 @@ func awsRestjson1_serializeOpDocumentCreatePricingRuleInput(v *CreatePricingRule
 		ok.String(*v.Name)
 	}
 
+	if v.Operation != nil {
+		ok := object.Key("Operation")
+		ok.String(*v.Operation)
+	}
+
 	if len(v.Scope) > 0 {
 		ok := object.Key("Scope")
 		ok.String(string(v.Scope))
@@ -755,9 +765,21 @@ func awsRestjson1_serializeOpDocumentCreatePricingRuleInput(v *CreatePricingRule
 		}
 	}
 
+	if v.Tiering != nil {
+		ok := object.Key("Tiering")
+		if err := awsRestjson1_serializeDocumentCreateTieringInput(v.Tiering, ok); err != nil {
+			return err
+		}
+	}
+
 	if len(v.Type) > 0 {
 		ok := object.Key("Type")
 		ok.String(string(v.Type))
+	}
+
+	if v.UsageType != nil {
+		ok := object.Key("UsageType")
+		ok.String(*v.UsageType)
 	}
 
 	return nil
@@ -1510,6 +1532,91 @@ func awsRestjson1_serializeOpDocumentListCustomLineItemsInput(v *ListCustomLineI
 	if v.Filters != nil {
 		ok := object.Key("Filters")
 		if err := awsRestjson1_serializeDocumentListCustomLineItemsFilter(v.Filters, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.MaxResults != nil {
+		ok := object.Key("MaxResults")
+		ok.Integer(*v.MaxResults)
+	}
+
+	if v.NextToken != nil {
+		ok := object.Key("NextToken")
+		ok.String(*v.NextToken)
+	}
+
+	return nil
+}
+
+type awsRestjson1_serializeOpListCustomLineItemVersions struct {
+}
+
+func (*awsRestjson1_serializeOpListCustomLineItemVersions) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsRestjson1_serializeOpListCustomLineItemVersions) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*ListCustomLineItemVersionsInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	opPath, opQuery := httpbinding.SplitURI("/list-custom-line-item-versions")
+	request.URL.Path = smithyhttp.JoinPath(request.URL.Path, opPath)
+	request.URL.RawQuery = smithyhttp.JoinRawQuery(request.URL.RawQuery, opQuery)
+	request.Method = "POST"
+	restEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	restEncoder.SetHeader("Content-Type").String("application/json")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsRestjson1_serializeOpDocumentListCustomLineItemVersionsInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = restEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+func awsRestjson1_serializeOpHttpBindingsListCustomLineItemVersionsInput(v *ListCustomLineItemVersionsInput, encoder *httpbinding.Encoder) error {
+	if v == nil {
+		return fmt.Errorf("unsupported serialization of nil %T", v)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeOpDocumentListCustomLineItemVersionsInput(v *ListCustomLineItemVersionsInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.Arn != nil {
+		ok := object.Key("Arn")
+		ok.String(*v.Arn)
+	}
+
+	if v.Filters != nil {
+		ok := object.Key("Filters")
+		if err := awsRestjson1_serializeDocumentListCustomLineItemVersionsFilter(v.Filters, ok); err != nil {
 			return err
 		}
 	}
@@ -2511,6 +2618,13 @@ func awsRestjson1_serializeOpDocumentUpdatePricingRuleInput(v *UpdatePricingRule
 		ok.String(*v.Name)
 	}
 
+	if v.Tiering != nil {
+		ok := object.Key("Tiering")
+		if err := awsRestjson1_serializeDocumentUpdateTieringInput(v.Tiering, ok); err != nil {
+			return err
+		}
+	}
+
 	if len(v.Type) > 0 {
 		ok := object.Key("Type")
 		ok.String(string(v.Type))
@@ -2562,6 +2676,32 @@ func awsRestjson1_serializeDocumentComputationPreference(v *types.ComputationPre
 	if v.PricingPlanArn != nil {
 		ok := object.Key("PricingPlanArn")
 		ok.String(*v.PricingPlanArn)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentCreateFreeTierConfig(v *types.CreateFreeTierConfig, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.Activated != nil {
+		ok := object.Key("Activated")
+		ok.Boolean(*v.Activated)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentCreateTieringInput(v *types.CreateTieringInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.FreeTier != nil {
+		ok := object.Key("FreeTier")
+		if err := awsRestjson1_serializeDocumentCreateFreeTierConfig(v.FreeTier, ok); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -2800,6 +2940,37 @@ func awsRestjson1_serializeDocumentListCustomLineItemsFilter(v *types.ListCustom
 	return nil
 }
 
+func awsRestjson1_serializeDocumentListCustomLineItemVersionsBillingPeriodRangeFilter(v *types.ListCustomLineItemVersionsBillingPeriodRangeFilter, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.EndBillingPeriod != nil {
+		ok := object.Key("EndBillingPeriod")
+		ok.String(*v.EndBillingPeriod)
+	}
+
+	if v.StartBillingPeriod != nil {
+		ok := object.Key("StartBillingPeriod")
+		ok.String(*v.StartBillingPeriod)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentListCustomLineItemVersionsFilter(v *types.ListCustomLineItemVersionsFilter, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.BillingPeriodRange != nil {
+		ok := object.Key("BillingPeriodRange")
+		if err := awsRestjson1_serializeDocumentListCustomLineItemVersionsBillingPeriodRangeFilter(v.BillingPeriodRange, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentListPricingPlansFilter(v *types.ListPricingPlansFilter, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -2960,6 +3131,32 @@ func awsRestjson1_serializeDocumentUpdateCustomLineItemPercentageChargeDetails(v
 		default:
 			ok.Double(*v.PercentageValue)
 
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentUpdateFreeTierConfig(v *types.UpdateFreeTierConfig, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.Activated != nil {
+		ok := object.Key("Activated")
+		ok.Boolean(*v.Activated)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentUpdateTieringInput(v *types.UpdateTieringInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.FreeTier != nil {
+		ok := object.Key("FreeTier")
+		if err := awsRestjson1_serializeDocumentUpdateFreeTierConfig(v.FreeTier, ok); err != nil {
+			return err
 		}
 	}
 

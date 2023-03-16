@@ -71,6 +71,9 @@ type GetComponentTypeOutput struct {
 	// This member is required.
 	WorkspaceId *string
 
+	// The component type name.
+	ComponentTypeName *string
+
 	// The description of the component type.
 	Description *string
 
@@ -96,8 +99,15 @@ type GetComponentTypeOutput struct {
 	// Each string in the mapping must be unique to this object.
 	PropertyDefinitions map[string]types.PropertyDefinitionResponse
 
+	// The maximum number of results to return at one time. The default is 25. Valid
+	// Range: Minimum value of 1. Maximum value of 250.
+	PropertyGroups map[string]types.PropertyGroupResponse
+
 	// The current status of the component type.
 	Status *types.Status
+
+	// The syncSource of the sync job, if this entity was created by a sync job.
+	SyncSource *string
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata

@@ -60,10 +60,10 @@ type DescribeUserProfileOutput struct {
 	// The last modified time.
 	LastModifiedTime *time.Time
 
-	// The SSO user identifier.
+	// The IAM Identity Center user identifier.
 	SingleSignOnUserIdentifier *string
 
-	// The SSO user value.
+	// The IAM Identity Center user value.
 	SingleSignOnUserValue *string
 
 	// The status.

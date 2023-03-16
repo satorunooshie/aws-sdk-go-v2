@@ -14,8 +14,14 @@ import (
 
 // Lists the log streams for the specified log group. You can list all the log
 // streams or filter the results by prefix. You can also control how the results
-// are ordered. This operation has a limit of five transactions per second, after
-// which transactions are throttled.
+// are ordered. You can specify the log group to search by using either
+// logGroupIdentifier or logGroupName. You must include one of these two
+// parameters, but you can't include both. This operation has a limit of five
+// transactions per second, after which transactions are throttled. If you are
+// using CloudWatch cross-account observability, you can use this operation in a
+// monitoring account and view data from the linked source accounts. For more
+// information, see CloudWatch cross-account observability
+// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Unified-Cross-Account.html).
 func (c *Client) DescribeLogStreams(ctx context.Context, params *DescribeLogStreamsInput, optFns ...func(*Options)) (*DescribeLogStreamsOutput, error) {
 	if params == nil {
 		params = &DescribeLogStreamsInput{}
@@ -33,11 +39,6 @@ func (c *Client) DescribeLogStreams(ctx context.Context, params *DescribeLogStre
 
 type DescribeLogStreamsInput struct {
 
-	// The name of the log group.
-	//
-	// This member is required.
-	LogGroupName *string
-
 	// If the value is true, results are returned in descending order. If the value is
 	// to false, results are returned in ascending order. The default value is false.
 	Descending *bool
@@ -45,6 +46,16 @@ type DescribeLogStreamsInput struct {
 	// The maximum number of items returned. If you don't specify a value, the default
 	// is up to 50 items.
 	Limit *int32
+
+	// Specify either the name or ARN of the log group to view. If the log group is in
+	// a source account and you are using a monitoring account, you must use the log
+	// group ARN. You must include either logGroupIdentifier or logGroupName, but not
+	// both.
+	LogGroupIdentifier *string
+
+	// The name of the log group. You must include either logGroupIdentifier or
+	// logGroupName, but not both.
+	LogGroupName *string
 
 	// The prefix to match. If orderBy is LastEventTime, you cannot specify this
 	// parameter.
@@ -125,9 +136,6 @@ func (c *Client) addOperationDescribeLogStreamsMiddlewares(stack *middleware.Sta
 		return err
 	}
 	if err = smithyhttp.AddCloseResponseBodyMiddleware(stack); err != nil {
-		return err
-	}
-	if err = addOpDescribeLogStreamsValidationMiddleware(stack); err != nil {
 		return err
 	}
 	if err = stack.Initialize.Add(newServiceMetadataMiddleware_opDescribeLogStreams(options.Region), middleware.Before); err != nil {

@@ -53,10 +53,12 @@ type DescribePlaceIndexOutput struct {
 	// *
 	// Esri
 	//
+	// * Grab
+	//
 	// * Here
 	//
-	// For more information about data providers, see Amazon Location
-	// Service data providers
+	// For more information about data providers, see Amazon
+	// Location Service data providers
 	// (https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html).
 	//
 	// This member is required.
@@ -73,7 +75,7 @@ type DescribePlaceIndexOutput struct {
 	Description *string
 
 	// The Amazon Resource Name (ARN) for the place index resource. Used to specify a
-	// resource across AWS.
+	// resource across Amazon Web Services.
 	//
 	// * Format example:
 	// arn:aws:geo:region:account-id:place-index/ExamplePlaceIndex

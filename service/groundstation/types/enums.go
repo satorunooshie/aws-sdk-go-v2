@@ -2,6 +2,28 @@
 
 package types
 
+type AgentStatus string
+
+// Enum values for AgentStatus
+const (
+	AgentStatusSuccess  AgentStatus = "SUCCESS"
+	AgentStatusFailed   AgentStatus = "FAILED"
+	AgentStatusActive   AgentStatus = "ACTIVE"
+	AgentStatusInactive AgentStatus = "INACTIVE"
+)
+
+// Values returns all known values for AgentStatus. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (AgentStatus) Values() []AgentStatus {
+	return []AgentStatus{
+		"SUCCESS",
+		"FAILED",
+		"ACTIVE",
+		"INACTIVE",
+	}
+}
+
 type AngleUnits string
 
 // Enum values for AngleUnits
@@ -17,6 +39,24 @@ func (AngleUnits) Values() []AngleUnits {
 	return []AngleUnits{
 		"DEGREE_ANGLE",
 		"RADIAN",
+	}
+}
+
+type AuditResults string
+
+// Enum values for AuditResults
+const (
+	AuditResultsHealthy   AuditResults = "HEALTHY"
+	AuditResultsUnhealthy AuditResults = "UNHEALTHY"
+)
+
+// Values returns all known values for AuditResults. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (AuditResults) Values() []AuditResults {
+	return []AuditResults{
+		"HEALTHY",
+		"UNHEALTHY",
 	}
 }
 
@@ -37,6 +77,26 @@ func (BandwidthUnits) Values() []BandwidthUnits {
 		"GHz",
 		"MHz",
 		"kHz",
+	}
+}
+
+type ComponentType string
+
+// Enum values for ComponentType
+const (
+	ComponentTypeLaminarFlow ComponentType = "LAMINAR_FLOW"
+	ComponentTypePrism       ComponentType = "PRISM"
+	ComponentTypeDigitizer   ComponentType = "DIGITIZER"
+)
+
+// Values returns all known values for ComponentType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ComponentType) Values() []ComponentType {
+	return []ComponentType{
+		"LAMINAR_FLOW",
+		"PRISM",
+		"DIGITIZER",
 	}
 }
 
@@ -165,6 +225,79 @@ func (EndpointStatus) Values() []EndpointStatus {
 		"deleted",
 		"deleting",
 		"failed",
+	}
+}
+
+type EphemerisInvalidReason string
+
+// Enum values for EphemerisInvalidReason
+const (
+	// Provided spacecraft identifiers such as spacecraft NORAD Id are invalid
+	EphemerisInvalidReasonMetadataInvalid EphemerisInvalidReason = "METADATA_INVALID"
+	// Start, end, or expiration time(s) are invalid for the provided ephemeris
+	EphemerisInvalidReasonTimeRangeInvalid EphemerisInvalidReason = "TIME_RANGE_INVALID"
+	// Provided ephemeris defines invalid spacecraft trajectory
+	EphemerisInvalidReasonTrajectoryInvalid EphemerisInvalidReason = "TRAJECTORY_INVALID"
+	// Provided KMS key is invalid
+	EphemerisInvalidReasonKmsKeyInvalid EphemerisInvalidReason = "KMS_KEY_INVALID"
+	// Internal Service Error occurred while processing ephemeris
+	EphemerisInvalidReasonValidationError EphemerisInvalidReason = "VALIDATION_ERROR"
+)
+
+// Values returns all known values for EphemerisInvalidReason. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (EphemerisInvalidReason) Values() []EphemerisInvalidReason {
+	return []EphemerisInvalidReason{
+		"METADATA_INVALID",
+		"TIME_RANGE_INVALID",
+		"TRAJECTORY_INVALID",
+		"KMS_KEY_INVALID",
+		"VALIDATION_ERROR",
+	}
+}
+
+type EphemerisSource string
+
+// Enum values for EphemerisSource
+const (
+	EphemerisSourceCustomerProvided EphemerisSource = "CUSTOMER_PROVIDED"
+	EphemerisSourceSpaceTrack       EphemerisSource = "SPACE_TRACK"
+)
+
+// Values returns all known values for EphemerisSource. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (EphemerisSource) Values() []EphemerisSource {
+	return []EphemerisSource{
+		"CUSTOMER_PROVIDED",
+		"SPACE_TRACK",
+	}
+}
+
+type EphemerisStatus string
+
+// Enum values for EphemerisStatus
+const (
+	EphemerisStatusValidating EphemerisStatus = "VALIDATING"
+	EphemerisStatusInvalid    EphemerisStatus = "INVALID"
+	EphemerisStatusError      EphemerisStatus = "ERROR"
+	EphemerisStatusEnabled    EphemerisStatus = "ENABLED"
+	EphemerisStatusDisabled   EphemerisStatus = "DISABLED"
+	EphemerisStatusExpired    EphemerisStatus = "EXPIRED"
+)
+
+// Values returns all known values for EphemerisStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (EphemerisStatus) Values() []EphemerisStatus {
+	return []EphemerisStatus{
+		"VALIDATING",
+		"INVALID",
+		"ERROR",
+		"ENABLED",
+		"DISABLED",
+		"EXPIRED",
 	}
 }
 

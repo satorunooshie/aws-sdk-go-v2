@@ -13,8 +13,8 @@ import (
 
 // Notify Proton of status changes to a provisioned resource when you use
 // self-managed provisioning. For more information, see Self-managed provisioning
-// (https://docs.aws.amazon.com/proton/latest/adminguide/ag-works-prov-methods.html#ag-works-prov-methods-self)
-// in the Proton Administrator Guide.
+// (https://docs.aws.amazon.com/proton/latest/userguide/ag-works-prov-methods.html#ag-works-prov-methods-self)
+// in the Proton User Guide.
 func (c *Client) NotifyResourceDeploymentStatusChange(ctx context.Context, params *NotifyResourceDeploymentStatusChangeInput, optFns ...func(*Options)) (*NotifyResourceDeploymentStatusChangeOutput, error) {
 	if params == nil {
 		params = &NotifyResourceDeploymentStatusChangeInput{}
@@ -37,16 +37,14 @@ type NotifyResourceDeploymentStatusChangeInput struct {
 	// This member is required.
 	ResourceArn *string
 
-	// The status of your provisioned resource.
-	//
-	// This member is required.
-	Status types.ResourceDeploymentStatus
-
 	// The deployment ID for your provisioned resource.
 	DeploymentId *string
 
 	// The provisioned resource state change detail data that's returned by Proton.
 	Outputs []types.Output
+
+	// The status of your provisioned resource.
+	Status types.ResourceDeploymentStatus
 
 	// The deployment status message for your provisioned resource.
 	StatusMessage *string

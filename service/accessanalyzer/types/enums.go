@@ -111,9 +111,10 @@ type FindingSourceType string
 
 // Enum values for FindingSourceType
 const (
-	FindingSourceTypePolicy        FindingSourceType = "POLICY"
-	FindingSourceTypeBucketAcl     FindingSourceType = "BUCKET_ACL"
-	FindingSourceTypeS3AccessPoint FindingSourceType = "S3_ACCESS_POINT"
+	FindingSourceTypePolicy               FindingSourceType = "POLICY"
+	FindingSourceTypeBucketAcl            FindingSourceType = "BUCKET_ACL"
+	FindingSourceTypeS3AccessPoint        FindingSourceType = "S3_ACCESS_POINT"
+	FindingSourceTypeS3AccessPointAccount FindingSourceType = "S3_ACCESS_POINT_ACCOUNT"
 )
 
 // Values returns all known values for FindingSourceType. Note that this can be
@@ -124,6 +125,7 @@ func (FindingSourceType) Values() []FindingSourceType {
 		"POLICY",
 		"BUCKET_ACL",
 		"S3_ACCESS_POINT",
+		"S3_ACCESS_POINT_ACCOUNT",
 	}
 }
 
@@ -356,6 +358,12 @@ const (
 	ResourceTypeAwsLambdaLayerversion   ResourceType = "AWS::Lambda::LayerVersion"
 	ResourceTypeAwsKmsKey               ResourceType = "AWS::KMS::Key"
 	ResourceTypeAwsSecretsmanagerSecret ResourceType = "AWS::SecretsManager::Secret"
+	ResourceTypeAwsEfsFilesystem        ResourceType = "AWS::EFS::FileSystem"
+	ResourceTypeAwsEc2Snapshot          ResourceType = "AWS::EC2::Snapshot"
+	ResourceTypeAwsEcrRepository        ResourceType = "AWS::ECR::Repository"
+	ResourceTypeAwsRdsDbsnapshot        ResourceType = "AWS::RDS::DBSnapshot"
+	ResourceTypeAwsRdsDbclustersnapshot ResourceType = "AWS::RDS::DBClusterSnapshot"
+	ResourceTypeAwsSnsTopic             ResourceType = "AWS::SNS::Topic"
 )
 
 // Values returns all known values for ResourceType. Note that this can be expanded
@@ -370,6 +378,12 @@ func (ResourceType) Values() []ResourceType {
 		"AWS::Lambda::LayerVersion",
 		"AWS::KMS::Key",
 		"AWS::SecretsManager::Secret",
+		"AWS::EFS::FileSystem",
+		"AWS::EC2::Snapshot",
+		"AWS::ECR::Repository",
+		"AWS::RDS::DBSnapshot",
+		"AWS::RDS::DBClusterSnapshot",
+		"AWS::SNS::Topic",
 	}
 }
 
@@ -421,6 +435,7 @@ const (
 	ValidatePolicyResourceTypeS3AccessPoint             ValidatePolicyResourceType = "AWS::S3::AccessPoint"
 	ValidatePolicyResourceTypeS3MultiRegionAccessPoint  ValidatePolicyResourceType = "AWS::S3::MultiRegionAccessPoint"
 	ValidatePolicyResourceTypeS3ObjectLambdaAccessPoint ValidatePolicyResourceType = "AWS::S3ObjectLambda::AccessPoint"
+	ValidatePolicyResourceTypeRoleTrust                 ValidatePolicyResourceType = "AWS::IAM::AssumeRolePolicyDocument"
 )
 
 // Values returns all known values for ValidatePolicyResourceType. Note that this
@@ -432,6 +447,7 @@ func (ValidatePolicyResourceType) Values() []ValidatePolicyResourceType {
 		"AWS::S3::AccessPoint",
 		"AWS::S3::MultiRegionAccessPoint",
 		"AWS::S3ObjectLambda::AccessPoint",
+		"AWS::IAM::AssumeRolePolicyDocument",
 	}
 }
 

@@ -25,9 +25,9 @@ import (
 // (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html)
 // in the Amazon Elastic Compute Cloud User Guide and Security groups for your VPC
 // (https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_SecurityGroups.html)
-// in the Amazon Virtual Private Cloud User Guide. We are retiring EC2-Classic on
-// August 15, 2022. We recommend that you migrate from EC2-Classic to a VPC. For
-// more information, see Migrate from EC2-Classic to a VPC
+// in the Amazon Virtual Private Cloud User Guide. We are retiring EC2-Classic. We
+// recommend that you migrate from EC2-Classic to a VPC. For more information, see
+// Migrate from EC2-Classic to a VPC
 // (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html) in the
 // Amazon Elastic Compute Cloud User Guide.
 func (c *Client) DescribeSecurityGroups(ctx context.Context, params *DescribeSecurityGroupsInput, optFns ...func(*Options)) (*DescribeSecurityGroupsOutput, error) {
@@ -156,13 +156,15 @@ type DescribeSecurityGroupsInput struct {
 	// groups by name. Default: Describes all of your security groups.
 	GroupNames []string
 
-	// The maximum number of results to return in a single call. To retrieve the
-	// remaining results, make another request with the returned NextToken value. This
-	// value can be between 5 and 1000. If this parameter is not specified, then all
-	// results are returned.
+	// The maximum number of items to return for this request. To get the next page of
+	// items, make another request with the token returned in the output. This value
+	// can be between 5 and 1000. If this parameter is not specified, then all items
+	// are returned. For more information, see Pagination
+	// (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination).
 	MaxResults *int32
 
-	// The token to request the next page of results.
+	// The token returned from a previous paginated request. Pagination continues from
+	// the end of the items returned by the previous request.
 	NextToken *string
 
 	noSmithyDocumentSerde
@@ -170,8 +172,8 @@ type DescribeSecurityGroupsInput struct {
 
 type DescribeSecurityGroupsOutput struct {
 
-	// The token to use to retrieve the next page of results. This value is null when
-	// there are no more results to return.
+	// The token to include in another request to get the next page of items. This
+	// value is null when there are no more items to return.
 	NextToken *string
 
 	// Information about the security groups.
@@ -254,10 +256,11 @@ var _ DescribeSecurityGroupsAPIClient = (*Client)(nil)
 // DescribeSecurityGroupsPaginatorOptions is the paginator options for
 // DescribeSecurityGroups
 type DescribeSecurityGroupsPaginatorOptions struct {
-	// The maximum number of results to return in a single call. To retrieve the
-	// remaining results, make another request with the returned NextToken value. This
-	// value can be between 5 and 1000. If this parameter is not specified, then all
-	// results are returned.
+	// The maximum number of items to return for this request. To get the next page of
+	// items, make another request with the token returned in the output. This value
+	// can be between 5 and 1000. If this parameter is not specified, then all items
+	// are returned. For more information, see Pagination
+	// (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/Query-Requests.html#api-pagination).
 	Limit int32
 
 	// Set to true if pagination should stop if the service returns a pagination token

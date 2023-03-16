@@ -34,15 +34,16 @@ func (c *Client) ListSecurityProfiles(ctx context.Context, params *ListSecurityP
 
 type ListSecurityProfilesInput struct {
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	//
 	// This member is required.
 	InstanceId *string
 
 	// The maximum number of results to return per page. The default MaxResult size is
 	// 100.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token for the next set of results. Use the value returned in the previous
 	// response in the next request to retrieve the next set of results.
@@ -164,8 +165,8 @@ func NewListSecurityProfilesPaginator(client ListSecurityProfilesAPIClient, para
 	}
 
 	options := ListSecurityProfilesPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -195,7 +196,11 @@ func (p *ListSecurityProfilesPaginator) NextPage(ctx context.Context, optFns ...
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListSecurityProfiles(ctx, &params, optFns...)
 	if err != nil {

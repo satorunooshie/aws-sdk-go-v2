@@ -2,6 +2,42 @@
 
 package types
 
+type CustomEventsStatus string
+
+// Enum values for CustomEventsStatus
+const (
+	CustomEventsStatusEnabled  CustomEventsStatus = "ENABLED"
+	CustomEventsStatusDisabled CustomEventsStatus = "DISABLED"
+)
+
+// Values returns all known values for CustomEventsStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (CustomEventsStatus) Values() []CustomEventsStatus {
+	return []CustomEventsStatus{
+		"ENABLED",
+		"DISABLED",
+	}
+}
+
+type MetricDestination string
+
+// Enum values for MetricDestination
+const (
+	MetricDestinationCloudWatch MetricDestination = "CloudWatch"
+	MetricDestinationEvidently  MetricDestination = "Evidently"
+)
+
+// Values returns all known values for MetricDestination. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (MetricDestination) Values() []MetricDestination {
+	return []MetricDestination{
+		"CloudWatch",
+		"Evidently",
+	}
+}
+
 type StateEnum string
 
 // Enum values for StateEnum

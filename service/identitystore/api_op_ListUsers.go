@@ -12,10 +12,9 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the attribute name and value of the user that you specified in the search.
-// We only support UserName as a valid filter attribute path currently, and filter
-// is required. This API returns minimum attributes, including UserId and UserName
-// in the response.
+// Lists all users in the identity store. Returns a paginated list of complete User
+// objects. Filtering for a User by the UserName attribute is deprecated. Instead,
+// use the GetUserId API action.
 func (c *Client) ListUsers(ctx context.Context, params *ListUsersInput, optFns ...func(*Options)) (*ListUsersOutput, error) {
 	if params == nil {
 		params = &ListUsersInput{}
@@ -35,18 +34,22 @@ type ListUsersInput struct {
 
 	// The globally unique identifier for the identity store, such as d-1234567890. In
 	// this example, d- is a fixed prefix, and 1234567890 is a randomly generated
-	// string that contains number and lower case letters. This value is generated at
+	// string that contains numbers and lower case letters. This value is generated at
 	// the time that a new identity store is created.
 	//
 	// This member is required.
 	IdentityStoreId *string
 
-	// A list of Filter objects, which is used in the ListUsers and ListGroups request.
+	// A list of Filter objects, which is used in the ListUsers and ListGroups
+	// requests.
+	//
+	// Deprecated: Using filters with ListUsers API is deprecated, please use
+	// GetGroupId API instead.
 	Filters []types.Filter
 
 	// The maximum number of results to be returned per request. This parameter is used
-	// in the ListUsers and ListGroups request to specify how many results to return in
-	// one page. The length limit is 50 characters.
+	// in the ListUsers and ListGroups requests to specify how many results to return
+	// in one page. The length limit is 50 characters.
 	MaxResults *int32
 
 	// The pagination token used for the ListUsers and ListGroups API operations. This
@@ -150,8 +153,8 @@ var _ ListUsersAPIClient = (*Client)(nil)
 // ListUsersPaginatorOptions is the paginator options for ListUsers
 type ListUsersPaginatorOptions struct {
 	// The maximum number of results to be returned per request. This parameter is used
-	// in the ListUsers and ListGroups request to specify how many results to return in
-	// one page. The length limit is 50 characters.
+	// in the ListUsers and ListGroups requests to specify how many results to return
+	// in one page. The length limit is 50 characters.
 	Limit int32
 
 	// Set to true if pagination should stop if the service returns a pagination token

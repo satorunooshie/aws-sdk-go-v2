@@ -1,3 +1,111 @@
+# v1.43.3 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.43.2 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.43.1 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.43.0 (2023-02-17)
+
+* **Feature**: Release of Delta Lake Data Lake Format for Glue Studio Service
+
+# v1.42.0 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Feature**: Fix DirectJDBCSource not showing up in CLI code gen
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.41.0 (2023-02-08)
+
+* **Feature**: DirectJDBCSource + Glue 4.0 streaming options
+
+# v1.40.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.40.1 (2023-01-31)
+
+* No change notes available for this release.
+
+# v1.40.0 (2023-01-19)
+
+* **Feature**: Release Glue Studio Hudi Data Lake Format for SDK/CLI
+
+# v1.39.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.38.1 (2022-12-19)
+
+* No change notes available for this release.
+
+# v1.38.0 (2022-12-15)
+
+* **Feature**: This release adds support for AWS Glue Crawler with native DeltaLake tables, allowing Crawlers to classify Delta Lake format tables and catalog them for query engines to query against.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.37.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.37.0 (2022-11-30)
+
+* **Feature**: This release adds support for AWS Glue Data Quality, which helps you evaluate and monitor the quality of your data and includes the API for creating, deleting, or updating data quality rulesets, runs and evaluations.
+
+# v1.36.0 (2022-11-29)
+
+* **Feature**: This release allows the creation of Custom Visual Transforms (Dynamic Transforms) to be created via AWS Glue CLI/SDK.
+
+# v1.35.0 (2022-11-18)
+
+* **Feature**: AWSGlue Crawler - Adding support for Table and Column level Comments with database level datatypes for JDBC based crawler.
+
+# v1.34.1 (2022-11-11)
+
+* **Documentation**: Added links related to enabling job bookmarks.
+
+# v1.34.0 (2022-10-27)
+
+* **Feature**: Added support for custom datatypes when using custom csv classifier.
+
+# v1.33.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.0 (2022-10-05)
+
+* **Feature**: This SDK release adds support to sync glue jobs with source control provider. Additionally, a new parameter called SourceControlDetails will be added to Job model.
+
+# v1.32.0 (2022-09-22)
+
+* **Feature**: Added support for S3 Event Notifications for Catalog Target Crawlers.
+
+# v1.31.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.31.0 (2022-09-14)
+
+* **Feature**: Fixed a bug in the API client generation which caused some operation parameters to be incorrectly generated as value types instead of pointer types. The service API always required these affected parameters to be nilable. This fixes the SDK client to match the expectations of the the service API.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.30.4 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.30.3 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.30.2 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

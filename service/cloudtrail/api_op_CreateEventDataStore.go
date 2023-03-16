@@ -35,12 +35,47 @@ type CreateEventDataStoreInput struct {
 	// This member is required.
 	Name *string
 
-	// The advanced event selectors to use to select the events for the data store. For
-	// more information about how to use advanced event selectors, see Log events by
-	// using advanced event selectors
+	// The advanced event selectors to use to select the events for the data store. You
+	// can configure up to five advanced event selectors for each event data store. For
+	// more information about how to use advanced event selectors to log CloudTrail
+	// events, see Log events by using advanced event selectors
 	// (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html#creating-data-event-selectors-advanced)
+	// in the CloudTrail User Guide. For more information about how to use advanced
+	// event selectors to include Config configuration items in your event data store,
+	// see Create an event data store for Config configuration items
+	// (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/query-lake-cli.html#lake-cli-create-eds-config)
+	// in the CloudTrail User Guide. For more information about how to use advanced
+	// event selectors to include non-Amazon Web Services events in your event data
+	// store, see Create an integration to log events from outside Amazon Web Services
+	// (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/query-lake-cli.html#lake-cli-create-integration)
 	// in the CloudTrail User Guide.
 	AdvancedEventSelectors []types.AdvancedEventSelector
+
+	// Specifies the KMS key ID to use to encrypt the events delivered by CloudTrail.
+	// The value can be an alias name prefixed by alias/, a fully specified ARN to an
+	// alias, a fully specified ARN to a key, or a globally unique identifier.
+	// Disabling or deleting the KMS key, or removing CloudTrail permissions on the
+	// key, prevents CloudTrail from logging events to the event data store, and
+	// prevents users from querying the data in the event data store that was encrypted
+	// with the key. After you associate an event data store with a KMS key, the KMS
+	// key cannot be removed or changed. Before you disable or delete a KMS key that
+	// you are using with an event data store, delete or back up your event data store.
+	// CloudTrail also supports KMS multi-Region keys. For more information about
+	// multi-Region keys, see Using multi-Region keys
+	// (https://docs.aws.amazon.com/kms/latest/developerguide/multi-region-keys-overview.html)
+	// in the Key Management Service Developer Guide. Examples:
+	//
+	// * alias/MyAliasName
+	//
+	// *
+	// arn:aws:kms:us-east-2:123456789012:alias/MyAliasName
+	//
+	// *
+	// arn:aws:kms:us-east-2:123456789012:key/12345678-1234-1234-1234-123456789012
+	//
+	// *
+	// 12345678-1234-1234-1234-123456789012
+	KmsKeyId *string
 
 	// Specifies whether the event data store includes events from all regions, or only
 	// from the region in which the event data store is created.
@@ -51,7 +86,7 @@ type CreateEventDataStoreInput struct {
 	OrganizationEnabled *bool
 
 	// The retention period of the event data store, in days. You can set a retention
-	// period of up to 2555 days, the equivalent of seven years.
+	// period of up to 2557 days, the equivalent of seven years.
 	RetentionPeriod *int32
 
 	// A list of tags.
@@ -76,6 +111,11 @@ type CreateEventDataStoreOutput struct {
 
 	// The ARN of the event data store.
 	EventDataStoreArn *string
+
+	// Specifies the KMS key ID that encrypts the events delivered by CloudTrail. The
+	// value is a fully specified ARN to a KMS key in the following format.
+	// arn:aws:kms:us-east-2:123456789012:key/12345678-1234-1234-1234-123456789012
+	KmsKeyId *string
 
 	// Indicates whether the event data store collects events from all regions, or only
 	// from the region in which it was created.

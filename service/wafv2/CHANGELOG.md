@@ -1,3 +1,93 @@
+# v1.26.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.0 (2023-02-23)
+
+* **Feature**: You can now associate an AWS WAF v2 web ACL with an AWS App Runner service.
+
+# v1.25.3 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.25.2 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.1 (2023-02-16)
+
+* **Documentation**: Added a notice for account takeover prevention (ATP). The interface incorrectly lets you to configure ATP response inspection in regional web ACLs in Region US East (N. Virginia), without returning an error. ATP response inspection is only available in web ACLs that protect CloudFront distributions.
+
+# v1.25.0 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Feature**: For protected CloudFront distributions, you can now use the AWS WAF Fraud Control account takeover prevention (ATP) managed rule group to block new login attempts from clients that have recently submitted too many failed login attempts.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.24.3 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.2 (2023-01-18)
+
+* **Documentation**: Improved the visibility of the guidance for updating AWS WAF resources, such as web ACLs and rule groups.
+
+# v1.24.1 (2023-01-12)
+
+* No change notes available for this release.
+
+# v1.24.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.23.4 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.3 (2022-12-12)
+
+* **Documentation**: Documents the naming requirement for logging destinations that you use with web ACLs.
+
+# v1.23.2 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.1 (2022-11-07)
+
+* **Documentation**: The geo match statement now adds labels for country and region. You can match requests at the region level by combining a geo match statement with label match statements.
+
+# v1.23.0 (2022-10-27)
+
+* **Feature**: This release adds the following: Challenge rule action, to silently verify client browsers; rule group rule action override to any valid rule action, not just Count; token sharing between protected applications for challenge/CAPTCHA token; targeted rules option for Bot Control managed rule group.
+
+# v1.22.11 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.10 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.9 (2022-09-23)
+
+* **Documentation**: Add the default specification for ResourceType in ListResourcesForWebACL.
+
+# v1.22.8 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.7 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.6 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.5 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.22.4 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

@@ -61,17 +61,11 @@ type RestoreDBInstanceFromDBSnapshotInput struct {
 	// This member is required.
 	DBInstanceIdentifier *string
 
-	// The identifier for the DB snapshot to restore from. Constraints:
-	//
-	// * Must match
-	// the identifier of an existing DBSnapshot.
-	//
-	// * If you are restoring from a shared
-	// manual DB snapshot, the DBSnapshotIdentifier must be the ARN of the shared DB
-	// snapshot.
-	//
-	// This member is required.
-	DBSnapshotIdentifier *string
+	// The amount of storage (in gibibytes) to allocate initially for the DB instance.
+	// Follow the allocation rules specified in CreateDBInstance. Be sure to allocate
+	// enough storage for your new DB instance so that the restore operation can
+	// succeed. You can also allocate additional storage for future growth.
+	AllocatedStorage *int32
 
 	// A value that indicates whether minor version upgrades are applied automatically
 	// to the DB instance during the maintenance window. If you restore an RDS Custom
@@ -122,6 +116,32 @@ type RestoreDBInstanceFromDBSnapshotInput struct {
 	// in the Amazon RDS User Guide. This setting is required for RDS Custom.
 	CustomIamInstanceProfile *string
 
+	// The identifier for the RDS for MySQL Multi-AZ DB cluster snapshot to restore
+	// from. For more information on Multi-AZ DB clusters, see  Multi-AZ DB cluster
+	// deployments
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html)
+	// in the Amazon RDS User Guide. Constraints:
+	//
+	// * Must match the identifier of an
+	// existing Multi-AZ DB cluster snapshot.
+	//
+	// * Can't be specified when
+	// DBSnapshotIdentifier is specified.
+	//
+	// * Must be specified when
+	// DBSnapshotIdentifier isn't specified.
+	//
+	// * If you are restoring from a shared
+	// manual Multi-AZ DB cluster snapshot, the DBClusterSnapshotIdentifier must be the
+	// ARN of the shared snapshot.
+	//
+	// * Can't be the identifier of an Aurora DB cluster
+	// snapshot.
+	//
+	// * Can't be the identifier of an RDS for PostgreSQL Multi-AZ DB
+	// cluster snapshot.
+	DBClusterSnapshotIdentifier *string
+
 	// The compute and memory capacity of the Amazon RDS DB instance, for example
 	// db.m4.large. Not all DB instance classes are available in all Amazon Web
 	// Services Regions, or for all database engines. For the full list of DB instance
@@ -152,6 +172,22 @@ type RestoreDBInstanceFromDBSnapshotInput struct {
 	// * Can't end with a hyphen or contain two
 	// consecutive hyphens.
 	DBParameterGroupName *string
+
+	// The identifier for the DB snapshot to restore from. Constraints:
+	//
+	// * Must match
+	// the identifier of an existing DBSnapshot.
+	//
+	// * Can't be specified when
+	// DBClusterSnapshotIdentifier is specified.
+	//
+	// * Must be specified when
+	// DBClusterSnapshotIdentifier isn't specified.
+	//
+	// * If you are restoring from a
+	// shared manual DB snapshot, the DBSnapshotIdentifier must be the ARN of the
+	// shared DB snapshot.
+	DBSnapshotIdentifier *string
 
 	// The DB subnet group name to use for the new instance. Constraints: If supplied,
 	// must match the name of an existing DBSubnetGroup. Example: mydbsubnetgroup
@@ -193,7 +229,7 @@ type RestoreDBInstanceFromDBSnapshotInput struct {
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html) in
 	// the Amazon RDS User Guide. For more information about CoIPs, see Customer-owned
 	// IP addresses
-	// (https://docs.aws.amazon.com/outposts/latest/userguide/outposts-networking-components.html#ip-addressing)
+	// (https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing)
 	// in the Amazon Web Services Outposts User Guide.
 	EnableCustomerOwnedIp *bool
 
@@ -241,8 +277,7 @@ type RestoreDBInstanceFromDBSnapshotInput struct {
 	// converted to a non-PIOPS instance. The conversion takes additional time, though
 	// your DB instance is available for connections before the conversion starts. The
 	// provisioned IOPS value must follow the requirements for your database engine.
-	// For more information, see Amazon RDS Provisioned IOPS Storage to Improve
-	// Performance
+	// For more information, see Amazon RDS Provisioned IOPS storage
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html#USER_PIOPS)
 	// in the Amazon RDS User Guide. Constraints: Must be an integer greater than 1000.
 	Iops *int32
@@ -297,9 +332,14 @@ type RestoreDBInstanceFromDBSnapshotInput struct {
 	// to a private IP address. For more information, see CreateDBInstance.
 	PubliclyAccessible *bool
 
+	// Specifies the storage throughput value for the DB instance. This setting doesn't
+	// apply to RDS Custom or Amazon Aurora.
+	StorageThroughput *int32
+
 	// Specifies the storage type to be associated with the DB instance. Valid values:
-	// standard | gp2 | io1 If you specify io1, you must also include a value for the
-	// Iops parameter. Default: io1 if the Iops parameter is specified, otherwise gp2
+	// gp2 | gp3 | io1 | standard If you specify io1 or gp3, you must also include a
+	// value for the Iops parameter. Default: io1 if the Iops parameter is specified,
+	// otherwise gp2
 	StorageType *string
 
 	// A list of tags. For more information, see Tagging Amazon RDS Resources

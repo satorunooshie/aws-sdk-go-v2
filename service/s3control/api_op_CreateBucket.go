@@ -113,7 +113,7 @@ type CreateBucketInput struct {
 	// is not supported by Amazon S3 on Outposts buckets.
 	ObjectLockEnabledForBucket bool
 
-	// The ID of the Outposts where the bucket is being created. This is required by
+	// The ID of the Outposts where the bucket is being created. This ID is required by
 	// Amazon S3 on Outposts buckets.
 	OutpostId *string
 
@@ -127,7 +127,7 @@ type CreateBucketOutput struct {
 	// x-amz-outpost-id as well. For using this parameter with S3 on Outposts with the
 	// Amazon Web Services SDK and CLI, you must specify the ARN of the bucket accessed
 	// in the format arn:aws:s3-outposts:::outpost//bucket/. For example, to access the
-	// bucket reports through outpost my-outpost owned by account 123456789012 in
+	// bucket reports through Outpost my-outpost owned by account 123456789012 in
 	// Region us-west-2, use the URL encoding of
 	// arn:aws:s3-outposts:us-west-2:123456789012:outpost/my-outpost/bucket/reports.
 	// The value must be URL encoded.

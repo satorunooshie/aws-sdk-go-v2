@@ -86,6 +86,32 @@ func (DestinationType) Values() []DestinationType {
 	}
 }
 
+type FailedItemReason string
+
+// Enum values for FailedItemReason
+const (
+	FailedItemReasonNotValidArn          FailedItemReason = "NOT_VALID_ARN"
+	FailedItemReasonNotValidPartition    FailedItemReason = "NOT_VALID_PARTITION"
+	FailedItemReasonNotValidRegion       FailedItemReason = "NOT_VALID_REGION"
+	FailedItemReasonNotValidService      FailedItemReason = "NOT_VALID_SERVICE"
+	FailedItemReasonNotValidResourceType FailedItemReason = "NOT_VALID_RESOURCE_TYPE"
+	FailedItemReasonNotValidAccountId    FailedItemReason = "NOT_VALID_ACCOUNT_ID"
+)
+
+// Values returns all known values for FailedItemReason. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (FailedItemReason) Values() []FailedItemReason {
+	return []FailedItemReason{
+		"NOT_VALID_ARN",
+		"NOT_VALID_PARTITION",
+		"NOT_VALID_REGION",
+		"NOT_VALID_SERVICE",
+		"NOT_VALID_RESOURCE_TYPE",
+		"NOT_VALID_ACCOUNT_ID",
+	}
+}
+
 type FirewallDeploymentModel string
 
 // Enum values for FirewallDeploymentModel
@@ -122,6 +148,23 @@ func (MarketplaceSubscriptionOnboardingStatus) Values() []MarketplaceSubscriptio
 		"NO_SUBSCRIPTION",
 		"NOT_COMPLETE",
 		"COMPLETE",
+	}
+}
+
+type NetworkFirewallOverrideAction string
+
+// Enum values for NetworkFirewallOverrideAction
+const (
+	NetworkFirewallOverrideActionDropToAlert NetworkFirewallOverrideAction = "DROP_TO_ALERT"
+)
+
+// Values returns all known values for NetworkFirewallOverrideAction. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (NetworkFirewallOverrideAction) Values() []NetworkFirewallOverrideAction {
+	return []NetworkFirewallOverrideAction{
+		"DROP_TO_ALERT",
 	}
 }
 
@@ -192,6 +235,7 @@ const (
 	SecurityServiceTypeNetworkFirewall            SecurityServiceType = "NETWORK_FIREWALL"
 	SecurityServiceTypeDnsFirewall                SecurityServiceType = "DNS_FIREWALL"
 	SecurityServiceTypeThirdPartyFirewall         SecurityServiceType = "THIRD_PARTY_FIREWALL"
+	SecurityServiceTypeImportNetworkFirewall      SecurityServiceType = "IMPORT_NETWORK_FIREWALL"
 )
 
 // Values returns all known values for SecurityServiceType. Note that this can be
@@ -208,6 +252,7 @@ func (SecurityServiceType) Values() []SecurityServiceType {
 		"NETWORK_FIREWALL",
 		"DNS_FIREWALL",
 		"THIRD_PARTY_FIREWALL",
+		"IMPORT_NETWORK_FIREWALL",
 	}
 }
 
@@ -249,7 +294,8 @@ type ThirdPartyFirewall string
 
 // Enum values for ThirdPartyFirewall
 const (
-	ThirdPartyFirewallPaloAltoNetworksCloudNgfw ThirdPartyFirewall = "PALO_ALTO_NETWORKS_CLOUD_NGFW"
+	ThirdPartyFirewallPaloAltoNetworksCloudNgfw    ThirdPartyFirewall = "PALO_ALTO_NETWORKS_CLOUD_NGFW"
+	ThirdPartyFirewallFortigateCloudNativeFirewall ThirdPartyFirewall = "FORTIGATE_CLOUD_NATIVE_FIREWALL"
 )
 
 // Values returns all known values for ThirdPartyFirewall. Note that this can be
@@ -258,6 +304,7 @@ const (
 func (ThirdPartyFirewall) Values() []ThirdPartyFirewall {
 	return []ThirdPartyFirewall{
 		"PALO_ALTO_NETWORKS_CLOUD_NGFW",
+		"FORTIGATE_CLOUD_NATIVE_FIREWALL",
 	}
 }
 

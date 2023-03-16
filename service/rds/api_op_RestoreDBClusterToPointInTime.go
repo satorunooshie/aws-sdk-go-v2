@@ -26,7 +26,7 @@ import (
 // Amazon Aurora?
 // (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html)
 // in the Amazon Aurora User Guide. For more information on Multi-AZ DB clusters,
-// see  Multi-AZ deployments with two readable standby DB instances
+// see  Multi-AZ DB cluster deployments
 // (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html)
 // in the Amazon RDS User Guide.
 func (c *Client) RestoreDBClusterToPointInTime(ctx context.Context, params *RestoreDBClusterToPointInTimeInput, optFns ...func(*Options)) (*RestoreDBClusterToPointInTimeOutput, error) {
@@ -88,9 +88,10 @@ type RestoreDBClusterToPointInTimeInput struct {
 	CopyTagsToSnapshot *bool
 
 	// The compute and memory capacity of the each DB instance in the Multi-AZ DB
-	// cluster, for example db.m6g.xlarge. Not all DB instance classes are available in
-	// all Amazon Web Services Regions, or for all database engines. For the full list
-	// of DB instance classes, and availability for your engine, see DB instance class
+	// cluster, for example db.m6gd.xlarge. Not all DB instance classes are available
+	// in all Amazon Web Services Regions, or for all database engines. For the full
+	// list of DB instance classes, and availability for your engine, see DB instance
+	// class
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html)
 	// in the Amazon RDS User Guide. Valid for: Multi-AZ DB clusters only
 	DBClusterInstanceClass *string
@@ -169,8 +170,7 @@ type RestoreDBClusterToPointInTimeInput struct {
 
 	// The amount of Provisioned IOPS (input/output operations per second) to be
 	// initially allocated for each DB instance in the Multi-AZ DB cluster. For
-	// information about valid Iops values, see Amazon RDS Provisioned IOPS storage to
-	// improve performance
+	// information about valid IOPS values, see Amazon RDS Provisioned IOPS storage
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html#USER_PIOPS)
 	// in the Amazon RDS User Guide. Constraints: Must be a multiple between .5 and 50
 	// of the storage amount for the DB instance. Valid for: Multi-AZ DB clusters only

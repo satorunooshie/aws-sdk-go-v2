@@ -13,9 +13,12 @@ import (
 )
 
 // Retrieves a transcript of the session, including details about any attachments.
-// Note that ConnectionToken is used for invoking this API instead of
-// ParticipantToken. The Amazon Connect Participant Service APIs do not use
-// Signature Version 4 authentication
+// For information about accessing past chat contact transcripts for a persistent
+// chat, see Enable persistent chat
+// (https://docs.aws.amazon.com/connect/latest/adminguide/chat-persistence.html).
+// ConnectionToken is used for invoking this API instead of ParticipantToken. The
+// Amazon Connect Participant Service APIs do not use Signature Version 4
+// authentication
 // (https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html).
 func (c *Client) GetTranscript(ctx context.Context, params *GetTranscriptInput, optFns ...func(*Options)) (*GetTranscriptOutput, error) {
 	if params == nil {
@@ -43,7 +46,7 @@ type GetTranscriptInput struct {
 	ContactId *string
 
 	// The maximum number of results to return in the page. Default: 10.
-	MaxResults int32
+	MaxResults *int32
 
 	// The pagination token. Use the value returned previously in the next subsequent
 	// request to retrieve the next set of results.
@@ -176,8 +179,8 @@ func NewGetTranscriptPaginator(client GetTranscriptAPIClient, params *GetTranscr
 	}
 
 	options := GetTranscriptPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -207,7 +210,11 @@ func (p *GetTranscriptPaginator) NextPage(ctx context.Context, optFns ...func(*O
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.GetTranscript(ctx, &params, optFns...)
 	if err != nil {

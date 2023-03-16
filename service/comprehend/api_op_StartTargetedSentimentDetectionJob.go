@@ -13,7 +13,8 @@ import (
 )
 
 // Starts an asynchronous targeted sentiment detection job for a collection of
-// documents. Use the operation to track the status of a job.
+// documents. Use the DescribeTargetedSentimentDetectionJob operation to track the
+// status of a job.
 func (c *Client) StartTargetedSentimentDetectionJob(ctx context.Context, params *StartTargetedSentimentDetectionJobInput, optFns ...func(*Options)) (*StartTargetedSentimentDetectionJobOutput, error) {
 	if params == nil {
 		params = &StartTargetedSentimentDetectionJobInput{}
@@ -39,12 +40,13 @@ type StartTargetedSentimentDetectionJobInput struct {
 	// This member is required.
 	DataAccessRoleArn *string
 
-	// The input properties for an inference job.
+	// The input properties for an inference job. The document reader config field
+	// applies only to non-text inputs for custom analysis.
 	//
 	// This member is required.
 	InputDataConfig *types.InputDataConfig
 
-	// The language of the input documents. Currently, English is the only valid
+	// The language of the input documents. Currently, English is the only supported
 	// language.
 	//
 	// This member is required.
@@ -62,7 +64,7 @@ type StartTargetedSentimentDetectionJobInput struct {
 	// The identifier of the job.
 	JobName *string
 
-	// Tags to be associated with the targeted sentiment detection job. A tag is a
+	// Tags to associate with the targeted sentiment detection job. A tag is a
 	// key-value pair that adds metadata to a resource used by Amazon Comprehend. For
 	// example, a tag with "Sales" as the key might be added to a resource to indicate
 	// its use by the sales department.
@@ -100,7 +102,7 @@ type StartTargetedSentimentDetectionJobOutput struct {
 	JobArn *string
 
 	// The identifier generated for the job. To get the status of a job, use this
-	// identifier with the operation.
+	// identifier with the DescribeTargetedSentimentDetectionJob operation.
 	JobId *string
 
 	// The status of the job.
@@ -114,7 +116,8 @@ type StartTargetedSentimentDetectionJobOutput struct {
 	// COMPLETED - The job was successfully completed and the output is available.
 	//
 	// *
-	// FAILED - The job did not complete. To get details, use the operation.
+	// FAILED - The job did not complete. To get details, use the
+	// DescribeTargetedSentimentDetectionJob operation.
 	JobStatus types.JobStatus
 
 	// Metadata pertaining to the operation's result.

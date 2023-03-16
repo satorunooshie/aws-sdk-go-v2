@@ -1,3 +1,111 @@
+# v1.0.56 (2023-03-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.55 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.54 (2023-02-22)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.53 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.52 (2023-02-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.51 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.50 (2023-02-01)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.49 (2023-01-25)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.48 (2023-01-23)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.47 (2023-01-05)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.46 (2022-12-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.45 (2022-12-19)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.44 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.43 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.42 (2022-11-22)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.41 (2022-11-17)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.40 (2022-11-16)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.39 (2022-11-11)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.38 (2022-11-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.37 (2022-11-04)
+
+* **Dependency Update**: update golang.org/x/net dependency to 0.1.0
+
+# v1.0.36 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.35 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.34 (2022-09-30)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.33 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.32 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.31 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.0.30 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.0.29 (2022-08-30)
 
 * **Dependency Update**: Updated to the latest SDK module versions

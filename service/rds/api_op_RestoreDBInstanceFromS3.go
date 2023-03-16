@@ -90,10 +90,10 @@ type RestoreDBInstanceFromS3Input struct {
 	// This member is required.
 	SourceEngineVersion *string
 
-	// The amount of storage (in gigabytes) to allocate initially for the DB instance.
+	// The amount of storage (in gibibytes) to allocate initially for the DB instance.
 	// Follow the allocation rules specified in CreateDBInstance. Be sure to allocate
-	// enough memory for your new DB instance so that the restore operation can
-	// succeed. You can also allocate additional memory for future growth.
+	// enough storage for your new DB instance so that the restore operation can
+	// succeed. You can also allocate additional storage for future growth.
 	AllocatedStorage *int32
 
 	// A value that indicates whether minor engine upgrades are applied automatically
@@ -172,8 +172,8 @@ type RestoreDBInstanceFromS3Input struct {
 	EngineVersion *string
 
 	// The amount of Provisioned IOPS (input/output operations per second) to allocate
-	// initially for the DB instance. For information about valid Iops values, see
-	// Amazon RDS Provisioned IOPS Storage to Improve Performance
+	// initially for the DB instance. For information about valid IOPS values, see
+	// Amazon RDS Provisioned IOPS storage
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html#USER_PIOPS)
 	// in the Amazon RDS User Guide.
 	Iops *int32
@@ -191,10 +191,40 @@ type RestoreDBInstanceFromS3Input struct {
 	// The license model for this DB instance. Use general-public-license.
 	LicenseModel *string
 
+	// A value that indicates whether to manage the master user password with Amazon
+	// Web Services Secrets Manager. For more information, see Password management with
+	// Amazon Web Services Secrets Manager
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html)
+	// in the Amazon RDS User Guide. Constraints:
+	//
+	// * Can't manage the master user
+	// password with Amazon Web Services Secrets Manager if MasterUserPassword is
+	// specified.
+	ManageMasterUserPassword *bool
+
 	// The password for the master user. The password can include any printable ASCII
-	// character except "/", """, or "@". Constraints: Must contain from 8 to 41
-	// characters.
+	// character except "/", """, or "@". Constraints: Can't be specified if
+	// ManageMasterUserPassword is turned on. MariaDB Constraints: Must contain from 8
+	// to 41 characters. Microsoft SQL Server Constraints: Must contain from 8 to 128
+	// characters. MySQL Constraints: Must contain from 8 to 41 characters. Oracle
+	// Constraints: Must contain from 8 to 30 characters. PostgreSQL Constraints: Must
+	// contain from 8 to 128 characters.
 	MasterUserPassword *string
+
+	// The Amazon Web Services KMS key identifier to encrypt a secret that is
+	// automatically generated and managed in Amazon Web Services Secrets Manager. This
+	// setting is valid only if the master user password is managed by RDS in Amazon
+	// Web Services Secrets Manager for the DB instance. The Amazon Web Services KMS
+	// key identifier is the key ARN, key ID, alias ARN, or alias name for the KMS key.
+	// To use a KMS key in a different Amazon Web Services account, specify the key ARN
+	// or alias ARN. If you don't specify MasterUserSecretKmsKeyId, then the
+	// aws/secretsmanager KMS key is used to encrypt the secret. If the secret is in a
+	// different Amazon Web Services account, then you can't use the aws/secretsmanager
+	// KMS key to encrypt the secret, and you must use a customer managed KMS key.
+	// There is a default KMS key for your Amazon Web Services account. Your Amazon Web
+	// Services account has a different default KMS key for each Amazon Web Services
+	// Region.
+	MasterUserSecretKmsKeyId *string
 
 	// The name for the master user. Constraints:
 	//
@@ -348,9 +378,14 @@ type RestoreDBInstanceFromS3Input struct {
 	// A value that indicates whether the new DB instance is encrypted or not.
 	StorageEncrypted *bool
 
+	// Specifies the storage throughput value for the DB instance. This setting doesn't
+	// apply to RDS Custom or Amazon Aurora.
+	StorageThroughput *int32
+
 	// Specifies the storage type to be associated with the DB instance. Valid values:
-	// standard | gp2 | io1 If you specify io1, you must also include a value for the
-	// Iops parameter. Default: io1 if the Iops parameter is specified; otherwise gp2
+	// gp2 | gp3 | io1 | standard If you specify io1 or gp3, you must also include a
+	// value for the Iops parameter. Default: io1 if the Iops parameter is specified;
+	// otherwise gp2
 	StorageType *string
 
 	// A list of tags to associate with this DB instance. For more information, see

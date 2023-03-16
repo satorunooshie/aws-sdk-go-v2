@@ -51,13 +51,12 @@ type GetDataSetDetailsOutput struct {
 	DataSetName *string
 
 	// The size of the block on disk.
-	Blocksize int32
+	Blocksize *int32
 
 	// The timestamp when the data set was created.
 	CreationTime *time.Time
 
-	// The type of data set. Possible values include VSAM, IS, PS, GDG, PO, PS, or
-	// unknown.
+	// The type of data set. The only supported value is VSAM.
 	DataSetOrg types.DatasetDetailOrgAttributes
 
 	// The last time the data set was referenced.
@@ -66,11 +65,11 @@ type GetDataSetDetailsOutput struct {
 	// The last time the data set was updated.
 	LastUpdatedTime *time.Time
 
-	// The locaion where the data set is stored.
+	// The location where the data set is stored.
 	Location *string
 
 	// The length of records in the data set.
-	RecordLength int32
+	RecordLength *int32
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata

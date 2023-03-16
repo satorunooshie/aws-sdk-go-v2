@@ -249,6 +249,13 @@ const (
 	ContentTypeMsWord    ContentType = "MS_WORD"
 	ContentTypePlainText ContentType = "PLAIN_TEXT"
 	ContentTypePpt       ContentType = "PPT"
+	ContentTypeRtf       ContentType = "RTF"
+	ContentTypeXml       ContentType = "XML"
+	ContentTypeXslt      ContentType = "XSLT"
+	ContentTypeMsExcel   ContentType = "MS_EXCEL"
+	ContentTypeCsv       ContentType = "CSV"
+	ContentTypeJson      ContentType = "JSON"
+	ContentTypeMd        ContentType = "MD"
 )
 
 // Values returns all known values for ContentType. Note that this can be expanded
@@ -261,6 +268,13 @@ func (ContentType) Values() []ContentType {
 		"MS_WORD",
 		"PLAIN_TEXT",
 		"PPT",
+		"RTF",
+		"XML",
+		"XSLT",
+		"MS_EXCEL",
+		"CSV",
+		"JSON",
+		"MD",
 	}
 }
 
@@ -839,6 +853,24 @@ func (QueryIdentifiersEnclosingOption) Values() []QueryIdentifiersEnclosingOptio
 	}
 }
 
+type QueryResultFormat string
+
+// Enum values for QueryResultFormat
+const (
+	QueryResultFormatTable QueryResultFormat = "TABLE"
+	QueryResultFormatText  QueryResultFormat = "TEXT"
+)
+
+// Values returns all known values for QueryResultFormat. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (QueryResultFormat) Values() []QueryResultFormat {
+	return []QueryResultFormat{
+		"TABLE",
+		"TEXT",
+	}
+}
+
 type QueryResultType string
 
 // Enum values for QueryResultType
@@ -1114,6 +1146,7 @@ const (
 	SharePointVersionSharepoint2013   SharePointVersion = "SHAREPOINT_2013"
 	SharePointVersionSharepoint2016   SharePointVersion = "SHAREPOINT_2016"
 	SharePointVersionSharepointOnline SharePointVersion = "SHAREPOINT_ONLINE"
+	SharePointVersionSharepoint2019   SharePointVersion = "SHAREPOINT_2019"
 )
 
 // Values returns all known values for SharePointVersion. Note that this can be
@@ -1124,6 +1157,7 @@ func (SharePointVersion) Values() []SharePointVersion {
 		"SHAREPOINT_2013",
 		"SHAREPOINT_2016",
 		"SHAREPOINT_ONLINE",
+		"SHAREPOINT_2019",
 	}
 }
 

@@ -12,7 +12,11 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Get information about the resources in a scope.
+// Returns resource CIDRs managed by IPAM in a given scope. If an IPAM is
+// associated with more than one resource discovery, the resource CIDRs across all
+// of the resource discoveries is returned. A resource discovery is an IPAM
+// component that enables IPAM to manage and monitor resources that belong to the
+// owning account.
 func (c *Client) GetIpamResourceCidrs(ctx context.Context, params *GetIpamResourceCidrsInput, optFns ...func(*Options)) (*GetIpamResourceCidrsOutput, error) {
 	if params == nil {
 		params = &GetIpamResourceCidrsInput{}
@@ -61,7 +65,7 @@ type GetIpamResourceCidrsInput struct {
 	// The ID of the Amazon Web Services account that owns the resource.
 	ResourceOwner *string
 
-	// A tag on an IPAM resource.
+	// The resource tag.
 	ResourceTag *types.RequestIpamResourceTag
 
 	// The resource type.

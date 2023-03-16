@@ -413,8 +413,8 @@ type DataSourceFreeTrial struct {
 // member account.
 type DataSourcesFreeTrial struct {
 
-	// Describes whether any AWS CloudTrail management event logs are enabled as data
-	// sources.
+	// Describes whether any Amazon Web Services CloudTrail management event logs are
+	// enabled as data sources.
 	CloudTrail *DataSourceFreeTrial
 
 	// Describes whether any DNS logs are enabled as data sources.
@@ -563,6 +563,10 @@ type EbsVolumeScanDetails struct {
 // Describes the configuration of scanning EBS volumes as a data source.
 type EbsVolumesResult struct {
 
+	// Specifies the reason why scanning EBS volumes (Malware Protection) was not
+	// enabled as a data source.
+	Reason *string
+
 	// Describes whether scanning EBS volumes is enabled as a data source.
 	Status DataSourceStatus
 
@@ -697,7 +701,9 @@ type FilterCriteria struct {
 }
 
 // Represents a condition that when matched will be added to the response of the
-// operation.
+// operation. Irrespective of using any filter criteria, an administrator account
+// can view the scan entries for all of its member accounts. However, each member
+// account can view the scan entries only for their own account.
 type FilterCriterion struct {
 
 	// An enum value representing possible scan properties to match with given scan
@@ -1594,7 +1600,7 @@ type RemotePortDetails struct {
 // activity that prompted GuardDuty to generate a finding.
 type Resource struct {
 
-	// The IAM access key details (IAM user information) of a user that engaged in the
+	// The IAM access key details (user information) of a user that engaged in the
 	// activity that prompted GuardDuty to generate a finding.
 	AccessKeyDetails *AccessKeyDetails
 
@@ -1732,7 +1738,7 @@ type Scan struct {
 	// Represents total bytes that were scanned.
 	TotalBytes int64
 
-	// Represents the reason the scan was triggered.
+	// Specifies the reason why the scan was initiated.
 	TriggerDetails *TriggerDetails
 
 	noSmithyDocumentSerde
@@ -1964,7 +1970,7 @@ type ServiceAdditionalInfo struct {
 // Contains information about the criteria used for sorting findings.
 type SortCriteria struct {
 
-	// Represents the finding attribute (for example, accountId) to sort findings by.
+	// Represents the finding attribute, such as accountId, that sorts the findings.
 	AttributeName *string
 
 	// The order by which the sorted findings are to be displayed.
@@ -2045,7 +2051,7 @@ type TriggerDetails struct {
 	// The description of the scan trigger.
 	Description *string
 
-	// The ID of the GuardDuty finding that triggered the BirdDog scan.
+	// The ID of the GuardDuty finding that triggered the malware scan.
 	GuardDutyFindingId *string
 
 	noSmithyDocumentSerde
@@ -2063,6 +2069,16 @@ type UnprocessedAccount struct {
 	//
 	// This member is required.
 	Result *string
+
+	noSmithyDocumentSerde
+}
+
+// Specifies the names of the data sources that couldn't be enabled.
+type UnprocessedDataSourcesResult struct {
+
+	// An object that contains information on the status of all Malware Protection data
+	// sources.
+	MalwareProtection *MalwareProtectionConfigurationResult
 
 	noSmithyDocumentSerde
 }

@@ -16,10 +16,12 @@ import (
 // Creates a new Amazon Aurora DB cluster or Multi-AZ DB cluster. You can use the
 // ReplicationSourceIdentifier parameter to create an Amazon Aurora DB cluster as a
 // read replica of another DB cluster or Amazon RDS MySQL or PostgreSQL DB
-// instance. For more information on Amazon Aurora, see  What is Amazon Aurora?
+// instance. For more information about Amazon Aurora, see What is Amazon Aurora?
 // (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html)
-// in the Amazon Aurora User Guide. For more information on Multi-AZ DB clusters,
-// see  Multi-AZ deployments with two readable standby DB instances
+// in the Amazon Aurora User Guide. You can also use the
+// ReplicationSourceIdentifier parameter to create a Multi-AZ DB cluster read
+// replica with an RDS for PostgreSQL DB instance as the source. For more
+// information about Multi-AZ DB clusters, see Multi-AZ DB cluster deployments
 // (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html)
 // in the Amazon RDS User Guide.
 func (c *Client) CreateDBCluster(ctx context.Context, params *CreateDBClusterInput, optFns ...func(*Options)) (*CreateDBClusterOutput, error) {
@@ -121,7 +123,7 @@ type CreateDBClusterInput struct {
 	CopyTagsToSnapshot *bool
 
 	// The compute and memory capacity of each DB instance in the Multi-AZ DB cluster,
-	// for example db.m6g.xlarge. Not all DB instance classes are available in all
+	// for example db.m6gd.xlarge. Not all DB instance classes are available in all
 	// Amazon Web Services Regions, or for all database engines. For the full list of
 	// DB instance classes and availability for your engine, see DB instance class
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html)
@@ -145,6 +147,9 @@ type CreateDBClusterInput struct {
 	// DBSubnetGroup. Must not be default. Example: mydbsubnetgroup Valid for: Aurora
 	// DB clusters and Multi-AZ DB clusters
 	DBSubnetGroupName *string
+
+	// Reserved for future use.
+	DBSystemId *string
 
 	// The name for your database of up to 64 alphanumeric characters. If you do not
 	// provide a name, Amazon RDS doesn't create a database in the DB cluster you are
@@ -292,8 +297,7 @@ type CreateDBClusterInput struct {
 
 	// The amount of Provisioned IOPS (input/output operations per second) to be
 	// initially allocated for each DB instance in the Multi-AZ DB cluster. For
-	// information about valid Iops values, see Amazon RDS Provisioned IOPS storage to
-	// improve performance
+	// information about valid IOPS values, see Amazon RDS Provisioned IOPS storage
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html#USER_PIOPS)
 	// in the Amazon RDS User Guide. This setting is required to create a Multi-AZ DB
 	// cluster. Constraints: Must be a multiple between .5 and 50 of the storage amount
@@ -323,10 +327,48 @@ type CreateDBClusterInput struct {
 	// Web Services Region. Valid for: Aurora DB clusters and Multi-AZ DB clusters
 	KmsKeyId *string
 
+	// A value that indicates whether to manage the master user password with Amazon
+	// Web Services Secrets Manager. For more information, see Password management with
+	// Amazon Web Services Secrets Manager
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html)
+	// in the Amazon RDS User Guide and Password management with Amazon Web Services
+	// Secrets Manager
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/rds-secrets-manager.html)
+	// in the Amazon Aurora User Guide. Constraints:
+	//
+	// * Can't manage the master user
+	// password with Amazon Web Services Secrets Manager if MasterUserPassword is
+	// specified.
+	//
+	// Valid for: Aurora DB clusters and Multi-AZ DB clusters
+	ManageMasterUserPassword *bool
+
 	// The password for the master database user. This password can contain any
-	// printable ASCII character except "/", """, or "@". Constraints: Must contain
-	// from 8 to 41 characters. Valid for: Aurora DB clusters and Multi-AZ DB clusters
+	// printable ASCII character except "/", """, or "@". Constraints:
+	//
+	// * Must contain
+	// from 8 to 41 characters.
+	//
+	// * Can't be specified if ManageMasterUserPassword is
+	// turned on.
+	//
+	// Valid for: Aurora DB clusters and Multi-AZ DB clusters
 	MasterUserPassword *string
+
+	// The Amazon Web Services KMS key identifier to encrypt a secret that is
+	// automatically generated and managed in Amazon Web Services Secrets Manager. This
+	// setting is valid only if the master user password is managed by RDS in Amazon
+	// Web Services Secrets Manager for the DB cluster. The Amazon Web Services KMS key
+	// identifier is the key ARN, key ID, alias ARN, or alias name for the KMS key. To
+	// use a KMS key in a different Amazon Web Services account, specify the key ARN or
+	// alias ARN. If you don't specify MasterUserSecretKmsKeyId, then the
+	// aws/secretsmanager KMS key is used to encrypt the secret. If the secret is in a
+	// different Amazon Web Services account, then you can't use the aws/secretsmanager
+	// KMS key to encrypt the secret, and you must use a customer managed KMS key.
+	// There is a default KMS key for your Amazon Web Services account. Your Amazon Web
+	// Services account has a different default KMS key for each Amazon Web Services
+	// Region. Valid for: Aurora DB clusters and Multi-AZ DB clusters
+	MasterUserSecretKmsKeyId *string
 
 	// The name of the master user for the DB cluster. Constraints:
 	//
@@ -524,7 +566,8 @@ type CreateDBClusterInput struct {
 	PubliclyAccessible *bool
 
 	// The Amazon Resource Name (ARN) of the source DB instance or DB cluster if this
-	// DB cluster is created as a read replica. Valid for: Aurora DB clusters only
+	// DB cluster is created as a read replica. Valid for: Aurora DB clusters and RDS
+	// for PostgreSQL Multi-AZ DB clusters
 	ReplicationSourceIdentifier *string
 
 	// For DB clusters in serverless DB engine mode, the scaling properties of the DB

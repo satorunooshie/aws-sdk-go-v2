@@ -13,7 +13,9 @@ import (
 
 // Inspects the text of a batch of documents for the syntax and part of speech of
 // the words in the document and returns information about them. For more
-// information, see how-syntax.
+// information, see Syntax
+// (https://docs.aws.amazon.com/comprehend/latest/dg/how-syntax.html) in the
+// Comprehend Developer Guide.
 func (c *Client) BatchDetectSyntax(ctx context.Context, params *BatchDetectSyntaxInput, optFns ...func(*Options)) (*BatchDetectSyntaxOutput, error) {
 	if params == nil {
 		params = &BatchDetectSyntaxInput{}
@@ -39,9 +41,8 @@ type BatchDetectSyntaxInput struct {
 	// This member is required.
 	LanguageCode types.SyntaxLanguageCode
 
-	// A list containing the text of the input documents. The list can contain a
-	// maximum of 25 documents. Each document must contain fewer that 5,000 bytes of
-	// UTF-8 encoded characters.
+	// A list containing the UTF-8 encoded text of the input documents. The list can
+	// contain a maximum of 25 documents. The maximum size for each document is 5 KB.
 	//
 	// This member is required.
 	TextList []string

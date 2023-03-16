@@ -1,3 +1,72 @@
+# v1.9.2 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.1 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.9.0 (2023-02-21)
+
+* **Feature**: In this release we improved resilience hub application creation and maintenance by introducing new resource and app component crud APIs, improving visibility and maintenance of application input sources and added support for additional information attributes to be provided by customers.
+
+# v1.8.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.8.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.8.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.8.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.7.4 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.3 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.0 (2022-10-20)
+
+* **Feature**: In this release, we are introducing support for regional optimization for AWS Resilience Hub applications. It also includes a few documentation updates to improve clarity.
+
+# v1.6.15 (2022-10-06)
+
+* **Documentation**: Documentation change for AWS Resilience Hub. Doc-only update to fix Documentation layout
+
+# v1.6.14 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.6.13 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.6.12 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.6.11 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.6.10 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

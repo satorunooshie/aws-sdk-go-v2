@@ -1,3 +1,72 @@
+# v1.12.4 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.3 (2023-02-23)
+
+* **Documentation**: Doc-only update. Updated information on attached role policies for customer provided roles
+
+# v1.12.2 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.12.1 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.0 (2023-02-16)
+
+* **Feature**: With this release Amazon Managed Grafana now supports inbound Network Access Control that helps you to restrict user access to your Grafana workspaces
+
+# v1.11.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.11.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.11.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.10.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.0 (2022-11-23)
+
+* **Feature**: This release includes support for configuring a Grafana workspace to connect to a datasource within a VPC as well as new APIs for configuring Grafana settings.
+
+# v1.9.15 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.14 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.13 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.12 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.11 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.10 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.9.9 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

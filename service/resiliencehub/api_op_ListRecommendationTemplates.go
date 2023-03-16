@@ -12,7 +12,7 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the recommendation templates for the Resilience Hub applications.
+// Lists the recommendation templates for the AWS Resilience Hub applications.
 func (c *Client) ListRecommendationTemplates(ctx context.Context, params *ListRecommendationTemplatesInput, optFns ...func(*Options)) (*ListRecommendationTemplatesOutput, error) {
 	if params == nil {
 		params = &ListRecommendationTemplatesInput{}
@@ -34,7 +34,7 @@ type ListRecommendationTemplatesInput struct {
 	// arn:partition:resiliencehub:region:account:app-assessment/app-id. For more
 	// information about ARNs, see  Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the AWS General Reference guide.
 	//
 	// This member is required.
 	AssessmentArn *string
@@ -68,7 +68,7 @@ type ListRecommendationTemplatesOutput struct {
 	// The token for the next set of results, or null if there are no more results.
 	NextToken *string
 
-	// The recommendation templates for the Resilience Hub applications.
+	// The recommendation templates for the AWS Resilience Hub applications.
 	RecommendationTemplates []types.RecommendationTemplate
 
 	// Metadata pertaining to the operation's result.
@@ -151,6 +151,11 @@ var _ ListRecommendationTemplatesAPIClient = (*Client)(nil)
 // ListRecommendationTemplatesPaginatorOptions is the paginator options for
 // ListRecommendationTemplates
 type ListRecommendationTemplatesPaginatorOptions struct {
+	// The maximum number of results to include in the response. If more results exist
+	// than the specified MaxResults value, a token is included in the response so that
+	// the remaining results can be retrieved.
+	Limit int32
+
 	// Set to true if pagination should stop if the service returns a pagination token
 	// that matches the most recent token provided to the service.
 	StopOnDuplicateToken bool
@@ -174,6 +179,9 @@ func NewListRecommendationTemplatesPaginator(client ListRecommendationTemplatesA
 	}
 
 	options := ListRecommendationTemplatesPaginatorOptions{}
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
+	}
 
 	for _, fn := range optFns {
 		fn(&options)
@@ -201,6 +209,12 @@ func (p *ListRecommendationTemplatesPaginator) NextPage(ctx context.Context, opt
 
 	params := *p.params
 	params.NextToken = p.nextToken
+
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListRecommendationTemplates(ctx, &params, optFns...)
 	if err != nil {

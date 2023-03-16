@@ -197,6 +197,37 @@ type EmptyChatChannel struct {
 	noSmithyDocumentSerde
 }
 
+// An item referenced in a TimelineEvent that is involved in or somehow associated
+// with an incident. You can specify an Amazon Resource Name (ARN) for an Amazon
+// Web Services resource or a RelatedItem ID.
+//
+// The following types satisfy this interface:
+//
+//	EventReferenceMemberRelatedItemId
+//	EventReferenceMemberResource
+type EventReference interface {
+	isEventReference()
+}
+
+// The ID of a RelatedItem referenced in a TimelineEvent.
+type EventReferenceMemberRelatedItemId struct {
+	Value string
+
+	noSmithyDocumentSerde
+}
+
+func (*EventReferenceMemberRelatedItemId) isEventReference() {}
+
+// The Amazon Resource Name (ARN) of an Amazon Web Services resource referenced in
+// a TimelineEvent.
+type EventReferenceMemberResource struct {
+	Value string
+
+	noSmithyDocumentSerde
+}
+
+func (*EventReferenceMemberResource) isEventReference() {}
+
 // Details about a timeline event during an incident.
 type EventSummary struct {
 
@@ -224,6 +255,9 @@ type EventSummary struct {
 	//
 	// This member is required.
 	IncidentRecordArn *string
+
+	// A list of references in a TimelineEvent.
+	EventReferences []EventReference
 
 	noSmithyDocumentSerde
 }
@@ -397,7 +431,8 @@ type IncidentTemplate struct {
 	// same incident.
 	DedupeString *string
 
-	// Tags to apply to an incident when calling the StartIncident API action.
+	// Tags to assign to the template. When the StartIncident API action is called,
+	// Incident Manager assigns the tags specified in the template to the incident.
 	IncidentTags map[string]string
 
 	// The Amazon SNS targets that are notified when updates are made to an incident.
@@ -409,6 +444,25 @@ type IncidentTemplate struct {
 
 	noSmithyDocumentSerde
 }
+
+// Information about third-party services integrated into a response plan.
+//
+// The following types satisfy this interface:
+//
+//	IntegrationMemberPagerDutyConfiguration
+type Integration interface {
+	isIntegration()
+}
+
+// Information about the PagerDuty service where the response plan creates an
+// incident.
+type IntegrationMemberPagerDutyConfiguration struct {
+	Value PagerDutyConfiguration
+
+	noSmithyDocumentSerde
+}
+
+func (*IntegrationMemberPagerDutyConfiguration) isIntegration() {}
 
 // Details and type of a related item.
 type ItemIdentifier struct {
@@ -432,6 +486,7 @@ type ItemIdentifier struct {
 //
 //	ItemValueMemberArn
 //	ItemValueMemberMetricDefinition
+//	ItemValueMemberPagerDutyIncidentDetail
 //	ItemValueMemberUrl
 type ItemValue interface {
 	isItemValue()
@@ -455,6 +510,15 @@ type ItemValueMemberMetricDefinition struct {
 }
 
 func (*ItemValueMemberMetricDefinition) isItemValue() {}
+
+// Details about an incident that is associated with a PagerDuty incident.
+type ItemValueMemberPagerDutyIncidentDetail struct {
+	Value PagerDutyIncidentDetail
+
+	noSmithyDocumentSerde
+}
+
+func (*ItemValueMemberPagerDutyIncidentDetail) isItemValue() {}
 
 // The URL, if the related item is a non-Amazon Web Services resource.
 type ItemValueMemberUrl struct {
@@ -482,6 +546,63 @@ type NotificationTargetItemMemberSnsTopicArn struct {
 }
 
 func (*NotificationTargetItemMemberSnsTopicArn) isNotificationTargetItem() {}
+
+// Details about the PagerDuty configuration for a response plan.
+type PagerDutyConfiguration struct {
+
+	// The name of the PagerDuty configuration.
+	//
+	// This member is required.
+	Name *string
+
+	// Details about the PagerDuty service associated with the configuration.
+	//
+	// This member is required.
+	PagerDutyIncidentConfiguration *PagerDutyIncidentConfiguration
+
+	// The ID of the Amazon Web Services Secrets Manager secret that stores your
+	// PagerDuty key, either a General Access REST API Key or User Token REST API Key,
+	// and other user credentials.
+	//
+	// This member is required.
+	SecretId *string
+
+	noSmithyDocumentSerde
+}
+
+// Details about the PagerDuty service where the response plan creates an incident.
+type PagerDutyIncidentConfiguration struct {
+
+	// The ID of the PagerDuty service that the response plan associates with an
+	// incident when it launches.
+	//
+	// This member is required.
+	ServiceId *string
+
+	noSmithyDocumentSerde
+}
+
+// Details about the PagerDuty incident associated with an incident created by an
+// Incident Manager response plan.
+type PagerDutyIncidentDetail struct {
+
+	// The ID of the incident associated with the PagerDuty service for the response
+	// plan.
+	//
+	// This member is required.
+	Id *string
+
+	// Indicates whether to resolve the PagerDuty incident when you resolve the
+	// associated Incident Manager incident.
+	AutoResolve *bool
+
+	// The ID of the Amazon Web Services Secrets Manager secret that stores your
+	// PagerDuty key, either a General Access REST API Key or User Token REST API Key,
+	// and other user credentials.
+	SecretId *string
+
+	noSmithyDocumentSerde
+}
 
 // Information about a Amazon Web Services Region in your replication set.
 type RegionInfo struct {
@@ -524,6 +645,10 @@ type RelatedItem struct {
 	//
 	// This member is required.
 	Identifier *ItemIdentifier
+
+	// A unique ID for a RelatedItem. Don't specify this parameter when you add a
+	// RelatedItem by using the UpdateRelatedItems API action.
+	GeneratedId *string
 
 	// The title of the related item.
 	Title *string
@@ -715,6 +840,9 @@ type TimelineEvent struct {
 	// This member is required.
 	IncidentRecordArn *string
 
+	// A list of references in a TimelineEvent.
+	EventReferences []EventReference
+
 	noSmithyDocumentSerde
 }
 
@@ -791,6 +919,8 @@ func (*UnknownUnionMember) isAutomationExecution()        {}
 func (*UnknownUnionMember) isChatChannel()                {}
 func (*UnknownUnionMember) isCondition()                  {}
 func (*UnknownUnionMember) isDynamicSsmParameterValue()   {}
+func (*UnknownUnionMember) isEventReference()             {}
+func (*UnknownUnionMember) isIntegration()                {}
 func (*UnknownUnionMember) isItemValue()                  {}
 func (*UnknownUnionMember) isNotificationTargetItem()     {}
 func (*UnknownUnionMember) isRelatedItemsUpdate()         {}

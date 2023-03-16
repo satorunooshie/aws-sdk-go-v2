@@ -44,9 +44,7 @@ type CreateFilterInput struct {
 	// * region
 	//
 	// *
-	// confidence
-	//
-	// * id
+	// id
 	//
 	// * resource.accessKeyDetails.accessKeyId
 	//
@@ -186,11 +184,6 @@ type CreateFilterInput struct {
 	// * resource.s3BucketDetails.type
 	//
 	// *
-	// service.archived When this attribute is set to TRUE, only archived findings are
-	// listed. When it's set to FALSE, only unarchived findings are listed. When this
-	// attribute is not set, all existing findings are listed.
-	//
-	// *
 	// service.resourceRole
 	//
 	// * severity
@@ -204,9 +197,9 @@ type CreateFilterInput struct {
 	// This member is required.
 	FindingCriteria *types.FindingCriteria
 
-	// The name of the filter. Minimum length of 3. Maximum length of 64. Valid
-	// characters include alphanumeric characters, dot (.), underscore (_), and dash
-	// (-). Spaces are not allowed.
+	// The name of the filter. Valid characters include period (.), underscore (_),
+	// dash (-), and alphanumeric characters. A whitespace is considered to be an
+	// invalid character.
 	//
 	// This member is required.
 	Name *string
@@ -218,7 +211,9 @@ type CreateFilterInput struct {
 	// The idempotency token for the create request.
 	ClientToken *string
 
-	// The description of the filter.
+	// The description of the filter. Valid characters include alphanumeric characters,
+	// and special characters such as -, ., :, { }, [ ], ( ), /, \t, \n, \x0B, \f, \r,
+	// _, and whitespace.
 	Description *string
 
 	// Specifies the position of the filter in the list of current filters. Also

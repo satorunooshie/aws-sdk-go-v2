@@ -42,6 +42,8 @@ public final class AwsSignatureVersion4aUtils {
                 AwsCustomGoDependency.INTERNAL_SIGV4A).build());
         writer.putContext("anonType", SymbolUtils.createPointableSymbolBuilder("AnonymousCredentials",
                 AwsCustomGoDependency.AWS_CORE).build());
+        writer.putContext("isProvider", SymbolUtils.createValueSymbolBuilder("IsCredentialsProvider",
+                AwsCustomGoDependency.AWS_CORE).build());
         writer.putContext("adapType", SymbolUtils.createPointableSymbolBuilder("SymmetricCredentialAdaptor",
                 AwsCustomGoDependency.INTERNAL_SIGV4A).build());
         writer.write("""
@@ -49,16 +51,15 @@ public final class AwsSignatureVersion4aUtils {
                          if o.$fieldName:L == nil {
                              return
                          }
-                         
+
                          if _, ok := o.$fieldName:L.($credType:T); ok {
                              return
                          }
-                         
-                         switch o.$fieldName:L.(type) {
-                         case $anonType:T, $anonType:P:
-                             return
+
+                         if $isProvider:T(o.$fieldName:L, ($anonType:P)(nil)) {
+                            return
                          }
-                         
+
                          o.$fieldName:L = &$adapType:T{SymmetricProvider: o.$fieldName:L}
                      }
                      """);
@@ -164,7 +165,7 @@ public final class AwsSignatureVersion4aUtils {
                              V4aSigner: o.$v4aSigner:L,
                              LogSigning: o.$logMode:L.IsSigning(),
                          })
-                         
+
                          return $registerMiddleware:T(stack, mw)
                      }
                      """);

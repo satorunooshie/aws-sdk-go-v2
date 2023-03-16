@@ -11,8 +11,8 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Creates a dashboard from a template. To first create a template, see the
-// CreateTemplate
+// Creates a dashboard from either a template or directly with a
+// DashboardDefinition. To first create a template, see the CreateTemplate
 // (https://docs.aws.amazon.com/quicksight/latest/APIReference/API_CreateTemplate.html)
 // API operation. A dashboard is an entity in Amazon QuickSight that identifies
 // Amazon QuickSight reports, created from analyses. You can share Amazon
@@ -53,22 +53,6 @@ type CreateDashboardInput struct {
 	// This member is required.
 	Name *string
 
-	// The entity that you are using as a source when you create the dashboard. In
-	// SourceEntity, you specify the type of object you're using as source. You can
-	// only create a dashboard from a template, so you use a SourceTemplate entity. If
-	// you need to create a dashboard from an analysis, first convert the analysis to a
-	// template by using the CreateTemplate
-	// (https://docs.aws.amazon.com/quicksight/latest/APIReference/API_CreateTemplate.html)
-	// API operation. For SourceTemplate, specify the Amazon Resource Name (ARN) of the
-	// source template. The SourceTemplateARN can contain any Amazon Web Services
-	// account and any Amazon QuickSight-supported Amazon Web Services Region. Use the
-	// DataSetReferences entity within SourceTemplate to list the replacement datasets
-	// for the placeholders listed in the original. The schema in each dataset must
-	// match its placeholder.
-	//
-	// This member is required.
-	SourceEntity *types.DashboardSourceEntity
-
 	// Options for publishing the dashboard when you create it:
 	//
 	// * AvailabilityStatus
@@ -86,6 +70,11 @@ type CreateDashboardInput struct {
 	// can be either COLLAPSED or EXPANDED. This option is COLLAPSED by default.
 	DashboardPublishOptions *types.DashboardPublishOptions
 
+	// The definition of a dashboard. A definition is the data model of all features in
+	// a Dashboard, Template, or Analysis. Either a SourceEntity or a Definition must
+	// be provided in order for the request to be valid.
+	Definition *types.DashboardVersionDefinition
+
 	// The parameters for the creation of the dashboard, which you want to use to
 	// override the default settings. A dashboard can have any type of parameters, and
 	// some parameters might accept multiple values.
@@ -95,6 +84,21 @@ type CreateDashboardInput struct {
 	// structure for granting permissions by providing a list of IAM action information
 	// for each principal ARN. To specify no permissions, omit the permissions list.
 	Permissions []types.ResourcePermission
+
+	// The entity that you are using as a source when you create the dashboard. In
+	// SourceEntity, you specify the type of object you're using as source. You can
+	// only create a dashboard from a template, so you use a SourceTemplate entity. If
+	// you need to create a dashboard from an analysis, first convert the analysis to a
+	// template by using the CreateTemplate
+	// (https://docs.aws.amazon.com/quicksight/latest/APIReference/API_CreateTemplate.html)
+	// API operation. For SourceTemplate, specify the Amazon Resource Name (ARN) of the
+	// source template. The SourceTemplateARN can contain any Amazon Web Services
+	// account and any Amazon QuickSight-supported Amazon Web Services Region. Use the
+	// DataSetReferences entity within SourceTemplate to list the replacement datasets
+	// for the placeholders listed in the original. The schema in each dataset must
+	// match its placeholder. Either a SourceEntity or a Definition must be provided in
+	// order for the request to be valid.
+	SourceEntity *types.DashboardSourceEntity
 
 	// Contains a map of the key-value pairs for the resource tag or tags assigned to
 	// the dashboard.

@@ -345,6 +345,61 @@ func (m *awsAwsjson11_serializeOpCreateDataRepositoryTask) HandleSerialize(ctx c
 	return next.HandleSerialize(ctx, in)
 }
 
+type awsAwsjson11_serializeOpCreateFileCache struct {
+}
+
+func (*awsAwsjson11_serializeOpCreateFileCache) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsjson11_serializeOpCreateFileCache) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*CreateFileCacheInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-amz-json-1.1")
+	httpBindingEncoder.SetHeader("X-Amz-Target").String("AWSSimbaAPIService_v20180301.CreateFileCache")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsAwsjson11_serializeOpDocumentCreateFileCacheInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
 type awsAwsjson11_serializeOpCreateFileSystem struct {
 }
 
@@ -785,6 +840,61 @@ func (m *awsAwsjson11_serializeOpDeleteDataRepositoryAssociation) HandleSerializ
 	return next.HandleSerialize(ctx, in)
 }
 
+type awsAwsjson11_serializeOpDeleteFileCache struct {
+}
+
+func (*awsAwsjson11_serializeOpDeleteFileCache) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsjson11_serializeOpDeleteFileCache) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*DeleteFileCacheInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-amz-json-1.1")
+	httpBindingEncoder.SetHeader("X-Amz-Target").String("AWSSimbaAPIService_v20180301.DeleteFileCache")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsAwsjson11_serializeOpDocumentDeleteFileCacheInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
 type awsAwsjson11_serializeOpDeleteFileSystem struct {
 }
 
@@ -1155,6 +1265,61 @@ func (m *awsAwsjson11_serializeOpDescribeDataRepositoryTasks) HandleSerialize(ct
 
 	jsonEncoder := smithyjson.NewEncoder()
 	if err := awsAwsjson11_serializeOpDocumentDescribeDataRepositoryTasksInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
+type awsAwsjson11_serializeOpDescribeFileCaches struct {
+}
+
+func (*awsAwsjson11_serializeOpDescribeFileCaches) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsjson11_serializeOpDescribeFileCaches) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*DescribeFileCachesInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-amz-json-1.1")
+	httpBindingEncoder.SetHeader("X-Amz-Target").String("AWSSimbaAPIService_v20180301.DescribeFileCaches")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsAwsjson11_serializeOpDocumentDescribeFileCachesInput(input, jsonEncoder.Value); err != nil {
 		return out, metadata, &smithy.SerializationError{Err: err}
 	}
 
@@ -1830,6 +1995,61 @@ func (m *awsAwsjson11_serializeOpUpdateDataRepositoryAssociation) HandleSerializ
 	return next.HandleSerialize(ctx, in)
 }
 
+type awsAwsjson11_serializeOpUpdateFileCache struct {
+}
+
+func (*awsAwsjson11_serializeOpUpdateFileCache) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsjson11_serializeOpUpdateFileCache) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*UpdateFileCacheInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-amz-json-1.1")
+	httpBindingEncoder.SetHeader("X-Amz-Target").String("AWSSimbaAPIService_v20180301.UpdateFileCache")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsAwsjson11_serializeOpDocumentUpdateFileCacheInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
 type awsAwsjson11_serializeOpUpdateFileSystem struct {
 }
 
@@ -2126,6 +2346,48 @@ func awsAwsjson11_serializeDocumentCompletionReport(v *types.CompletionReport, v
 	return nil
 }
 
+func awsAwsjson11_serializeDocumentCreateFileCacheDataRepositoryAssociations(v []types.FileCacheDataRepositoryAssociation, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		if err := awsAwsjson11_serializeDocumentFileCacheDataRepositoryAssociation(&v[i], av); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func awsAwsjson11_serializeDocumentCreateFileCacheLustreConfiguration(v *types.CreateFileCacheLustreConfiguration, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if len(v.DeploymentType) > 0 {
+		ok := object.Key("DeploymentType")
+		ok.String(string(v.DeploymentType))
+	}
+
+	if v.MetadataConfiguration != nil {
+		ok := object.Key("MetadataConfiguration")
+		if err := awsAwsjson11_serializeDocumentFileCacheLustreMetadataConfiguration(v.MetadataConfiguration, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.PerUnitStorageThroughput != nil {
+		ok := object.Key("PerUnitStorageThroughput")
+		ok.Integer(*v.PerUnitStorageThroughput)
+	}
+
+	if v.WeeklyMaintenanceStartTime != nil {
+		ok := object.Key("WeeklyMaintenanceStartTime")
+		ok.String(*v.WeeklyMaintenanceStartTime)
+	}
+
+	return nil
+}
+
 func awsAwsjson11_serializeDocumentCreateFileSystemLustreConfiguration(v *types.CreateFileSystemLustreConfiguration, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -2396,9 +2658,19 @@ func awsAwsjson11_serializeDocumentCreateOntapVolumeConfiguration(v *types.Creat
 	object := value.Object()
 	defer object.Close()
 
+	if v.CopyTagsToBackups != nil {
+		ok := object.Key("CopyTagsToBackups")
+		ok.Boolean(*v.CopyTagsToBackups)
+	}
+
 	if v.JunctionPath != nil {
 		ok := object.Key("JunctionPath")
 		ok.String(*v.JunctionPath)
+	}
+
+	if len(v.OntapVolumeType) > 0 {
+		ok := object.Key("OntapVolumeType")
+		ok.String(string(v.OntapVolumeType))
 	}
 
 	if len(v.SecurityStyle) > 0 {
@@ -2409,6 +2681,11 @@ func awsAwsjson11_serializeDocumentCreateOntapVolumeConfiguration(v *types.Creat
 	if v.SizeInMegabytes != nil {
 		ok := object.Key("SizeInMegabytes")
 		ok.Integer(*v.SizeInMegabytes)
+	}
+
+	if v.SnapshotPolicy != nil {
+		ok := object.Key("SnapshotPolicy")
+		ok.String(*v.SnapshotPolicy)
 	}
 
 	if v.StorageEfficiencyEnabled != nil {
@@ -2753,6 +3030,79 @@ func awsAwsjson11_serializeDocumentEventTypes(v []types.EventType, value smithyj
 	return nil
 }
 
+func awsAwsjson11_serializeDocumentFileCacheDataRepositoryAssociation(v *types.FileCacheDataRepositoryAssociation, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.DataRepositoryPath != nil {
+		ok := object.Key("DataRepositoryPath")
+		ok.String(*v.DataRepositoryPath)
+	}
+
+	if v.DataRepositorySubdirectories != nil {
+		ok := object.Key("DataRepositorySubdirectories")
+		if err := awsAwsjson11_serializeDocumentSubDirectoriesPaths(v.DataRepositorySubdirectories, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.FileCachePath != nil {
+		ok := object.Key("FileCachePath")
+		ok.String(*v.FileCachePath)
+	}
+
+	if v.NFS != nil {
+		ok := object.Key("NFS")
+		if err := awsAwsjson11_serializeDocumentFileCacheNFSConfiguration(v.NFS, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsAwsjson11_serializeDocumentFileCacheIds(v []string, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		av.String(v[i])
+	}
+	return nil
+}
+
+func awsAwsjson11_serializeDocumentFileCacheLustreMetadataConfiguration(v *types.FileCacheLustreMetadataConfiguration, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.StorageCapacity != nil {
+		ok := object.Key("StorageCapacity")
+		ok.Integer(*v.StorageCapacity)
+	}
+
+	return nil
+}
+
+func awsAwsjson11_serializeDocumentFileCacheNFSConfiguration(v *types.FileCacheNFSConfiguration, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.DnsIps != nil {
+		ok := object.Key("DnsIps")
+		if err := awsAwsjson11_serializeDocumentRepositoryDnsIps(v.DnsIps, ok); err != nil {
+			return err
+		}
+	}
+
+	if len(v.Version) > 0 {
+		ok := object.Key("Version")
+		ok.String(string(v.Version))
+	}
+
+	return nil
+}
+
 func awsAwsjson11_serializeDocumentFileSystemIds(v []string, value smithyjson.Value) error {
 	array := value.Array()
 	defer array.Close()
@@ -3000,6 +3350,17 @@ func awsAwsjson11_serializeDocumentOpenZFSUserOrGroupQuota(v *types.OpenZFSUserO
 	return nil
 }
 
+func awsAwsjson11_serializeDocumentRepositoryDnsIps(v []string, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		av.String(v[i])
+	}
+	return nil
+}
+
 func awsAwsjson11_serializeDocumentRestoreOpenZFSVolumeOptions(v []types.RestoreOpenZFSVolumeOption, value smithyjson.Value) error {
 	array := value.Array()
 	defer array.Close()
@@ -3225,6 +3586,17 @@ func awsAwsjson11_serializeDocumentStorageVirtualMachineIds(v []string, value sm
 	return nil
 }
 
+func awsAwsjson11_serializeDocumentSubDirectoriesPaths(v []string, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		av.String(v[i])
+	}
+	return nil
+}
+
 func awsAwsjson11_serializeDocumentSubnetIds(v []string, value smithyjson.Value) error {
 	array := value.Array()
 	defer array.Close()
@@ -3305,6 +3677,18 @@ func awsAwsjson11_serializeDocumentTieringPolicy(v *types.TieringPolicy, value s
 	return nil
 }
 
+func awsAwsjson11_serializeDocumentUpdateFileCacheLustreConfiguration(v *types.UpdateFileCacheLustreConfiguration, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.WeeklyMaintenanceStartTime != nil {
+		ok := object.Key("WeeklyMaintenanceStartTime")
+		ok.String(*v.WeeklyMaintenanceStartTime)
+	}
+
+	return nil
+}
+
 func awsAwsjson11_serializeDocumentUpdateFileSystemLustreConfiguration(v *types.UpdateFileSystemLustreConfiguration, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -3355,6 +3739,13 @@ func awsAwsjson11_serializeDocumentUpdateFileSystemOntapConfiguration(v *types.U
 	object := value.Object()
 	defer object.Close()
 
+	if v.AddRouteTableIds != nil {
+		ok := object.Key("AddRouteTableIds")
+		if err := awsAwsjson11_serializeDocumentRouteTableIds(v.AddRouteTableIds, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.AutomaticBackupRetentionDays != nil {
 		ok := object.Key("AutomaticBackupRetentionDays")
 		ok.Integer(*v.AutomaticBackupRetentionDays)
@@ -3375,6 +3766,13 @@ func awsAwsjson11_serializeDocumentUpdateFileSystemOntapConfiguration(v *types.U
 	if v.FsxAdminPassword != nil {
 		ok := object.Key("FsxAdminPassword")
 		ok.String(*v.FsxAdminPassword)
+	}
+
+	if v.RemoveRouteTableIds != nil {
+		ok := object.Key("RemoveRouteTableIds")
+		if err := awsAwsjson11_serializeDocumentRouteTableIds(v.RemoveRouteTableIds, ok); err != nil {
+			return err
+		}
 	}
 
 	if v.ThroughputCapacity != nil {
@@ -3479,6 +3877,11 @@ func awsAwsjson11_serializeDocumentUpdateOntapVolumeConfiguration(v *types.Updat
 	object := value.Object()
 	defer object.Close()
 
+	if v.CopyTagsToBackups != nil {
+		ok := object.Key("CopyTagsToBackups")
+		ok.Boolean(*v.CopyTagsToBackups)
+	}
+
 	if v.JunctionPath != nil {
 		ok := object.Key("JunctionPath")
 		ok.String(*v.JunctionPath)
@@ -3492,6 +3895,11 @@ func awsAwsjson11_serializeDocumentUpdateOntapVolumeConfiguration(v *types.Updat
 	if v.SizeInMegabytes != nil {
 		ok := object.Key("SizeInMegabytes")
 		ok.Integer(*v.SizeInMegabytes)
+	}
+
+	if v.SnapshotPolicy != nil {
+		ok := object.Key("SnapshotPolicy")
+		ok.String(*v.SnapshotPolicy)
 	}
 
 	if v.StorageEfficiencyEnabled != nil {
@@ -3804,6 +4212,11 @@ func awsAwsjson11_serializeOpDocumentCreateDataRepositoryTaskInput(v *CreateData
 	object := value.Object()
 	defer object.Close()
 
+	if v.CapacityToRelease != nil {
+		ok := object.Key("CapacityToRelease")
+		ok.Long(*v.CapacityToRelease)
+	}
+
 	if v.ClientRequestToken != nil {
 		ok := object.Key("ClientRequestToken")
 		ok.String(*v.ClientRequestToken)
@@ -3838,6 +4251,78 @@ func awsAwsjson11_serializeOpDocumentCreateDataRepositoryTaskInput(v *CreateData
 	if len(v.Type) > 0 {
 		ok := object.Key("Type")
 		ok.String(string(v.Type))
+	}
+
+	return nil
+}
+
+func awsAwsjson11_serializeOpDocumentCreateFileCacheInput(v *CreateFileCacheInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.ClientRequestToken != nil {
+		ok := object.Key("ClientRequestToken")
+		ok.String(*v.ClientRequestToken)
+	}
+
+	if v.CopyTagsToDataRepositoryAssociations != nil {
+		ok := object.Key("CopyTagsToDataRepositoryAssociations")
+		ok.Boolean(*v.CopyTagsToDataRepositoryAssociations)
+	}
+
+	if v.DataRepositoryAssociations != nil {
+		ok := object.Key("DataRepositoryAssociations")
+		if err := awsAwsjson11_serializeDocumentCreateFileCacheDataRepositoryAssociations(v.DataRepositoryAssociations, ok); err != nil {
+			return err
+		}
+	}
+
+	if len(v.FileCacheType) > 0 {
+		ok := object.Key("FileCacheType")
+		ok.String(string(v.FileCacheType))
+	}
+
+	if v.FileCacheTypeVersion != nil {
+		ok := object.Key("FileCacheTypeVersion")
+		ok.String(*v.FileCacheTypeVersion)
+	}
+
+	if v.KmsKeyId != nil {
+		ok := object.Key("KmsKeyId")
+		ok.String(*v.KmsKeyId)
+	}
+
+	if v.LustreConfiguration != nil {
+		ok := object.Key("LustreConfiguration")
+		if err := awsAwsjson11_serializeDocumentCreateFileCacheLustreConfiguration(v.LustreConfiguration, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.SecurityGroupIds != nil {
+		ok := object.Key("SecurityGroupIds")
+		if err := awsAwsjson11_serializeDocumentSecurityGroupIds(v.SecurityGroupIds, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.StorageCapacity != nil {
+		ok := object.Key("StorageCapacity")
+		ok.Integer(*v.StorageCapacity)
+	}
+
+	if v.SubnetIds != nil {
+		ok := object.Key("SubnetIds")
+		if err := awsAwsjson11_serializeDocumentSubnetIds(v.SubnetIds, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.Tags != nil {
+		ok := object.Key("Tags")
+		if err := awsAwsjson11_serializeDocumentTags(v.Tags, ok); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -3886,6 +4371,11 @@ func awsAwsjson11_serializeOpDocumentCreateFileSystemFromBackupInput(v *CreateFi
 		if err := awsAwsjson11_serializeDocumentSecurityGroupIds(v.SecurityGroupIds, ok); err != nil {
 			return err
 		}
+	}
+
+	if v.StorageCapacity != nil {
+		ok := object.Key("StorageCapacity")
+		ok.Integer(*v.StorageCapacity)
 	}
 
 	if len(v.StorageType) > 0 {
@@ -4196,6 +4686,23 @@ func awsAwsjson11_serializeOpDocumentDeleteDataRepositoryAssociationInput(v *Del
 	return nil
 }
 
+func awsAwsjson11_serializeOpDocumentDeleteFileCacheInput(v *DeleteFileCacheInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.ClientRequestToken != nil {
+		ok := object.Key("ClientRequestToken")
+		ok.String(*v.ClientRequestToken)
+	}
+
+	if v.FileCacheId != nil {
+		ok := object.Key("FileCacheId")
+		ok.String(*v.FileCacheId)
+	}
+
+	return nil
+}
+
 func awsAwsjson11_serializeOpDocumentDeleteFileSystemInput(v *DeleteFileSystemInput, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -4387,6 +4894,30 @@ func awsAwsjson11_serializeOpDocumentDescribeDataRepositoryTasksInput(v *Describ
 		if err := awsAwsjson11_serializeDocumentTaskIds(v.TaskIds, ok); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func awsAwsjson11_serializeOpDocumentDescribeFileCachesInput(v *DescribeFileCachesInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.FileCacheIds != nil {
+		ok := object.Key("FileCacheIds")
+		if err := awsAwsjson11_serializeDocumentFileCacheIds(v.FileCacheIds, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.MaxResults != nil {
+		ok := object.Key("MaxResults")
+		ok.Integer(*v.MaxResults)
+	}
+
+	if v.NextToken != nil {
+		ok := object.Key("NextToken")
+		ok.String(*v.NextToken)
 	}
 
 	return nil
@@ -4688,6 +5219,30 @@ func awsAwsjson11_serializeOpDocumentUpdateDataRepositoryAssociationInput(v *Upd
 	if v.S3 != nil {
 		ok := object.Key("S3")
 		if err := awsAwsjson11_serializeDocumentS3DataRepositoryConfiguration(v.S3, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsAwsjson11_serializeOpDocumentUpdateFileCacheInput(v *UpdateFileCacheInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.ClientRequestToken != nil {
+		ok := object.Key("ClientRequestToken")
+		ok.String(*v.ClientRequestToken)
+	}
+
+	if v.FileCacheId != nil {
+		ok := object.Key("FileCacheId")
+		ok.String(*v.FileCacheId)
+	}
+
+	if v.LustreConfiguration != nil {
+		ok := object.Key("LustreConfiguration")
+		if err := awsAwsjson11_serializeDocumentUpdateFileCacheLustreConfiguration(v.LustreConfiguration, ok); err != nil {
 			return err
 		}
 	}

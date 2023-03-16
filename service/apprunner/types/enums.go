@@ -221,6 +221,7 @@ const (
 	OperationTypePauseService    OperationType = "PAUSE_SERVICE"
 	OperationTypeResumeService   OperationType = "RESUME_SERVICE"
 	OperationTypeDeleteService   OperationType = "DELETE_SERVICE"
+	OperationTypeUpdateService   OperationType = "UPDATE_SERVICE"
 )
 
 // Values returns all known values for OperationType. Note that this can be
@@ -233,6 +234,7 @@ func (OperationType) Values() []OperationType {
 		"PAUSE_SERVICE",
 		"RESUME_SERVICE",
 		"DELETE_SERVICE",
+		"UPDATE_SERVICE",
 	}
 }
 
@@ -261,6 +263,11 @@ const (
 	RuntimeNodejs14   Runtime = "NODEJS_14"
 	RuntimeCorretto8  Runtime = "CORRETTO_8"
 	RuntimeCorretto11 Runtime = "CORRETTO_11"
+	RuntimeNodejs16   Runtime = "NODEJS_16"
+	RuntimeGo1        Runtime = "GO_1"
+	RuntimeDotnet6    Runtime = "DOTNET_6"
+	RuntimePhp81      Runtime = "PHP_81"
+	RuntimeRuby31     Runtime = "RUBY_31"
 )
 
 // Values returns all known values for Runtime. Note that this can be expanded in
@@ -273,6 +280,11 @@ func (Runtime) Values() []Runtime {
 		"NODEJS_14",
 		"CORRETTO_8",
 		"CORRETTO_11",
+		"NODEJS_16",
+		"GO_1",
+		"DOTNET_6",
+		"PHP_81",
+		"RUBY_31",
 	}
 }
 
@@ -349,5 +361,35 @@ func (VpcConnectorStatus) Values() []VpcConnectorStatus {
 	return []VpcConnectorStatus{
 		"ACTIVE",
 		"INACTIVE",
+	}
+}
+
+type VpcIngressConnectionStatus string
+
+// Enum values for VpcIngressConnectionStatus
+const (
+	VpcIngressConnectionStatusAvailable       VpcIngressConnectionStatus = "AVAILABLE"
+	VpcIngressConnectionStatusPendingCreation VpcIngressConnectionStatus = "PENDING_CREATION"
+	VpcIngressConnectionStatusPendingUpdate   VpcIngressConnectionStatus = "PENDING_UPDATE"
+	VpcIngressConnectionStatusPendingDeletion VpcIngressConnectionStatus = "PENDING_DELETION"
+	VpcIngressConnectionStatusFailedCreation  VpcIngressConnectionStatus = "FAILED_CREATION"
+	VpcIngressConnectionStatusFailedUpdate    VpcIngressConnectionStatus = "FAILED_UPDATE"
+	VpcIngressConnectionStatusFailedDeletion  VpcIngressConnectionStatus = "FAILED_DELETION"
+	VpcIngressConnectionStatusDeleted         VpcIngressConnectionStatus = "DELETED"
+)
+
+// Values returns all known values for VpcIngressConnectionStatus. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (VpcIngressConnectionStatus) Values() []VpcIngressConnectionStatus {
+	return []VpcIngressConnectionStatus{
+		"AVAILABLE",
+		"PENDING_CREATION",
+		"PENDING_UPDATE",
+		"PENDING_DELETION",
+		"FAILED_CREATION",
+		"FAILED_UPDATE",
+		"FAILED_DELETION",
+		"DELETED",
 	}
 }

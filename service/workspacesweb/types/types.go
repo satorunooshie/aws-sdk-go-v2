@@ -226,6 +226,18 @@ type NetworkSettingsSummary struct {
 // The web portal.
 type Portal struct {
 
+	// The type of authentication integration points used when signing into the web
+	// portal. Defaults to Standard. Standard web portals are authenticated directly
+	// through your identity provider. You need to call CreateIdentityProvider to
+	// integrate your identity provider with your web portal. User and group access to
+	// your web portal is controlled through your identity provider.
+	// IAM_Identity_Center web portals are authenticated through AWS IAM Identity
+	// Center (successor to AWS Single Sign-On). They provide additional features, such
+	// as IdP-initiated authentication. Identity sources (including external identity
+	// provider integration), plus user and group access to your web portal, can be
+	// configured in the IAM Identity Center.
+	AuthenticationType AuthenticationType
+
 	// The ARN of the browser settings that is associated with this web portal.
 	BrowserSettingsArn *string
 
@@ -260,7 +272,11 @@ type Portal struct {
 	// The ARN of the trust store that is associated with the web portal.
 	TrustStoreArn *string
 
-	// The ARN of the trust store that is associated with the web portal.
+	// The ARN of the user access logging settings that is associated with the web
+	// portal.
+	UserAccessLoggingSettingsArn *string
+
+	// The ARN of the user settings that is associated with the web portal.
 	UserSettingsArn *string
 
 	noSmithyDocumentSerde
@@ -268,6 +284,18 @@ type Portal struct {
 
 // The summary of the portal.
 type PortalSummary struct {
+
+	// The type of authentication integration points used when signing into the web
+	// portal. Defaults to Standard. Standard web portals are authenticated directly
+	// through your identity provider. You need to call CreateIdentityProvider to
+	// integrate your identity provider with your web portal. User and group access to
+	// your web portal is controlled through your identity provider.
+	// IAM_Identity_Center web portals are authenticated through AWS IAM Identity
+	// Center (successor to AWS Single Sign-On). They provide additional features, such
+	// as IdP-initiated authentication. Identity sources (including external identity
+	// provider integration), plus user and group access to your web portal, can be
+	// configured in the IAM Identity Center.
+	AuthenticationType AuthenticationType
 
 	// The ARN of the browser settings that is associated with the web portal.
 	BrowserSettingsArn *string
@@ -299,6 +327,10 @@ type PortalSummary struct {
 
 	// The ARN of the trust that is associated with this web portal.
 	TrustStoreArn *string
+
+	// The ARN of the user access logging settings that is associated with the web
+	// portal.
+	UserAccessLoggingSettingsArn *string
 
 	// The ARN of the user settings that is associated with the web portal.
 	UserSettingsArn *string
@@ -344,6 +376,37 @@ type TrustStoreSummary struct {
 
 	// The ARN of the trust store.
 	TrustStoreArn *string
+
+	noSmithyDocumentSerde
+}
+
+// A user access logging settings resource that can be associated with a web
+// portal.
+type UserAccessLoggingSettings struct {
+
+	// The ARN of the user access logging settings.
+	//
+	// This member is required.
+	UserAccessLoggingSettingsArn *string
+
+	// A list of web portal ARNs that this user access logging settings is associated
+	// with.
+	AssociatedPortalArns []string
+
+	// The ARN of the Kinesis stream.
+	KinesisStreamArn *string
+
+	noSmithyDocumentSerde
+}
+
+// The summary of user access logging settings.
+type UserAccessLoggingSettingsSummary struct {
+
+	// The ARN of the Kinesis stream.
+	KinesisStreamArn *string
+
+	// The ARN of the user access logging settings.
+	UserAccessLoggingSettingsArn *string
 
 	noSmithyDocumentSerde
 }

@@ -48,6 +48,9 @@ type DescribeMetricSetOutput struct {
 	// The time at which the dataset was created.
 	CreationTime *time.Time
 
+	// The dimensions and their values that were used to filter the dataset.
+	DimensionFilterList []types.MetricSetDimensionFilter
+
 	// A list of the dimensions chosen for analysis.
 	DimensionList []string
 
@@ -75,7 +78,7 @@ type DescribeMetricSetOutput struct {
 	// After an interval ends, the amount of seconds that the detector waits before
 	// importing data. Offset is only supported for S3, Redshift, Athena and
 	// datasources.
-	Offset int32
+	Offset *int32
 
 	// Contains information about the column used for tracking time in your source
 	// data.

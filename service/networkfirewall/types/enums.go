@@ -100,6 +100,24 @@ func (GeneratedRulesType) Values() []GeneratedRulesType {
 	}
 }
 
+type IPAddressType string
+
+// Enum values for IPAddressType
+const (
+	IPAddressTypeDualstack IPAddressType = "DUALSTACK"
+	IPAddressTypeIpv4      IPAddressType = "IPV4"
+)
+
+// Values returns all known values for IPAddressType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (IPAddressType) Values() []IPAddressType {
+	return []IPAddressType{
+		"DUALSTACK",
+		"IPV4",
+	}
+}
+
 type LogDestinationType string
 
 // Enum values for LogDestinationType
@@ -268,9 +286,10 @@ type StatefulAction string
 
 // Enum values for StatefulAction
 const (
-	StatefulActionPass  StatefulAction = "PASS"
-	StatefulActionDrop  StatefulAction = "DROP"
-	StatefulActionAlert StatefulAction = "ALERT"
+	StatefulActionPass   StatefulAction = "PASS"
+	StatefulActionDrop   StatefulAction = "DROP"
+	StatefulActionAlert  StatefulAction = "ALERT"
+	StatefulActionReject StatefulAction = "REJECT"
 )
 
 // Values returns all known values for StatefulAction. Note that this can be
@@ -281,6 +300,7 @@ func (StatefulAction) Values() []StatefulAction {
 		"PASS",
 		"DROP",
 		"ALERT",
+		"REJECT",
 	}
 }
 
@@ -351,6 +371,24 @@ func (StatefulRuleProtocol) Values() []StatefulRuleProtocol {
 		"TFTP",
 		"NTP",
 		"DHCP",
+	}
+}
+
+type StreamExceptionPolicy string
+
+// Enum values for StreamExceptionPolicy
+const (
+	StreamExceptionPolicyDrop     StreamExceptionPolicy = "DROP"
+	StreamExceptionPolicyContinue StreamExceptionPolicy = "CONTINUE"
+)
+
+// Values returns all known values for StreamExceptionPolicy. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (StreamExceptionPolicy) Values() []StreamExceptionPolicy {
+	return []StreamExceptionPolicy{
+		"DROP",
+		"CONTINUE",
 	}
 }
 

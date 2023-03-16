@@ -2,6 +2,24 @@
 
 package types
 
+type AutomaticTerminationMode string
+
+// Enum values for AutomaticTerminationMode
+const (
+	AutomaticTerminationModeDeactivated AutomaticTerminationMode = "DEACTIVATED"
+	AutomaticTerminationModeActivated   AutomaticTerminationMode = "ACTIVATED"
+)
+
+// Values returns all known values for AutomaticTerminationMode. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (AutomaticTerminationMode) Values() []AutomaticTerminationMode {
+	return []AutomaticTerminationMode{
+		"DEACTIVATED",
+		"ACTIVATED",
+	}
+}
+
 type LaunchProfilePersona string
 
 // Enum values for LaunchProfilePersona
@@ -83,6 +101,8 @@ const (
 	LaunchProfileStatusCodeEncryptionKeyAccessDenied                 LaunchProfileStatusCode = "ENCRYPTION_KEY_ACCESS_DENIED"
 	LaunchProfileStatusCodeEncryptionKeyNotFound                     LaunchProfileStatusCode = "ENCRYPTION_KEY_NOT_FOUND"
 	LaunchProfileStatusCodeInvalidSubnetsProvided                    LaunchProfileStatusCode = "INVALID_SUBNETS_PROVIDED"
+	LaunchProfileStatusCodeInvalidInstanceTypesProvided              LaunchProfileStatusCode = "INVALID_INSTANCE_TYPES_PROVIDED"
+	LaunchProfileStatusCodeInvalidSubnetsCombination                 LaunchProfileStatusCode = "INVALID_SUBNETS_COMBINATION"
 )
 
 // Values returns all known values for LaunchProfileStatusCode. Note that this can
@@ -103,6 +123,8 @@ func (LaunchProfileStatusCode) Values() []LaunchProfileStatusCode {
 		"ENCRYPTION_KEY_ACCESS_DENIED",
 		"ENCRYPTION_KEY_NOT_FOUND",
 		"INVALID_SUBNETS_PROVIDED",
+		"INVALID_INSTANCE_TYPES_PROVIDED",
+		"INVALID_SUBNETS_COMBINATION",
 	}
 }
 
@@ -182,6 +204,42 @@ func (LaunchProfileValidationType) Values() []LaunchProfileValidationType {
 		"VALIDATE_SUBNET_ASSOCIATION",
 		"VALIDATE_NETWORK_ACL_ASSOCIATION",
 		"VALIDATE_SECURITY_GROUP_ASSOCIATION",
+	}
+}
+
+type SessionBackupMode string
+
+// Enum values for SessionBackupMode
+const (
+	SessionBackupModeAutomatic   SessionBackupMode = "AUTOMATIC"
+	SessionBackupModeDeactivated SessionBackupMode = "DEACTIVATED"
+)
+
+// Values returns all known values for SessionBackupMode. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (SessionBackupMode) Values() []SessionBackupMode {
+	return []SessionBackupMode{
+		"AUTOMATIC",
+		"DEACTIVATED",
+	}
+}
+
+type SessionPersistenceMode string
+
+// Enum values for SessionPersistenceMode
+const (
+	SessionPersistenceModeDeactivated SessionPersistenceMode = "DEACTIVATED"
+	SessionPersistenceModeActivated   SessionPersistenceMode = "ACTIVATED"
+)
+
+// Values returns all known values for SessionPersistenceMode. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (SessionPersistenceMode) Values() []SessionPersistenceMode {
+	return []SessionPersistenceMode{
+		"DEACTIVATED",
+		"ACTIVATED",
 	}
 }
 
@@ -288,6 +346,13 @@ const (
 	StreamingInstanceTypeG4dn8xlarge  StreamingInstanceType = "g4dn.8xlarge"
 	StreamingInstanceTypeG4dn12xlarge StreamingInstanceType = "g4dn.12xlarge"
 	StreamingInstanceTypeG4dn16xlarge StreamingInstanceType = "g4dn.16xlarge"
+	StreamingInstanceTypeG34xlarge    StreamingInstanceType = "g3.4xlarge"
+	StreamingInstanceTypeG3sXlarge    StreamingInstanceType = "g3s.xlarge"
+	StreamingInstanceTypeG5Xlarge     StreamingInstanceType = "g5.xlarge"
+	StreamingInstanceTypeG52xlarge    StreamingInstanceType = "g5.2xlarge"
+	StreamingInstanceTypeG54xlarge    StreamingInstanceType = "g5.4xlarge"
+	StreamingInstanceTypeG58xlarge    StreamingInstanceType = "g5.8xlarge"
+	StreamingInstanceTypeG516xlarge   StreamingInstanceType = "g5.16xlarge"
 )
 
 // Values returns all known values for StreamingInstanceType. Note that this can be
@@ -301,6 +366,13 @@ func (StreamingInstanceType) Values() []StreamingInstanceType {
 		"g4dn.8xlarge",
 		"g4dn.12xlarge",
 		"g4dn.16xlarge",
+		"g3.4xlarge",
+		"g3s.xlarge",
+		"g5.xlarge",
+		"g5.2xlarge",
+		"g5.4xlarge",
+		"g5.8xlarge",
+		"g5.16xlarge",
 	}
 }
 
@@ -671,6 +743,7 @@ const (
 	StudioStatusCodeEncryptionKeyAccessDenied            StudioStatusCode = "ENCRYPTION_KEY_ACCESS_DENIED"
 	StudioStatusCodeAwsSsoConfigurationRepaired          StudioStatusCode = "AWS_SSO_CONFIGURATION_REPAIRED"
 	StudioStatusCodeAwsSsoConfigurationRepairInProgress  StudioStatusCode = "AWS_SSO_CONFIGURATION_REPAIR_IN_PROGRESS"
+	StudioStatusCodeAwsStsRegionDisabled                 StudioStatusCode = "AWS_STS_REGION_DISABLED"
 )
 
 // Values returns all known values for StudioStatusCode. Note that this can be
@@ -696,5 +769,24 @@ func (StudioStatusCode) Values() []StudioStatusCode {
 		"ENCRYPTION_KEY_ACCESS_DENIED",
 		"AWS_SSO_CONFIGURATION_REPAIRED",
 		"AWS_SSO_CONFIGURATION_REPAIR_IN_PROGRESS",
+		"AWS_STS_REGION_DISABLED",
+	}
+}
+
+type VolumeRetentionMode string
+
+// Enum values for VolumeRetentionMode
+const (
+	VolumeRetentionModeRetain VolumeRetentionMode = "RETAIN"
+	VolumeRetentionModeDelete VolumeRetentionMode = "DELETE"
+)
+
+// Values returns all known values for VolumeRetentionMode. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (VolumeRetentionMode) Values() []VolumeRetentionMode {
+	return []VolumeRetentionMode{
+		"RETAIN",
+		"DELETE",
 	}
 }

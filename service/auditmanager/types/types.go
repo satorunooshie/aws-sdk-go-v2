@@ -42,7 +42,7 @@ type AssessmentControl struct {
 	// The description of the control.
 	Description *string
 
-	// The amount of evidence that's generated for the control.
+	// The amount of evidence that's collected for the control.
 	EvidenceCount int32
 
 	// The list of data sources for the evidence.
@@ -86,7 +86,7 @@ type AssessmentControlSet struct {
 	// The roles that are associated with the control set.
 	Roles []Role
 
-	// Specifies the current status of the control set.
+	// The current status of the control set.
 	Status ControlSetStatus
 
 	// The total number of evidence objects that are retrieved automatically for the
@@ -198,7 +198,7 @@ type AssessmentFrameworkMetadata struct {
 	// The number of controls that are associated with the framework.
 	ControlsCount int32
 
-	// Specifies when the framework was created.
+	// The time when the framework was created.
 	CreatedAt *time.Time
 
 	// The description of the framework.
@@ -207,7 +207,7 @@ type AssessmentFrameworkMetadata struct {
 	// The unique identifier for the framework.
 	Id *string
 
-	// Specifies when the framework was most recently updated.
+	// The time when the framework was most recently updated.
 	LastUpdatedAt *time.Time
 
 	// The logo that's associated with the framework.
@@ -382,14 +382,14 @@ type AssessmentReport struct {
 	noSmithyDocumentSerde
 }
 
-// An error entity for the AssessmentReportEvidence API. This is used to provide
+// An error entity for assessment report evidence errors. This is used to provide
 // more meaningful errors than a simple string message.
 type AssessmentReportEvidenceError struct {
 
-	// The error code that the AssessmentReportEvidence API returned.
+	// The error code that was returned.
 	ErrorCode *string
 
-	// The error message that the AssessmentReportEvidence API returned.
+	// The error message that was returned.
 	ErrorMessage *string
 
 	// The identifier for the evidence.
@@ -457,7 +457,17 @@ type AWSAccount struct {
 	noSmithyDocumentSerde
 }
 
-// An Amazon Web Service such as Amazon S3 or CloudTrail.
+// An Amazon Web Service such as Amazon S3 or CloudTrail. For an example of how to
+// find an Amazon Web Service name and how to define it in your assessment scope,
+// see the following:
+//
+// * Finding an Amazon Web Service name to use in your
+// assessment scope
+// (https://docs.aws.amazon.com/audit-manager/latest/APIReference/API_GetServicesInScope.html#API_GetServicesInScope_Example_2)
+//
+// *
+// Defining an Amazon Web Service name in your assessment scope
+// (https://docs.aws.amazon.com/audit-manager/latest/APIReference/API_GetServicesInScope.html#API_GetServicesInScope_Example_3)
 type AWSService struct {
 
 	// The name of the Amazon Web Service.
@@ -524,7 +534,7 @@ type ChangeLog struct {
 	// The time when the action was performed and the changelog record was created.
 	CreatedAt *time.Time
 
-	// The IAM user or role that performed the action.
+	// The user or role that performed the action.
 	CreatedBy *string
 
 	// The name of the object that changed. This could be the name of an assessment,
@@ -552,14 +562,14 @@ type Control struct {
 	// The data mapping sources for the control.
 	ControlMappingSources []ControlMappingSource
 
-	// The data source that determines where Audit Manager collects evidence from for
-	// the control.
+	// The data source types that determine where Audit Manager collects evidence from
+	// for the control.
 	ControlSources *string
 
-	// Specifies when the control was created.
+	// The time when the control was created.
 	CreatedAt *time.Time
 
-	// The IAM user or role that created the control.
+	// The user or role that created the control.
 	CreatedBy *string
 
 	// The description of the control.
@@ -568,10 +578,10 @@ type Control struct {
 	// The unique identifier for the control.
 	Id *string
 
-	// Specifies when the control was most recently updated.
+	// The time when the control was most recently updated.
 	LastUpdatedAt *time.Time
 
-	// The IAM user or role that most recently updated the control.
+	// The user or role that most recently updated the control.
 	LastUpdatedBy *string
 
 	// The name of the control.
@@ -720,7 +730,7 @@ type ControlMappingSource struct {
 	// collection is automated or manual.
 	SourceSetUpOption SourceSetUpOption
 
-	// Specifies one of the five types of data sources for evidence collection.
+	// Specifies one of the five data source types for evidence collection.
 	SourceType SourceType
 
 	// The instructions for troubleshooting the control.
@@ -739,13 +749,13 @@ type ControlMetadata struct {
 	// the control.
 	ControlSources *string
 
-	// Specifies when the control was created.
+	// The time when the control was created.
 	CreatedAt *time.Time
 
 	// The unique identifier for the control.
 	Id *string
 
-	// Specifies when the control was most recently updated.
+	// The time when the control was most recently updated.
 	LastUpdatedAt *time.Time
 
 	// The name of the control.
@@ -882,7 +892,7 @@ type Delegation struct {
 	// The identifier for the control set that's associated with the delegation.
 	ControlSetId *string
 
-	// The IAM user or role that created the delegation.
+	// The user or role that created the delegation.
 	CreatedBy *string
 
 	// Specifies when the delegation was created.
@@ -935,9 +945,43 @@ type DelegationMetadata struct {
 	noSmithyDocumentSerde
 }
 
+// The deregistration policy for the data that's stored in Audit Manager. You can
+// use this attribute to determine how your data is handled when you deregister
+// Audit Manager
+// (https://docs.aws.amazon.com/audit-manager/latest/APIReference/API_DeregisterAccount.html).
+// By default, Audit Manager retains evidence data for two years from the time of
+// its creation. Other Audit Manager resources (including assessments, custom
+// controls, and custom frameworks) remain in Audit Manager indefinitely, and are
+// available if you re-register Audit Manager
+// (https://docs.aws.amazon.com/audit-manager/latest/APIReference/API_RegisterAccount.html)
+// in the future. For more information about data retention, see Data Protection
+// (https://docs.aws.amazon.com/audit-manager/latest/userguide/data-protection.html)
+// in the Audit Manager User Guide. If you choose to delete all data, this action
+// permanently deletes all evidence data in your account within seven days. It also
+// deletes all of the Audit Manager resources that you created, including
+// assessments, custom controls, and custom frameworks. Your data will not be
+// available if you re-register Audit Manager in the future.
+type DeregistrationPolicy struct {
+
+	// Specifies which Audit Manager data will be deleted when you deregister Audit
+	// Manager.
+	//
+	// * If you set the value to ALL, all of your data is deleted within
+	// seven days of deregistration.
+	//
+	// * If you set the value to DEFAULT, none of your
+	// data is deleted at the time of deregistration. However, keep in mind that the
+	// Audit Manager data retention policy still applies. As a result, any evidence
+	// data will be deleted two years after its creation date. Your other Audit Manager
+	// resources will continue to exist indefinitely.
+	DeleteResources DeleteResources
+
+	noSmithyDocumentSerde
+}
+
 // A record that contains the information needed to demonstrate compliance with the
 // requirements specified by a control. Examples of evidence include change
-// activity triggered by a user, or a system configuration snapshot.
+// activity invoked by a user, or a system configuration snapshot.
 type Evidence struct {
 
 	// Specifies whether the evidence is included in the assessment report.
@@ -955,10 +999,22 @@ type Evidence struct {
 	// organization path.
 	AwsOrganization *string
 
-	// The evaluation status for evidence that falls under the compliance check
-	// category. For evidence collected from Security Hub, a Pass or Fail result is
-	// shown. For evidence collected from Config, a Compliant or Noncompliant result is
-	// shown.
+	// The evaluation status for automated evidence that falls under the compliance
+	// check category.
+	//
+	// * Audit Manager classes evidence as non-compliant if Security
+	// Hub reports a Fail result, or if Config reports a Non-compliant result.
+	//
+	// * Audit
+	// Manager classes evidence as compliant if Security Hub reports a Pass result, or
+	// if Config reports a Compliant result.
+	//
+	// * If a compliance check isn't available
+	// or applicable, then no compliance evaluation can be made for that evidence. This
+	// is the case if the evidence uses Config or Security Hub as the underlying data
+	// source type, but those services aren't enabled. This is also the case if the
+	// evidence uses an underlying data source type that doesn't support compliance
+	// checks (such as manual evidence, Amazon Web Services API calls, or CloudTrail).
 	ComplianceCheck *string
 
 	// The data source where the evidence was collected from.
@@ -979,8 +1035,7 @@ type Evidence struct {
 	// The identifier for the folder that the evidence is stored in.
 	EvidenceFolderId *string
 
-	// The unique identifier for the IAM user or role that's associated with the
-	// evidence.
+	// The unique identifier for the user or role that's associated with the evidence.
 	IamId *string
 
 	// The identifier for the evidence.
@@ -991,6 +1046,59 @@ type Evidence struct {
 
 	// The timestamp that represents when the evidence was collected.
 	Time *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// The settings object that specifies whether evidence finder is enabled. This
+// object also describes the related event data store, and the backfill status for
+// populating the event data store with evidence data.
+type EvidenceFinderEnablement struct {
+
+	// The current status of the evidence data backfill process. The backfill starts
+	// after you enable evidence finder. During this task, Audit Manager populates an
+	// event data store with your past two years’ worth of evidence data so that your
+	// evidence can be queried.
+	//
+	// * NOT_STARTED means that the backfill hasn’t started
+	// yet.
+	//
+	// * IN_PROGRESS means that the backfill is in progress. This can take up to
+	// 7 days to complete, depending on the amount of evidence data.
+	//
+	// * COMPLETED means
+	// that the backfill is complete. All of your past evidence is now queryable.
+	BackfillStatus EvidenceFinderBackfillStatus
+
+	// The current status of the evidence finder feature and the related event data
+	// store.
+	//
+	// * ENABLE_IN_PROGRESS means that you requested to enable evidence finder.
+	// An event data store is currently being created to support evidence finder
+	// queries.
+	//
+	// * ENABLED means that an event data store was successfully created and
+	// evidence finder is enabled. We recommend that you wait 7 days until the event
+	// data store is backfilled with your past two years’ worth of evidence data. You
+	// can use evidence finder in the meantime, but not all data might be available
+	// until the backfill is complete.
+	//
+	// * DISABLE_IN_PROGRESS means that you requested
+	// to disable evidence finder, and your request is pending the deletion of the
+	// event data store.
+	//
+	// * DISABLED means that you have permanently disabled evidence
+	// finder and the event data store has been deleted. You can't re-enable evidence
+	// finder after this point.
+	EnablementStatus EvidenceFinderEnablementStatus
+
+	// Represents any errors that occurred when enabling or disabling evidence finder.
+	Error *string
+
+	// The Amazon Resource Name (ARN) of the CloudTrail Lake event data store that’s
+	// used by evidence finder. The event data store is the lake of evidence data that
+	// evidence finder runs queries against.
+	EventDataStoreArn *string
 
 	noSmithyDocumentSerde
 }
@@ -1038,10 +1146,10 @@ type Framework struct {
 	// The sources that Audit Manager collects evidence from for the control.
 	ControlSources *string
 
-	// Specifies when the framework was created.
+	// The time when the framework was created.
 	CreatedAt *time.Time
 
-	// The IAM user or role that created the framework.
+	// The user or role that created the framework.
 	CreatedBy *string
 
 	// The description of the framework.
@@ -1050,10 +1158,10 @@ type Framework struct {
 	// The unique identifier for the framework.
 	Id *string
 
-	// Specifies when the framework was most recently updated.
+	// The time when the framework was most recently updated.
 	LastUpdatedAt *time.Time
 
-	// The IAM user or role that most recently updated the framework.
+	// The user or role that most recently updated the framework.
 	LastUpdatedBy *string
 
 	// The logo that's associated with the framework.
@@ -1245,6 +1353,25 @@ type Resource struct {
 	// The Amazon Resource Name (ARN) for the resource.
 	Arn *string
 
+	// The evaluation status for a resource that was assessed when collecting
+	// compliance check evidence.
+	//
+	// * Audit Manager classes the resource as
+	// non-compliant if Security Hub reports a Fail result, or if Config reports a
+	// Non-compliant result.
+	//
+	// * Audit Manager classes the resource as compliant if
+	// Security Hub reports a Pass result, or if Config reports a Compliant result.
+	//
+	// *
+	// If a compliance check isn't available or applicable, then no compliance
+	// evaluation can be made for that resource. This is the case if a resource
+	// assessment uses Config or Security Hub as the underlying data source type, but
+	// those services aren't enabled. This is also the case if the resource assessment
+	// uses an underlying data source type that doesn't support compliance checks (such
+	// as manual evidence, Amazon Web Services API calls, or CloudTrail).
+	ComplianceCheck *string
+
 	// The value of the resource.
 	Value *string
 
@@ -1312,6 +1439,14 @@ type Settings struct {
 
 	// The designated default audit owners.
 	DefaultProcessOwners []Role
+
+	// The deregistration policy for your Audit Manager data. You can use this
+	// attribute to determine how your data is handled when you deregister Audit
+	// Manager.
+	DeregistrationPolicy *DeregistrationPolicy
+
+	// The current evidence finder status and event data store details.
+	EvidenceFinderEnablement *EvidenceFinderEnablement
 
 	// Specifies whether Organizations is enabled.
 	IsAwsOrgEnabled *bool
@@ -1385,11 +1520,7 @@ type SourceKeyword struct {
 	// keywordValue: Custom_CustomRuleForAccount-conformance-pack
 	//
 	// * Service-linked
-	// rule name: securityhub-api-gw-cache-encrypted-101104e1 keywordValue:
-	// Custom_securityhub-api-gw-cache-encrypted
-	//
-	// * Service-linked rule name:
-	// OrgConfigRule-s3-bucket-versioning-enabled-dbgzf8ba keywordValue:
+	// rule name: OrgConfigRule-s3-bucket-versioning-enabled-dbgzf8ba keywordValue:
 	// Custom_OrgConfigRule-s3-bucket-versioning-enabled
 	KeywordValue *string
 

@@ -10,6 +10,7 @@ const (
 	ActionValueBlock           ActionValue = "BLOCK"
 	ActionValueCount           ActionValue = "COUNT"
 	ActionValueCaptcha         ActionValue = "CAPTCHA"
+	ActionValueChallenge       ActionValue = "CHALLENGE"
 	ActionValueExcludedAsCount ActionValue = "EXCLUDED_AS_COUNT"
 )
 
@@ -22,6 +23,7 @@ func (ActionValue) Values() []ActionValue {
 		"BLOCK",
 		"COUNT",
 		"CAPTCHA",
+		"CHALLENGE",
 		"EXCLUDED_AS_COUNT",
 	}
 }
@@ -590,8 +592,10 @@ type FailureReason string
 
 // Enum values for FailureReason
 const (
-	FailureReasonTokenMissing FailureReason = "TOKEN_MISSING"
-	FailureReasonTokenExpired FailureReason = "TOKEN_EXPIRED"
+	FailureReasonTokenMissing        FailureReason = "TOKEN_MISSING"
+	FailureReasonTokenExpired        FailureReason = "TOKEN_EXPIRED"
+	FailureReasonTokenInvalid        FailureReason = "TOKEN_INVALID"
+	FailureReasonTokenDomainMismatch FailureReason = "TOKEN_DOMAIN_MISMATCH"
 )
 
 // Values returns all known values for FailureReason. Note that this can be
@@ -601,6 +605,8 @@ func (FailureReason) Values() []FailureReason {
 	return []FailureReason{
 		"TOKEN_MISSING",
 		"TOKEN_EXPIRED",
+		"TOKEN_INVALID",
+		"TOKEN_DOMAIN_MISMATCH",
 	}
 }
 
@@ -675,6 +681,24 @@ func (ForwardedIPPosition) Values() []ForwardedIPPosition {
 		"FIRST",
 		"LAST",
 		"ANY",
+	}
+}
+
+type InspectionLevel string
+
+// Enum values for InspectionLevel
+const (
+	InspectionLevelCommon   InspectionLevel = "COMMON"
+	InspectionLevelTargeted InspectionLevel = "TARGETED"
+)
+
+// Values returns all known values for InspectionLevel. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (InspectionLevel) Values() []InspectionLevel {
+	return []InspectionLevel{
+		"COMMON",
+		"TARGETED",
 	}
 }
 
@@ -841,6 +865,9 @@ const (
 	ParameterExceptionFieldCookieMatchPattern             ParameterExceptionField = "COOKIE_MATCH_PATTERN"
 	ParameterExceptionFieldMapMatchScope                  ParameterExceptionField = "MAP_MATCH_SCOPE"
 	ParameterExceptionFieldOversizeHandling               ParameterExceptionField = "OVERSIZE_HANDLING"
+	ParameterExceptionFieldChallengeConfig                ParameterExceptionField = "CHALLENGE_CONFIG"
+	ParameterExceptionFieldTokenDomain                    ParameterExceptionField = "TOKEN_DOMAIN"
+	ParameterExceptionFieldAtpRuleSetResponseInspection   ParameterExceptionField = "ATP_RULE_SET_RESPONSE_INSPECTION"
 )
 
 // Values returns all known values for ParameterExceptionField. Note that this can
@@ -911,6 +938,9 @@ func (ParameterExceptionField) Values() []ParameterExceptionField {
 		"COOKIE_MATCH_PATTERN",
 		"MAP_MATCH_SCOPE",
 		"OVERSIZE_HANDLING",
+		"CHALLENGE_CONFIG",
+		"TOKEN_DOMAIN",
+		"ATP_RULE_SET_RESPONSE_INSPECTION",
 	}
 }
 
@@ -1001,6 +1031,7 @@ const (
 	ResourceTypeApiGateway              ResourceType = "API_GATEWAY"
 	ResourceTypeAppsync                 ResourceType = "APPSYNC"
 	ResourceTypeCognitioUserPool        ResourceType = "COGNITO_USER_POOL"
+	ResourceTypeAppRunnerService        ResourceType = "APP_RUNNER_SERVICE"
 )
 
 // Values returns all known values for ResourceType. Note that this can be expanded
@@ -1012,6 +1043,7 @@ func (ResourceType) Values() []ResourceType {
 		"API_GATEWAY",
 		"APPSYNC",
 		"COGNITO_USER_POOL",
+		"APP_RUNNER_SERVICE",
 	}
 }
 

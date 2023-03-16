@@ -84,6 +84,12 @@ type AccountSettings struct {
 	// (https://docs.aws.amazon.com/quicksight/latest/APIReference/API_UpdatePublicSharingSettings.html).
 	PublicSharingEnabled bool
 
+	// A boolean value that determines whether or not an Amazon QuickSight account can
+	// be deleted. A True value doesn't allow the account to be deleted and results in
+	// an error message if a user tries to make a DeleteAccountSubsctiption request. A
+	// False value will allow the ccount to be deleted.
+	TerminationProtectionEnabled bool
+
 	noSmithyDocumentSerde
 }
 
@@ -104,6 +110,66 @@ type AdHocFilteringOption struct {
 
 	// Availability status.
 	AvailabilityStatus DashboardBehavior
+
+	noSmithyDocumentSerde
+}
+
+// An aggregation function aggregates values from a dimension or measure. This is a
+// union type structure. For this structure to be valid, only one of the attributes
+// can be defined.
+type AggregationFunction struct {
+
+	// Aggregation for categorical values.
+	//
+	// * COUNT: Aggregate by the total number of
+	// values, including duplicates.
+	//
+	// * DISTINCT_COUNT: Aggregate by the total number
+	// of distinct values.
+	CategoricalAggregationFunction CategoricalAggregationFunction
+
+	// Aggregation for date values.
+	//
+	// * COUNT: Aggregate by the total number of values,
+	// including duplicates.
+	//
+	// * DISTINCT_COUNT: Aggregate by the total number of
+	// distinct values.
+	//
+	// * MIN: Select the smallest date value.
+	//
+	// * MAX: Select the
+	// largest date value.
+	DateAggregationFunction DateAggregationFunction
+
+	// Aggregation for numerical values.
+	NumericalAggregationFunction *NumericalAggregationFunction
+
+	noSmithyDocumentSerde
+}
+
+// The configuration options to sort aggregated values.
+type AggregationSortConfiguration struct {
+
+	// The function that aggregates the values in Column.
+	//
+	// This member is required.
+	AggregationFunction *AggregationFunction
+
+	// The column that determines the sort order of aggregated values.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The sort direction of values.
+	//
+	// * ASC: Sort in ascending order.
+	//
+	// * DESC: Sort in
+	// descending order.
+	//
+	// This member is required.
+	SortDirection SortDirection
 
 	noSmithyDocumentSerde
 }
@@ -167,6 +233,56 @@ type Analysis struct {
 	noSmithyDocumentSerde
 }
 
+// The configuration for default analysis settings.
+type AnalysisDefaults struct {
+
+	// The configuration for default new sheet settings.
+	//
+	// This member is required.
+	DefaultNewSheetConfiguration *DefaultNewSheetConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The definition of an analysis.
+type AnalysisDefinition struct {
+
+	// An array of dataset identifier declarations. This mapping allows the usage of
+	// dataset identifiers instead of dataset ARNs throughout analysis sub-structures.
+	//
+	// This member is required.
+	DataSetIdentifierDeclarations []DataSetIdentifierDeclaration
+
+	// The configuration for default analysis settings.
+	AnalysisDefaults *AnalysisDefaults
+
+	// An array of calculated field definitions for the analysis.
+	CalculatedFields []CalculatedField
+
+	// An array of analysis-level column configurations. Column configurations can be
+	// used to set default formatting for a column to be used throughout an analysis.
+	ColumnConfigurations []ColumnConfiguration
+
+	// Filter definitions for an analysis. For more information, see Filtering Data in
+	// Amazon QuickSight
+	// (https://docs.aws.amazon.com/quicksight/latest/user/adding-a-filter.html) in the
+	// Amazon QuickSight User Guide.
+	FilterGroups []FilterGroup
+
+	// An array of parameter declarations for an analysis. Parameters are named
+	// variables that can transfer a value for use by an action or an object. For more
+	// information, see Parameters in Amazon QuickSight
+	// (https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html)
+	// in the Amazon QuickSight User Guide.
+	ParameterDeclarations []ParameterDeclaration
+
+	// An array of sheet definitions for an analysis. Each SheetDefinition provides
+	// detailed information about a sheet within this analysis.
+	Sheets []SheetDefinition
+
+	noSmithyDocumentSerde
+}
+
 // Analysis error.
 type AnalysisError struct {
 
@@ -176,6 +292,9 @@ type AnalysisError struct {
 	// The type of the analysis error.
 	Type AnalysisErrorType
 
+	// Lists the violated entities that caused the analysis error
+	ViolatedEntities []Entity
+
 	noSmithyDocumentSerde
 }
 
@@ -183,11 +302,47 @@ type AnalysisError struct {
 type AnalysisSearchFilter struct {
 
 	// The name of the value that you want to use as a filter, for example "Name":
-	// "QUICKSIGHT_USER".
+	// "QUICKSIGHT_OWNER". Valid values are defined as follows:
+	//
+	// *
+	// QUICKSIGHT_VIEWER_OR_OWNER: Provide an ARN of a user or group, and any analyses
+	// with that ARN listed as one of the analysis' owners or viewers are returned.
+	// Implicit permissions from folders or groups are considered.
+	//
+	// * QUICKSIGHT_OWNER:
+	// Provide an ARN of a user or group, and any analyses with that ARN listed as one
+	// of the owners of the analyses are returned. Implicit permissions from folders or
+	// groups are considered.
+	//
+	// * DIRECT_QUICKSIGHT_SOLE_OWNER: Provide an ARN of a user
+	// or group, and any analyses with that ARN listed as the only owner of the
+	// analysis are returned. Implicit permissions from folders or groups are not
+	// considered.
+	//
+	// * DIRECT_QUICKSIGHT_OWNER: Provide an ARN of a user or group, and
+	// any analyses with that ARN listed as one of the owners of the analyses are
+	// returned. Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// DIRECT_QUICKSIGHT_VIEWER_OR_OWNER: Provide an ARN of a user or group, and any
+	// analyses with that ARN listed as one of the owners or viewers of the analyses
+	// are returned. Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// ANALYSIS_NAME: Any analyses whose names have a substring match to this value
+	// will be returned.
 	Name AnalysisFilterAttribute
 
 	// The comparison operator that you want to use as a filter, for example
-	// "Operator": "StringEquals".
+	// "Operator": "StringEquals". Valid values are "StringEquals" and "StringLike". If
+	// you set the operator value to "StringEquals", you need to provide an ownership
+	// related filter in the "NAME" field and the arn of the user or group whose
+	// folders you want to search in the "Value" field. For example,
+	// "Name":"DIRECT_QUICKSIGHT_OWNER", "Operator": "StringEquals", "Value":
+	// "arn:aws:quicksight:us-east-1:1:user/default/UserName1". If you set the value to
+	// "StringLike", you need to provide the name of the folders you are searching for.
+	// For example, "Name":"ANALYSIS_NAME", "Operator": "StringLike", "Value": "Test".
+	// The "StringLike" operator only supports the NAME value ANALYSIS_NAME.
 	Operator FilterOperator
 
 	// The value of the named item, in this case QUICKSIGHT_USER, that you want to use
@@ -248,6 +403,20 @@ type AnalysisSummary struct {
 	noSmithyDocumentSerde
 }
 
+// The date configuration of the filter.
+type AnchorDateConfiguration struct {
+
+	// The options for the date configuration. Choose one of the options below:
+	//
+	// * NOW
+	AnchorOption AnchorOption
+
+	// The name of the parameter that is used for the anchor date configuration.
+	ParameterName *string
+
+	noSmithyDocumentSerde
+}
+
 // Information about the dashboard that you want to embed.
 type AnonymousUserDashboardEmbeddingConfiguration struct {
 
@@ -289,11 +458,83 @@ type AnonymousUserEmbeddingExperienceConfiguration struct {
 	// The type of embedding experience. In this case, Amazon QuickSight visuals.
 	DashboardVisual *AnonymousUserDashboardVisualEmbeddingConfiguration
 
+	// The Q search bar that you want to use for anonymous user embedding.
+	QSearchBar *AnonymousUserQSearchBarEmbeddingConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The settings that you want to use with the Q search bar.
+type AnonymousUserQSearchBarEmbeddingConfiguration struct {
+
+	// The QuickSight Q topic ID of the topic that you want the anonymous user to see
+	// first. This ID is included in the output URL. When the URL in response is
+	// accessed, Amazon QuickSight renders the Q search bar with this topic
+	// pre-selected. The Amazon Resource Name (ARN) of this Q topic must be included in
+	// the AuthorizedResourceArns parameter. Otherwise, the request will fail with
+	// InvalidParameterValueException.
+	//
+	// This member is required.
+	InitialTopicId *string
+
+	noSmithyDocumentSerde
+}
+
+// The arc axis configuration of a GaugeChartVisual.
+type ArcAxisConfiguration struct {
+
+	// The arc axis range of a GaugeChartVisual.
+	Range *ArcAxisDisplayRange
+
+	// The reserved range of the arc axis.
+	ReserveRange int32
+
+	noSmithyDocumentSerde
+}
+
+// The arc axis range of a GaugeChartVisual.
+type ArcAxisDisplayRange struct {
+
+	// The maximum value of the arc axis range.
+	Max *float64
+
+	// The minimum value of the arc axis range.
+	Min *float64
+
+	noSmithyDocumentSerde
+}
+
+// The arc configuration of a GaugeChartVisual.
+type ArcConfiguration struct {
+
+	// The option that determines the arc angle of a GaugeChartVisual.
+	ArcAngle *float64
+
+	// The options that determine the arc thickness of a GaugeChartVisual.
+	ArcThickness ArcThicknessOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the arc thickness of a GaugeChartVisual.
+type ArcOptions struct {
+
+	// The arc thickness of a GaugeChartVisual.
+	ArcThickness ArcThickness
+
 	noSmithyDocumentSerde
 }
 
 // Parameters for Amazon Athena.
 type AthenaParameters struct {
+
+	// Use the RoleArn structure to override an account-wide role for a specific Athena
+	// data source. For example, say an account administrator has turned off all Athena
+	// access with an account-wide role. The administrator can then use RoleArn to
+	// bypass the account-wide role and allow Athena access for the single Athena data
+	// source that is specified in the structure, even if the account-wide role
+	// forbidding Athena access is still active.
+	RoleArn *string
 
 	// The workgroup that Amazon Athena uses.
 	WorkGroup *string
@@ -354,11 +595,513 @@ type AwsIotAnalyticsParameters struct {
 	noSmithyDocumentSerde
 }
 
+// The data options for an axis. This is a union type structure. For this structure
+// to be valid, only one of the attributes can be defined.
+type AxisDataOptions struct {
+
+	// The options for an axis with a date field.
+	DateAxisOptions *DateAxisOptions
+
+	// The options for an axis with a numeric field.
+	NumericAxisOptions *NumericAxisOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that are saved for future extension.
+type AxisDisplayDataDrivenRange struct {
+	noSmithyDocumentSerde
+}
+
+// The minimum and maximum setup for an axis display range.
+type AxisDisplayMinMaxRange struct {
+
+	// The maximum setup for an axis display range.
+	Maximum *float64
+
+	// The minimum setup for an axis display range.
+	Minimum *float64
+
+	noSmithyDocumentSerde
+}
+
+// The display options for the axis label.
+type AxisDisplayOptions struct {
+
+	// Determines whether or not the axis line is visible.
+	AxisLineVisibility Visibility
+
+	// The offset value that determines the starting placement of the axis within a
+	// visual's bounds.
+	AxisOffset *string
+
+	// The data options for an axis.
+	DataOptions *AxisDataOptions
+
+	// Determines whether or not the grid line is visible.
+	GridLineVisibility Visibility
+
+	// The scroll bar options for an axis.
+	ScrollbarOptions *ScrollBarOptions
+
+	// The tick label options of an axis.
+	TickLabelOptions *AxisTickLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The range setup of a numeric axis display range. This is a union type structure.
+// For this structure to be valid, only one of the attributes can be defined.
+type AxisDisplayRange struct {
+
+	// The data-driven setup of an axis display range.
+	DataDriven *AxisDisplayDataDrivenRange
+
+	// The minimum and maximum setup of an axis display range.
+	MinMax *AxisDisplayMinMaxRange
+
+	noSmithyDocumentSerde
+}
+
+// The label options for a chart axis. You must specify the field that the label is
+// targeted to.
+type AxisLabelOptions struct {
+
+	// The options that indicate which field the label belongs to.
+	ApplyTo *AxisLabelReferenceOptions
+
+	// The text for the axis label.
+	CustomLabel *string
+
+	// The font configuration of the axis label.
+	FontConfiguration *FontConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The reference that specifies where the axis label is applied to.
+type AxisLabelReferenceOptions struct {
+
+	// The column that the axis label is targeted to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The field that the axis label is targeted to.
+	//
+	// This member is required.
+	FieldId *string
+
+	noSmithyDocumentSerde
+}
+
+// The liner axis scale setup. This is a union type structure. For this structure
+// to be valid, only one of the attributes can be defined.
+type AxisLinearScale struct {
+
+	// The step count setup of a linear axis.
+	StepCount *int32
+
+	// The step size setup of a linear axis.
+	StepSize *float64
+
+	noSmithyDocumentSerde
+}
+
+// The logarithmic axis scale setup.
+type AxisLogarithmicScale struct {
+
+	// The base setup of a logarithmic axis scale.
+	Base *float64
+
+	noSmithyDocumentSerde
+}
+
+// The scale setup options for a numeric axis display. This is a union type
+// structure. For this structure to be valid, only one of the attributes can be
+// defined.
+type AxisScale struct {
+
+	// The linear axis scale setup.
+	Linear *AxisLinearScale
+
+	// The logarithmic axis scale setup.
+	Logarithmic *AxisLogarithmicScale
+
+	noSmithyDocumentSerde
+}
+
+// The tick label options of an axis.
+type AxisTickLabelOptions struct {
+
+	// Determines whether or not the axis ticks are visible.
+	LabelOptions *LabelOptions
+
+	// The rotation angle of the axis tick labels.
+	RotationAngle *float64
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field wells of a bar chart.
+type BarChartAggregatedFieldWells struct {
+
+	// The category (y-axis) field well of a bar chart.
+	Category []DimensionField
+
+	// The color (group/color) field well of a bar chart.
+	Colors []DimensionField
+
+	// The small multiples field well of a bar chart.
+	SmallMultiples []DimensionField
+
+	// The value field wells of a bar chart. Values are aggregated by category.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a BarChartVisual.
+type BarChartConfiguration struct {
+
+	// Determines the arrangement of the bars. The orientation and arrangement of bars
+	// determine the type of bar that is used in the visual.
+	BarsArrangement BarsArrangement
+
+	// The label display options (grid line, range, scale, axis step) for bar chart
+	// category.
+	CategoryAxis *AxisDisplayOptions
+
+	// The label options (label text, label visibility and sort icon visibility) for a
+	// bar chart.
+	CategoryLabelOptions *ChartAxisLabelOptions
+
+	// The label options (label text, label visibility and sort icon visibility) for a
+	// color that is used in a bar chart.
+	ColorLabelOptions *ChartAxisLabelOptions
+
+	// The contribution analysis (anomaly configuration) setup of the visual.
+	ContributionAnalysisDefaults []ContributionAnalysisDefault
+
+	// The options that determine if visual data labels are displayed.
+	DataLabels *DataLabelOptions
+
+	// The field wells of the visual.
+	FieldWells *BarChartFieldWells
+
+	// The legend display setup of the visual.
+	Legend *LegendOptions
+
+	// The orientation of the bars in a bar chart visual. There are two valid values in
+	// this structure:
+	//
+	// * HORIZONTAL: Used for charts that have horizontal bars.
+	// Visuals that use this value are horizontal bar charts, horizontal stacked bar
+	// charts, and horizontal stacked 100% bar charts.
+	//
+	// * VERTICAL: Used for charts
+	// that have vertical bars. Visuals that use this value are vertical bar charts,
+	// vertical stacked bar charts, and vertical stacked 100% bar charts.
+	Orientation BarChartOrientation
+
+	// The reference line setup of the visual.
+	ReferenceLines []ReferenceLine
+
+	// The small multiples setup for the visual.
+	SmallMultiplesOptions *SmallMultiplesOptions
+
+	// The sort configuration of a BarChartVisual.
+	SortConfiguration *BarChartSortConfiguration
+
+	// The tooltip display setup of the visual.
+	Tooltip *TooltipOptions
+
+	// The label display options (grid line, range, scale, axis step) for a bar chart
+	// value.
+	ValueAxis *AxisDisplayOptions
+
+	// The label options (label text, label visibility and sort icon visibility) for a
+	// bar chart value.
+	ValueLabelOptions *ChartAxisLabelOptions
+
+	// The palette (chart color) display setup of the visual.
+	VisualPalette *VisualPalette
+
+	noSmithyDocumentSerde
+}
+
+// The field wells of a BarChartVisual. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type BarChartFieldWells struct {
+
+	// The aggregated field wells of a bar chart.
+	BarChartAggregatedFieldWells *BarChartAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// sort-configuration-description
+type BarChartSortConfiguration struct {
+
+	// The limit on the number of categories displayed in a bar chart.
+	CategoryItemsLimit *ItemsLimitConfiguration
+
+	// The sort configuration of category fields.
+	CategorySort []FieldSortOptions
+
+	// The limit on the number of values displayed in a bar chart.
+	ColorItemsLimit *ItemsLimitConfiguration
+
+	// The sort configuration of color fields in a bar chart.
+	ColorSort []FieldSortOptions
+
+	// The limit on the number of small multiples panels that are displayed.
+	SmallMultiplesLimitConfiguration *ItemsLimitConfiguration
+
+	// The sort configuration of the small multiples field.
+	SmallMultiplesSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A bar chart. The BarChartVisual structure describes a visual that is a member of
+// the bar chart family. The following charts can be described using this
+// structure:
+//
+// * Horizontal bar chart
+//
+// * Vertical bar chart
+//
+// * Horizontal stacked
+// bar chart
+//
+// * Vertical stacked bar chart
+//
+// * Horizontal stacked 100% bar chart
+//
+// *
+// Vertical stacked 100% bar chart
+//
+// For more information, see Using bar charts
+// (https://docs.aws.amazon.com/quicksight/latest/user/bar-charts.html) in the
+// Amazon QuickSight User Guide.
+type BarChartVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *BarChartConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the bin count of a histogram.
+type BinCountOptions struct {
+
+	// The options that determine the bin count value.
+	Value *int32
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the bin width of a histogram.
+type BinWidthOptions struct {
+
+	// The options that determine the bin count limit.
+	BinCountLimit *int64
+
+	// The options that determine the bin width value.
+	Value *float64
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a body section.
+type BodySectionConfiguration struct {
+
+	// The configuration of content in a body section.
+	//
+	// This member is required.
+	Content *BodySectionContent
+
+	// The unique identifier of a body section.
+	//
+	// This member is required.
+	SectionId *string
+
+	// The configuration of a page break for a section.
+	PageBreakConfiguration *SectionPageBreakConfiguration
+
+	// The style options of a body section.
+	Style *SectionStyle
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of content in a body section.
+type BodySectionContent struct {
+
+	// The layout configuration of a body section.
+	Layout *SectionLayoutConfiguration
+
+	noSmithyDocumentSerde
+}
+
 // The display options for tile borders for visuals.
 type BorderStyle struct {
 
 	// The option to enable display of borders for visuals.
-	Show bool
+	Show *bool
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field well for a box plot.
+type BoxPlotAggregatedFieldWells struct {
+
+	// The group by field well of a box plot chart. Values are grouped based on group
+	// by fields.
+	GroupBy []DimensionField
+
+	// The value field well of a box plot chart. Values are aggregated based on group
+	// by fields.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a BoxPlotVisual.
+type BoxPlotChartConfiguration struct {
+
+	// The box plot chart options for a box plot visual
+	BoxPlotOptions *BoxPlotOptions
+
+	// The label display options (grid line, range, scale, axis step) of a box plot
+	// category.
+	CategoryAxis *AxisDisplayOptions
+
+	// The label options (label text, label visibility and sort Icon visibility) of a
+	// box plot category.
+	CategoryLabelOptions *ChartAxisLabelOptions
+
+	// The field wells of the visual.
+	FieldWells *BoxPlotFieldWells
+
+	// The options for the legend setup of a visual.
+	Legend *LegendOptions
+
+	// The label display options (grid line, range, scale, axis step) of a box plot
+	// category.
+	PrimaryYAxisDisplayOptions *AxisDisplayOptions
+
+	// The label options (label text, label visibility and sort icon visibility) of a
+	// box plot value.
+	PrimaryYAxisLabelOptions *ChartAxisLabelOptions
+
+	// The reference line setup of the visual.
+	ReferenceLines []ReferenceLine
+
+	// The sort configuration of a BoxPlotVisual.
+	SortConfiguration *BoxPlotSortConfiguration
+
+	// The tooltip display setup of the visual.
+	Tooltip *TooltipOptions
+
+	// The palette (chart color) display setup of the visual.
+	VisualPalette *VisualPalette
+
+	noSmithyDocumentSerde
+}
+
+// The field wells of a BoxPlotVisual. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type BoxPlotFieldWells struct {
+
+	// The aggregated field wells of a box plot.
+	BoxPlotAggregatedFieldWells *BoxPlotAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The options of a box plot visual.
+type BoxPlotOptions struct {
+
+	// Determines the visibility of all data points of the box plot.
+	AllDataPointsVisibility Visibility
+
+	// Determines the visibility of the outlier in a box plot.
+	OutlierVisibility Visibility
+
+	// The style options of the box plot.
+	StyleOptions *BoxPlotStyleOptions
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a BoxPlotVisual.
+type BoxPlotSortConfiguration struct {
+
+	// The sort configuration of a group by fields.
+	CategorySort []FieldSortOptions
+
+	// The pagination configuration of a table visual or box plot.
+	PaginationConfiguration *PaginationConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The style options of the box plot.
+type BoxPlotStyleOptions struct {
+
+	// The fill styles (solid, transparent) of the box plot.
+	FillStyle BoxPlotFillStyle
+
+	noSmithyDocumentSerde
+}
+
+// A box plot. For more information, see Using box plots
+// (https://docs.aws.amazon.com/quicksight/latest/user/box-plots.html) in the
+// Amazon QuickSight User Guide.
+type BoxPlotVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers..
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *BoxPlotChartConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
 
 	noSmithyDocumentSerde
 }
@@ -386,6 +1129,67 @@ type CalculatedColumn struct {
 	noSmithyDocumentSerde
 }
 
+// The calculated field of an analysis.
+type CalculatedField struct {
+
+	// The data set that is used in this calculated field.
+	//
+	// This member is required.
+	DataSetIdentifier *string
+
+	// The expression of the calculated field.
+	//
+	// This member is required.
+	Expression *string
+
+	// The name of the calculated field.
+	//
+	// This member is required.
+	Name *string
+
+	noSmithyDocumentSerde
+}
+
+// The table calculation measure field for pivot tables.
+type CalculatedMeasureField struct {
+
+	// The expression in the table calculation.
+	//
+	// This member is required.
+	Expression *string
+
+	// The custom field ID.
+	//
+	// This member is required.
+	FieldId *string
+
+	noSmithyDocumentSerde
+}
+
+// The values that are displayed in a control can be configured to only show values
+// that are valid based on what's selected in other controls.
+type CascadingControlConfiguration struct {
+
+	// A list of source controls that determine the values that are used in the current
+	// control.
+	SourceControls []CascadingControlSource
+
+	noSmithyDocumentSerde
+}
+
+// The source controls that are used in a CascadingControlConfiguration.
+type CascadingControlSource struct {
+
+	// The column identifier that determines which column to look up for the source
+	// sheet control.
+	ColumnToMatch *ColumnIdentifier
+
+	// The source sheet control ID of a CascadingControlSource.
+	SourceSheetControlId *string
+
+	noSmithyDocumentSerde
+}
+
 // A transform operation that casts a column to a different type.
 type CastColumnTypeOperation struct {
 
@@ -402,6 +1206,185 @@ type CastColumnTypeOperation struct {
 	// When casting a column from string to datetime type, you can supply a string in a
 	// format supported by Amazon QuickSight to denote the source data format.
 	Format *string
+
+	noSmithyDocumentSerde
+}
+
+// The dimension type field with categorical type columns..
+type CategoricalDimensionField struct {
+
+	// The column that is used in the CategoricalDimensionField.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The custom field ID.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The format configuration of the field.
+	FormatConfiguration *StringFormatConfiguration
+
+	// The custom hierarchy ID.
+	HierarchyId *string
+
+	noSmithyDocumentSerde
+}
+
+// The measure type field with categorical type columns.
+type CategoricalMeasureField struct {
+
+	// The column that is used in the CategoricalMeasureField.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The custom field ID.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The aggregation function of the measure field.
+	AggregationFunction CategoricalAggregationFunction
+
+	// The format configuration of the field.
+	FormatConfiguration *StringFormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The numeric equality type drill down filter.
+type CategoryDrillDownFilter struct {
+
+	// A list of the string inputs that are the values of the category drill down
+	// filter.
+	//
+	// This member is required.
+	CategoryValues []string
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	noSmithyDocumentSerde
+}
+
+// A CategoryFilter filters text values. For more information, see Adding text
+// filters
+// (https://docs.aws.amazon.com/quicksight/latest/user/add-a-text-filter-data-prep.html)
+// in the Amazon QuickSight User Guide.
+type CategoryFilter struct {
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The configuration for a CategoryFilter.
+	//
+	// This member is required.
+	Configuration *CategoryFilterConfiguration
+
+	// An identifier that uniquely identifies a filter within a dashboard, analysis, or
+	// template.
+	//
+	// This member is required.
+	FilterId *string
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for a CategoryFilter. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type CategoryFilterConfiguration struct {
+
+	// A custom filter that filters based on a single value. This filter can be
+	// partially matched.
+	CustomFilterConfiguration *CustomFilterConfiguration
+
+	// A list of custom filter values. In the Amazon QuickSight console, this filter
+	// type is called a custom filter list.
+	CustomFilterListConfiguration *CustomFilterListConfiguration
+
+	// A list of filter configurations. In the Amazon QuickSight console, this filter
+	// type is called a filter list.
+	FilterListConfiguration *FilterListConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The label options for an axis on a chart.
+type ChartAxisLabelOptions struct {
+
+	// The label options for a chart axis.
+	AxisLabelOptions []AxisLabelOptions
+
+	// The visibility configuration of the sort icon on a chart's axis label.
+	SortIconVisibility Visibility
+
+	// The visibility of an axis label on a chart. Choose one of the following
+	// options:
+	//
+	// * VISIBLE: Shows the axis.
+	//
+	// * HIDDEN: Hides the axis.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The cluster marker that is a part of the cluster marker configuration.
+type ClusterMarker struct {
+
+	// The simple cluster marker of the cluster marker.
+	SimpleClusterMarker *SimpleClusterMarker
+
+	noSmithyDocumentSerde
+}
+
+// The cluster marker configuration of the geospatial map selected point style.
+type ClusterMarkerConfiguration struct {
+
+	// The cluster marker that is a part of the cluster marker configuration
+	ClusterMarker *ClusterMarker
+
+	noSmithyDocumentSerde
+}
+
+// Determines the color scale that is applied to the visual.
+type ColorScale struct {
+
+	// Determines the color fill type.
+	//
+	// This member is required.
+	ColorFillType ColorFillType
+
+	// Determines the list of colors that are applied to the visual.
+	//
+	// This member is required.
+	Colors []DataColor
+
+	// Determines the color that is applied to null values.
+	NullValueColor *DataColor
+
+	noSmithyDocumentSerde
+}
+
+// The general configuration of a column.
+type ColumnConfiguration struct {
+
+	// The column.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The format configuration of a column.
+	FormatConfiguration *FormatConfiguration
+
+	// The role of the column.
+	Role ColumnRole
 
 	noSmithyDocumentSerde
 }
@@ -447,6 +1430,40 @@ type ColumnGroupSchema struct {
 	noSmithyDocumentSerde
 }
 
+// The option that determines the hierarchy of the fields for a visual element.
+type ColumnHierarchy struct {
+
+	// The option that determines the hierarchy of any DateTime fields.
+	DateTimeHierarchy *DateTimeHierarchy
+
+	// The option that determines the hierarchy of the fields that are built within a
+	// visual's field wells. These fields can't be duplicated to other visuals.
+	ExplicitHierarchy *ExplicitHierarchy
+
+	// The option that determines the hierarchy of the fields that are defined during
+	// data preparation. These fields are available to use in any analysis that uses
+	// the data source.
+	PredefinedHierarchy *PredefinedHierarchy
+
+	noSmithyDocumentSerde
+}
+
+// A column of a data set.
+type ColumnIdentifier struct {
+
+	// The name of the column.
+	//
+	// This member is required.
+	ColumnName *string
+
+	// The data set that the column belongs to.
+	//
+	// This member is required.
+	DataSetIdentifier *string
+
+	noSmithyDocumentSerde
+}
+
 // A rule defined to grant access on one or more restricted columns. Each dataset
 // can have multiple rules. To create a restricted column, you add it to one or
 // more rules. Each rule must contain at least one column and at least one user or
@@ -478,6 +1495,25 @@ type ColumnSchema struct {
 	noSmithyDocumentSerde
 }
 
+// The sort configuration for a column that is not used in a field well.
+type ColumnSort struct {
+
+	// The sort direction.
+	//
+	// This member is required.
+	Direction SortDirection
+
+	// A column of a data set.
+	//
+	// This member is required.
+	SortBy *ColumnIdentifier
+
+	// The aggregation function that is defined in the column sort.
+	AggregationFunction *AggregationFunction
+
+	noSmithyDocumentSerde
+}
+
 // A tag for a column in a TagColumnOperation
 // (https://docs.aws.amazon.com/quicksight/latest/APIReference/API_TagColumnOperation.html)
 // structure. This is a variant type structure. For this structure to be valid,
@@ -489,6 +1525,373 @@ type ColumnTag struct {
 
 	// A geospatial role for a column.
 	ColumnGeographicRole GeoSpatialDataRole
+
+	noSmithyDocumentSerde
+}
+
+// The tooltip item for the columns that are not part of a field well.
+type ColumnTooltipItem struct {
+
+	// The target column of the tooltip item.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The aggregation function of the column tooltip item.
+	Aggregation *AggregationFunction
+
+	// The label of the tooltip item.
+	Label *string
+
+	// The visibility of the tooltip item.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field wells of a combo chart.
+type ComboChartAggregatedFieldWells struct {
+
+	// The aggregated BarValues field well of a combo chart.
+	BarValues []MeasureField
+
+	// The aggregated category field wells of a combo chart.
+	Category []DimensionField
+
+	// The aggregated colors field well of a combo chart.
+	Colors []DimensionField
+
+	// The aggregated LineValues field well of a combo chart.
+	LineValues []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a ComboChartVisual.
+type ComboChartConfiguration struct {
+
+	// The options that determine if visual data labels are displayed. The data label
+	// options for a bar in a combo chart.
+	BarDataLabels *DataLabelOptions
+
+	// Determines the bar arrangement in a combo chart. The following are valid values
+	// in this structure:
+	//
+	// * CLUSTERED: For clustered bar combo charts.
+	//
+	// * STACKED: For
+	// stacked bar combo charts.
+	//
+	// * STACKED_PERCENT: Do not use. If you use this value,
+	// the operation returns a validation error.
+	BarsArrangement BarsArrangement
+
+	// The category axis of a combo chart.
+	CategoryAxis *AxisDisplayOptions
+
+	// The label options (label text, label visibility, and sort icon visibility) of a
+	// combo chart category (group/color) field well.
+	CategoryLabelOptions *ChartAxisLabelOptions
+
+	// The label options (label text, label visibility, and sort icon visibility) of a
+	// combo chart's color field well.
+	ColorLabelOptions *ChartAxisLabelOptions
+
+	// The field wells of the visual.
+	FieldWells *ComboChartFieldWells
+
+	// The legend display setup of the visual.
+	Legend *LegendOptions
+
+	// The options that determine if visual data labels are displayed. The data label
+	// options for a line in a combo chart.
+	LineDataLabels *DataLabelOptions
+
+	// The label display options (grid line, range, scale, and axis step) of a combo
+	// chart's primary y-axis (bar) field well.
+	PrimaryYAxisDisplayOptions *AxisDisplayOptions
+
+	// The label options (label text, label visibility, and sort icon visibility) of a
+	// combo chart's primary y-axis (bar) field well.
+	PrimaryYAxisLabelOptions *ChartAxisLabelOptions
+
+	// The reference line setup of the visual.
+	ReferenceLines []ReferenceLine
+
+	// The label display options (grid line, range, scale, axis step) of a combo
+	// chart's secondary y-axis (line) field well.
+	SecondaryYAxisDisplayOptions *AxisDisplayOptions
+
+	// The label options (label text, label visibility, and sort icon visibility) of a
+	// combo chart's secondary y-axis(line) field well.
+	SecondaryYAxisLabelOptions *ChartAxisLabelOptions
+
+	// The sort configuration of a ComboChartVisual.
+	SortConfiguration *ComboChartSortConfiguration
+
+	// The legend display setup of the visual.
+	Tooltip *TooltipOptions
+
+	// The palette (chart color) display setup of the visual.
+	VisualPalette *VisualPalette
+
+	noSmithyDocumentSerde
+}
+
+// The field wells of the visual. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type ComboChartFieldWells struct {
+
+	// The aggregated field wells of a combo chart. Combo charts only have aggregated
+	// field wells. Columns in a combo chart are aggregated by category.
+	ComboChartAggregatedFieldWells *ComboChartAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a ComboChartVisual.
+type ComboChartSortConfiguration struct {
+
+	// The item limit configuration for the category field well of a combo chart.
+	CategoryItemsLimit *ItemsLimitConfiguration
+
+	// The sort configuration of the category field well in a combo chart.
+	CategorySort []FieldSortOptions
+
+	// The item limit configuration of the color field well in a combo chart.
+	ColorItemsLimit *ItemsLimitConfiguration
+
+	// The sort configuration of the color field well in a combo chart.
+	ColorSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A combo chart. The ComboChartVisual includes stacked bar combo charts and
+// clustered bar combo charts For more information, see Using combo charts
+// (https://docs.aws.amazon.com/quicksight/latest/user/combo-charts.html) in the
+// Amazon QuickSight User Guide.
+type ComboChartVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *ComboChartConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The comparison display configuration of a KPI or gauge chart.
+type ComparisonConfiguration struct {
+
+	// The format of the comparison.
+	ComparisonFormat *ComparisonFormatConfiguration
+
+	// The method of the comparison. Choose from the following options:
+	//
+	// *
+	// DIFFERENCE
+	//
+	// * PERCENT_DIFFERENCE
+	//
+	// * PERCENT
+	ComparisonMethod ComparisonMethod
+
+	noSmithyDocumentSerde
+}
+
+// The format of the comparison. This is a union type structure. For this structure
+// to be valid, only one of the attributes can be defined.
+type ComparisonFormatConfiguration struct {
+
+	// The number display format.
+	NumberDisplayFormatConfiguration *NumberDisplayFormatConfiguration
+
+	// The percentage display format.
+	PercentageDisplayFormatConfiguration *PercentageDisplayFormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The computation union that is used in an insight visual. This is a union type
+// structure. For this structure to be valid, only one of the attributes can be
+// defined.
+type Computation struct {
+
+	// The forecast computation configuration.
+	Forecast *ForecastComputation
+
+	// The growth rate computation configuration.
+	GrowthRate *GrowthRateComputation
+
+	// The maximum and minimum computation configuration.
+	MaximumMinimum *MaximumMinimumComputation
+
+	// The metric comparison computation configuration.
+	MetricComparison *MetricComparisonComputation
+
+	// The period over period computation configuration.
+	PeriodOverPeriod *PeriodOverPeriodComputation
+
+	// The period to DataSetIdentifier computation configuration.
+	PeriodToDate *PeriodToDateComputation
+
+	// The top movers and bottom movers computation configuration.
+	TopBottomMovers *TopBottomMoversComputation
+
+	// The top ranked and bottom ranked computation configuration.
+	TopBottomRanked *TopBottomRankedComputation
+
+	// The total aggregation computation configuration.
+	TotalAggregation *TotalAggregationComputation
+
+	// The unique values computation configuration.
+	UniqueValues *UniqueValuesComputation
+
+	noSmithyDocumentSerde
+}
+
+// The formatting configuration for the color.
+type ConditionalFormattingColor struct {
+
+	// Formatting configuration for gradient color.
+	Gradient *ConditionalFormattingGradientColor
+
+	// Formatting configuration for solid color.
+	Solid *ConditionalFormattingSolidColor
+
+	noSmithyDocumentSerde
+}
+
+// Determines the custom condition for an icon set.
+type ConditionalFormattingCustomIconCondition struct {
+
+	// The expression that determines the condition of the icon set.
+	//
+	// This member is required.
+	Expression *string
+
+	// Custom icon options for an icon set.
+	//
+	// This member is required.
+	IconOptions *ConditionalFormattingCustomIconOptions
+
+	// Determines the color of the icon.
+	Color *string
+
+	// Determines the icon display configuration.
+	DisplayConfiguration *ConditionalFormattingIconDisplayConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// Custom icon options for an icon set.
+type ConditionalFormattingCustomIconOptions struct {
+
+	// Determines the type of icon.
+	Icon Icon
+
+	// Determines the Unicode icon type.
+	UnicodeIcon *string
+
+	noSmithyDocumentSerde
+}
+
+// Formatting configuration for gradient color.
+type ConditionalFormattingGradientColor struct {
+
+	// Determines the color.
+	//
+	// This member is required.
+	Color *GradientColor
+
+	// The expression that determines the formatting configuration for gradient color.
+	//
+	// This member is required.
+	Expression *string
+
+	noSmithyDocumentSerde
+}
+
+// The formatting configuration for the icon.
+type ConditionalFormattingIcon struct {
+
+	// Determines the custom condition for an icon set.
+	CustomCondition *ConditionalFormattingCustomIconCondition
+
+	// Formatting configuration for icon set.
+	IconSet *ConditionalFormattingIconSet
+
+	noSmithyDocumentSerde
+}
+
+// Determines the icon display configuration.
+type ConditionalFormattingIconDisplayConfiguration struct {
+
+	// Determines the icon display configuration.
+	IconDisplayOption ConditionalFormattingIconDisplayOption
+
+	noSmithyDocumentSerde
+}
+
+// Formatting configuration for icon set.
+type ConditionalFormattingIconSet struct {
+
+	// The expression that determines the formatting configuration for the icon set.
+	//
+	// This member is required.
+	Expression *string
+
+	// Determines the icon set type.
+	IconSetType ConditionalFormattingIconSetType
+
+	noSmithyDocumentSerde
+}
+
+// Formatting configuration for solid color.
+type ConditionalFormattingSolidColor struct {
+
+	// The expression that determines the formatting configuration for solid color.
+	//
+	// This member is required.
+	Expression *string
+
+	// Determines the color.
+	Color *string
+
+	noSmithyDocumentSerde
+}
+
+// The contribution analysis visual display for a line, pie, or bar chart.
+type ContributionAnalysisDefault struct {
+
+	// The dimensions columns that are used in the contribution analysis, usually a
+	// list of ColumnIdentifiers.
+	//
+	// This member is required.
+	ContributorDimensions []ColumnIdentifier
+
+	// The measure field that is used in the contribution analysis.
+	//
+	// This member is required.
+	MeasureFieldId *string
 
 	noSmithyDocumentSerde
 }
@@ -532,6 +1935,256 @@ type CredentialPair struct {
 	noSmithyDocumentSerde
 }
 
+// The options that determine the currency display format configuration.
+type CurrencyDisplayFormatConfiguration struct {
+
+	// The option that determines the decimal places configuration.
+	DecimalPlacesConfiguration *DecimalPlacesConfiguration
+
+	// The options that determine the negative value configuration.
+	NegativeValueConfiguration *NegativeValueConfiguration
+
+	// The options that determine the null value format configuration.
+	NullValueFormatConfiguration *NullValueFormatConfiguration
+
+	// Determines the number scale value for the currency format.
+	NumberScale NumberScale
+
+	// Determines the prefix value of the currency format.
+	Prefix *string
+
+	// The options that determine the numeric separator configuration.
+	SeparatorConfiguration *NumericSeparatorConfiguration
+
+	// Determines the suffix value of the currency format.
+	Suffix *string
+
+	// Determines the symbol for the currency format.
+	Symbol *string
+
+	noSmithyDocumentSerde
+}
+
+// The filter operation that filters data included in a visual or in an entire
+// sheet.
+type CustomActionFilterOperation struct {
+
+	// The configuration that chooses the fields to be filtered.
+	//
+	// This member is required.
+	SelectedFieldsConfiguration *FilterOperationSelectedFieldsConfiguration
+
+	// The configuration that chooses the target visuals to be filtered.
+	//
+	// This member is required.
+	TargetVisualsConfiguration *FilterOperationTargetVisualsConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The navigation operation that navigates between different sheets in the same
+// analysis. This is a union type structure. For this structure to be valid, only
+// one of the attributes can be defined.
+type CustomActionNavigationOperation struct {
+
+	// The configuration that chooses the navigation target.
+	LocalNavigationConfiguration *LocalNavigationConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The set parameter operation that sets parameters in custom action.
+type CustomActionSetParametersOperation struct {
+
+	// The parameter that determines the value configuration.
+	//
+	// This member is required.
+	ParameterValueConfigurations []SetParameterValueConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The URL operation that opens a link to another webpage.
+type CustomActionURLOperation struct {
+
+	// The target of the CustomActionURLOperation. Valid values are defined as
+	// follows:
+	//
+	// * NEW_TAB: Opens the target URL in a new browser tab.
+	//
+	// * NEW_WINDOW:
+	// Opens the target URL in a new browser window.
+	//
+	// * SAME_TAB: Opens the target URL
+	// in the same browser tab.
+	//
+	// This member is required.
+	URLTarget URLTargetConfiguration
+
+	// THe URL link of the CustomActionURLOperation.
+	//
+	// This member is required.
+	URLTemplate *string
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a CustomContentVisual.
+type CustomContentConfiguration struct {
+
+	// The content type of the custom content visual. You can use this to have the
+	// visual render as an image.
+	ContentType CustomContentType
+
+	// The input URL that links to the custom content that you want in the custom
+	// visual.
+	ContentUrl *string
+
+	// The sizing options for the size of the custom content visual. This structure is
+	// required when the ContentType of the visual is 'IMAGE'.
+	ImageScaling CustomContentImageScalingConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// A visual that contains custom content. For more information, see Using custom
+// visual content
+// (https://docs.aws.amazon.com/quicksight/latest/user/custom-visual-content.html)
+// in the Amazon QuickSight User Guide.
+type CustomContentVisual struct {
+
+	// The dataset that is used to create the custom content visual. You can't create a
+	// visual without a dataset.
+	//
+	// This member is required.
+	DataSetIdentifier *string
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration of a CustomContentVisual.
+	ChartConfiguration *CustomContentConfiguration
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// A custom filter that filters based on a single value. This filter can be
+// partially matched.
+type CustomFilterConfiguration struct {
+
+	// The match operator that is used to determine if a filter should be applied.
+	//
+	// This member is required.
+	MatchOperator CategoryFilterMatchOperator
+
+	// This option determines how null values should be treated when filtering data.
+	//
+	// *
+	// ALL_VALUES: Include null values in filtered results.
+	//
+	// * NULLS_ONLY: Only include
+	// null values in filtered results.
+	//
+	// * NON_NULLS_ONLY: Exclude null values from
+	// filtered results.
+	//
+	// This member is required.
+	NullOption FilterNullOption
+
+	// The category value for the filter. This field is mutually exclusive to
+	// ParameterName.
+	CategoryValue *string
+
+	// The parameter whose value should be used for the filter value. This field is
+	// mutually exclusive to CategoryValue.
+	ParameterName *string
+
+	// Select all of the values. Null is not the assigned value of select all.
+	//
+	// *
+	// FILTER_ALL_VALUES
+	SelectAllOptions CategoryFilterSelectAllOptions
+
+	noSmithyDocumentSerde
+}
+
+// A list of custom filter values.
+type CustomFilterListConfiguration struct {
+
+	// The match operator that is used to determine if a filter should be applied.
+	//
+	// This member is required.
+	MatchOperator CategoryFilterMatchOperator
+
+	// This option determines how null values should be treated when filtering data.
+	//
+	// *
+	// ALL_VALUES: Include null values in filtered results.
+	//
+	// * NULLS_ONLY: Only include
+	// null values in filtered results.
+	//
+	// * NON_NULLS_ONLY: Exclude null values from
+	// filtered results.
+	//
+	// This member is required.
+	NullOption FilterNullOption
+
+	// The list of category values for the filter.
+	CategoryValues []string
+
+	// Select all of the values. Null is not the assigned value of select all.
+	//
+	// *
+	// FILTER_ALL_VALUES
+	SelectAllOptions CategoryFilterSelectAllOptions
+
+	noSmithyDocumentSerde
+}
+
+// The custom narrative options.
+type CustomNarrativeOptions struct {
+
+	// The string input of custom narrative.
+	//
+	// This member is required.
+	Narrative *string
+
+	noSmithyDocumentSerde
+}
+
+// The customized parameter values. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type CustomParameterValues struct {
+
+	// A list of datetime-type parameter values.
+	DateTimeValues []time.Time
+
+	// A list of decimal-type parameter values.
+	DecimalValues []float64
+
+	// A list of integer-type parameter values.
+	IntegerValues []int64
+
+	// A list of string-type parameter values.
+	StringValues []string
+
+	noSmithyDocumentSerde
+}
+
 // A physical table type built from the results of the custom SQL query.
 type CustomSql struct {
 
@@ -556,22 +2209,38 @@ type CustomSql struct {
 	noSmithyDocumentSerde
 }
 
+// The configuration of custom values for the destination parameter in
+// DestinationParameterValueConfiguration.
+type CustomValuesConfiguration struct {
+
+	// The customized parameter values. This is a union type structure. For this
+	// structure to be valid, only one of the attributes can be defined.
+	//
+	// This member is required.
+	CustomValues *CustomParameterValues
+
+	// Includes the null value in custom action parameter values.
+	IncludeNullValue *bool
+
+	noSmithyDocumentSerde
+}
+
 // Dashboard.
 type Dashboard struct {
 
 	// The Amazon Resource Name (ARN) of the resource.
 	Arn *string
 
-	// The time that this dataset was created.
+	// The time that this dashboard was created.
 	CreatedTime *time.Time
 
 	// Dashboard ID.
 	DashboardId *string
 
-	// The last time that this dataset was published.
+	// The last time that this dashboard was published.
 	LastPublishedTime *time.Time
 
-	// The last time that this dataset was updated.
+	// The last time that this dashboard was updated.
 	LastUpdatedTime *time.Time
 
 	// A display name for the dashboard.
@@ -592,6 +2261,9 @@ type DashboardError struct {
 	// Type.
 	Type DashboardErrorType
 
+	// Lists the violated entities that caused the dashboard error.
+	ViolatedEntities []Entity
+
 	noSmithyDocumentSerde
 }
 
@@ -601,11 +2273,38 @@ type DashboardPublishOptions struct {
 	// Ad hoc (one-time) filtering option.
 	AdHocFilteringOption *AdHocFilteringOption
 
+	// The drill-down options of data points in a dashboard.
+	DataPointDrillUpDownOption *DataPointDrillUpDownOption
+
+	// The data point menu label options of a dashboard.
+	DataPointMenuLabelOption *DataPointMenuLabelOption
+
+	// The data point tool tip options of a dashboard.
+	DataPointTooltipOption *DataPointTooltipOption
+
 	// Export to .csv option.
 	ExportToCSVOption *ExportToCSVOption
 
+	// Determines if hidden fields are exported with a dashboard.
+	ExportWithHiddenFieldsOption *ExportWithHiddenFieldsOption
+
 	// Sheet controls option.
 	SheetControlsOption *SheetControlsOption
+
+	// The sheet layout maximization options of a dashbaord.
+	SheetLayoutElementMaximizationOption *SheetLayoutElementMaximizationOption
+
+	// The axis sort options of a dashboard.
+	VisualAxisSortOption *VisualAxisSortOption
+
+	// The menu options of a visual in a dashboard.
+	VisualMenuOption *VisualMenuOption
+
+	// The visual publish options of a visual in a dashboard.
+	//
+	// Deprecated: VisualPublishOptions property will reach its end of standard support
+	// in a future release. To perform this action, use ExportWithHiddenFields.
+	VisualPublishOptions *DashboardVisualPublishOptions
 
 	noSmithyDocumentSerde
 }
@@ -613,14 +2312,51 @@ type DashboardPublishOptions struct {
 // A filter that you apply when searching for dashboards.
 type DashboardSearchFilter struct {
 
-	// The comparison operator that you want to use as a filter, for example,
-	// "Operator": "StringEquals".
+	// The comparison operator that you want to use as a filter, for example
+	// "Operator": "StringEquals". Valid values are "StringEquals" and "StringLike". If
+	// you set the operator value to "StringEquals", you need to provide an ownership
+	// related filter in the "NAME" field and the arn of the user or group whose
+	// folders you want to search in the "Value" field. For example,
+	// "Name":"DIRECT_QUICKSIGHT_OWNER", "Operator": "StringEquals", "Value":
+	// "arn:aws:quicksight:us-east-1:1:user/default/UserName1". If you set the value to
+	// "StringLike", you need to provide the name of the folders you are searching for.
+	// For example, "Name":"DASHBOARD_NAME", "Operator": "StringLike", "Value": "Test".
+	// The "StringLike" operator only supports the NAME value DASHBOARD_NAME.
 	//
 	// This member is required.
 	Operator FilterOperator
 
 	// The name of the value that you want to use as a filter, for example, "Name":
-	// "QUICKSIGHT_USER".
+	// "QUICKSIGHT_OWNER". Valid values are defined as follows:
+	//
+	// *
+	// QUICKSIGHT_VIEWER_OR_OWNER: Provide an ARN of a user or group, and any
+	// dashboards with that ARN listed as one of the dashboards's owners or viewers are
+	// returned. Implicit permissions from folders or groups are considered.
+	//
+	// *
+	// QUICKSIGHT_OWNER: Provide an ARN of a user or group, and any dashboards with
+	// that ARN listed as one of the owners of the dashboards are returned. Implicit
+	// permissions from folders or groups are considered.
+	//
+	// *
+	// DIRECT_QUICKSIGHT_SOLE_OWNER: Provide an ARN of a user or group, and any
+	// dashboards with that ARN listed as the only owner of the dashboard are returned.
+	// Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// DIRECT_QUICKSIGHT_OWNER: Provide an ARN of a user or group, and any dashboards
+	// with that ARN listed as one of the owners of the dashboards are returned.
+	// Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// DIRECT_QUICKSIGHT_VIEWER_OR_OWNER: Provide an ARN of a user or group, and any
+	// dashboards with that ARN listed as one of the owners or viewers of the
+	// dashboards are returned. Implicit permissions from folders or groups are not
+	// considered.
+	//
+	// * DASHBOARD_NAME: Any dashboards whose names have a substring match
+	// to this value will be returned.
 	Name DashboardFilterAttribute
 
 	// The value of the named item, in this case QUICKSIGHT_USER, that you want to use
@@ -721,6 +2457,46 @@ type DashboardVersion struct {
 	noSmithyDocumentSerde
 }
 
+// The contents of a dashboard.
+type DashboardVersionDefinition struct {
+
+	// An array of dataset identifier declarations. With this mapping,you can use
+	// dataset identifiers instead of dataset Amazon Resource Names (ARNs) throughout
+	// the dashboard's sub-structures.
+	//
+	// This member is required.
+	DataSetIdentifierDeclarations []DataSetIdentifierDeclaration
+
+	// The configuration for default analysis settings.
+	AnalysisDefaults *AnalysisDefaults
+
+	// An array of calculated field definitions for the dashboard.
+	CalculatedFields []CalculatedField
+
+	// An array of dashboard-level column configurations. Column configurations are
+	// used to set the default formatting for a column that is used throughout a
+	// dashboard.
+	ColumnConfigurations []ColumnConfiguration
+
+	// The filter definitions for a dashboard. For more information, see Filtering Data
+	// in Amazon QuickSight
+	// (https://docs.aws.amazon.com/quicksight/latest/user/adding-a-filter.html) in the
+	// Amazon QuickSight User Guide.
+	FilterGroups []FilterGroup
+
+	// The parameter declarations for a dashboard. Parameters are named variables that
+	// can transfer a value for use by an action or an object. For more information,
+	// see Parameters in Amazon QuickSight
+	// (https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html)
+	// in the Amazon QuickSight User Guide.
+	ParameterDeclarations []ParameterDeclaration
+
+	// An array of sheet definitions for a dashboard.
+	Sheets []SheetDefinition
+
+	noSmithyDocumentSerde
+}
+
 // Dashboard version summary.
 type DashboardVersionSummary struct {
 
@@ -787,6 +2563,65 @@ type DashboardVisualId struct {
 	noSmithyDocumentSerde
 }
 
+// The visual publish options of a visual in a dashboard
+type DashboardVisualPublishOptions struct {
+
+	// Determines if hidden fields are included in an exported dashboard.
+	ExportHiddenFieldsOption *ExportHiddenFieldsOption
+
+	noSmithyDocumentSerde
+}
+
+// The options for data bars.
+type DataBarsOptions struct {
+
+	// The field ID for the data bars options.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The color of the negative data bar.
+	NegativeColor *string
+
+	// The color of the positive data bar.
+	PositiveColor *string
+
+	noSmithyDocumentSerde
+}
+
+// The required parameters that are needed to connect to a Databricks data source.
+type DatabricksParameters struct {
+
+	// The host name of the Databricks data source.
+	//
+	// This member is required.
+	Host *string
+
+	// The port for the Databricks data source.
+	//
+	// This member is required.
+	Port int32
+
+	// The HTTP path of the Databricks data source.
+	//
+	// This member is required.
+	SqlEndpointPath *string
+
+	noSmithyDocumentSerde
+}
+
+// Determines the color that is applied to a particular data value.
+type DataColor struct {
+
+	// The color that is applied to the data value.
+	Color *string
+
+	// The data value that the color is applied to.
+	DataValue *float64
+
+	noSmithyDocumentSerde
+}
+
 // The theme colors that are used for data colors in charts. The colors description
 // is a hexadecimal color code that consists of six alphanumerical characters,
 // prefixed with #, for example #37BFF5.
@@ -801,6 +2636,177 @@ type DataColorPalette struct {
 
 	// The minimum and maximum hexadecimal codes that describe a color gradient.
 	MinMaxGradient []string
+
+	noSmithyDocumentSerde
+}
+
+// The data field series item configuration of a line chart.
+type DataFieldSeriesItem struct {
+
+	// The axis that you are binding the field to.
+	//
+	// This member is required.
+	AxisBinding AxisBinding
+
+	// The field ID of the field that you are setting the axis binding to.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The field value of the field that you are setting the axis binding to.
+	FieldValue *string
+
+	// The options that determine the presentation of line series associated to the
+	// field.
+	Settings *LineChartSeriesSettings
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of the data labels.
+type DataLabelOptions struct {
+
+	// Determines the visibility of the category field labels.
+	CategoryLabelVisibility Visibility
+
+	// The option that determines the data label type.
+	DataLabelTypes []DataLabelType
+
+	// Determines the color of the data labels.
+	LabelColor *string
+
+	// Determines the content of the data labels.
+	LabelContent DataLabelContent
+
+	// Determines the font configuration of the data labels.
+	LabelFontConfiguration *FontConfiguration
+
+	// Determines the visibility of the measure field labels.
+	MeasureLabelVisibility Visibility
+
+	// Determines whether overlap is enabled or disabled for the data labels.
+	Overlap DataLabelOverlap
+
+	// Determines the position of the data labels.
+	Position DataLabelPosition
+
+	// Determines the visibility of the data labels.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The option that determines the data label type. This is a union type structure.
+// For this structure to be valid, only one of the attributes can be defined.
+type DataLabelType struct {
+
+	// The option that specifies individual data values for labels.
+	DataPathLabelType *DataPathLabelType
+
+	// Determines the label configuration for the entire field.
+	FieldLabelType *FieldLabelType
+
+	// Determines the label configuration for the maximum value in a visual.
+	MaximumLabelType *MaximumLabelType
+
+	// Determines the label configuration for the minimum value in a visual.
+	MinimumLabelType *MinimumLabelType
+
+	// Determines the label configuration for range end value in a visual.
+	RangeEndsLabelType *RangeEndsLabelType
+
+	noSmithyDocumentSerde
+}
+
+// The color map that determines the color options for a particular element.
+type DataPathColor struct {
+
+	// The color that needs to be applied to the element.
+	//
+	// This member is required.
+	Color *string
+
+	// The element that the color needs to be applied to.
+	//
+	// This member is required.
+	Element *DataPathValue
+
+	// The time granularity of the field that the color needs to be applied to.
+	TimeGranularity TimeGranularity
+
+	noSmithyDocumentSerde
+}
+
+// The option that specifies individual data values for labels.
+type DataPathLabelType struct {
+
+	// The field ID of the field that the data label needs to be applied to.
+	FieldId *string
+
+	// The actual value of the field that is labeled.
+	FieldValue *string
+
+	// The visibility of the data label.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// Allows data paths to be sorted by a specific data value.
+type DataPathSort struct {
+
+	// Determines the sort direction.
+	//
+	// This member is required.
+	Direction SortDirection
+
+	// The list of data paths that need to be sorted.
+	//
+	// This member is required.
+	SortPaths []DataPathValue
+
+	noSmithyDocumentSerde
+}
+
+// The data path that needs to be sorted.
+type DataPathValue struct {
+
+	// The field ID of the field that needs to be sorted.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The actual value of the field that needs to be sorted.
+	//
+	// This member is required.
+	FieldValue *string
+
+	noSmithyDocumentSerde
+}
+
+// The drill down options for data points in a dashbaord.
+type DataPointDrillUpDownOption struct {
+
+	// The status of the drill down options of data points.
+	AvailabilityStatus DashboardBehavior
+
+	noSmithyDocumentSerde
+}
+
+// The data point menu options of a dashboard.
+type DataPointMenuLabelOption struct {
+
+	// The status of the data point menu options.
+	AvailabilityStatus DashboardBehavior
+
+	noSmithyDocumentSerde
+}
+
+// The data point tooltip options.
+type DataPointTooltipOption struct {
+
+	// The status of the data point tool tip options.
+	AvailabilityStatus DashboardBehavior
 
 	noSmithyDocumentSerde
 }
@@ -880,6 +2886,22 @@ type DataSetConfiguration struct {
 	noSmithyDocumentSerde
 }
 
+// A data set.
+type DataSetIdentifierDeclaration struct {
+
+	// The Amazon Resource Name (ARN) of the data set.
+	//
+	// This member is required.
+	DataSetArn *string
+
+	// The identifier of the data set, typically the data set's name.
+	//
+	// This member is required.
+	Identifier *string
+
+	noSmithyDocumentSerde
+}
+
 // Dataset reference.
 type DataSetReference struct {
 
@@ -901,6 +2923,67 @@ type DataSetSchema struct {
 
 	// A structure containing the list of column schemas.
 	ColumnSchemaList []ColumnSchema
+
+	noSmithyDocumentSerde
+}
+
+// A filter that you apply when searching for datasets.
+type DataSetSearchFilter struct {
+
+	// The name of the value that you want to use as a filter, for example, "Name":
+	// "QUICKSIGHT_OWNER". Valid values are defined as follows:
+	//
+	// *
+	// QUICKSIGHT_VIEWER_OR_OWNER: Provide an ARN of a user or group, and any datasets
+	// with that ARN listed as one of the dataset owners or viewers are returned.
+	// Implicit permissions from folders or groups are considered.
+	//
+	// * QUICKSIGHT_OWNER:
+	// Provide an ARN of a user or group, and any datasets with that ARN listed as one
+	// of the owners of the dataset are returned. Implicit permissions from folders or
+	// groups are considered.
+	//
+	// * DIRECT_QUICKSIGHT_SOLE_OWNER: Provide an ARN of a user
+	// or group, and any datasets with that ARN listed as the only owner of the dataset
+	// are returned. Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// DIRECT_QUICKSIGHT_OWNER: Provide an ARN of a user or group, and any datasets
+	// with that ARN listed as one of the owners if the dataset are returned. Implicit
+	// permissions from folders or groups are not considered.
+	//
+	// *
+	// DIRECT_QUICKSIGHT_VIEWER_OR_OWNER: Provide an ARN of a user or group, and any
+	// datasets with that ARN listed as one of the owners or viewers of the dataset are
+	// returned. Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// DATASET_NAME: Any datasets whose names have a substring match to this value will
+	// be returned.
+	//
+	// This member is required.
+	Name DataSetFilterAttribute
+
+	// The comparison operator that you want to use as a filter, for example
+	// "Operator": "StringEquals". Valid values are "StringEquals" and "StringLike". If
+	// you set the operator value to "StringEquals", you need to provide an ownership
+	// related filter in the "NAME" field and the arn of the user or group whose
+	// datasets you want to search in the "Value" field. For example,
+	// "Name":"QUICKSIGHT_OWNER", "Operator": "StringEquals", "Value":
+	// "arn:aws:quicksight:us-east- 1:1:user/default/UserName1". If you set the value
+	// to "StringLike", you need to provide the name of the datasets you are searching
+	// for. For example, "Name":"DATASET_NAME", "Operator": "StringLike", "Value":
+	// "Test". The "StringLike" operator only supports the NAME value DATASET_NAME.
+	//
+	// This member is required.
+	Operator FilterOperator
+
+	// The value of the named item, in this case QUICKSIGHT_OWNER, that you want to use
+	// as a filter, for example, "Value":
+	// "arn:aws:quicksight:us-east-1:1:user/default/UserName1".
+	//
+	// This member is required.
+	Value *string
 
 	noSmithyDocumentSerde
 }
@@ -991,6 +3074,10 @@ type DataSource struct {
 	// A display name for the data source.
 	Name *string
 
+	// The Amazon Resource Name (ARN) of the secret associated with the data source in
+	// Amazon Secrets Manager.
+	SecretArn *string
+
 	// Secure Socket Layer (SSL) properties that apply when Amazon QuickSight connects
 	// to your underlying source.
 	SslProperties *SslProperties
@@ -1024,6 +3111,10 @@ type DataSourceCredentials struct {
 	// (https://docs.aws.amazon.com/quicksight/latest/APIReference/API_CredentialPair.html).
 	CredentialPair *CredentialPair
 
+	// The Amazon Resource Name (ARN) of the secret associated with the data source in
+	// Amazon Secrets Manager.
+	SecretArn *string
+
 	noSmithyDocumentSerde
 }
 
@@ -1051,6 +3142,7 @@ type DataSourceErrorInfo struct {
 //	DataSourceParametersMemberAuroraParameters
 //	DataSourceParametersMemberAuroraPostgreSqlParameters
 //	DataSourceParametersMemberAwsIotAnalyticsParameters
+//	DataSourceParametersMemberDatabricksParameters
 //	DataSourceParametersMemberExasolParameters
 //	DataSourceParametersMemberJiraParameters
 //	DataSourceParametersMemberMariaDbParameters
@@ -1124,6 +3216,15 @@ type DataSourceParametersMemberAwsIotAnalyticsParameters struct {
 }
 
 func (*DataSourceParametersMemberAwsIotAnalyticsParameters) isDataSourceParameters() {}
+
+// The required parameters that are needed to connect to a Databricks data source.
+type DataSourceParametersMemberDatabricksParameters struct {
+	Value DatabricksParameters
+
+	noSmithyDocumentSerde
+}
+
+func (*DataSourceParametersMemberDatabricksParameters) isDataSourceParameters() {}
 
 // The parameters for Exasol.
 type DataSourceParametersMemberExasolParameters struct {
@@ -1269,6 +3370,206 @@ type DataSourceParametersMemberTwitterParameters struct {
 
 func (*DataSourceParametersMemberTwitterParameters) isDataSourceParameters() {}
 
+// A filter that you apply when searching for data sources.
+type DataSourceSearchFilter struct {
+
+	// The name of the value that you want to use as a filter, for example, "Name":
+	// "DIRECT_QUICKSIGHT_OWNER". Valid values are defined as follows:
+	//
+	// *
+	// DIRECT_QUICKSIGHT_VIEWER_OR_OWNER: Provide an ARN of a user or group, and any
+	// data sources with that ARN listed as one of the owners or viewers of the data
+	// sources are returned. Implicit permissions from folders or groups are not
+	// considered.
+	//
+	// * DIRECT_QUICKSIGHT_OWNER: Provide an ARN of a user or group, and
+	// any data sources with that ARN listed as one of the owners if the data source
+	// are returned. Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// DIRECT_QUICKSIGHT_SOLE_OWNER: Provide an ARN of a user or group, and any data
+	// sources with that ARN listed as the only owner of the data source are returned.
+	// Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// DATASOURCE_NAME: Any data sources whose names have a substring match to the
+	// provided value are returned.
+	//
+	// This member is required.
+	Name DataSourceFilterAttribute
+
+	// The comparison operator that you want to use as a filter, for example
+	// "Operator": "StringEquals". Valid values are "StringEquals" and "StringLike". If
+	// you set the operator value to "StringEquals", you need to provide an ownership
+	// related filter in the "NAME" field and the arn of the user or group whose data
+	// sources you want to search in the "Value" field. For example,
+	// "Name":"DIRECT_QUICKSIGHT_OWNER", "Operator": "StringEquals", "Value":
+	// "arn:aws:quicksight:us-east-1:1:user/default/UserName1". If you set the value to
+	// "StringLike", you need to provide the name of the data sources you are searching
+	// for. For example, "Name":"DATASOURCE_NAME", "Operator": "StringLike", "Value":
+	// "Test". The "StringLike" operator only supports the NAME value DATASOURCE_NAME.
+	//
+	// This member is required.
+	Operator FilterOperator
+
+	// The value of the named item, for example DIRECT_QUICKSIGHT_OWNER, that you want
+	// to use as a filter, for example, "Value":
+	// "arn:aws:quicksight:us-east-1:1:user/default/UserName1".
+	//
+	// This member is required.
+	Value *string
+
+	noSmithyDocumentSerde
+}
+
+// A DataSourceSummary object that returns a summary of a data source.
+type DataSourceSummary struct {
+
+	// The arn of the datasource.
+	Arn *string
+
+	// The date and time that the data source was created. This value is expressed in
+	// MM-DD-YYYY HH:MM:SS format.
+	CreatedTime *time.Time
+
+	// The unique ID of the data source.
+	DataSourceId *string
+
+	// The date and time the data source was last updated. This value is expressed in
+	// MM-DD-YYYY HH:MM:SS format.
+	LastUpdatedTime *time.Time
+
+	// The name of the data source.
+	Name *string
+
+	// The type of the data source.
+	Type DataSourceType
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine how a date axis is displayed.
+type DateAxisOptions struct {
+
+	// Determines whether or not missing dates are displayed.
+	MissingDateVisibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The dimension type field with date type columns.
+type DateDimensionField struct {
+
+	// The column that is used in the DateDimensionField.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The custom field ID.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The date granularity of the DateDimensionField. Choose one of the following
+	// options:
+	//
+	// * YEAR
+	//
+	// * QUARTER
+	//
+	// * MONTH
+	//
+	// * WEEK
+	//
+	// * DAY
+	//
+	// * HOUR
+	//
+	// * MINUTE
+	//
+	// *
+	// SECOND
+	//
+	// * MILLISECOND
+	DateGranularity TimeGranularity
+
+	// The format configuration of the field.
+	FormatConfiguration *DateTimeFormatConfiguration
+
+	// The custom hierarchy ID.
+	HierarchyId *string
+
+	noSmithyDocumentSerde
+}
+
+// The measure type field with date type columns.
+type DateMeasureField struct {
+
+	// The column that is used in the DateMeasureField.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The custom field ID.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The aggregation function of the measure field.
+	AggregationFunction DateAggregationFunction
+
+	// The format configuration of the field.
+	FormatConfiguration *DateTimeFormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The default values of the DateTimeParameterDeclaration.
+type DateTimeDefaultValues struct {
+
+	// The dynamic value of the DataTimeDefaultValues. Different defaults are displayed
+	// according to users, groups, and values mapping.
+	DynamicValue *DynamicDefaultValue
+
+	// The rolling date of the DataTimeDefaultValues. The date is determined from the
+	// dataset based on input expression.
+	RollingDate *RollingDateConfiguration
+
+	// The static values of the DataTimeDefaultValues.
+	StaticValues []time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Formatting configuration for DateTime fields.
+type DateTimeFormatConfiguration struct {
+
+	// Determines the DateTime format.
+	DateTimeFormat *string
+
+	// The options that determine the null value format configuration.
+	NullValueFormatConfiguration *NullValueFormatConfiguration
+
+	// The formatting configuration for numeric DateTime fields.
+	NumericFormatConfiguration *NumericFormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The option that determines the hierarchy of any DateTime fields.
+type DateTimeHierarchy struct {
+
+	// The hierarchy ID of the DateTime hierarchy.
+	//
+	// This member is required.
+	HierarchyId *string
+
+	// The option that determines the drill down filters for the DateTime hierarchy.
+	DrillDownFilters []DrillDownFilter
+
+	noSmithyDocumentSerde
+}
+
 // A date-time parameter.
 type DateTimeParameter struct {
 
@@ -1285,6 +3586,71 @@ type DateTimeParameter struct {
 	noSmithyDocumentSerde
 }
 
+// A parameter declaration for the DateTime data type.
+type DateTimeParameterDeclaration struct {
+
+	// The name of the parameter that is being declared.
+	//
+	// This member is required.
+	Name *string
+
+	// The default values of a parameter. If the parameter is a single-value parameter,
+	// a maximum of one default value can be provided.
+	DefaultValues *DateTimeDefaultValues
+
+	// The level of time precision that is used to aggregate DateTime values.
+	TimeGranularity TimeGranularity
+
+	// The configuration that defines the default value of a DateTime parameter when a
+	// value has not been set.
+	ValueWhenUnset *DateTimeValueWhenUnsetConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The display options of a control.
+type DateTimePickerControlDisplayOptions struct {
+
+	// Customize how dates are formatted in controls.
+	DateTimeFormat *string
+
+	// The options to configure the title visibility, name, and font size.
+	TitleOptions *LabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The configuration that defines the default value of a DateTime parameter when a
+// value has not been set.
+type DateTimeValueWhenUnsetConfiguration struct {
+
+	// A custom value that's used when the value of a parameter isn't set.
+	CustomValue *time.Time
+
+	// The built-in options for default values. The value can be one of the
+	// following:
+	//
+	// * RECOMMENDED: The recommended value.
+	//
+	// * NULL: The NULL value.
+	ValueWhenUnsetOption ValueWhenUnsetOption
+
+	noSmithyDocumentSerde
+}
+
+// The default values of the DecimalParameterDeclaration.
+type DecimalDefaultValues struct {
+
+	// The dynamic value of the DecimalDefaultValues. Different defaults are displayed
+	// according to users, groups, and values mapping.
+	DynamicValue *DynamicDefaultValue
+
+	// The static values of the DecimalDefaultValues.
+	StaticValues []float64
+
+	noSmithyDocumentSerde
+}
+
 // A decimal parameter.
 type DecimalParameter struct {
 
@@ -1297,6 +3663,289 @@ type DecimalParameter struct {
 	//
 	// This member is required.
 	Values []float64
+
+	noSmithyDocumentSerde
+}
+
+// A parameter declaration for the Decimal data type.
+type DecimalParameterDeclaration struct {
+
+	// The name of the parameter that is being declared.
+	//
+	// This member is required.
+	Name *string
+
+	// The value type determines whether the parameter is a single-value or multi-value
+	// parameter.
+	//
+	// This member is required.
+	ParameterValueType ParameterValueType
+
+	// The default values of a parameter. If the parameter is a single-value parameter,
+	// a maximum of one default value can be provided.
+	DefaultValues *DecimalDefaultValues
+
+	// The configuration that defines the default value of a Decimal parameter when a
+	// value has not been set.
+	ValueWhenUnset *DecimalValueWhenUnsetConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The option that determines the decimal places configuration.
+type DecimalPlacesConfiguration struct {
+
+	// The values of the decimal places.
+	//
+	// This member is required.
+	DecimalPlaces *int64
+
+	noSmithyDocumentSerde
+}
+
+// The configuration that defines the default value of a Decimal parameter when a
+// value has not been set.
+type DecimalValueWhenUnsetConfiguration struct {
+
+	// A custom value that's used when the value of a parameter isn't set.
+	CustomValue *float64
+
+	// The built-in options for default values. The value can be one of the
+	// following:
+	//
+	// * RECOMMENDED: The recommended value.
+	//
+	// * NULL: The NULL value.
+	ValueWhenUnsetOption ValueWhenUnsetOption
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the default settings of a free-form layout
+// configuration.
+type DefaultFreeFormLayoutConfiguration struct {
+
+	// Determines the screen canvas size options for a free-form layout.
+	//
+	// This member is required.
+	CanvasSizeOptions *FreeFormLayoutCanvasSizeOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the default settings for a grid layout configuration.
+type DefaultGridLayoutConfiguration struct {
+
+	// Determines the screen canvas size options for a grid layout.
+	//
+	// This member is required.
+	CanvasSizeOptions *GridLayoutCanvasSizeOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the default settings for interactive layout
+// configuration.
+type DefaultInteractiveLayoutConfiguration struct {
+
+	// The options that determine the default settings of a free-form layout
+	// configuration.
+	FreeForm *DefaultFreeFormLayoutConfiguration
+
+	// The options that determine the default settings for a grid layout configuration.
+	Grid *DefaultGridLayoutConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for default new sheet settings.
+type DefaultNewSheetConfiguration struct {
+
+	// The options that determine the default settings for interactive layout
+	// configuration.
+	InteractiveLayoutConfiguration *DefaultInteractiveLayoutConfiguration
+
+	// The options that determine the default settings for a paginated layout
+	// configuration.
+	PaginatedLayoutConfiguration *DefaultPaginatedLayoutConfiguration
+
+	// The option that determines the sheet content type.
+	SheetContentType SheetContentType
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the default settings for a paginated layout
+// configuration.
+type DefaultPaginatedLayoutConfiguration struct {
+
+	// The options that determine the default settings for a section-based layout
+	// configuration.
+	SectionBased *DefaultSectionBasedLayoutConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the default settings for a section-based layout
+// configuration.
+type DefaultSectionBasedLayoutConfiguration struct {
+
+	// Determines the screen canvas size options for a section-based layout.
+	//
+	// This member is required.
+	CanvasSizeOptions *SectionBasedLayoutCanvasSizeOptions
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of destination parameter values. This is a union type
+// structure. For this structure to be valid, only one of the attributes can be
+// defined.
+type DestinationParameterValueConfiguration struct {
+
+	// The configuration of custom values for destination parameter in
+	// DestinationParameterValueConfiguration.
+	CustomValuesConfiguration *CustomValuesConfiguration
+
+	// The configuration that selects all options.
+	SelectAllValueOptions SelectAllValueOptions
+
+	// The source field ID of the destination parameter.
+	SourceField *string
+
+	// The source parameter name of the destination parameter.
+	SourceParameterName *string
+
+	noSmithyDocumentSerde
+}
+
+// The dimension type field.
+type DimensionField struct {
+
+	// The dimension type field with categorical type columns.
+	CategoricalDimensionField *CategoricalDimensionField
+
+	// The dimension type field with date type columns.
+	DateDimensionField *DateDimensionField
+
+	// The dimension type field with numerical type columns.
+	NumericalDimensionField *NumericalDimensionField
+
+	noSmithyDocumentSerde
+}
+
+// The label options of the label that is displayed in the center of a donut chart.
+// This option isn't available for pie charts.
+type DonutCenterOptions struct {
+
+	// Determines the visibility of the label in a donut chart. In the Amazon
+	// QuickSight console, this option is called 'Show total'.
+	LabelVisibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The options for configuring a donut chart or pie chart.
+type DonutOptions struct {
+
+	// The option for define the arc of the chart shape. Valid values are as
+	// follows:
+	//
+	// * WHOLE - A pie chart
+	//
+	// * SMALL- A small-sized donut chart
+	//
+	// * MEDIUM- A
+	// medium-sized donut chart
+	//
+	// * LARGE- A large-sized donut chart
+	ArcOptions *ArcOptions
+
+	// The label options of the label that is displayed in the center of a donut chart.
+	// This option isn't available for pie charts.
+	DonutCenterOptions *DonutCenterOptions
+
+	noSmithyDocumentSerde
+}
+
+// The drill down filter for the column hierarchies. This is a union type
+// structure. For this structure to be valid, only one of the attributes can be
+// defined.
+type DrillDownFilter struct {
+
+	// The category type drill down filter. This filter is used for string type
+	// columns.
+	CategoryFilter *CategoryDrillDownFilter
+
+	// The numeric equality type drill down filter. This filter is used for number type
+	// columns.
+	NumericEqualityFilter *NumericEqualityDrillDownFilter
+
+	// The time range drill down filter. This filter is used for date time columns.
+	TimeRangeFilter *TimeRangeDrillDownFilter
+
+	noSmithyDocumentSerde
+}
+
+// The display options of a control.
+type DropDownControlDisplayOptions struct {
+
+	// The configuration of the Select all options in a dropdown control.
+	SelectAllOptions *ListControlSelectAllOptions
+
+	// The options to configure the title visibility, name, and font size.
+	TitleOptions *LabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// Defines different defaults to the users or groups based on mapping.
+type DynamicDefaultValue struct {
+
+	// The column that contains the default value of each user or group.
+	//
+	// This member is required.
+	DefaultValueColumn *ColumnIdentifier
+
+	// The column that contains the group name.
+	GroupNameColumn *ColumnIdentifier
+
+	// The column that contains the username.
+	UserNameColumn *ColumnIdentifier
+
+	noSmithyDocumentSerde
+}
+
+// An empty visual. Empty visuals are used in layouts but have not been configured
+// to show any data. A new visual created in the Amazon QuickSight console is
+// considered an EmptyVisual until a visual type is selected.
+type EmptyVisual struct {
+
+	// The data set that is used in the empty visual. Every visual requires a dataset
+	// to render.
+	//
+	// This member is required.
+	DataSetIdentifier *string
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	noSmithyDocumentSerde
+}
+
+// An object, structure, or sub-structure of an analysis, template, or dashboard.
+type Entity struct {
+
+	// The hierarchical path of the entity within the analysis, template, or dashboard
+	// definition tree.
+	Path *string
 
 	noSmithyDocumentSerde
 }
@@ -1329,11 +3978,94 @@ type ExasolParameters struct {
 	noSmithyDocumentSerde
 }
 
+// The exclude period of TimeRangeFilter or RelativeDatesFilter.
+type ExcludePeriodConfiguration struct {
+
+	// The amount or number of the exclude period.
+	//
+	// This member is required.
+	Amount *int32
+
+	// The granularity or unit (day, month, year) of the exclude period.
+	//
+	// This member is required.
+	Granularity TimeGranularity
+
+	// The status of the exclude period. Choose from the following options:
+	//
+	// *
+	// ENABLED
+	//
+	// * DISABLED
+	Status WidgetStatus
+
+	noSmithyDocumentSerde
+}
+
+// The option that determines the hierarchy of the fields that are built within a
+// visual's field wells. These fields can't be duplicated to other visuals.
+type ExplicitHierarchy struct {
+
+	// The list of columns that define the explicit hierarchy.
+	//
+	// This member is required.
+	Columns []ColumnIdentifier
+
+	// The hierarchy ID of the explicit hierarchy.
+	//
+	// This member is required.
+	HierarchyId *string
+
+	// The option that determines the drill down filters for the explicit hierarchy.
+	DrillDownFilters []DrillDownFilter
+
+	noSmithyDocumentSerde
+}
+
+// Determines if hidden fields are included in an exported dashboard.
+type ExportHiddenFieldsOption struct {
+
+	// The status of the export hidden fields options of a dashbaord.
+	AvailabilityStatus DashboardBehavior
+
+	noSmithyDocumentSerde
+}
+
 // Export to .csv option.
 type ExportToCSVOption struct {
 
 	// Availability status.
 	AvailabilityStatus DashboardBehavior
+
+	noSmithyDocumentSerde
+}
+
+// Determines whether or not hidden fields are visible on exported dashbaords.
+type ExportWithHiddenFieldsOption struct {
+
+	// The status of the export with hidden fields options.
+	AvailabilityStatus DashboardBehavior
+
+	noSmithyDocumentSerde
+}
+
+// The setup for the detailed tooltip.
+type FieldBasedTooltip struct {
+
+	// The visibility of Show aggregations.
+	AggregationVisibility Visibility
+
+	// The fields configuration in the tooltip.
+	TooltipFields []TooltipItem
+
+	// The type for the >tooltip title. Choose one of the following options:
+	//
+	// * NONE:
+	// Doesn't use the primary value as the title.
+	//
+	// * PRIMARY_VALUE: Uses primary value
+	// as the title.
+	TooltipTitleType TooltipTitleType
 
 	noSmithyDocumentSerde
 }
@@ -1350,6 +4082,459 @@ type FieldFolder struct {
 	noSmithyDocumentSerde
 }
 
+// The field label type.
+type FieldLabelType struct {
+
+	// Indicates the field that is targeted by the field label.
+	FieldId *string
+
+	// The visibility of the field label.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The field series item configuration of a line chart.
+type FieldSeriesItem struct {
+
+	// The axis that you are binding the field to.
+	//
+	// This member is required.
+	AxisBinding AxisBinding
+
+	// The field ID of the field for which you are setting the axis binding.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The options that determine the presentation of line series associated to the
+	// field.
+	Settings *LineChartSeriesSettings
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration for a field in a field well.
+type FieldSort struct {
+
+	// The sort direction. Choose one of the following options:
+	//
+	// * ASC: Ascending
+	//
+	// *
+	// DESC: Descending
+	//
+	// This member is required.
+	Direction SortDirection
+
+	// The sort configuration target field.
+	//
+	// This member is required.
+	FieldId *string
+
+	noSmithyDocumentSerde
+}
+
+// The field sort options in a chart configuration.
+type FieldSortOptions struct {
+
+	// The sort configuration for a column that is not used in a field well.
+	ColumnSort *ColumnSort
+
+	// The sort configuration for a field in a field well.
+	FieldSort *FieldSort
+
+	noSmithyDocumentSerde
+}
+
+// The tooltip item for the fields.
+type FieldTooltipItem struct {
+
+	// The unique ID of the field that is targeted by the tooltip.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The label of the tooltip item.
+	Label *string
+
+	// The visibility of the tooltip item.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field well of the filled map.
+type FilledMapAggregatedFieldWells struct {
+
+	// The aggregated location field well of the filled map. Values are grouped by
+	// location fields.
+	Geospatial []DimensionField
+
+	// The aggregated color field well of a filled map. Values are aggregated based on
+	// location fields.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting of a FilledMapVisual.
+type FilledMapConditionalFormatting struct {
+
+	// Conditional formatting options of a FilledMapVisual.
+	//
+	// This member is required.
+	ConditionalFormattingOptions []FilledMapConditionalFormattingOption
+
+	noSmithyDocumentSerde
+}
+
+// Conditional formatting options of a FilledMapVisual.
+type FilledMapConditionalFormattingOption struct {
+
+	// The conditional formatting that determines the shape of the filled map.
+	//
+	// This member is required.
+	Shape *FilledMapShapeConditionalFormatting
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for a FilledMapVisual.
+type FilledMapConfiguration struct {
+
+	// The field wells of the visual.
+	FieldWells *FilledMapFieldWells
+
+	// The legend display setup of the visual.
+	Legend *LegendOptions
+
+	// The map style options of the filled map visual.
+	MapStyleOptions *GeospatialMapStyleOptions
+
+	// The sort configuration of a FilledMapVisual.
+	SortConfiguration *FilledMapSortConfiguration
+
+	// The tooltip display setup of the visual.
+	Tooltip *TooltipOptions
+
+	// The window options of the filled map visual.
+	WindowOptions *GeospatialWindowOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field wells of a FilledMapVisual. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type FilledMapFieldWells struct {
+
+	// The aggregated field well of the filled map.
+	FilledMapAggregatedFieldWells *FilledMapAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting that determines the shape of the filled map.
+type FilledMapShapeConditionalFormatting struct {
+
+	// The field ID of the filled map shape.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The conditional formatting that determines the background color of a filled
+	// map's shape.
+	Format *ShapeConditionalFormat
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a FilledMapVisual.
+type FilledMapSortConfiguration struct {
+
+	// The sort configuration of the location fields.
+	CategorySort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A filled map. For more information, see Creating filled maps
+// (https://docs.aws.amazon.com/quicksight/latest/user/filled-maps.html) in the
+// Amazon QuickSight User Guide.
+type FilledMapVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers..
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *FilledMapConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The conditional formatting of a FilledMapVisual.
+	ConditionalFormatting *FilledMapConditionalFormatting
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// With a Filter, you can remove portions of data from a particular visual or view.
+// This is a union type structure. For this structure to be valid, only one of the
+// attributes can be defined.
+type Filter struct {
+
+	// A CategoryFilter filters text values. For more information, see Adding text
+	// filters
+	// (https://docs.aws.amazon.com/quicksight/latest/user/add-a-text-filter-data-prep.html)
+	// in the Amazon QuickSight User Guide.
+	CategoryFilter *CategoryFilter
+
+	// A NumericEqualityFilter filters numeric values that equal or do not equal a
+	// given numeric value.
+	NumericEqualityFilter *NumericEqualityFilter
+
+	// A NumericRangeFilter filters numeric values that are either inside or outside a
+	// given numeric range.
+	NumericRangeFilter *NumericRangeFilter
+
+	// A RelativeDatesFilter filters date values that are relative to a given date.
+	RelativeDatesFilter *RelativeDatesFilter
+
+	// A TimeEqualityFilter filters date-time values that equal or do not equal a given
+	// date/time value.
+	TimeEqualityFilter *TimeEqualityFilter
+
+	// A TimeRangeFilter filters date-time values that are either inside or outside a
+	// given date/time range.
+	TimeRangeFilter *TimeRangeFilter
+
+	// A TopBottomFilter filters data to the top or bottom values for a given column.
+	TopBottomFilter *TopBottomFilter
+
+	noSmithyDocumentSerde
+}
+
+// The control of a filter that is used to interact with a dashboard or an
+// analysis. This is a union type structure. For this structure to be valid, only
+// one of the attributes can be defined.
+type FilterControl struct {
+
+	// A control from a date filter that is used to specify date and time.
+	DateTimePicker *FilterDateTimePickerControl
+
+	// A control to display a dropdown list with buttons that are used to select a
+	// single value.
+	Dropdown *FilterDropDownControl
+
+	// A control to display a list of buttons or boxes. This is used to select either a
+	// single value or multiple values.
+	List *FilterListControl
+
+	// A control from a date filter that is used to specify the relative date.
+	RelativeDateTime *FilterRelativeDateTimeControl
+
+	// A control to display a horizontal toggle bar. This is used to change a value by
+	// sliding the toggle.
+	Slider *FilterSliderControl
+
+	// A control to display a text box that is used to enter multiple entries.
+	TextArea *FilterTextAreaControl
+
+	// A control to display a text box that is used to enter a single entry.
+	TextField *FilterTextFieldControl
+
+	noSmithyDocumentSerde
+}
+
+// A control from a date filter that is used to specify date and time.
+type FilterDateTimePickerControl struct {
+
+	// The ID of the FilterDateTimePickerControl.
+	//
+	// This member is required.
+	FilterControlId *string
+
+	// The source filter ID of the FilterDateTimePickerControl.
+	//
+	// This member is required.
+	SourceFilterId *string
+
+	// The title of the FilterDateTimePickerControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The display options of a control.
+	DisplayOptions *DateTimePickerControlDisplayOptions
+
+	// The date time picker type of a FilterDateTimePickerControl. Choose one of the
+	// following options:
+	//
+	// * SINGLE_VALUED: The filter condition is a fixed date.
+	//
+	// *
+	// DATE_RANGE: The filter condition is a date time range.
+	Type SheetControlDateTimePickerType
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a dropdown list with buttons that are used to select a
+// single value.
+type FilterDropDownControl struct {
+
+	// The ID of the FilterDropDownControl.
+	//
+	// This member is required.
+	FilterControlId *string
+
+	// The source filter ID of the FilterDropDownControl.
+	//
+	// This member is required.
+	SourceFilterId *string
+
+	// The title of the FilterDropDownControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The values that are displayed in a control can be configured to only show values
+	// that are valid based on what's selected in other controls.
+	CascadingControlConfiguration *CascadingControlConfiguration
+
+	// The display options of the FilterDropDownControl.
+	DisplayOptions *DropDownControlDisplayOptions
+
+	// A list of selectable values that are used in a control.
+	SelectableValues *FilterSelectableValues
+
+	// The type of the FilterDropDownControl. Choose one of the following options:
+	//
+	// *
+	// MULTI_SELECT: The user can select multiple entries from a dropdown menu.
+	//
+	// *
+	// SINGLE_SELECT: The user can select a single entry from a dropdown menu.
+	Type SheetControlListType
+
+	noSmithyDocumentSerde
+}
+
+// A grouping of individual filters. Filter groups are applied to the same group of
+// visuals. For more information, see Adding filter conditions (group filters) with
+// AND and OR operators
+// (https://docs.aws.amazon.com/quicksight/latest/user/add-a-compound-filter.html)
+// in the Amazon QuickSight User Guide.
+type FilterGroup struct {
+
+	// The filter new feature which can apply filter group to all data sets. Choose one
+	// of the following options:
+	//
+	// * ALL_DATASETS
+	//
+	// * SINGLE_DATASET
+	//
+	// This member is required.
+	CrossDataset CrossDatasetTypes
+
+	// The value that uniquely identifies a FilterGroup within a dashboard, template,
+	// or analysis.
+	//
+	// This member is required.
+	FilterGroupId *string
+
+	// The list of filters that are present in a FilterGroup.
+	//
+	// This member is required.
+	Filters []Filter
+
+	// The configuration that specifies what scope to apply to a FilterGroup. This is a
+	// union type structure. For this structure to be valid, only one of the attributes
+	// can be defined.
+	//
+	// This member is required.
+	ScopeConfiguration *FilterScopeConfiguration
+
+	// The status of the FilterGroup.
+	Status WidgetStatus
+
+	noSmithyDocumentSerde
+}
+
+// A list of filter configurations.
+type FilterListConfiguration struct {
+
+	// The match operator that is used to determine if a filter should be applied.
+	//
+	// This member is required.
+	MatchOperator CategoryFilterMatchOperator
+
+	// The list of category values for the filter.
+	CategoryValues []string
+
+	// Select all of the values. Null is not the assigned value of select all.
+	//
+	// *
+	// FILTER_ALL_VALUES
+	SelectAllOptions CategoryFilterSelectAllOptions
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a list of buttons or boxes. This is used to select either a
+// single value or multiple values.
+type FilterListControl struct {
+
+	// The ID of the FilterListControl.
+	//
+	// This member is required.
+	FilterControlId *string
+
+	// The source filter ID of the FilterListControl.
+	//
+	// This member is required.
+	SourceFilterId *string
+
+	// The title of the FilterListControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The values that are displayed in a control can be configured to only show values
+	// that are valid based on what's selected in other controls.
+	CascadingControlConfiguration *CascadingControlConfiguration
+
+	// The display options of a control.
+	DisplayOptions *ListControlDisplayOptions
+
+	// A list of selectable values that are used in a control.
+	SelectableValues *FilterSelectableValues
+
+	// The type of FilterListControl. Choose one of the following options:
+	//
+	// *
+	// MULTI_SELECT: The user can select multiple entries from the list.
+	//
+	// *
+	// SINGLE_SELECT: The user can select a single entry from the list.
+	Type SheetControlListType
+
+	noSmithyDocumentSerde
+}
+
 // A transform operation that filters rows based on a condition.
 type FilterOperation struct {
 
@@ -1358,6 +4543,178 @@ type FilterOperation struct {
 	//
 	// This member is required.
 	ConditionExpression *string
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of selected fields in theCustomActionFilterOperation. This is
+// a union type structure. For this structure to be valid, only one of the
+// attributes can be defined.
+type FilterOperationSelectedFieldsConfiguration struct {
+
+	// A structure that contains the options that choose which fields are filtered in
+	// the CustomActionFilterOperation. Valid values are defined as follows:
+	//
+	// *
+	// ALL_FIELDS: Applies the filter operation to all fields.
+	SelectedFieldOptions SelectedFieldOptions
+
+	// Chooses the fields that are filtered in CustomActionFilterOperation.
+	SelectedFields []string
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of target visuals that you want to be filtered. This is a
+// union type structure. For this structure to be valid, only one of the attributes
+// can be defined.
+type FilterOperationTargetVisualsConfiguration struct {
+
+	// The configuration of the same-sheet target visuals that you want to be filtered.
+	SameSheetTargetVisualConfiguration *SameSheetTargetVisualConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// A control from a date filter that is used to specify the relative date.
+type FilterRelativeDateTimeControl struct {
+
+	// The ID of the FilterTextAreaControl.
+	//
+	// This member is required.
+	FilterControlId *string
+
+	// The source filter ID of the FilterTextAreaControl.
+	//
+	// This member is required.
+	SourceFilterId *string
+
+	// The title of the FilterTextAreaControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The display options of a control.
+	DisplayOptions *RelativeDateTimeControlDisplayOptions
+
+	noSmithyDocumentSerde
+}
+
+// The scope configuration for a FilterGroup. This is a union type structure. For
+// this structure to be valid, only one of the attributes can be defined.
+type FilterScopeConfiguration struct {
+
+	// The configuration for applying a filter to specific sheets.
+	SelectedSheets *SelectedSheetsFilterScopeConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// A list of selectable values that are used in a control.
+type FilterSelectableValues struct {
+
+	// The values that are used in the FilterSelectableValues.
+	Values []string
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a horizontal toggle bar. This is used to change a value by
+// sliding the toggle.
+type FilterSliderControl struct {
+
+	// The ID of the FilterSliderControl.
+	//
+	// This member is required.
+	FilterControlId *string
+
+	// The smaller value that is displayed at the left of the slider.
+	//
+	// This member is required.
+	MaximumValue float64
+
+	// The larger value that is displayed at the right of the slider.
+	//
+	// This member is required.
+	MinimumValue float64
+
+	// The source filter ID of the FilterSliderControl.
+	//
+	// This member is required.
+	SourceFilterId *string
+
+	// The number of increments that the slider bar is divided into.
+	//
+	// This member is required.
+	StepSize float64
+
+	// The title of the FilterSliderControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The display options of a control.
+	DisplayOptions *SliderControlDisplayOptions
+
+	// The type of FilterSliderControl. Choose one of the following options:
+	//
+	// *
+	// SINGLE_POINT: Filter against(equals) a single data point.
+	//
+	// * RANGE: Filter data
+	// that is in a specified range.
+	Type SheetControlSliderType
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a text box that is used to enter multiple entries.
+type FilterTextAreaControl struct {
+
+	// The ID of the FilterTextAreaControl.
+	//
+	// This member is required.
+	FilterControlId *string
+
+	// The source filter ID of the FilterTextAreaControl.
+	//
+	// This member is required.
+	SourceFilterId *string
+
+	// The title of the FilterTextAreaControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The delimiter that is used to separate the lines in text.
+	Delimiter *string
+
+	// The display options of a control.
+	DisplayOptions *TextAreaControlDisplayOptions
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a text box that is used to enter a single entry.
+type FilterTextFieldControl struct {
+
+	// The ID of the FilterTextFieldControl.
+	//
+	// This member is required.
+	FilterControlId *string
+
+	// The source filter ID of the FilterTextFieldControl.
+	//
+	// This member is required.
+	SourceFilterId *string
+
+	// The title of the FilterTextFieldControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The display options of a control.
+	DisplayOptions *TextFieldControlDisplayOptions
 
 	noSmithyDocumentSerde
 }
@@ -1402,15 +4759,56 @@ type FolderMember struct {
 	noSmithyDocumentSerde
 }
 
-// A filter to use to search a Amazon QuickSight folder.
+// A filter to use to search an Amazon QuickSight folder.
 type FolderSearchFilter struct {
 
 	// The name of a value that you want to use in the filter. For example, "Name":
-	// "PARENT_FOLDER_ARN".
+	// "QUICKSIGHT_OWNER". Valid values are defined as follows:
+	//
+	// *
+	// QUICKSIGHT_VIEWER_OR_OWNER: Provide an ARN of a user or group, and any folders
+	// with that ARN listed as one of the folder's owners or viewers are returned.
+	// Implicit permissions from folders or groups are considered.
+	//
+	// * QUICKSIGHT_OWNER:
+	// Provide an ARN of a user or group, and any folders with that ARN listed as one
+	// of the owners of the folders are returned. Implicit permissions from folders or
+	// groups are considered.
+	//
+	// * DIRECT_QUICKSIGHT_SOLE_OWNER: Provide an ARN of a user
+	// or group, and any folders with that ARN listed as the only owner of the folder
+	// are returned. Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// DIRECT_QUICKSIGHT_OWNER: Provide an ARN of a user or group, and any folders with
+	// that ARN listed as one of the owners of the folders are returned. Implicit
+	// permissions from folders or groups are not considered.
+	//
+	// *
+	// DIRECT_QUICKSIGHT_VIEWER_OR_OWNER: Provide an ARN of a user or group, and any
+	// folders with that ARN listed as one of the owners or viewers of the folders are
+	// returned. Implicit permissions from folders or groups are not considered.
+	//
+	// *
+	// FOLDER_NAME: Any folders whose names have a substring match to this value will
+	// be returned.
+	//
+	// * PARENT_FOLDER_ARN: Provide an ARN of a folder, and any folders
+	// that are directly under that parent folder are returned. If you choose to use
+	// this option and leave the value blank, all root-level folders in the account are
+	// returned.
 	Name FolderFilterAttribute
 
-	// The comparison operator that you want to use in the filter. For example,
-	// "Operator": "StringEquals".
+	// The comparison operator that you want to use as a filter, for example
+	// "Operator": "StringEquals". Valid values are "StringEquals" and "StringLike". If
+	// you set the operator value to "StringEquals", you need to provide an ownership
+	// related filter in the "NAME" field and the arn of the user or group whose
+	// folders you want to search in the "Value" field. For example,
+	// "Name":"DIRECT_QUICKSIGHT_OWNER", "Operator": "StringEquals", "Value":
+	// "arn:aws:quicksight:us-east-1:1:user/default/UserName1". If you set the value to
+	// "StringLike", you need to provide the name of the folders you are searching for.
+	// For example, "Name":"FOLDER_NAME", "Operator": "StringLike", "Value": "Test".
+	// The "StringLike" operator only supports the NAME value FOLDER_NAME.
 	Operator FilterOperator
 
 	// The value of the named item (in this example, PARENT_FOLDER_ARN), that you want
@@ -1445,6 +4843,515 @@ type FolderSummary struct {
 	noSmithyDocumentSerde
 }
 
+// Determines the font settings.
+type Font struct {
+
+	// Determines the font family settings.
+	FontFamily *string
+
+	noSmithyDocumentSerde
+}
+
+// Configures the display properties of the given text.
+type FontConfiguration struct {
+
+	// Determines the color of the text.
+	FontColor *string
+
+	// Determines the appearance of decorative lines on the text.
+	FontDecoration FontDecoration
+
+	// The option that determines the text display size.
+	FontSize *FontSize
+
+	// Determines the text display face that is inherited by the given font family.
+	FontStyle FontStyle
+
+	// The option that determines the text display weight, or boldness.
+	FontWeight *FontWeight
+
+	noSmithyDocumentSerde
+}
+
+// The option that determines the text display size.
+type FontSize struct {
+
+	// The lexical name for the text size, proportional to its surrounding context.
+	Relative RelativeFontSize
+
+	noSmithyDocumentSerde
+}
+
+// The option that determines the text display weight, or boldness.
+type FontWeight struct {
+
+	// The lexical name for the level of boldness of the text display.
+	Name FontWeightName
+
+	noSmithyDocumentSerde
+}
+
+// The forecast computation configuration.
+type ForecastComputation struct {
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The time field that is used in a computation.
+	//
+	// This member is required.
+	Time *DimensionField
+
+	// The custom seasonality value setup of a forecast computation.
+	CustomSeasonalityValue *int32
+
+	// The lower boundary setup of a forecast computation.
+	LowerBoundary *float64
+
+	// The name of a computation.
+	Name *string
+
+	// The periods backward setup of a forecast computation.
+	PeriodsBackward *int32
+
+	// The periods forward setup of a forecast computation.
+	PeriodsForward *int32
+
+	// The prediction interval setup of a forecast computation.
+	PredictionInterval *int32
+
+	// The seasonality setup of a forecast computation. Choose one of the following
+	// options:
+	//
+	// * AUTOMATIC
+	//
+	// * CUSTOM: Checks the custom seasonality value.
+	Seasonality ForecastComputationSeasonality
+
+	// The upper boundary setup of a forecast computation.
+	UpperBoundary *float64
+
+	// The value field that is used in a computation.
+	Value *MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The forecast configuration that is used in a line chart's display properties.
+type ForecastConfiguration struct {
+
+	// The forecast properties setup of a forecast in the line chart.
+	ForecastProperties *TimeBasedForecastProperties
+
+	// The forecast scenario of a forecast in the line chart.
+	Scenario *ForecastScenario
+
+	noSmithyDocumentSerde
+}
+
+// The forecast scenario of a forecast in the line chart.
+type ForecastScenario struct {
+
+	// The what-if analysis forecast setup with the target date.
+	WhatIfPointScenario *WhatIfPointScenario
+
+	// The what-if analysis forecast setup with the date range.
+	WhatIfRangeScenario *WhatIfRangeScenario
+
+	noSmithyDocumentSerde
+}
+
+// The formatting configuration for all types of field.
+type FormatConfiguration struct {
+
+	// Formatting configuration for DateTime fields.
+	DateTimeFormatConfiguration *DateTimeFormatConfiguration
+
+	// Formatting configuration for number fields.
+	NumberFormatConfiguration *NumberFormatConfiguration
+
+	// Formatting configuration for string fields.
+	StringFormatConfiguration *StringFormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// Configuration options for the canvas of a free-form layout.
+type FreeFormLayoutCanvasSizeOptions struct {
+
+	// The options that determine the sizing of the canvas used in a free-form layout.
+	ScreenCanvasSizeOptions *FreeFormLayoutScreenCanvasSizeOptions
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a free-form layout.
+type FreeFormLayoutConfiguration struct {
+
+	// The elements that are included in a free-form layout.
+	//
+	// This member is required.
+	Elements []FreeFormLayoutElement
+
+	// Configuration options for the canvas of a free-form layout.
+	CanvasSizeOptions *FreeFormLayoutCanvasSizeOptions
+
+	noSmithyDocumentSerde
+}
+
+// An element within a free-form layout.
+type FreeFormLayoutElement struct {
+
+	// A unique identifier for an element within a free-form layout.
+	//
+	// This member is required.
+	ElementId *string
+
+	// The type of element.
+	//
+	// This member is required.
+	ElementType LayoutElementType
+
+	// The height of an element within a free-form layout.
+	//
+	// This member is required.
+	Height *string
+
+	// The width of an element within a free-form layout.
+	//
+	// This member is required.
+	Width *string
+
+	// The x-axis coordinate of the element.
+	//
+	// This member is required.
+	XAxisLocation *string
+
+	// The y-axis coordinate of the element.
+	//
+	// This member is required.
+	YAxisLocation *string
+
+	// The background style configuration of a free-form layout element.
+	BackgroundStyle *FreeFormLayoutElementBackgroundStyle
+
+	// The border style configuration of a free-form layout element.
+	BorderStyle *FreeFormLayoutElementBorderStyle
+
+	// The loading animation configuration of a free-form layout element.
+	LoadingAnimation *LoadingAnimation
+
+	// The rendering rules that determine when an element should be displayed within a
+	// free-form layout.
+	RenderingRules []SheetElementRenderingRule
+
+	// The border style configuration of a free-form layout element. This border style
+	// is used when the element is selected.
+	SelectedBorderStyle *FreeFormLayoutElementBorderStyle
+
+	// The visibility of an element within a free-form layout.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The background style configuration of a free-form layout element.
+type FreeFormLayoutElementBackgroundStyle struct {
+
+	// The background color of a free-form layout element.
+	Color *string
+
+	// The background visibility of a free-form layout element.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The background style configuration of a free-form layout element.
+type FreeFormLayoutElementBorderStyle struct {
+
+	// The border color of a free-form layout element.
+	Color *string
+
+	// The border visibility of a free-form layout element.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the sizing of the canvas used in a free-form layout.
+type FreeFormLayoutScreenCanvasSizeOptions struct {
+
+	// The width that the view port will be optimized for when the layout renders.
+	//
+	// This member is required.
+	OptimizedViewPortWidth *string
+
+	noSmithyDocumentSerde
+}
+
+// The free-form layout configuration of a section.
+type FreeFormSectionLayoutConfiguration struct {
+
+	// The elements that are included in the free-form layout.
+	//
+	// This member is required.
+	Elements []FreeFormLayoutElement
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a FunnelChartVisual.
+type FunnelChartAggregatedFieldWells struct {
+
+	// The category field wells of a funnel chart. Values are grouped by category
+	// fields.
+	Category []DimensionField
+
+	// The value field wells of a funnel chart. Values are aggregated based on
+	// categories.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a FunnelChartVisual.
+type FunnelChartConfiguration struct {
+
+	// The label options of the categories that are displayed in a FunnelChartVisual.
+	CategoryLabelOptions *ChartAxisLabelOptions
+
+	// The options that determine the presentation of the data labels.
+	DataLabelOptions *FunnelChartDataLabelOptions
+
+	// The field well configuration of a FunnelChartVisual.
+	FieldWells *FunnelChartFieldWells
+
+	// The sort configuration of a FunnelChartVisual.
+	SortConfiguration *FunnelChartSortConfiguration
+
+	// The tooltip configuration of a FunnelChartVisual.
+	Tooltip *TooltipOptions
+
+	// The label options for the values that are displayed in a FunnelChartVisual.
+	ValueLabelOptions *ChartAxisLabelOptions
+
+	// The visual palette configuration of a FunnelChartVisual.
+	VisualPalette *VisualPalette
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of the data labels.
+type FunnelChartDataLabelOptions struct {
+
+	// The visibility of the category labels within the data labels.
+	CategoryLabelVisibility Visibility
+
+	// The color of the data label text.
+	LabelColor *string
+
+	// The font configuration for the data labels. Only the FontSize attribute of the
+	// font configuration is used for data labels.
+	LabelFontConfiguration *FontConfiguration
+
+	// Determines the style of the metric labels.
+	MeasureDataLabelStyle FunnelChartMeasureDataLabelStyle
+
+	// The visibility of the measure labels within the data labels.
+	MeasureLabelVisibility Visibility
+
+	// Determines the positioning of the data label relative to a section of the
+	// funnel.
+	Position DataLabelPosition
+
+	// The visibility option that determines if data labels are displayed.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a FunnelChartVisual. This is a union type
+// structure. For this structure to be valid, only one of the attributes can be
+// defined.
+type FunnelChartFieldWells struct {
+
+	// The field well configuration of a FunnelChartVisual.
+	FunnelChartAggregatedFieldWells *FunnelChartAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a FunnelChartVisual.
+type FunnelChartSortConfiguration struct {
+
+	// The limit on the number of categories displayed.
+	CategoryItemsLimit *ItemsLimitConfiguration
+
+	// The sort configuration of the category fields.
+	CategorySort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A funnel chart. For more information, see Using funnel charts
+// (https://docs.aws.amazon.com/quicksight/latest/user/funnel-visual-content.html)
+// in the Amazon QuickSight User Guide.
+type FunnelChartVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers..
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration of a FunnelChartVisual.
+	ChartConfiguration *FunnelChartConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of the arc of a GaugeChartVisual.
+type GaugeChartArcConditionalFormatting struct {
+
+	// The conditional formatting of the arc foreground color.
+	ForegroundColor *ConditionalFormattingColor
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting of a GaugeChartVisual.
+type GaugeChartConditionalFormatting struct {
+
+	// Conditional formatting options of a GaugeChartVisual.
+	ConditionalFormattingOptions []GaugeChartConditionalFormattingOption
+
+	noSmithyDocumentSerde
+}
+
+// Conditional formatting options of a GaugeChartVisual.
+type GaugeChartConditionalFormattingOption struct {
+
+	// The options that determine the presentation of the arc of a GaugeChartVisual.
+	Arc *GaugeChartArcConditionalFormatting
+
+	// The conditional formatting for the primary value of a GaugeChartVisual.
+	PrimaryValue *GaugeChartPrimaryValueConditionalFormatting
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a GaugeChartVisual.
+type GaugeChartConfiguration struct {
+
+	// The data label configuration of a GaugeChartVisual.
+	DataLabels *DataLabelOptions
+
+	// The field well configuration of a GaugeChartVisual.
+	FieldWells *GaugeChartFieldWells
+
+	// The options that determine the presentation of the GaugeChartVisual.
+	GaugeChartOptions *GaugeChartOptions
+
+	// The tooltip configuration of a GaugeChartVisual.
+	TooltipOptions *TooltipOptions
+
+	// The visual palette configuration of a GaugeChartVisual.
+	VisualPalette *VisualPalette
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a GaugeChartVisual.
+type GaugeChartFieldWells struct {
+
+	// The target value field wells of a GaugeChartVisual.
+	TargetValues []MeasureField
+
+	// The value field wells of a GaugeChartVisual.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of the GaugeChartVisual.
+type GaugeChartOptions struct {
+
+	// The arc configuration of a GaugeChartVisual.
+	Arc *ArcConfiguration
+
+	// The arc axis configuration of a GaugeChartVisual.
+	ArcAxis *ArcAxisConfiguration
+
+	// The comparison configuration of a GaugeChartVisual.
+	Comparison *ComparisonConfiguration
+
+	// The options that determine the primary value display type.
+	PrimaryValueDisplayType PrimaryValueDisplayType
+
+	// The options that determine the primary value font configuration.
+	PrimaryValueFontConfiguration *FontConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting for the primary value of a GaugeChartVisual.
+type GaugeChartPrimaryValueConditionalFormatting struct {
+
+	// The conditional formatting of the primary value icon.
+	Icon *ConditionalFormattingIcon
+
+	// The conditional formatting of the primary value text color.
+	TextColor *ConditionalFormattingColor
+
+	noSmithyDocumentSerde
+}
+
+// A gauge chart. For more information, see Using gauge charts
+// (https://docs.aws.amazon.com/quicksight/latest/user/gauge-chart.html) in the
+// Amazon QuickSight User Guide.
+type GaugeChartVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration of a GaugeChartVisual.
+	ChartConfiguration *GaugeChartConfiguration
+
+	// The conditional formatting of a GaugeChartVisual.
+	ConditionalFormatting *GaugeChartConditionalFormatting
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
 // Geospatial column group that denotes a hierarchy.
 type GeoSpatialColumnGroup struct {
 
@@ -1453,15 +5360,273 @@ type GeoSpatialColumnGroup struct {
 	// This member is required.
 	Columns []string
 
-	// Country code.
-	//
-	// This member is required.
-	CountryCode GeoSpatialCountryCode
-
 	// A display name for the hierarchy.
 	//
 	// This member is required.
 	Name *string
+
+	// Country code.
+	CountryCode GeoSpatialCountryCode
+
+	noSmithyDocumentSerde
+}
+
+// The bound options (north, south, west, east) of the geospatial window options.
+type GeospatialCoordinateBounds struct {
+
+	// The longitude of the east bound of the geospatial coordinate bounds.
+	//
+	// This member is required.
+	East *float64
+
+	// The latitude of the north bound of the geospatial coordinate bounds.
+	//
+	// This member is required.
+	North *float64
+
+	// The latitude of the south bound of the geospatial coordinate bounds.
+	//
+	// This member is required.
+	South *float64
+
+	// The longitude of the west bound of the geospatial coordinate bounds.
+	//
+	// This member is required.
+	West *float64
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field wells for a geospatial map.
+type GeospatialMapAggregatedFieldWells struct {
+
+	// The color field wells of a geospatial map.
+	Colors []DimensionField
+
+	// The geospatial field wells of a geospatial map. Values are grouped by geospatial
+	// fields.
+	Geospatial []DimensionField
+
+	// The size field wells of a geospatial map. Values are aggregated based on
+	// geospatial fields.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a GeospatialMapVisual.
+type GeospatialMapConfiguration struct {
+
+	// The field wells of the visual.
+	FieldWells *GeospatialMapFieldWells
+
+	// The legend display setup of the visual.
+	Legend *LegendOptions
+
+	// The map style options of the geospatial map.
+	MapStyleOptions *GeospatialMapStyleOptions
+
+	// The point style options of the geospatial map.
+	PointStyleOptions *GeospatialPointStyleOptions
+
+	// The tooltip display setup of the visual.
+	Tooltip *TooltipOptions
+
+	// The visual display options for the visual palette.
+	VisualPalette *VisualPalette
+
+	// The window options of the geospatial map.
+	WindowOptions *GeospatialWindowOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field wells of a GeospatialMapVisual. This is a union type structure. For
+// this structure to be valid, only one of the attributes can be defined.
+type GeospatialMapFieldWells struct {
+
+	// The aggregated field well for a geospatial map.
+	GeospatialMapAggregatedFieldWells *GeospatialMapAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The map style options of the geospatial map.
+type GeospatialMapStyleOptions struct {
+
+	// The base map style of the geospatial map.
+	BaseMapStyle BaseMapStyleType
+
+	noSmithyDocumentSerde
+}
+
+// A geospatial map or a points on map visual. For more information, see Creating
+// point maps (https://docs.aws.amazon.com/quicksight/latest/user/point-maps.html)
+// in the Amazon QuickSight User Guide.
+type GeospatialMapVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers..
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *GeospatialMapConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The point style of the geospatial map.
+type GeospatialPointStyleOptions struct {
+
+	// The cluster marker configuration of the geospatial point style.
+	ClusterMarkerConfiguration *ClusterMarkerConfiguration
+
+	// The selected point styles (point, cluster) of the geospatial map.
+	SelectedPointStyle GeospatialSelectedPointStyle
+
+	noSmithyDocumentSerde
+}
+
+// The window options of the geospatial map visual.
+type GeospatialWindowOptions struct {
+
+	// The bounds options (north, south, west, east) of the geospatial window options.
+	Bounds *GeospatialCoordinateBounds
+
+	// The map zoom modes (manual, auto) of the geospatial window options.
+	MapZoomMode MapZoomMode
+
+	noSmithyDocumentSerde
+}
+
+// Determines the border options for a table visual.
+type GlobalTableBorderOptions struct {
+
+	// Determines the options for side specific border.
+	SideSpecificBorder *TableSideBorderOptions
+
+	// Determines the options for uniform border.
+	UniformBorder *TableBorderOptions
+
+	noSmithyDocumentSerde
+}
+
+// Determines the gradient color settings.
+type GradientColor struct {
+
+	// The list of gradient color stops.
+	Stops []GradientStop
+
+	noSmithyDocumentSerde
+}
+
+// Determines the gradient stop configuration.
+type GradientStop struct {
+
+	// Determines gradient offset value.
+	//
+	// This member is required.
+	GradientOffset float64
+
+	// Determines the color.
+	Color *string
+
+	// Determines the data value.
+	DataValue *float64
+
+	noSmithyDocumentSerde
+}
+
+// Configuration options for the canvas of a grid layout.
+type GridLayoutCanvasSizeOptions struct {
+
+	// The options that determine the sizing of the canvas used in a grid layout.
+	ScreenCanvasSizeOptions *GridLayoutScreenCanvasSizeOptions
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for a grid layout. Also called a tiled layout. Visuals snap to
+// a grid with standard spacing and alignment. Dashboards are displayed as
+// designed, with options to fit to screen or view at actual size.
+type GridLayoutConfiguration struct {
+
+	// The elements that are included in a grid layout.
+	//
+	// This member is required.
+	Elements []GridLayoutElement
+
+	// Configuration options for the canvas of a grid layout.
+	CanvasSizeOptions *GridLayoutCanvasSizeOptions
+
+	noSmithyDocumentSerde
+}
+
+// An element within a grid layout.
+type GridLayoutElement struct {
+
+	// The width of a grid element expressed as a number of grid columns.
+	//
+	// This member is required.
+	ColumnSpan *int32
+
+	// A unique identifier for an element within a grid layout.
+	//
+	// This member is required.
+	ElementId *string
+
+	// The type of element.
+	//
+	// This member is required.
+	ElementType LayoutElementType
+
+	// The height of a grid element expressed as a number of grid rows.
+	//
+	// This member is required.
+	RowSpan *int32
+
+	// The column index for the upper left corner of an element.
+	ColumnIndex *int32
+
+	// The row index for the upper left corner of an element.
+	RowIndex *int32
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the sizing of the canvas used in a grid layout.
+type GridLayoutScreenCanvasSizeOptions struct {
+
+	// This value determines the layout behavior when the viewport is resized.
+	//
+	// *
+	// FIXED: A fixed width will be used when optimizing the layout. In the Amazon
+	// QuickSight console, this option is called Classic.
+	//
+	// * RESPONSIVE: The width of
+	// the canvas will be responsive and optimized to the view port. In the Amazon
+	// QuickSight console, this option is called Tiled.
+	//
+	// This member is required.
+	ResizeOption ResizeOption
+
+	// The width that the view port will be optimized for when the layout renders.
+	OptimizedViewPortWidth *string
 
 	noSmithyDocumentSerde
 }
@@ -1522,12 +5687,254 @@ type GroupSearchFilter struct {
 	noSmithyDocumentSerde
 }
 
+// The growth rate computation configuration.
+type GrowthRateComputation struct {
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The time field that is used in a computation.
+	//
+	// This member is required.
+	Time *DimensionField
+
+	// The name of a computation.
+	Name *string
+
+	// The period size setup of a growth rate computation.
+	PeriodSize int32
+
+	// The value field that is used in a computation.
+	Value *MeasureField
+
+	noSmithyDocumentSerde
+}
+
 // The display options for gutter spacing between tiles on a sheet.
 type GutterStyle struct {
 
 	// This Boolean value controls whether to display a gutter space between sheet
 	// tiles.
-	Show bool
+	Show *bool
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a header or footer section.
+type HeaderFooterSectionConfiguration struct {
+
+	// The layout configuration of the header or footer section.
+	//
+	// This member is required.
+	Layout *SectionLayoutConfiguration
+
+	// The unique identifier of the header or footer section.
+	//
+	// This member is required.
+	SectionId *string
+
+	// The style options of a header or footer section.
+	Style *SectionStyle
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field wells of a heat map.
+type HeatMapAggregatedFieldWells struct {
+
+	// The columns field well of a heat map.
+	Columns []DimensionField
+
+	// The rows field well of a heat map.
+	Rows []DimensionField
+
+	// The values field well of a heat map.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a heat map.
+type HeatMapConfiguration struct {
+
+	// The color options (gradient color, point of divergence) in a heat map.
+	ColorScale *ColorScale
+
+	// The label options of the column that is displayed in a heat map.
+	ColumnLabelOptions *ChartAxisLabelOptions
+
+	// The options that determine if visual data labels are displayed.
+	DataLabels *DataLabelOptions
+
+	// The field wells of the visual.
+	FieldWells *HeatMapFieldWells
+
+	// The legend display setup of the visual.
+	Legend *LegendOptions
+
+	// The label options of the row that is displayed in a heat map.
+	RowLabelOptions *ChartAxisLabelOptions
+
+	// The sort configuration of a heat map.
+	SortConfiguration *HeatMapSortConfiguration
+
+	// The tooltip display setup of the visual.
+	Tooltip *TooltipOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a heat map. This is a union type structure. For
+// this structure to be valid, only one of the attributes can be defined.
+type HeatMapFieldWells struct {
+
+	// The aggregated field wells of a heat map.
+	HeatMapAggregatedFieldWells *HeatMapAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a heat map.
+type HeatMapSortConfiguration struct {
+
+	// The limit on the number of columns that are displayed in a heat map.
+	HeatMapColumnItemsLimitConfiguration *ItemsLimitConfiguration
+
+	// The column sort configuration for heat map for columns that aren't a part of a
+	// field well.
+	HeatMapColumnSort []FieldSortOptions
+
+	// The limit on the number of rows that are displayed in a heat map.
+	HeatMapRowItemsLimitConfiguration *ItemsLimitConfiguration
+
+	// The field sort configuration of the rows fields.
+	HeatMapRowSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A heat map. For more information, see Using heat maps
+// (https://docs.aws.amazon.com/quicksight/latest/user/heat-map.html) in the Amazon
+// QuickSight User Guide.
+type HeatMapVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration of a heat map.
+	ChartConfiguration *HeatMapConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a histogram.
+type HistogramAggregatedFieldWells struct {
+
+	// The value field wells of a histogram. Values are aggregated by COUNT or
+	// DISTINCT_COUNT.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of histogram bins.
+type HistogramBinOptions struct {
+
+	// The options that determine the bin count of a histogram.
+	BinCount *BinCountOptions
+
+	// The options that determine the bin width of a histogram.
+	BinWidth *BinWidthOptions
+
+	// The options that determine the selected bin type.
+	SelectedBinType HistogramBinType
+
+	// The options that determine the bin start value.
+	StartValue *float64
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for a HistogramVisual.
+type HistogramConfiguration struct {
+
+	// The options that determine the presentation of histogram bins.
+	BinOptions *HistogramBinOptions
+
+	// The data label configuration of a histogram.
+	DataLabels *DataLabelOptions
+
+	// The field well configuration of a histogram.
+	FieldWells *HistogramFieldWells
+
+	// The tooltip configuration of a histogram.
+	Tooltip *TooltipOptions
+
+	// The visual palette configuration of a histogram.
+	VisualPalette *VisualPalette
+
+	// The options that determine the presentation of the x-axis.
+	XAxisDisplayOptions *AxisDisplayOptions
+
+	// The options that determine the presentation of the x-axis label.
+	XAxisLabelOptions *ChartAxisLabelOptions
+
+	// The options that determine the presentation of the y-axis.
+	YAxisDisplayOptions *AxisDisplayOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a histogram.
+type HistogramFieldWells struct {
+
+	// The field well configuration of a histogram.
+	HistogramAggregatedFieldWells *HistogramAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// A histogram. For more information, see Using histograms
+// (https://docs.aws.amazon.com/quicksight/latest/user/histogram-charts.html) in
+// the Amazon QuickSight User Guide.
+type HistogramVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration for a HistogramVisual.
+	ChartConfiguration *HistogramConfiguration
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
 
 	noSmithyDocumentSerde
 }
@@ -1593,10 +6000,10 @@ type Ingestion struct {
 	IngestionId *string
 
 	// The size of the data ingested, in bytes.
-	IngestionSizeInBytes int64
+	IngestionSizeInBytes *int64
 
 	// The time that this ingestion took, measured in seconds.
-	IngestionTimeInSeconds int64
+	IngestionTimeInSeconds *int64
 
 	// Information about a queued dataset SPICE ingestion.
 	QueueInfo *QueueInfo
@@ -1629,6 +6036,63 @@ type InputColumn struct {
 	noSmithyDocumentSerde
 }
 
+// The configuration of an insight visual.
+type InsightConfiguration struct {
+
+	// The computations configurations of the insight visual
+	Computations []Computation
+
+	// The custom narrative of the insight visual.
+	CustomNarrative *CustomNarrativeOptions
+
+	noSmithyDocumentSerde
+}
+
+// An insight visual. For more information, see Working with insights
+// (https://docs.aws.amazon.com/quicksight/latest/user/computational-insights.html)
+// in the Amazon QuickSight User Guide.
+type InsightVisual struct {
+
+	// The dataset that is used in the insight visual.
+	//
+	// This member is required.
+	DataSetIdentifier *string
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration of an insight visual.
+	InsightConfiguration *InsightConfiguration
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The default values of the IntegerParameterDeclaration.
+type IntegerDefaultValues struct {
+
+	// The dynamic value of the IntegerDefaultValues. Different defaults are displayed
+	// according to users, groups, and values mapping.
+	DynamicValue *DynamicDefaultValue
+
+	// The static values of the IntegerDefaultValues.
+	StaticValues []int64
+
+	noSmithyDocumentSerde
+}
+
 // An integer parameter.
 type IntegerParameter struct {
 
@@ -1641,6 +6105,67 @@ type IntegerParameter struct {
 	//
 	// This member is required.
 	Values []int64
+
+	noSmithyDocumentSerde
+}
+
+// A parameter declaration for the Integer data type.
+type IntegerParameterDeclaration struct {
+
+	// The name of the parameter that is being declared.
+	//
+	// This member is required.
+	Name *string
+
+	// The value type determines whether the parameter is a single-value or multi-value
+	// parameter.
+	//
+	// This member is required.
+	ParameterValueType ParameterValueType
+
+	// The default values of a parameter. If the parameter is a single-value parameter,
+	// a maximum of one default value can be provided.
+	DefaultValues *IntegerDefaultValues
+
+	// A parameter declaration for the Integer data type.
+	ValueWhenUnset *IntegerValueWhenUnsetConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// A parameter declaration for the Integer data type. This is a union type
+// structure. For this structure to be valid, only one of the attributes can be
+// defined.
+type IntegerValueWhenUnsetConfiguration struct {
+
+	// A custom value that's used when the value of a parameter isn't set.
+	CustomValue *int64
+
+	// The built-in options for default values. The value can be one of the
+	// following:
+	//
+	// * RECOMMENDED: The recommended value.
+	//
+	// * NULL: The NULL value.
+	ValueWhenUnsetOption ValueWhenUnsetOption
+
+	noSmithyDocumentSerde
+}
+
+// The limit configuration of the visual display for an axis.
+type ItemsLimitConfiguration struct {
+
+	// The limit on how many items of a field are showed in the chart. For example, the
+	// number of slices that are displayed in a pie chart.
+	ItemsLimit *int64
+
+	// The Show other of an axis in the chart. Choose one of the following options:
+	//
+	// *
+	// INCLUDE
+	//
+	// * EXCLUDE
+	OtherCategories OtherCategories
 
 	noSmithyDocumentSerde
 }
@@ -1694,7 +6219,481 @@ type JoinKeyProperties struct {
 	// A value that indicates that a row in a table is uniquely identified by the
 	// columns in a join key. This is used by Amazon QuickSight to optimize query
 	// performance.
-	UniqueKey bool
+	UniqueKey *bool
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting of a KPI visual.
+type KPIConditionalFormatting struct {
+
+	// The conditional formatting options of a KPI visual.
+	ConditionalFormattingOptions []KPIConditionalFormattingOption
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting options of a KPI visual.
+type KPIConditionalFormattingOption struct {
+
+	// The conditional formatting for the primary value of a KPI visual.
+	PrimaryValue *KPIPrimaryValueConditionalFormatting
+
+	// The conditional formatting for the progress bar of a KPI visual.
+	ProgressBar *KPIProgressBarConditionalFormatting
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a KPI visual.
+type KPIConfiguration struct {
+
+	// The field well configuration of a KPI visual.
+	FieldWells *KPIFieldWells
+
+	// The options that determine the presentation of a KPI visual.
+	KPIOptions *KPIOptions
+
+	// The sort configuration of a KPI visual.
+	SortConfiguration *KPISortConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a KPI visual.
+type KPIFieldWells struct {
+
+	// The target value field wells of a KPI visual.
+	TargetValues []MeasureField
+
+	// The trend group field wells of a KPI visual.
+	TrendGroups []DimensionField
+
+	// The value field wells of a KPI visual.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of a KPI visual.
+type KPIOptions struct {
+
+	// The comparison configuration of a KPI visual.
+	Comparison *ComparisonConfiguration
+
+	// The options that determine the primary value display type.
+	PrimaryValueDisplayType PrimaryValueDisplayType
+
+	// The options that determine the primary value font configuration.
+	PrimaryValueFontConfiguration *FontConfiguration
+
+	// The options that determine the presentation of the progress bar of a KPI visual.
+	ProgressBar *ProgressBarOptions
+
+	// The options that determine the presentation of the secondary value of a KPI
+	// visual.
+	SecondaryValue *SecondaryValueOptions
+
+	// The options that determine the secondary value font configuration.
+	SecondaryValueFontConfiguration *FontConfiguration
+
+	// The options that determine the presentation of trend arrows in a KPI visual.
+	TrendArrows *TrendArrowOptions
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting for the primary value of a KPI visual.
+type KPIPrimaryValueConditionalFormatting struct {
+
+	// The conditional formatting of the primary value's icon.
+	Icon *ConditionalFormattingIcon
+
+	// The conditional formatting of the primary value's text color.
+	TextColor *ConditionalFormattingColor
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting for the progress bar of a KPI visual.
+type KPIProgressBarConditionalFormatting struct {
+
+	// The conditional formatting of the progress bar's foreground color.
+	ForegroundColor *ConditionalFormattingColor
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a KPI visual.
+type KPISortConfiguration struct {
+
+	// The sort configuration of the trend group fields.
+	TrendGroupSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A key performance indicator (KPI). For more information, see Using KPIs
+// (https://docs.aws.amazon.com/quicksight/latest/user/kpi.html) in the Amazon
+// QuickSight User Guide.
+type KPIVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration of a KPI visual.
+	ChartConfiguration *KPIConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The conditional formatting of a KPI visual.
+	ConditionalFormatting *KPIConditionalFormatting
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The share label options for the labels.
+type LabelOptions struct {
+
+	// The text for the label.
+	CustomLabel *string
+
+	// The font configuration of the label.
+	FontConfiguration *FontConfiguration
+
+	// Determines whether or not the label is visible.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// A Layout defines the placement of elements within a sheet. For more information,
+// see Types of layout
+// (https://docs.aws.amazon.com/quicksight/latest/user/types-of-layout.html) in the
+// Amazon QuickSight User Guide. This is a union type structure. For this structure
+// to be valid, only one of the attributes can be defined.
+type Layout struct {
+
+	// The configuration that determines what the type of layout for a sheet.
+	//
+	// This member is required.
+	Configuration *LayoutConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The configuration that determines what the type of layout will be used on a
+// sheet. This is a union type structure. For this structure to be valid, only one
+// of the attributes can be defined.
+type LayoutConfiguration struct {
+
+	// A free-form is optimized for a fixed width and has more control over the exact
+	// placement of layout elements.
+	FreeFormLayout *FreeFormLayoutConfiguration
+
+	// A type of layout that can be used on a sheet. In a grid layout, visuals snap to
+	// a grid with standard spacing and alignment. Dashboards are displayed as
+	// designed, with options to fit to screen or view at actual size. A grid layout
+	// can be configured to behave in one of two ways when the viewport is resized:
+	// FIXED or RESPONSIVE.
+	GridLayout *GridLayoutConfiguration
+
+	// A section based layout organizes visuals into multiple sections and has
+	// customized header, footer and page break.
+	SectionBasedLayout *SectionBasedLayoutConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The options for the legend setup of a visual.
+type LegendOptions struct {
+
+	// The height of the legend. If this value is omitted, a default height is used
+	// when rendering.
+	Height *string
+
+	// The positions for the legend. Choose one of the following options:
+	//
+	// * AUTO
+	//
+	// *
+	// RIGHT
+	//
+	// * BOTTOM
+	//
+	// * LEFT
+	Position LegendPosition
+
+	// The custom title for the legend.
+	Title *LabelOptions
+
+	// Determines whether or not the legend is visible.
+	Visibility Visibility
+
+	// The width of the legend. If this value is omitted, a default width is used when
+	// rendering.
+	Width *string
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a line chart.
+type LineChartAggregatedFieldWells struct {
+
+	// The category field wells of a line chart. Values are grouped by category fields.
+	Category []DimensionField
+
+	// The color field wells of a line chart. Values are grouped by category fields.
+	Colors []DimensionField
+
+	// The small multiples field well of a line chart.
+	SmallMultiples []DimensionField
+
+	// The value field wells of a line chart. Values are aggregated based on
+	// categories.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a line chart.
+type LineChartConfiguration struct {
+
+	// The default configuration of a line chart's contribution analysis.
+	ContributionAnalysisDefaults []ContributionAnalysisDefault
+
+	// The data label configuration of a line chart.
+	DataLabels *DataLabelOptions
+
+	// The options that determine the default presentation of all line series in
+	// LineChartVisual.
+	DefaultSeriesSettings *LineChartDefaultSeriesSettings
+
+	// The field well configuration of a line chart.
+	FieldWells *LineChartFieldWells
+
+	// The forecast configuration of a line chart.
+	ForecastConfigurations []ForecastConfiguration
+
+	// The legend configuration of a line chart.
+	Legend *LegendOptions
+
+	// The series axis configuration of a line chart.
+	PrimaryYAxisDisplayOptions *LineSeriesAxisDisplayOptions
+
+	// The options that determine the presentation of the y-axis label.
+	PrimaryYAxisLabelOptions *ChartAxisLabelOptions
+
+	// The reference lines configuration of a line chart.
+	ReferenceLines []ReferenceLine
+
+	// The series axis configuration of a line chart.
+	SecondaryYAxisDisplayOptions *LineSeriesAxisDisplayOptions
+
+	// The options that determine the presentation of the secondary y-axis label.
+	SecondaryYAxisLabelOptions *ChartAxisLabelOptions
+
+	// The series item configuration of a line chart.
+	Series []SeriesItem
+
+	// The small multiples setup for the visual.
+	SmallMultiplesOptions *SmallMultiplesOptions
+
+	// The sort configuration of a line chart.
+	SortConfiguration *LineChartSortConfiguration
+
+	// The tooltip configuration of a line chart.
+	Tooltip *TooltipOptions
+
+	// Determines the type of the line chart.
+	Type LineChartType
+
+	// The visual palette configuration of a line chart.
+	VisualPalette *VisualPalette
+
+	// The options that determine the presentation of the x-axis.
+	XAxisDisplayOptions *AxisDisplayOptions
+
+	// The options that determine the presentation of the x-axis label.
+	XAxisLabelOptions *ChartAxisLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the default presentation of all line series in
+// LineChartVisual.
+type LineChartDefaultSeriesSettings struct {
+
+	// The axis to which you are binding all line series to.
+	AxisBinding AxisBinding
+
+	// Line styles options for all line series in the visual.
+	LineStyleSettings *LineChartLineStyleSettings
+
+	// Marker styles options for all line series in the visual.
+	MarkerStyleSettings *LineChartMarkerStyleSettings
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a line chart.
+type LineChartFieldWells struct {
+
+	// The field well configuration of a line chart.
+	LineChartAggregatedFieldWells *LineChartAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// Line styles options for a line series in LineChartVisual.
+type LineChartLineStyleSettings struct {
+
+	// Interpolation style for line series.
+	//
+	// * LINEAR: Show as default, linear
+	// style.
+	//
+	// * SMOOTH: Show as a smooth curve.
+	//
+	// * STEPPED: Show steps in line.
+	LineInterpolation LineInterpolation
+
+	// Line style for line series.
+	//
+	// * SOLID: Show as a solid line.
+	//
+	// * DOTTED: Show as a
+	// dotted line.
+	//
+	// * DASHED: Show as a dashed line.
+	LineStyle LineChartLineStyle
+
+	// Configuration option that determines whether to show the line for the series.
+	LineVisibility Visibility
+
+	// Width that determines the line thickness.
+	LineWidth *string
+
+	noSmithyDocumentSerde
+}
+
+// Marker styles options for a line series in LineChartVisual.
+type LineChartMarkerStyleSettings struct {
+
+	// Color of marker in the series.
+	MarkerColor *string
+
+	// Shape option for markers in the series.
+	//
+	// * CIRCLE: Show marker as a circle.
+	//
+	// *
+	// TRIANGLE: Show marker as a triangle.
+	//
+	// * SQUARE: Show marker as a square.
+	//
+	// *
+	// DIAMOND: Show marker as a diamond.
+	//
+	// * ROUNDED_SQUARE: Show marker as a rounded
+	// square.
+	MarkerShape LineChartMarkerShape
+
+	// Size of marker in the series.
+	MarkerSize *string
+
+	// Configuration option that determines whether to show the markers in the series.
+	MarkerVisibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of a line series in the visual
+type LineChartSeriesSettings struct {
+
+	// Line styles options for a line series in LineChartVisual.
+	LineStyleSettings *LineChartLineStyleSettings
+
+	// Marker styles options for a line series in LineChartVisual.
+	MarkerStyleSettings *LineChartMarkerStyleSettings
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a line chart.
+type LineChartSortConfiguration struct {
+
+	// The limit on the number of categories that are displayed in a line chart.
+	CategoryItemsLimitConfiguration *ItemsLimitConfiguration
+
+	// The sort configuration of the category fields.
+	CategorySort []FieldSortOptions
+
+	// The limit on the number of lines that are displayed in a line chart.
+	ColorItemsLimitConfiguration *ItemsLimitConfiguration
+
+	// The limit on the number of small multiples panels that are displayed.
+	SmallMultiplesLimitConfiguration *ItemsLimitConfiguration
+
+	// The sort configuration of the small multiples field.
+	SmallMultiplesSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A line chart. For more information, see Using line charts
+// (https://docs.aws.amazon.com/quicksight/latest/user/line-charts.html) in the
+// Amazon QuickSight User Guide.
+type LineChartVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration of a line chart.
+	ChartConfiguration *LineChartConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The series axis configuration of a line chart.
+type LineSeriesAxisDisplayOptions struct {
+
+	// The options that determine the presentation of the line series axis.
+	AxisOptions *AxisDisplayOptions
+
+	// The configuration options that determine how missing data is treated during the
+	// rendering of a line chart.
+	MissingDataConfigurations []MissingDataConfiguration
 
 	noSmithyDocumentSerde
 }
@@ -1705,6 +6704,59 @@ type LinkSharingConfiguration struct {
 
 	// A structure that contains the permissions of a shareable link.
 	Permissions []ResourcePermission
+
+	noSmithyDocumentSerde
+}
+
+// The display options of a control.
+type ListControlDisplayOptions struct {
+
+	// The configuration of the search options in a list control.
+	SearchOptions *ListControlSearchOptions
+
+	// The configuration of the Select all options in a list control.
+	SelectAllOptions *ListControlSelectAllOptions
+
+	// The options to configure the title visibility, name, and font size.
+	TitleOptions *LabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of the search options in a list control.
+type ListControlSearchOptions struct {
+
+	// The visibility configuration of the search options in a list control.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of the Select all options in a list control.
+type ListControlSelectAllOptions struct {
+
+	// The visibility configuration of the Select all options in a list control.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of loading animation in free-form layout.
+type LoadingAnimation struct {
+
+	// The visibility configuration of LoadingAnimation.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The navigation configuration for CustomActionNavigationOperation.
+type LocalNavigationConfiguration struct {
+
+	// The sheet that is targeted for navigation in the same analysis.
+	//
+	// This member is required.
+	TargetSheetId *string
 
 	noSmithyDocumentSerde
 }
@@ -1725,7 +6777,8 @@ type LogicalTable struct {
 	// This member is required.
 	Source *LogicalTableSource
 
-	// Transform operations that act on this logical table.
+	// Transform operations that act on this logical table. For this structure to be
+	// valid, only one of the attributes can be non-null.
 	DataTransforms []TransformOperation
 
 	noSmithyDocumentSerde
@@ -1744,6 +6797,19 @@ type LogicalTableSource struct {
 
 	// Physical table ID.
 	PhysicalTableId *string
+
+	noSmithyDocumentSerde
+}
+
+// The text format for a subtitle. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type LongFormatText struct {
+
+	// Plain text format.
+	PlainText *string
+
+	// Rich text. Examples of rich text include bold, underline, and italics.
+	RichText *string
 
 	noSmithyDocumentSerde
 }
@@ -1768,7 +6834,7 @@ type ManifestFileLocation struct {
 type MarginStyle struct {
 
 	// This Boolean value controls whether to display sheet margins.
-	Show bool
+	Show *bool
 
 	noSmithyDocumentSerde
 }
@@ -1794,6 +6860,65 @@ type MariaDbParameters struct {
 	noSmithyDocumentSerde
 }
 
+// The maximum label of a data path label.
+type MaximumLabelType struct {
+
+	// The visibility of the maximum label.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The maximum and minimum computation configuration.
+type MaximumMinimumComputation struct {
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The time field that is used in a computation.
+	//
+	// This member is required.
+	Time *DimensionField
+
+	// The type of computation. Choose one of the following options:
+	//
+	// * MAXIMUM: A
+	// maximum computation.
+	//
+	// * MINIMUM: A minimum computation.
+	//
+	// This member is required.
+	Type MaximumMinimumComputationType
+
+	// The name of a computation.
+	Name *string
+
+	// The value field that is used in a computation.
+	Value *MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The measure (metric) type field.
+type MeasureField struct {
+
+	// The calculated measure field only used in pivot tables.
+	CalculatedMeasureField *CalculatedMeasureField
+
+	// The measure type field with categorical type columns.
+	CategoricalMeasureField *CategoricalMeasureField
+
+	// The measure type field with date type columns.
+	DateMeasureField *DateMeasureField
+
+	// The measure type field with numerical type columns.
+	NumericalMeasureField *NumericalMeasureField
+
+	noSmithyDocumentSerde
+}
+
 // An object that consists of a member Amazon Resource Name (ARN) and a member ID.
 type MemberIdArnPair struct {
 
@@ -1802,6 +6927,63 @@ type MemberIdArnPair struct {
 
 	// The ID of the member.
 	MemberId *string
+
+	noSmithyDocumentSerde
+}
+
+// The metric comparison computation configuration.
+type MetricComparisonComputation struct {
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The field that is used in a metric comparison from value setup.
+	//
+	// This member is required.
+	FromValue *MeasureField
+
+	// The field that is used in a metric comparison to value setup.
+	//
+	// This member is required.
+	TargetValue *MeasureField
+
+	// The time field that is used in a computation.
+	//
+	// This member is required.
+	Time *DimensionField
+
+	// The name of a computation.
+	Name *string
+
+	noSmithyDocumentSerde
+}
+
+// The minimum label of a data path label.
+type MinimumLabelType struct {
+
+	// The visibility of the minimum label.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The configuration options that determine how missing data is treated during the
+// rendering of a line chart.
+type MissingDataConfiguration struct {
+
+	// The treatment option that determines how missing data should be rendered. Choose
+	// from the following options:
+	//
+	// * INTERPOLATE: Interpolate missing values between
+	// the prior and the next known value.
+	//
+	// * SHOW_AS_ZERO: Show missing values as the
+	// value 0.
+	//
+	// * SHOW_AS_BLANK: Display a blank space when rendering missing data.
+	TreatmentOption MissingDataTreatmentOption
 
 	noSmithyDocumentSerde
 }
@@ -1863,6 +7045,324 @@ type NamespaceInfoV2 struct {
 	noSmithyDocumentSerde
 }
 
+// The options that determine the negative value configuration.
+type NegativeValueConfiguration struct {
+
+	// Determines the display mode of the negative value configuration.
+	//
+	// This member is required.
+	DisplayMode NegativeValueDisplayMode
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the null value format configuration.
+type NullValueFormatConfiguration struct {
+
+	// Determines the null string of null values.
+	//
+	// This member is required.
+	NullString *string
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the number display format configuration.
+type NumberDisplayFormatConfiguration struct {
+
+	// The option that determines the decimal places configuration.
+	DecimalPlacesConfiguration *DecimalPlacesConfiguration
+
+	// The options that determine the negative value configuration.
+	NegativeValueConfiguration *NegativeValueConfiguration
+
+	// The options that determine the null value format configuration.
+	NullValueFormatConfiguration *NullValueFormatConfiguration
+
+	// Determines the number scale value of the number format.
+	NumberScale NumberScale
+
+	// Determines the prefix value of the number format.
+	Prefix *string
+
+	// The options that determine the numeric separator configuration.
+	SeparatorConfiguration *NumericSeparatorConfiguration
+
+	// Determines the suffix value of the number format.
+	Suffix *string
+
+	noSmithyDocumentSerde
+}
+
+// Formatting configuration for number fields.
+type NumberFormatConfiguration struct {
+
+	// The options that determine the numeric format configuration.
+	FormatConfiguration *NumericFormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// Aggregation for numerical values.
+type NumericalAggregationFunction struct {
+
+	// An aggregation based on the percentile of values in a dimension or measure.
+	PercentileAggregation *PercentileAggregation
+
+	// Built-in aggregation functions for numerical values.
+	//
+	// * SUM: The sum of a
+	// dimension or measure.
+	//
+	// * AVERAGE: The average of a dimension or measure.
+	//
+	// * MIN:
+	// The minimum value of a dimension or measure.
+	//
+	// * MAX: The maximum value of a
+	// dimension or measure.
+	//
+	// * COUNT: The count of a dimension or measure.
+	//
+	// *
+	// DISTINCT_COUNT: The count of distinct values in a dimension or measure.
+	//
+	// * VAR:
+	// The variance of a dimension or measure.
+	//
+	// * VARP: The partitioned variance of a
+	// dimension or measure.
+	//
+	// * STDEV: The standard deviation of a dimension or
+	// measure.
+	//
+	// * STDEVP: The partitioned standard deviation of a dimension or
+	// measure.
+	//
+	// * MEDIAN: The median value of a dimension or measure.
+	SimpleNumericalAggregation SimpleNumericalAggregationFunction
+
+	noSmithyDocumentSerde
+}
+
+// The dimension type field with numerical type columns.
+type NumericalDimensionField struct {
+
+	// The column that is used in the NumericalDimensionField.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The custom field ID.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The format configuration of the field.
+	FormatConfiguration *NumberFormatConfiguration
+
+	// The custom hierarchy ID.
+	HierarchyId *string
+
+	noSmithyDocumentSerde
+}
+
+// The measure type field with numerical type columns.
+type NumericalMeasureField struct {
+
+	// The column that is used in the NumericalMeasureField.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The custom field ID.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The aggregation function of the measure field.
+	AggregationFunction *NumericalAggregationFunction
+
+	// The format configuration of the field.
+	FormatConfiguration *NumberFormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The options for an axis with a numeric field.
+type NumericAxisOptions struct {
+
+	// The range setup of a numeric axis.
+	Range *AxisDisplayRange
+
+	// The scale setup of a numeric axis.
+	Scale *AxisScale
+
+	noSmithyDocumentSerde
+}
+
+// The category drill down filter.
+type NumericEqualityDrillDownFilter struct {
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The value of the double input numeric drill down filter.
+	//
+	// This member is required.
+	Value float64
+
+	noSmithyDocumentSerde
+}
+
+// A NumericEqualityFilter filters values that are equal to the specified value.
+type NumericEqualityFilter struct {
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// An identifier that uniquely identifies a filter within a dashboard, analysis, or
+	// template.
+	//
+	// This member is required.
+	FilterId *string
+
+	// The match operator that is used to determine if a filter should be applied.
+	//
+	// This member is required.
+	MatchOperator NumericEqualityMatchOperator
+
+	// This option determines how null values should be treated when filtering data.
+	//
+	// *
+	// ALL_VALUES: Include null values in filtered results.
+	//
+	// * NULLS_ONLY: Only include
+	// null values in filtered results.
+	//
+	// * NON_NULLS_ONLY: Exclude null values from
+	// filtered results.
+	//
+	// This member is required.
+	NullOption FilterNullOption
+
+	// The aggregation function of the filter.
+	AggregationFunction *AggregationFunction
+
+	// The parameter whose value should be used for the filter value.
+	ParameterName *string
+
+	// Select all of the values. Null is not the assigned value of select all.
+	//
+	// *
+	// FILTER_ALL_VALUES
+	SelectAllOptions NumericFilterSelectAllOptions
+
+	// The input value.
+	Value *float64
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the numeric format configuration. This is a union
+// type structure. For this structure to be valid, only one of the attributes can
+// be defined.
+type NumericFormatConfiguration struct {
+
+	// The options that determine the currency display format configuration.
+	CurrencyDisplayFormatConfiguration *CurrencyDisplayFormatConfiguration
+
+	// The options that determine the number display format configuration.
+	NumberDisplayFormatConfiguration *NumberDisplayFormatConfiguration
+
+	// The options that determine the percentage display format configuration.
+	PercentageDisplayFormatConfiguration *PercentageDisplayFormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// A NumericRangeFilter filters values that are within the value range.
+type NumericRangeFilter struct {
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// An identifier that uniquely identifies a filter within a dashboard, analysis, or
+	// template.
+	//
+	// This member is required.
+	FilterId *string
+
+	// This option determines how null values should be treated when filtering data.
+	//
+	// *
+	// ALL_VALUES: Include null values in filtered results.
+	//
+	// * NULLS_ONLY: Only include
+	// null values in filtered results.
+	//
+	// * NON_NULLS_ONLY: Exclude null values from
+	// filtered results.
+	//
+	// This member is required.
+	NullOption FilterNullOption
+
+	// The aggregation function of the filter.
+	AggregationFunction *AggregationFunction
+
+	// Determines whether the maximum value in the filter value range should be
+	// included in the filtered results.
+	IncludeMaximum *bool
+
+	// Determines whether the minimum value in the filter value range should be
+	// included in the filtered results.
+	IncludeMinimum *bool
+
+	// The maximum value for the filter value range.
+	RangeMaximum *NumericRangeFilterValue
+
+	// The minimum value for the filter value range.
+	RangeMinimum *NumericRangeFilterValue
+
+	// Select all of the values. Null is not the assigned value of select all.
+	//
+	// *
+	// FILTER_ALL_VALUES
+	SelectAllOptions NumericFilterSelectAllOptions
+
+	noSmithyDocumentSerde
+}
+
+// The value input pf the numeric range filter.
+type NumericRangeFilterValue struct {
+
+	// The parameter that is used in the numeric range.
+	Parameter *string
+
+	// The static value of the numeric range filter.
+	StaticValue *float64
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the numeric separator configuration.
+type NumericSeparatorConfiguration struct {
+
+	// Determines the decimal separator.
+	DecimalSeparator NumericSeparatorSymbol
+
+	// The options that determine the thousands separator configuration.
+	ThousandsSeparator *ThousandSeparatorOptions
+
+	noSmithyDocumentSerde
+}
+
 // The parameters for Oracle.
 type OracleParameters struct {
 
@@ -1899,6 +7399,217 @@ type OutputColumn struct {
 	noSmithyDocumentSerde
 }
 
+// The pagination configuration for a table visual or boxplot.
+type PaginationConfiguration struct {
+
+	// Indicates the page number.
+	//
+	// This member is required.
+	PageNumber *int64
+
+	// Indicates how many items render in one page.
+	//
+	// This member is required.
+	PageSize *int64
+
+	noSmithyDocumentSerde
+}
+
+// A collection of options that configure how each panel displays in a small
+// multiples chart.
+type PanelConfiguration struct {
+
+	// Sets the background color for each panel.
+	BackgroundColor *string
+
+	// Determines whether or not a background for each small multiples panel is
+	// rendered.
+	BackgroundVisibility Visibility
+
+	// Sets the line color of panel borders.
+	BorderColor *string
+
+	// Sets the line style of panel borders.
+	BorderStyle PanelBorderStyle
+
+	// Sets the line thickness of panel borders.
+	BorderThickness *string
+
+	// Determines whether or not each panel displays a border.
+	BorderVisibility Visibility
+
+	// Sets the total amount of negative space to display between sibling panels.
+	GutterSpacing *string
+
+	// Determines whether or not negative space between sibling panels is rendered.
+	GutterVisibility Visibility
+
+	// Configures the title display within each small multiples panel.
+	Title *PanelTitleOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the title styles for each small multiples panel.
+type PanelTitleOptions struct {
+
+	// Configures the display properties of the given text.
+	FontConfiguration *FontConfiguration
+
+	// Sets the horizontal text alignment of the title within each panel.
+	HorizontalTextAlignment HorizontalTextAlignment
+
+	// Determines whether or not panel titles are displayed.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The control of a parameter that users can interact with in a dashboard or an
+// analysis. This is a union type structure. For this structure to be valid, only
+// one of the attributes can be defined.
+type ParameterControl struct {
+
+	// A control from a date parameter that specifies date and time.
+	DateTimePicker *ParameterDateTimePickerControl
+
+	// A control to display a dropdown list with buttons that are used to select a
+	// single value.
+	Dropdown *ParameterDropDownControl
+
+	// A control to display a list with buttons or boxes that are used to select either
+	// a single value or multiple values.
+	List *ParameterListControl
+
+	// A control to display a horizontal toggle bar. This is used to change a value by
+	// sliding the toggle.
+	Slider *ParameterSliderControl
+
+	// A control to display a text box that is used to enter multiple entries.
+	TextArea *ParameterTextAreaControl
+
+	// A control to display a text box that is used to enter a single entry.
+	TextField *ParameterTextFieldControl
+
+	noSmithyDocumentSerde
+}
+
+// A control from a date parameter that specifies date and time.
+type ParameterDateTimePickerControl struct {
+
+	// The ID of the ParameterDateTimePickerControl.
+	//
+	// This member is required.
+	ParameterControlId *string
+
+	// The name of the ParameterDateTimePickerControl.
+	//
+	// This member is required.
+	SourceParameterName *string
+
+	// The title of the ParameterDateTimePickerControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The display options of a control.
+	DisplayOptions *DateTimePickerControlDisplayOptions
+
+	noSmithyDocumentSerde
+}
+
+// The declaration definition of a parameter. For more information, see Parameters
+// in Amazon QuickSight
+// (https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html)
+// in the Amazon QuickSight User Guide. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type ParameterDeclaration struct {
+
+	// A parameter declaration for the DateTime data type.
+	DateTimeParameterDeclaration *DateTimeParameterDeclaration
+
+	// A parameter declaration for the Decimal data type.
+	DecimalParameterDeclaration *DecimalParameterDeclaration
+
+	// A parameter declaration for the Integer data type.
+	IntegerParameterDeclaration *IntegerParameterDeclaration
+
+	// A parameter declaration for the String data type.
+	StringParameterDeclaration *StringParameterDeclaration
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a dropdown list with buttons that are used to select a
+// single value.
+type ParameterDropDownControl struct {
+
+	// The ID of the ParameterDropDownControl.
+	//
+	// This member is required.
+	ParameterControlId *string
+
+	// The source parameter name of the ParameterDropDownControl.
+	//
+	// This member is required.
+	SourceParameterName *string
+
+	// The title of the ParameterDropDownControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The values that are displayed in a control can be configured to only show values
+	// that are valid based on what's selected in other controls.
+	CascadingControlConfiguration *CascadingControlConfiguration
+
+	// The display options of a control.
+	DisplayOptions *DropDownControlDisplayOptions
+
+	// A list of selectable values that are used in a control.
+	SelectableValues *ParameterSelectableValues
+
+	// The type parameter name of the ParameterDropDownControl.
+	Type SheetControlListType
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a list with buttons or boxes that are used to select either
+// a single value or multiple values.
+type ParameterListControl struct {
+
+	// The ID of the ParameterListControl.
+	//
+	// This member is required.
+	ParameterControlId *string
+
+	// The source parameter name of the ParameterListControl.
+	//
+	// This member is required.
+	SourceParameterName *string
+
+	// The title of the ParameterListControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The values that are displayed in a control can be configured to only show values
+	// that are valid based on what's selected in other controls.
+	CascadingControlConfiguration *CascadingControlConfiguration
+
+	// The display options of a control.
+	DisplayOptions *ListControlDisplayOptions
+
+	// A list of selectable values that are used in a control.
+	SelectableValues *ParameterSelectableValues
+
+	// The type of ParameterListControl.
+	Type SheetControlListType
+
+	noSmithyDocumentSerde
+}
+
 // A list of Amazon QuickSight parameters and the list's override values.
 type Parameters struct {
 
@@ -1913,6 +7624,207 @@ type Parameters struct {
 
 	// The parameters that have a data type of string.
 	StringParameters []StringParameter
+
+	noSmithyDocumentSerde
+}
+
+// A list of selectable values that are used in a control.
+type ParameterSelectableValues struct {
+
+	// The column identifier that fetches values from the data set.
+	LinkToDataSetColumn *ColumnIdentifier
+
+	// The values that are used in ParameterSelectableValues.
+	Values []string
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a horizontal toggle bar. This is used to change a value by
+// sliding the toggle.
+type ParameterSliderControl struct {
+
+	// The smaller value that is displayed at the left of the slider.
+	//
+	// This member is required.
+	MaximumValue float64
+
+	// The larger value that is displayed at the right of the slider.
+	//
+	// This member is required.
+	MinimumValue float64
+
+	// The ID of the ParameterSliderControl.
+	//
+	// This member is required.
+	ParameterControlId *string
+
+	// The source parameter name of the ParameterSliderControl.
+	//
+	// This member is required.
+	SourceParameterName *string
+
+	// The number of increments that the slider bar is divided into.
+	//
+	// This member is required.
+	StepSize float64
+
+	// The title of the ParameterSliderControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The display options of a control.
+	DisplayOptions *SliderControlDisplayOptions
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a text box that is used to enter multiple entries.
+type ParameterTextAreaControl struct {
+
+	// The ID of the ParameterTextAreaControl.
+	//
+	// This member is required.
+	ParameterControlId *string
+
+	// The source parameter name of the ParameterTextAreaControl.
+	//
+	// This member is required.
+	SourceParameterName *string
+
+	// The title of the ParameterTextAreaControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The delimiter that is used to separate the lines in text.
+	Delimiter *string
+
+	// The display options of a control.
+	DisplayOptions *TextAreaControlDisplayOptions
+
+	noSmithyDocumentSerde
+}
+
+// A control to display a text box that is used to enter a single entry.
+type ParameterTextFieldControl struct {
+
+	// The ID of the ParameterTextFieldControl.
+	//
+	// This member is required.
+	ParameterControlId *string
+
+	// The source parameter name of the ParameterTextFieldControl.
+	//
+	// This member is required.
+	SourceParameterName *string
+
+	// The title of the ParameterTextFieldControl.
+	//
+	// This member is required.
+	Title *string
+
+	// The display options of a control.
+	DisplayOptions *TextFieldControlDisplayOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the percentage display format configuration.
+type PercentageDisplayFormatConfiguration struct {
+
+	// The option that determines the decimal places configuration.
+	DecimalPlacesConfiguration *DecimalPlacesConfiguration
+
+	// The options that determine the negative value configuration.
+	NegativeValueConfiguration *NegativeValueConfiguration
+
+	// The options that determine the null value format configuration.
+	NullValueFormatConfiguration *NullValueFormatConfiguration
+
+	// Determines the prefix value of the percentage format.
+	Prefix *string
+
+	// The options that determine the numeric separator configuration.
+	SeparatorConfiguration *NumericSeparatorConfiguration
+
+	// Determines the suffix value of the percentage format.
+	Suffix *string
+
+	noSmithyDocumentSerde
+}
+
+// An aggregation based on the percentile of values in a dimension or measure.
+type PercentileAggregation struct {
+
+	// The percentile value. This value can be any numeric constant 0–100. A percentile
+	// value of 50 computes the median value of the measure.
+	PercentileValue *float64
+
+	noSmithyDocumentSerde
+}
+
+// The percent range in the visible range.
+type PercentVisibleRange struct {
+
+	// The lower bound of the range.
+	From *float64
+
+	// The top bound of the range.
+	To *float64
+
+	noSmithyDocumentSerde
+}
+
+// The period over period computation configuration.
+type PeriodOverPeriodComputation struct {
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The time field that is used in a computation.
+	//
+	// This member is required.
+	Time *DimensionField
+
+	// The name of a computation.
+	Name *string
+
+	// The value field that is used in a computation.
+	Value *MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The period to date computation configuration.
+type PeriodToDateComputation struct {
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The time field that is used in a computation.
+	//
+	// This member is required.
+	Time *DimensionField
+
+	// The name of a computation.
+	Name *string
+
+	// The time granularity setup of period to date computation. Choose from the
+	// following options:
+	//
+	// * YEAR: Year to date.
+	//
+	// * MONTH: Month to date.
+	PeriodTimeGranularity TimeGranularity
+
+	// The value field that is used in a computation.
+	Value *MeasureField
 
 	noSmithyDocumentSerde
 }
@@ -1957,6 +7869,442 @@ type PhysicalTableMemberS3Source struct {
 
 func (*PhysicalTableMemberS3Source) isPhysicalTable() {}
 
+// The field well configuration of a pie chart.
+type PieChartAggregatedFieldWells struct {
+
+	// The category (group/color) field wells of a pie chart.
+	Category []DimensionField
+
+	// The small multiples field well of a pie chart.
+	SmallMultiples []DimensionField
+
+	// The value field wells of a pie chart. Values are aggregated based on categories.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a pie chart.
+type PieChartConfiguration struct {
+
+	// The label options of the group/color that is displayed in a pie chart.
+	CategoryLabelOptions *ChartAxisLabelOptions
+
+	// The contribution analysis (anomaly configuration) setup of the visual.
+	ContributionAnalysisDefaults []ContributionAnalysisDefault
+
+	// The options that determine if visual data labels are displayed.
+	DataLabels *DataLabelOptions
+
+	// The options that determine the shape of the chart. This option determines
+	// whether the chart is a pie chart or a donut chart.
+	DonutOptions *DonutOptions
+
+	// The field wells of the visual.
+	FieldWells *PieChartFieldWells
+
+	// The legend display setup of the visual.
+	Legend *LegendOptions
+
+	// The small multiples setup for the visual.
+	SmallMultiplesOptions *SmallMultiplesOptions
+
+	// The sort configuration of a pie chart.
+	SortConfiguration *PieChartSortConfiguration
+
+	// The tooltip display setup of the visual.
+	Tooltip *TooltipOptions
+
+	// The label options for the value that is displayed in a pie chart.
+	ValueLabelOptions *ChartAxisLabelOptions
+
+	// The palette (chart color) display setup of the visual.
+	VisualPalette *VisualPalette
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a pie chart. This is a union type structure. For
+// this structure to be valid, only one of the attributes can be defined.
+type PieChartFieldWells struct {
+
+	// The field well configuration of a pie chart.
+	PieChartAggregatedFieldWells *PieChartAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a pie chart.
+type PieChartSortConfiguration struct {
+
+	// The limit on the number of categories that are displayed in a pie chart.
+	CategoryItemsLimit *ItemsLimitConfiguration
+
+	// The sort configuration of the category fields.
+	CategorySort []FieldSortOptions
+
+	// The limit on the number of small multiples panels that are displayed.
+	SmallMultiplesLimitConfiguration *ItemsLimitConfiguration
+
+	// The sort configuration of the small multiples field.
+	SmallMultiplesSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A pie or donut chart. The PieChartVisual structure describes a visual that is a
+// member of the pie chart family. The following charts can be described by using
+// this structure:
+//
+// * Pie charts
+//
+// * Donut charts
+//
+// For more information, see Using
+// pie charts (https://docs.aws.amazon.com/quicksight/latest/user/pie-chart.html)
+// in the Amazon QuickSight User Guide. For more information, see Using donut
+// charts (https://docs.aws.amazon.com/quicksight/latest/user/donut-chart.html) in
+// the Amazon QuickSight User Guide.
+type PieChartVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration of a pie chart.
+	ChartConfiguration *PieChartConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field sort options for a pivot table sort configuration.
+type PivotFieldSortOptions struct {
+
+	// The field ID for the field sort options.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The sort by field for the field sort options.
+	//
+	// This member is required.
+	SortBy *PivotTableSortBy
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field well for the pivot table.
+type PivotTableAggregatedFieldWells struct {
+
+	// The columns field well for a pivot table. Values are grouped by columns fields.
+	Columns []DimensionField
+
+	// The rows field well for a pivot table. Values are grouped by rows fields.
+	Rows []DimensionField
+
+	// The values field well for a pivot table. Values are aggregated based on rows and
+	// columns fields.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The cell conditional formatting option for a pivot table.
+type PivotTableCellConditionalFormatting struct {
+
+	// The field ID of the cell for conditional formatting.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The scope of the cell for conditional formatting.
+	Scope *PivotTableConditionalFormattingScope
+
+	// The text format of the cell for conditional formatting.
+	TextFormat *TextConditionalFormat
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting for a PivotTableVisual.
+type PivotTableConditionalFormatting struct {
+
+	// Conditional formatting options for a PivotTableVisual.
+	ConditionalFormattingOptions []PivotTableConditionalFormattingOption
+
+	noSmithyDocumentSerde
+}
+
+// Conditional formatting options for a PivotTableVisual.
+type PivotTableConditionalFormattingOption struct {
+
+	// The cell conditional formatting option for a pivot table.
+	Cell *PivotTableCellConditionalFormatting
+
+	noSmithyDocumentSerde
+}
+
+// The scope of the cell for conditional formatting.
+type PivotTableConditionalFormattingScope struct {
+
+	// The role (field, field total, grand total) of the cell for conditional
+	// formatting.
+	Role PivotTableConditionalFormattingScopeRole
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for a PivotTableVisual.
+type PivotTableConfiguration struct {
+
+	// The field options for a pivot table visual.
+	FieldOptions *PivotTableFieldOptions
+
+	// The field wells of the visual.
+	FieldWells *PivotTableFieldWells
+
+	// The paginated report options for a pivot table visual.
+	PaginatedReportOptions *PivotTablePaginatedReportOptions
+
+	// The sort configuration for a PivotTableVisual.
+	SortConfiguration *PivotTableSortConfiguration
+
+	// The table options for a pivot table visual.
+	TableOptions *PivotTableOptions
+
+	// The total options for a pivot table visual.
+	TotalOptions *PivotTableTotalOptions
+
+	noSmithyDocumentSerde
+}
+
+// The data path options for the pivot table field options.
+type PivotTableDataPathOption struct {
+
+	// The list of data path values for the data path options.
+	//
+	// This member is required.
+	DataPathList []DataPathValue
+
+	// The width of the data path option.
+	Width *string
+
+	noSmithyDocumentSerde
+}
+
+// The selected field options for the pivot table field options.
+type PivotTableFieldOption struct {
+
+	// The field ID of the pivot table field.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The custom label of the pivot table field.
+	CustomLabel *string
+
+	// The visibility of the pivot table field.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The field options for a pivot table visual.
+type PivotTableFieldOptions struct {
+
+	// The data path options for the pivot table field options.
+	DataPathOptions []PivotTableDataPathOption
+
+	// The selected field options for the pivot table field options.
+	SelectedFieldOptions []PivotTableFieldOption
+
+	noSmithyDocumentSerde
+}
+
+// The optional configuration of subtotals cells.
+type PivotTableFieldSubtotalOptions struct {
+
+	// The field ID of the subtotal options.
+	FieldId *string
+
+	noSmithyDocumentSerde
+}
+
+// The field wells for a pivot table visual. This is a union type structure. For
+// this structure to be valid, only one of the attributes can be defined.
+type PivotTableFieldWells struct {
+
+	// The aggregated field well for the pivot table.
+	PivotTableAggregatedFieldWells *PivotTableAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The table options for a pivot table visual.
+type PivotTableOptions struct {
+
+	// The table cell style of cells.
+	CellStyle *TableCellStyle
+
+	// The visibility setting of a pivot table's collapsed row dimension fields. If the
+	// value of this structure is HIDDEN, all collapsed columns in a pivot table are
+	// automatically hidden. The default value is VISIBLE.
+	CollapsedRowDimensionsVisibility Visibility
+
+	// The table cell style of the column header.
+	ColumnHeaderStyle *TableCellStyle
+
+	// The visibility of the column names.
+	ColumnNamesVisibility Visibility
+
+	// The metric placement (row, column) options.
+	MetricPlacement PivotTableMetricPlacement
+
+	// The row alternate color options (widget status, row alternate colors).
+	RowAlternateColorOptions *RowAlternateColorOptions
+
+	// The table cell style of row field names.
+	RowFieldNamesStyle *TableCellStyle
+
+	// The table cell style of the row headers.
+	RowHeaderStyle *TableCellStyle
+
+	// The visibility of the single metric options.
+	SingleMetricVisibility Visibility
+
+	// Determines the visibility of the pivot table.
+	ToggleButtonsVisibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The paginated report options for a pivot table visual.
+type PivotTablePaginatedReportOptions struct {
+
+	// The visibility of the repeating header rows on each page.
+	OverflowColumnHeaderVisibility Visibility
+
+	// The visibility of the printing table overflow across pages.
+	VerticalOverflowVisibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The sort by field for the field sort options.
+type PivotTableSortBy struct {
+
+	// The column sort (field id, direction) for the pivot table sort by options.
+	Column *ColumnSort
+
+	// The data path sort (data path value, direction) for the pivot table sort by
+	// options.
+	DataPath *DataPathSort
+
+	// The field sort (field id, direction) for the pivot table sort by options.
+	Field *FieldSort
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration for a PivotTableVisual.
+type PivotTableSortConfiguration struct {
+
+	// The field sort options for a pivot table sort configuration.
+	FieldSortOptions []PivotFieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// The total options for a pivot table visual.
+type PivotTableTotalOptions struct {
+
+	// The column subtotal options.
+	ColumnSubtotalOptions *SubtotalOptions
+
+	// The column total options.
+	ColumnTotalOptions *PivotTotalOptions
+
+	// The row subtotal options.
+	RowSubtotalOptions *SubtotalOptions
+
+	// The row total options.
+	RowTotalOptions *PivotTotalOptions
+
+	noSmithyDocumentSerde
+}
+
+// A pivot table. For more information, see Using pivot tables
+// (https://docs.aws.amazon.com/quicksight/latest/user/pivot-table.html) in the
+// Amazon QuickSight User Guide.
+type PivotTableVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers..
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *PivotTableConfiguration
+
+	// The conditional formatting for a PivotTableVisual.
+	ConditionalFormatting *PivotTableConditionalFormatting
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The optional configuration of totals cells in a PivotTableVisual.
+type PivotTotalOptions struct {
+
+	// The custom label string for the total cells.
+	CustomLabel *string
+
+	// The cell styling options for the total of header cells.
+	MetricHeaderCellStyle *TableCellStyle
+
+	// The placement (start, end) for the total cells.
+	Placement TableTotalsPlacement
+
+	// The scroll status (pinned, scrolled) for the total cells.
+	ScrollStatus TableTotalsScrollStatus
+
+	// The cell styling options for the total cells.
+	TotalCellStyle *TableCellStyle
+
+	// The visibility configuration for the total cells.
+	TotalsVisibility Visibility
+
+	// The cell styling options for the totals of value cells.
+	ValueCellStyle *TableCellStyle
+
+	noSmithyDocumentSerde
+}
+
 // The parameters for PostgreSQL.
 type PostgreSqlParameters struct {
 
@@ -1978,6 +8326,27 @@ type PostgreSqlParameters struct {
 	noSmithyDocumentSerde
 }
 
+// The option that determines the hierarchy of the fields that are defined during
+// data preparation. These fields are available to use in any analysis that uses
+// the data source.
+type PredefinedHierarchy struct {
+
+	// The list of columns that define the predefined hierarchy.
+	//
+	// This member is required.
+	Columns []ColumnIdentifier
+
+	// The hierarchy ID of the predefined hierarchy.
+	//
+	// This member is required.
+	HierarchyId *string
+
+	// The option that determines the drill down filters for the predefined hierarchy.
+	DrillDownFilters []DrillDownFilter
+
+	noSmithyDocumentSerde
+}
+
 // The parameters for Presto.
 type PrestoParameters struct {
 
@@ -1995,6 +8364,15 @@ type PrestoParameters struct {
 	//
 	// This member is required.
 	Port int32
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of the progress bar of a KPI visual.
+type ProgressBarOptions struct {
+
+	// The visibility of the progress bar.
+	Visibility Visibility
 
 	noSmithyDocumentSerde
 }
@@ -2024,6 +8402,151 @@ type QueueInfo struct {
 	//
 	// This member is required.
 	WaitingOnIngestion *string
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field well configuration of a RadarChartVisual.
+type RadarChartAggregatedFieldWells struct {
+
+	// The aggregated field well categories of a radar chart.
+	Category []DimensionField
+
+	// The color that are assigned to the aggregated field wells of a radar chart.
+	Color []DimensionField
+
+	// The values that are assigned to the aggregated field wells of a radar chart.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configured style settings of a radar chart.
+type RadarChartAreaStyleSettings struct {
+
+	// The visibility settings of a radar chart.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a RadarChartVisual.
+type RadarChartConfiguration struct {
+
+	// Determines the visibility of the colors of alternatign bands in a radar chart.
+	AlternateBandColorsVisibility Visibility
+
+	// The color of the even-numbered alternate bands of a radar chart.
+	AlternateBandEvenColor *string
+
+	// The color of the odd-numbered alternate bands of a radar chart.
+	AlternateBandOddColor *string
+
+	// The base sreies settings of a radar chart.
+	BaseSeriesSettings *RadarChartSeriesSettings
+
+	// The category axis of a radar chart.
+	CategoryAxis *AxisDisplayOptions
+
+	// The category label options of a radar chart.
+	CategoryLabelOptions *ChartAxisLabelOptions
+
+	// The color axis of a radar chart.
+	ColorAxis *AxisDisplayOptions
+
+	// The color label options of a radar chart.
+	ColorLabelOptions *ChartAxisLabelOptions
+
+	// The field well configuration of a RadarChartVisual.
+	FieldWells *RadarChartFieldWells
+
+	// The legend display setup of the visual.
+	Legend *LegendOptions
+
+	// The shape of the radar chart.
+	Shape RadarChartShape
+
+	// The sort configuration of a RadarChartVisual.
+	SortConfiguration *RadarChartSortConfiguration
+
+	// The start angle of a radar chart's axis.
+	StartAngle *float64
+
+	// The palette (chart color) display setup of the visual.
+	VisualPalette *VisualPalette
+
+	noSmithyDocumentSerde
+}
+
+// The field wells of a radar chart visual.
+type RadarChartFieldWells struct {
+
+	// The aggregated field wells of a radar chart visual.
+	RadarChartAggregatedFieldWells *RadarChartAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The series settings of a radar chart.
+type RadarChartSeriesSettings struct {
+
+	// The area style settings of a radar chart.
+	AreaStyleSettings *RadarChartAreaStyleSettings
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a RadarChartVisual.
+type RadarChartSortConfiguration struct {
+
+	// The category items limit for a radar chart.
+	CategoryItemsLimit *ItemsLimitConfiguration
+
+	// The category sort options of a radar chart.
+	CategorySort []FieldSortOptions
+
+	// The color items limit of a radar chart.
+	ColorItemsLimit *ItemsLimitConfiguration
+
+	// The color sort configuration of a radar chart.
+	ColorSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A radar chart visual.
+type RadarChartVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *RadarChartConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The range ends label type of a data path label.
+type RangeEndsLabelType struct {
+
+	// The visibility of the range ends label.
+	Visibility Visibility
 
 	noSmithyDocumentSerde
 }
@@ -2066,6 +8589,175 @@ type RedshiftParameters struct {
 	noSmithyDocumentSerde
 }
 
+// The reference line visual display options.
+type ReferenceLine struct {
+
+	// The data configuration of the reference line.
+	//
+	// This member is required.
+	DataConfiguration *ReferenceLineDataConfiguration
+
+	// The label configuration of the reference line.
+	LabelConfiguration *ReferenceLineLabelConfiguration
+
+	// The status of the reference line. Choose one of the following options:
+	//
+	// *
+	// ENABLE
+	//
+	// * DISABLE
+	Status WidgetStatus
+
+	// The style configuration of the reference line.
+	StyleConfiguration *ReferenceLineStyleConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for a custom label on a ReferenceLine.
+type ReferenceLineCustomLabelConfiguration struct {
+
+	// The string text of the custom label.
+	//
+	// This member is required.
+	CustomLabel *string
+
+	noSmithyDocumentSerde
+}
+
+// The data configuration of the reference line.
+type ReferenceLineDataConfiguration struct {
+
+	// The axis binding type of the reference line. Choose one of the following
+	// options:
+	//
+	// * PrimaryY
+	//
+	// * SecondaryY
+	AxisBinding AxisBinding
+
+	// The dynamic configuration of the reference line data configuration.
+	DynamicConfiguration *ReferenceLineDynamicDataConfiguration
+
+	// The static data configuration of the reference line data configuration.
+	StaticConfiguration *ReferenceLineStaticDataConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The dynamic configuration of the reference line data configuration.
+type ReferenceLineDynamicDataConfiguration struct {
+
+	// The calculation that is used in the dynamic data.
+	//
+	// This member is required.
+	Calculation *NumericalAggregationFunction
+
+	// The column that the dynamic data targets.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The aggregation function that is used in the dynamic data.
+	//
+	// This member is required.
+	MeasureAggregationFunction *AggregationFunction
+
+	noSmithyDocumentSerde
+}
+
+// The label configuration of a reference line.
+type ReferenceLineLabelConfiguration struct {
+
+	// The custom label configuration of the label in a reference line.
+	CustomLabelConfiguration *ReferenceLineCustomLabelConfiguration
+
+	// The font color configuration of the label in a reference line.
+	FontColor *string
+
+	// The font configuration of the label in a reference line.
+	FontConfiguration *FontConfiguration
+
+	// The horizontal position configuration of the label in a reference line. Choose
+	// one of the following options:
+	//
+	// * LEFT
+	//
+	// * CENTER
+	//
+	// * RIGHT
+	HorizontalPosition ReferenceLineLabelHorizontalPosition
+
+	// The value label configuration of the label in a reference line.
+	ValueLabelConfiguration *ReferenceLineValueLabelConfiguration
+
+	// The vertical position configuration of the label in a reference line. Choose one
+	// of the following options:
+	//
+	// * ABOVE
+	//
+	// * BELOW
+	VerticalPosition ReferenceLineLabelVerticalPosition
+
+	noSmithyDocumentSerde
+}
+
+// The static data configuration of the reference line data configuration.
+type ReferenceLineStaticDataConfiguration struct {
+
+	// The double input of the static data.
+	//
+	// This member is required.
+	Value float64
+
+	noSmithyDocumentSerde
+}
+
+// The style configuration of the reference line.
+type ReferenceLineStyleConfiguration struct {
+
+	// The hex color of the reference line.
+	Color *string
+
+	// The pattern type of the line style. Choose one of the following options:
+	//
+	// *
+	// SOLID
+	//
+	// * DASHED
+	//
+	// * DOTTED
+	Pattern ReferenceLinePatternType
+
+	noSmithyDocumentSerde
+}
+
+// The value label configuration of the label in a reference line.
+type ReferenceLineValueLabelConfiguration struct {
+
+	// The format configuration of the value label.
+	FormatConfiguration *NumericFormatConfiguration
+
+	// The relative position of the value label. Choose one of the following
+	// options:
+	//
+	// * BEFORE_CUSTOM_LABEL
+	//
+	// * AFTER_CUSTOM_LABEL
+	RelativePosition ReferenceLineValueLabelRelativePosition
+
+	noSmithyDocumentSerde
+}
+
+// The feature configurations of an embedded Amazon QuickSight console.
+type RegisteredUserConsoleFeatureConfigurations struct {
+
+	// The state persistence configurations of an embedded Amazon QuickSight console.
+	StatePersistence *StatePersistenceConfigurations
+
+	noSmithyDocumentSerde
+}
+
 // Information about the dashboard you want to embed.
 type RegisteredUserDashboardEmbeddingConfiguration struct {
 
@@ -2077,6 +8769,18 @@ type RegisteredUserDashboardEmbeddingConfiguration struct {
 	//
 	// This member is required.
 	InitialDashboardId *string
+
+	// The feature configurations of an embbedded Amazon QuickSight dashboard.
+	FeatureConfigurations *RegisteredUserDashboardFeatureConfigurations
+
+	noSmithyDocumentSerde
+}
+
+// The feature configuration for an embedded dashboard.
+type RegisteredUserDashboardFeatureConfigurations struct {
+
+	// The state persistence settings of an embedded dashboard.
+	StatePersistence *StatePersistenceConfigurations
 
 	noSmithyDocumentSerde
 }
@@ -2170,6 +8874,9 @@ type RegisteredUserQSearchBarEmbeddingConfiguration struct {
 // Information about the Amazon QuickSight console that you want to embed.
 type RegisteredUserQuickSightConsoleEmbeddingConfiguration struct {
 
+	// The embedding configuration of an embedded Amazon QuickSight console.
+	FeatureConfigurations *RegisteredUserConsoleFeatureConfigurations
+
 	// The initial URL path for the Amazon QuickSight console. InitialPath is required.
 	// The entry point URL is constrained to the following paths:
 	//
@@ -2220,6 +8927,87 @@ type RelationalTable struct {
 	noSmithyDocumentSerde
 }
 
+// A RelativeDatesFilter filters relative dates values.
+type RelativeDatesFilter struct {
+
+	// The date configuration of the filter.
+	//
+	// This member is required.
+	AnchorDateConfiguration *AnchorDateConfiguration
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// An identifier that uniquely identifies a filter within a dashboard, analysis, or
+	// template.
+	//
+	// This member is required.
+	FilterId *string
+
+	// This option determines how null values should be treated when filtering data.
+	//
+	// *
+	// ALL_VALUES: Include null values in filtered results.
+	//
+	// * NULLS_ONLY: Only include
+	// null values in filtered results.
+	//
+	// * NON_NULLS_ONLY: Exclude null values from
+	// filtered results.
+	//
+	// This member is required.
+	NullOption FilterNullOption
+
+	// The range date type of the filter. Choose one of the options below:
+	//
+	// *
+	// PREVIOUS
+	//
+	// * THIS
+	//
+	// * LAST
+	//
+	// * NOW
+	//
+	// * NEXT
+	//
+	// This member is required.
+	RelativeDateType RelativeDateType
+
+	// The level of time precision that is used to aggregate DateTime values.
+	//
+	// This member is required.
+	TimeGranularity TimeGranularity
+
+	// The configuration for the exclude period of the filter.
+	ExcludePeriodConfiguration *ExcludePeriodConfiguration
+
+	// The minimum granularity (period granularity) of the relative dates filter.
+	MinimumGranularity TimeGranularity
+
+	// The parameter whose value should be used for the filter value.
+	ParameterName *string
+
+	// The date value of the filter.
+	RelativeDateValue *int32
+
+	noSmithyDocumentSerde
+}
+
+// The display options of a control.
+type RelativeDateTimeControlDisplayOptions struct {
+
+	// Customize how dates are formatted in controls.
+	DateTimeFormat *string
+
+	// The options to configure the title visibility, name, and font size.
+	TitleOptions *LabelOptions
+
+	noSmithyDocumentSerde
+}
+
 // A transform operation that renames a column.
 type RenameColumnOperation struct {
 
@@ -2265,17 +9053,43 @@ type ResourcePermission struct {
 	noSmithyDocumentSerde
 }
 
+// The rolling date configuration of a date time filter.
+type RollingDateConfiguration struct {
+
+	// The expression of the rolling date configuration.
+	//
+	// This member is required.
+	Expression *string
+
+	// The data set that is used in the rolling date configuration.
+	DataSetIdentifier *string
+
+	noSmithyDocumentSerde
+}
+
+// Determines the row alternate color options.
+type RowAlternateColorOptions struct {
+
+	// Determines the list of row alternate colors.
+	RowAlternateColors []string
+
+	// Determines the widget status.
+	Status WidgetStatus
+
+	noSmithyDocumentSerde
+}
+
 // Information about rows for a data set SPICE ingestion.
 type RowInfo struct {
 
 	// The number of rows that were not ingested.
-	RowsDropped int64
+	RowsDropped *int64
 
 	// The number of rows that were ingested.
-	RowsIngested int64
+	RowsIngested *int64
 
 	// The total number of rows in the dataset.
-	TotalRowsInDataset int64
+	TotalRowsInDataset *int64
 
 	noSmithyDocumentSerde
 }
@@ -2365,6 +9179,14 @@ type S3Parameters struct {
 	// This member is required.
 	ManifestFileLocation *ManifestFileLocation
 
+	// Use the RoleArn structure to override an account-wide role for a specific S3
+	// data source. For example, say an account administrator has turned off all S3
+	// access with an account-wide role. The administrator can then use RoleArn to
+	// bypass the account-wide role and allow S3 access for the single S3 data source
+	// that is specified in the structure, even if the account-wide role forbidding S3
+	// access is still active.
+	RoleArn *string
+
 	noSmithyDocumentSerde
 }
 
@@ -2384,6 +9206,373 @@ type S3Source struct {
 
 	// Information about the format for the S3 source file or files.
 	UploadSettings *UploadSettings
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of the same-sheet target visuals that you want to be filtered.
+// This is a union type structure. For this structure to be valid, only one of the
+// attributes can be defined.
+type SameSheetTargetVisualConfiguration struct {
+
+	// The options that choose the target visual in the same sheet. Valid values are
+	// defined as follows:
+	//
+	// * ALL_VISUALS: Applies the filter operation to all visuals
+	// in the same sheet.
+	TargetVisualOptions TargetVisualOptions
+
+	// A list of the target visual IDs that are located in the same sheet of the
+	// analysis.
+	TargetVisuals []string
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a sankey diagram.
+type SankeyDiagramAggregatedFieldWells struct {
+
+	// The destination field wells of a sankey diagram.
+	Destination []DimensionField
+
+	// The source field wells of a sankey diagram.
+	Source []DimensionField
+
+	// The weight field wells of a sankey diagram.
+	Weight []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a sankey diagram.
+type SankeyDiagramChartConfiguration struct {
+
+	// The data label configuration of a sankey diagram.
+	DataLabels *DataLabelOptions
+
+	// The field well configuration of a sankey diagram.
+	FieldWells *SankeyDiagramFieldWells
+
+	// The sort configuration of a sankey diagram.
+	SortConfiguration *SankeyDiagramSortConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a sankey diagram.
+type SankeyDiagramFieldWells struct {
+
+	// The field well configuration of a sankey diagram.
+	SankeyDiagramAggregatedFieldWells *SankeyDiagramAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a sankey diagram.
+type SankeyDiagramSortConfiguration struct {
+
+	// The limit on the number of destination nodes that are displayed in a sankey
+	// diagram.
+	DestinationItemsLimit *ItemsLimitConfiguration
+
+	// The limit on the number of source nodes that are displayed in a sankey diagram.
+	SourceItemsLimit *ItemsLimitConfiguration
+
+	// The sort configuration of the weight fields.
+	WeightSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A sankey diagram. For more information, see Using Sankey diagrams
+// (https://docs.aws.amazon.com/quicksight/latest/user/sankey-diagram.html) in the
+// Amazon QuickSight User Guide.
+type SankeyDiagramVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration of a sankey diagram.
+	ChartConfiguration *SankeyDiagramChartConfiguration
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field well of a scatter plot.
+type ScatterPlotCategoricallyAggregatedFieldWells struct {
+
+	// The category field well of a scatter plot.
+	Category []DimensionField
+
+	// The size field well of a scatter plot.
+	Size []MeasureField
+
+	// The x-axis field well of a scatter plot. The x-axis is aggregated by category.
+	XAxis []MeasureField
+
+	// The y-axis field well of a scatter plot. The y-axis is aggregated by category.
+	YAxis []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a scatter plot.
+type ScatterPlotConfiguration struct {
+
+	// The options that determine if visual data labels are displayed.
+	DataLabels *DataLabelOptions
+
+	// The field wells of the visual.
+	FieldWells *ScatterPlotFieldWells
+
+	// The legend display setup of the visual.
+	Legend *LegendOptions
+
+	// The legend display setup of the visual.
+	Tooltip *TooltipOptions
+
+	// The palette (chart color) display setup of the visual.
+	VisualPalette *VisualPalette
+
+	// The label display options (grid line, range, scale, and axis step) of the
+	// scatter plot's x-axis.
+	XAxisDisplayOptions *AxisDisplayOptions
+
+	// The label options (label text, label visibility, and sort icon visibility) of
+	// the scatter plot's x-axis.
+	XAxisLabelOptions *ChartAxisLabelOptions
+
+	// The label display options (grid line, range, scale, and axis step) of the
+	// scatter plot's y-axis.
+	YAxisDisplayOptions *AxisDisplayOptions
+
+	// The label options (label text, label visibility, and sort icon visibility) of
+	// the scatter plot's y-axis.
+	YAxisLabelOptions *ChartAxisLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a scatter plot. This is a union type structure.
+// For this structure to be valid, only one of the attributes can be defined.
+type ScatterPlotFieldWells struct {
+
+	// The aggregated field wells of a scatter plot. Scatter plots that have a field in
+	// the category (group/color) field will have aggregated field wells. The x and
+	// y-axes of these scatter plots are aggregated by category.
+	ScatterPlotCategoricallyAggregatedFieldWells *ScatterPlotCategoricallyAggregatedFieldWells
+
+	// The unaggregated field wells of a scatter plot. Scatter plots without a category
+	// field well have unaggregated field wells. The x and y-axes of these scatter
+	// plots are unaggregated.
+	ScatterPlotUnaggregatedFieldWells *ScatterPlotUnaggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The unaggregated field wells of a scatter plot.
+type ScatterPlotUnaggregatedFieldWells struct {
+
+	// The size field well of a scatter plot.
+	Size []MeasureField
+
+	// The x-axis field well of a scatter plot. The x-axis is a dimension field and
+	// cannot be aggregated.
+	XAxis []DimensionField
+
+	// The y-axis field well of a scatter plot. The y-axis is a dimension field and
+	// cannot be aggregated.
+	YAxis []DimensionField
+
+	noSmithyDocumentSerde
+}
+
+// A scatter plot. For more information, see Using scatter plots
+// (https://docs.aws.amazon.com/quicksight/latest/user/scatter-plot.html) in the
+// Amazon QuickSight User Guide.
+type ScatterPlotVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *ScatterPlotConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The visual display options for a data zoom scroll bar.
+type ScrollBarOptions struct {
+
+	// The visibility of the data zoom scroll bar.
+	Visibility Visibility
+
+	// The visibility range for the data zoom scroll bar.
+	VisibleRange *VisibleRangeOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of the secondary value of a KPI
+// visual.
+type SecondaryValueOptions struct {
+
+	// Determines the visibility of the secondary value.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a page break after a section.
+type SectionAfterPageBreak struct {
+
+	// The option that enables or disables a page break at the end of a section.
+	Status SectionPageBreakStatus
+
+	noSmithyDocumentSerde
+}
+
+// The options for the canvas of a section-based layout.
+type SectionBasedLayoutCanvasSizeOptions struct {
+
+	// The options for a paper canvas of a section-based layout.
+	PaperCanvasSizeOptions *SectionBasedLayoutPaperCanvasSizeOptions
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for a section-based layout.
+type SectionBasedLayoutConfiguration struct {
+
+	// A list of body section configurations.
+	//
+	// This member is required.
+	BodySections []BodySectionConfiguration
+
+	// The options for the canvas of a section-based layout.
+	//
+	// This member is required.
+	CanvasSizeOptions *SectionBasedLayoutCanvasSizeOptions
+
+	// A list of footer section configurations.
+	//
+	// This member is required.
+	FooterSections []HeaderFooterSectionConfiguration
+
+	// A list of header section configurations.
+	//
+	// This member is required.
+	HeaderSections []HeaderFooterSectionConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The options for a paper canvas of a section-based layout.
+type SectionBasedLayoutPaperCanvasSizeOptions struct {
+
+	// Defines the spacing between the canvas content and the top, bottom, left, and
+	// right edges.
+	PaperMargin *Spacing
+
+	// The paper orientation that is used to define canvas dimensions. Choose one of
+	// the following options:
+	//
+	// * PORTRAIT
+	//
+	// * LANDSCAPE
+	PaperOrientation PaperOrientation
+
+	// The paper size that is used to define canvas dimensions.
+	PaperSize PaperSize
+
+	noSmithyDocumentSerde
+}
+
+// The layout configuration of a section.
+type SectionLayoutConfiguration struct {
+
+	// The free-form layout configuration of a section.
+	//
+	// This member is required.
+	FreeFormLayout *FreeFormSectionLayoutConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a page break for a section.
+type SectionPageBreakConfiguration struct {
+
+	// The configuration of a page break after a section.
+	After *SectionAfterPageBreak
+
+	noSmithyDocumentSerde
+}
+
+// The options that style a section.
+type SectionStyle struct {
+
+	// The height of a section. Heights can only be defined for header and footer
+	// sections. The default height margin is 0.5 inches.
+	Height *string
+
+	// The spacing between section content and its top, bottom, left, and right edges.
+	// There is no padding by default.
+	Padding *Spacing
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for applying a filter to specific sheets or visuals. You can
+// apply this filter to multiple visuals that are on one sheet or to all visuals on
+// a sheet. This is a union type structure. For this structure to be valid, only
+// one of the attributes can be defined.
+type SelectedSheetsFilterScopeConfiguration struct {
+
+	// The sheet ID and visual IDs of the sheet and visuals that the filter is applied
+	// to.
+	SheetVisualScopingConfigurations []SheetVisualScopingConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The series item configuration of a line chart. This is a union type structure.
+// For this structure to be valid, only one of the attributes can be defined.
+type SeriesItem struct {
+
+	// The data field series item configuration of a line chart.
+	DataFieldSeriesItem *DataFieldSeriesItem
+
+	// The field series item configuration of a line chart.
+	FieldSeriesItem *FieldSeriesItem
 
 	noSmithyDocumentSerde
 }
@@ -2415,6 +9604,36 @@ type SessionTag struct {
 	noSmithyDocumentSerde
 }
 
+// The configuration of adding parameters in action.
+type SetParameterValueConfiguration struct {
+
+	// The destination parameter name of the SetParameterValueConfiguration.
+	//
+	// This member is required.
+	DestinationParameterName *string
+
+	// The configuration of destination parameter values. This is a union type
+	// structure. For this structure to be valid, only one of the attributes can be
+	// defined.
+	//
+	// This member is required.
+	Value *DestinationParameterValueConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The shape conditional formatting of a filled map visual.
+type ShapeConditionalFormat struct {
+
+	// The conditional formatting for the shape background color of a filled map
+	// visual.
+	//
+	// This member is required.
+	BackgroundColor *ConditionalFormattingColor
+
+	noSmithyDocumentSerde
+}
+
 // A sheet, which is an object that contains a set of visuals that are viewed
 // together on one page in Amazon QuickSight. Every analysis and dashboard contains
 // at least one sheet. Each sheet contains at least one visualization widget, for
@@ -2432,11 +9651,133 @@ type Sheet struct {
 	noSmithyDocumentSerde
 }
 
+// A grid layout to define the placement of sheet control.
+type SheetControlLayout struct {
+
+	// The configuration that determines the elements and canvas size options of sheet
+	// control.
+	//
+	// This member is required.
+	Configuration *SheetControlLayoutConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The configuration that determines the elements and canvas size options of sheet
+// control.
+type SheetControlLayoutConfiguration struct {
+
+	// The configuration that determines the elements and canvas size options of sheet
+	// control.
+	GridLayout *GridLayoutConfiguration
+
+	noSmithyDocumentSerde
+}
+
 // Sheet controls option.
 type SheetControlsOption struct {
 
 	// Visibility state.
 	VisibilityState DashboardUIState
+
+	noSmithyDocumentSerde
+}
+
+// A sheet is an object that contains a set of visuals that are viewed together on
+// one page in a paginated report. Every analysis and dashboard must contain at
+// least one sheet.
+type SheetDefinition struct {
+
+	// The unique identifier of a sheet.
+	//
+	// This member is required.
+	SheetId *string
+
+	// The layout content type of the sheet. Choose one of the following options:
+	//
+	// *
+	// PAGINATED: Creates a sheet for a paginated report.
+	//
+	// * INTERACTIVE: Creates a
+	// sheet for an interactive dashboard.
+	ContentType SheetContentType
+
+	// A description of the sheet.
+	Description *string
+
+	// The list of filter controls that are on a sheet. For more information, see
+	// Adding filter controls to analysis sheets
+	// (https://docs.aws.amazon.com/quicksight/latest/user/filter-controls.html) in the
+	// Amazon QuickSight User Guide.
+	FilterControls []FilterControl
+
+	// Layouts define how the components of a sheet are arranged. For more information,
+	// see Types of layout
+	// (https://docs.aws.amazon.com/quicksight/latest/user/types-of-layout.html) in the
+	// Amazon QuickSight User Guide.
+	Layouts []Layout
+
+	// The name of the sheet. This name is displayed on the sheet's tab in the Amazon
+	// QuickSight console.
+	Name *string
+
+	// The list of parameter controls that are on a sheet. For more information, see
+	// Using a Control with a Parameter in Amazon QuickSight
+	// (https://docs.aws.amazon.com/quicksight/latest/user/parameters-controls.html) in
+	// the Amazon QuickSight User Guide.
+	ParameterControls []ParameterControl
+
+	// The control layouts of the sheet.
+	SheetControlLayouts []SheetControlLayout
+
+	// The text boxes that are on a sheet.
+	TextBoxes []SheetTextBox
+
+	// The title of the sheet.
+	Title *string
+
+	// A list of the visuals that are on a sheet. Visual placement is determined by the
+	// layout of the sheet.
+	Visuals []Visual
+
+	noSmithyDocumentSerde
+}
+
+// The override configuration of the rendering rules of a sheet.
+type SheetElementConfigurationOverrides struct {
+
+	// Determines whether or not the overrides are visible. Choose one of the following
+	// options:
+	//
+	// * VISIBLE
+	//
+	// * HIDDEN
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The rendering rules of a sheet that uses a free-form layout.
+type SheetElementRenderingRule struct {
+
+	// The override configuration of the rendering rules of a sheet.
+	//
+	// This member is required.
+	ConfigurationOverrides *SheetElementConfigurationOverrides
+
+	// The expression of the rendering rules of a sheet.
+	//
+	// This member is required.
+	Expression *string
+
+	noSmithyDocumentSerde
+}
+
+// The sheet layout maximization options of a dashbaord.
+type SheetLayoutElementMaximizationOption struct {
+
+	// The status of the sheet layout maximization options of a dashbaord.
+	AvailabilityStatus DashboardBehavior
 
 	noSmithyDocumentSerde
 }
@@ -2449,6 +9790,59 @@ type SheetStyle struct {
 
 	// The layout options for tiles.
 	TileLayout *TileLayoutStyle
+
+	noSmithyDocumentSerde
+}
+
+// A text box.
+type SheetTextBox struct {
+
+	// The unique identifier for a text box. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have text boxes that share identifiers.
+	//
+	// This member is required.
+	SheetTextBoxId *string
+
+	// The content that is displayed in the text box.
+	Content *string
+
+	noSmithyDocumentSerde
+}
+
+// The filter that is applied to the options.
+type SheetVisualScopingConfiguration struct {
+
+	// The scope of the applied entities. Choose one of the following options:
+	//
+	// *
+	// ALL_VISUALS
+	//
+	// * SELECTED_VISUALS
+	//
+	// This member is required.
+	Scope FilterVisualScope
+
+	// The selected sheet that the filter is applied to.
+	//
+	// This member is required.
+	SheetId *string
+
+	// The selected visuals that the filter is applied to.
+	VisualIds []string
+
+	noSmithyDocumentSerde
+}
+
+// The text format for the title. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type ShortFormatText struct {
+
+	// Plain text format.
+	PlainText *string
+
+	// Rich text. Examples of rich text include bold, underline, and italics.
+	RichText *string
 
 	noSmithyDocumentSerde
 }
@@ -2473,6 +9867,44 @@ type SignupResponse struct {
 	noSmithyDocumentSerde
 }
 
+// The simple cluster marker of the cluster marker.
+type SimpleClusterMarker struct {
+
+	// The color of the simple cluster marker.
+	Color *string
+
+	noSmithyDocumentSerde
+}
+
+// The display options of a control.
+type SliderControlDisplayOptions struct {
+
+	// The options to configure the title visibility, name, and font size.
+	TitleOptions *LabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// Options that determine the layout and display options of a chart's small
+// multiples.
+type SmallMultiplesOptions struct {
+
+	// Sets the maximum number of visible columns to display in the grid of small
+	// multiples panels. The default is Auto, which automatically adjusts the columns
+	// in the grid to fit the overall layout and size of the given chart.
+	MaxVisibleColumns *int64
+
+	// Sets the maximum number of visible rows to display in the grid of small
+	// multiples panels. The default value is Auto, which automatically adjusts the
+	// rows in the grid to fit the overall layout and size of the given chart.
+	MaxVisibleRows *int64
+
+	// Configures the display options for each small multiples panel.
+	PanelConfiguration *PanelConfiguration
+
+	noSmithyDocumentSerde
+}
+
 // The parameters for Snowflake.
 type SnowflakeParameters struct {
 
@@ -2490,6 +9922,24 @@ type SnowflakeParameters struct {
 	//
 	// This member is required.
 	Warehouse *string
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of spacing (often a margin or padding).
+type Spacing struct {
+
+	// Define the bottom spacing.
+	Bottom *string
+
+	// Define the left spacing.
+	Left *string
+
+	// Define the right spacing.
+	Right *string
+
+	// Define the top spacing.
+	Top *string
 
 	noSmithyDocumentSerde
 }
@@ -2541,6 +9991,43 @@ type SslProperties struct {
 	noSmithyDocumentSerde
 }
 
+// The state perssitence configuration of an embedded dashboard.
+type StatePersistenceConfigurations struct {
+
+	// Determines if a Amazon QuickSight dashboard's state persistence settings are
+	// turned on or off.
+	//
+	// This member is required.
+	Enabled bool
+
+	noSmithyDocumentSerde
+}
+
+// The default values of the StringParameterDeclaration.
+type StringDefaultValues struct {
+
+	// The dynamic value of the StringDefaultValues. Different defaults displayed
+	// according to users, groups, and values mapping.
+	DynamicValue *DynamicDefaultValue
+
+	// The static values of the DecimalDefaultValues.
+	StaticValues []string
+
+	noSmithyDocumentSerde
+}
+
+// Formatting configuration for string fields.
+type StringFormatConfiguration struct {
+
+	// The options that determine the null value format configuration.
+	NullValueFormatConfiguration *NullValueFormatConfiguration
+
+	// The formatting configuration for numeric strings.
+	NumericFormatConfiguration *NumericFormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
 // A string parameter.
 type StringParameter struct {
 
@@ -2553,6 +10040,459 @@ type StringParameter struct {
 	//
 	// This member is required.
 	Values []string
+
+	noSmithyDocumentSerde
+}
+
+// A parameter declaration for the String data type.
+type StringParameterDeclaration struct {
+
+	// The name of the parameter that is being declared.
+	//
+	// This member is required.
+	Name *string
+
+	// The value type determines whether the parameter is a single-value or multi-value
+	// parameter.
+	//
+	// This member is required.
+	ParameterValueType ParameterValueType
+
+	// The default values of a parameter. If the parameter is a single-value parameter,
+	// a maximum of one default value can be provided.
+	DefaultValues *StringDefaultValues
+
+	// The configuration that defines the default value of a String parameter when a
+	// value has not been set.
+	ValueWhenUnset *StringValueWhenUnsetConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The configuration that defines the default value of a String parameter when a
+// value has not been set.
+type StringValueWhenUnsetConfiguration struct {
+
+	// A custom value that's used when the value of a parameter isn't set.
+	CustomValue *string
+
+	// The built-in options for default values. The value can be one of the
+	// following:
+	//
+	// * RECOMMENDED: The recommended value.
+	//
+	// * NULL: The NULL value.
+	ValueWhenUnsetOption ValueWhenUnsetOption
+
+	noSmithyDocumentSerde
+}
+
+// The subtotal options.
+type SubtotalOptions struct {
+
+	// The custom label string for the subtotal cells.
+	CustomLabel *string
+
+	// The field level (all, custom, last) for the subtotal cells.
+	FieldLevel PivotTableSubtotalLevel
+
+	// The optional configuration of subtotal cells.
+	FieldLevelOptions []PivotTableFieldSubtotalOptions
+
+	// The cell styling options for the subtotals of header cells.
+	MetricHeaderCellStyle *TableCellStyle
+
+	// The cell styling options for the subtotal cells.
+	TotalCellStyle *TableCellStyle
+
+	// The visibility configuration for the subtotal cells.
+	TotalsVisibility Visibility
+
+	// The cell styling options for the subtotals of value cells.
+	ValueCellStyle *TableCellStyle
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field well for the table.
+type TableAggregatedFieldWells struct {
+
+	// The group by field well for a pivot table. Values are grouped by group by
+	// fields.
+	GroupBy []DimensionField
+
+	// The values field well for a pivot table. Values are aggregated based on group by
+	// fields.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The border options for a table border.
+type TableBorderOptions struct {
+
+	// The color of a table border.
+	Color *string
+
+	// The style (none, solid) of a table border.
+	Style TableBorderStyle
+
+	// The thickness of a table border.
+	Thickness *int32
+
+	noSmithyDocumentSerde
+}
+
+// The cell conditional formatting option for a table.
+type TableCellConditionalFormatting struct {
+
+	// The field ID of the cell for conditional formatting.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The text format of the cell for conditional formatting.
+	TextFormat *TextConditionalFormat
+
+	noSmithyDocumentSerde
+}
+
+// The sizing options for the table image configuration.
+type TableCellImageSizingConfiguration struct {
+
+	// The cell scaling configuration of the sizing options for the table image
+	// configuration.
+	TableCellImageScalingConfiguration TableCellImageScalingConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The table cell style for a cell in pivot table or table visual.
+type TableCellStyle struct {
+
+	// The background color for the table cells.
+	BackgroundColor *string
+
+	// The borders for the table cells.
+	Border *GlobalTableBorderOptions
+
+	// The font configuration of the table cells.
+	FontConfiguration *FontConfiguration
+
+	// The height color for the table cells.
+	Height *int32
+
+	// The horizontal text alignment (left, center, right, auto) for the table cells.
+	HorizontalTextAlignment HorizontalTextAlignment
+
+	// The text wrap (none, wrap) for the table cells.
+	TextWrap TextWrap
+
+	// The vertical text alignment (top, middle, bottom) for the table cells.
+	VerticalTextAlignment VerticalTextAlignment
+
+	// The visibility of the table cells.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting for a PivotTableVisual.
+type TableConditionalFormatting struct {
+
+	// Conditional formatting options for a PivotTableVisual.
+	ConditionalFormattingOptions []TableConditionalFormattingOption
+
+	noSmithyDocumentSerde
+}
+
+// Conditional formatting options for a PivotTableVisual.
+type TableConditionalFormattingOption struct {
+
+	// The cell conditional formatting option for a table.
+	Cell *TableCellConditionalFormatting
+
+	// The row conditional formatting option for a table.
+	Row *TableRowConditionalFormatting
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for a TableVisual.
+type TableConfiguration struct {
+
+	// The field options for a table visual.
+	FieldOptions *TableFieldOptions
+
+	// The field wells of the visual.
+	FieldWells *TableFieldWells
+
+	// The paginated report options for a table visual.
+	PaginatedReportOptions *TablePaginatedReportOptions
+
+	// The sort configuration for a TableVisual.
+	SortConfiguration *TableSortConfiguration
+
+	// A collection of inline visualizations to display within a chart.
+	TableInlineVisualizations []TableInlineVisualization
+
+	// The table options for a table visual.
+	TableOptions *TableOptions
+
+	// The total options for a table visual.
+	TotalOptions *TotalOptions
+
+	noSmithyDocumentSerde
+}
+
+// The custom icon content for the table link content configuration.
+type TableFieldCustomIconContent struct {
+
+	// The icon set type (link) of the custom icon content for table URL link content.
+	Icon TableFieldIconSetType
+
+	noSmithyDocumentSerde
+}
+
+// The custom text content (value, font configuration) for the table link content
+// configuration.
+type TableFieldCustomTextContent struct {
+
+	// The font configuration of the custom text content for the table URL link
+	// content.
+	//
+	// This member is required.
+	FontConfiguration *FontConfiguration
+
+	// The string value of the custom text content for the table URL link content.
+	Value *string
+
+	noSmithyDocumentSerde
+}
+
+// The image configuration of a table field URL.
+type TableFieldImageConfiguration struct {
+
+	// The sizing options for the table image configuration.
+	SizingOptions *TableCellImageSizingConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The link configuration of a table field URL.
+type TableFieldLinkConfiguration struct {
+
+	// The URL content (text, icon) for the table link configuration.
+	//
+	// This member is required.
+	Content *TableFieldLinkContentConfiguration
+
+	// The URL target (new tab, new window, same tab) for the table link configuration.
+	//
+	// This member is required.
+	Target URLTargetConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The URL content (text, icon) for the table link configuration.
+type TableFieldLinkContentConfiguration struct {
+
+	// The custom icon content for the table link content configuration.
+	CustomIconContent *TableFieldCustomIconContent
+
+	// The custom text content (value, font configuration) for the table link content
+	// configuration.
+	CustomTextContent *TableFieldCustomTextContent
+
+	noSmithyDocumentSerde
+}
+
+// The options for a table field.
+type TableFieldOption struct {
+
+	// The field ID for a table field.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The custom label for a table field.
+	CustomLabel *string
+
+	// The URL configuration for a table field.
+	URLStyling *TableFieldURLConfiguration
+
+	// The visibility of a table field.
+	Visibility Visibility
+
+	// The width for a table field.
+	Width *string
+
+	noSmithyDocumentSerde
+}
+
+// The field options for a table visual.
+type TableFieldOptions struct {
+
+	// The order of field IDs of the field options for a table visual.
+	Order []string
+
+	// The selected field options for the table field options.
+	SelectedFieldOptions []TableFieldOption
+
+	noSmithyDocumentSerde
+}
+
+// The URL configuration for a table field.
+type TableFieldURLConfiguration struct {
+
+	// The image configuration of a table field URL.
+	ImageConfiguration *TableFieldImageConfiguration
+
+	// The link configuration of a table field URL.
+	LinkConfiguration *TableFieldLinkConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The field wells for a table visual. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type TableFieldWells struct {
+
+	// The aggregated field well for the table.
+	TableAggregatedFieldWells *TableAggregatedFieldWells
+
+	// The unaggregated field well for the table.
+	TableUnaggregatedFieldWells *TableUnaggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The inline visualization of a specific type to display within a chart.
+type TableInlineVisualization struct {
+
+	// The configuration of the inline visualization of the data bars within a chart.
+	DataBars *DataBarsOptions
+
+	noSmithyDocumentSerde
+}
+
+// The table options for a table visual.
+type TableOptions struct {
+
+	// The table cell style of table cells.
+	CellStyle *TableCellStyle
+
+	// The table cell style of a table header.
+	HeaderStyle *TableCellStyle
+
+	// The orientation (vertical, horizontal) for a table.
+	Orientation TableOrientation
+
+	// The row alternate color options (widget status, row alternate colors) for a
+	// table.
+	RowAlternateColorOptions *RowAlternateColorOptions
+
+	noSmithyDocumentSerde
+}
+
+// The paginated report options for a table visual.
+type TablePaginatedReportOptions struct {
+
+	// The visibility of repeating header rows on each page.
+	OverflowColumnHeaderVisibility Visibility
+
+	// The visibility of printing table overflow across pages.
+	VerticalOverflowVisibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting of a table row.
+type TableRowConditionalFormatting struct {
+
+	// The conditional formatting color (solid, gradient) of the background for a table
+	// row.
+	BackgroundColor *ConditionalFormattingColor
+
+	// The conditional formatting color (solid, gradient) of the text for a table row.
+	TextColor *ConditionalFormattingColor
+
+	noSmithyDocumentSerde
+}
+
+// The side border options for a table.
+type TableSideBorderOptions struct {
+
+	// The table border options of the bottom border.
+	Bottom *TableBorderOptions
+
+	// The table border options of the inner horizontal border.
+	InnerHorizontal *TableBorderOptions
+
+	// The table border options of the inner vertical border.
+	InnerVertical *TableBorderOptions
+
+	// The table border options of the left border.
+	Left *TableBorderOptions
+
+	// The table border options of the right border.
+	Right *TableBorderOptions
+
+	// The table border options of the top border.
+	Top *TableBorderOptions
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration for a TableVisual.
+type TableSortConfiguration struct {
+
+	// The pagination configuration (page size, page number) for the table.
+	PaginationConfiguration *PaginationConfiguration
+
+	// The field sort options for rows in the table.
+	RowSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// The unaggregated field well for the table.
+type TableUnaggregatedFieldWells struct {
+
+	// The values field well for a pivot table. Values are unaggregated for an
+	// unaggregated table.
+	Values []UnaggregatedField
+
+	noSmithyDocumentSerde
+}
+
+// A table visual. For more information, see Using tables as visuals
+// (https://docs.aws.amazon.com/quicksight/latest/user/tabular.html) in the Amazon
+// QuickSight User Guide.
+type TableVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers..
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *TableConfiguration
+
+	// The conditional formatting for a PivotTableVisual.
+	ConditionalFormatting *TableConditionalFormatting
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
 
 	noSmithyDocumentSerde
 }
@@ -2648,6 +10588,9 @@ type TemplateError struct {
 	// Type of error.
 	Type TemplateErrorType
 
+	// An error path that shows which entities caused the template error.
+	ViolatedEntities []Entity
+
 	noSmithyDocumentSerde
 }
 
@@ -2741,7 +10684,23 @@ type TemplateVersion struct {
 	// create this template.
 	SourceEntityArn *string
 
-	// The HTTP status of the request.
+	// The status that is associated with the template.
+	//
+	// * CREATION_IN_PROGRESS
+	//
+	// *
+	// CREATION_SUCCESSFUL
+	//
+	// * CREATION_FAILED
+	//
+	// * UPDATE_IN_PROGRESS
+	//
+	// *
+	// UPDATE_SUCCESSFUL
+	//
+	// * UPDATE_FAILED
+	//
+	// * DELETED
 	Status ResourceStatus
 
 	// The ARN of the theme associated with this version of the template.
@@ -2749,6 +10708,43 @@ type TemplateVersion struct {
 
 	// The version number of the template version.
 	VersionNumber *int64
+
+	noSmithyDocumentSerde
+}
+
+// The detailed definition of a template.
+type TemplateVersionDefinition struct {
+
+	// An array of dataset configurations. These configurations define the required
+	// columns for each dataset used within a template.
+	//
+	// This member is required.
+	DataSetConfigurations []DataSetConfiguration
+
+	// The configuration for default analysis settings.
+	AnalysisDefaults *AnalysisDefaults
+
+	// An array of calculated field definitions for the template.
+	CalculatedFields []CalculatedField
+
+	// An array of template-level column configurations. Column configurations are used
+	// to set default formatting for a column that's used throughout a template.
+	ColumnConfigurations []ColumnConfiguration
+
+	// Filter definitions for a template. For more information, see Filtering Data
+	// (https://docs.aws.amazon.com/quicksight/latest/user/filtering-visual-data.html)
+	// in the Amazon QuickSight User Guide.
+	FilterGroups []FilterGroup
+
+	// An array of parameter declarations for a template. Parameters are named
+	// variables that can transfer a value for use by an action or an object. For more
+	// information, see Parameters in Amazon QuickSight
+	// (https://docs.aws.amazon.com/quicksight/latest/user/parameters-in-quicksight.html)
+	// in the Amazon QuickSight User Guide.
+	ParameterDeclarations []ParameterDeclaration
+
+	// An array of sheet definitions for a template.
+	Sheets []SheetDefinition
 
 	noSmithyDocumentSerde
 }
@@ -2791,6 +10787,54 @@ type TeradataParameters struct {
 	//
 	// This member is required.
 	Port int32
+
+	noSmithyDocumentSerde
+}
+
+// The display options of a control.
+type TextAreaControlDisplayOptions struct {
+
+	// The configuration of the placeholder options in a text area control.
+	PlaceholderOptions *TextControlPlaceholderOptions
+
+	// The options to configure the title visibility, name, and font size.
+	TitleOptions *LabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The conditional formatting for the text.
+type TextConditionalFormat struct {
+
+	// The conditional formatting for the text background color.
+	BackgroundColor *ConditionalFormattingColor
+
+	// The conditional formatting for the icon.
+	Icon *ConditionalFormattingIcon
+
+	// The conditional formatting for the text color.
+	TextColor *ConditionalFormattingColor
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of the placeholder options in a text control.
+type TextControlPlaceholderOptions struct {
+
+	// The visibility configuration of the placeholder options in a text control.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The display options of a control.
+type TextFieldControlDisplayOptions struct {
+
+	// The configuration of the placeholder options in a text field control.
+	PlaceholderOptions *TextControlPlaceholderOptions
+
+	// The options to configure the title visibility, name, and font size.
+	TitleOptions *LabelOptions
 
 	noSmithyDocumentSerde
 }
@@ -2847,6 +10891,9 @@ type ThemeConfiguration struct {
 
 	// Display options related to sheets.
 	Sheet *SheetStyle
+
+	// Determines the typography options.
+	Typography *Typography
 
 	// Color properties that apply to the UI and to charts, excluding the colors that
 	// apply to data.
@@ -2944,6 +10991,18 @@ type ThemeVersionSummary struct {
 	noSmithyDocumentSerde
 }
 
+// The options that determine the thousands separator configuration.
+type ThousandSeparatorOptions struct {
+
+	// Determines the thousands separator symbol.
+	Symbol NumericSeparatorSymbol
+
+	// Determines the visibility of the thousands separator.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
 // The display options for the layout of tiles on a sheet.
 type TileLayoutStyle struct {
 
@@ -2961,6 +11020,340 @@ type TileStyle struct {
 
 	// The border around a tile.
 	Border *BorderStyle
+
+	noSmithyDocumentSerde
+}
+
+// The forecast properties setup of a forecast in the line chart.
+type TimeBasedForecastProperties struct {
+
+	// The lower boundary setup of a forecast computation.
+	LowerBoundary *float64
+
+	// The periods backward setup of a forecast computation.
+	PeriodsBackward *int32
+
+	// The periods forward setup of a forecast computation.
+	PeriodsForward *int32
+
+	// The prediction interval setup of a forecast computation.
+	PredictionInterval *int32
+
+	// The seasonality setup of a forecast computation. Choose one of the following
+	// options:
+	//
+	// * NULL: The input is set to NULL.
+	//
+	// * NON_NULL: The input is set to a
+	// custom value.
+	Seasonality *int32
+
+	// The upper boundary setup of a forecast computation.
+	UpperBoundary *float64
+
+	noSmithyDocumentSerde
+}
+
+// A TimeEqualityFilter filters values that are equal to a given value.
+type TimeEqualityFilter struct {
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// An identifier that uniquely identifies a filter within a dashboard, analysis, or
+	// template.
+	//
+	// This member is required.
+	FilterId *string
+
+	// The parameter whose value should be used for the filter value. This field is
+	// mutually exclusive to Value.
+	ParameterName *string
+
+	// The level of time precision that is used to aggregate DateTime values.
+	TimeGranularity TimeGranularity
+
+	// The value of a TimeEquality filter. This field is mutually exclusive to
+	// ParameterName.
+	Value *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// The time range drill down filter.
+type TimeRangeDrillDownFilter struct {
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The maximum value for the filter value range.
+	//
+	// This member is required.
+	RangeMaximum *time.Time
+
+	// The minimum value for the filter value range.
+	//
+	// This member is required.
+	RangeMinimum *time.Time
+
+	// The level of time precision that is used to aggregate DateTime values.
+	//
+	// This member is required.
+	TimeGranularity TimeGranularity
+
+	noSmithyDocumentSerde
+}
+
+// A TimeRangeFilter filters values that are between two specified values.
+type TimeRangeFilter struct {
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// An identifier that uniquely identifies a filter within a dashboard, analysis, or
+	// template.
+	//
+	// This member is required.
+	FilterId *string
+
+	// This option determines how null values should be treated when filtering data.
+	//
+	// *
+	// ALL_VALUES: Include null values in filtered results.
+	//
+	// * NULLS_ONLY: Only include
+	// null values in filtered results.
+	//
+	// * NON_NULLS_ONLY: Exclude null values from
+	// filtered results.
+	//
+	// This member is required.
+	NullOption FilterNullOption
+
+	// The exclude period of the time range filter.
+	ExcludePeriodConfiguration *ExcludePeriodConfiguration
+
+	// Determines whether the maximum value in the filter value range should be
+	// included in the filtered results.
+	IncludeMaximum *bool
+
+	// Determines whether the minimum value in the filter value range should be
+	// included in the filtered results.
+	IncludeMinimum *bool
+
+	// The maximum value for the filter value range.
+	RangeMaximumValue *TimeRangeFilterValue
+
+	// The minimum value for the filter value range.
+	RangeMinimumValue *TimeRangeFilterValue
+
+	// The level of time precision that is used to aggregate DateTime values.
+	TimeGranularity TimeGranularity
+
+	noSmithyDocumentSerde
+}
+
+// The value of a time range filter. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type TimeRangeFilterValue struct {
+
+	// The parameter type input value.
+	Parameter *string
+
+	// The rolling date input value.
+	RollingDate *RollingDateConfiguration
+
+	// The static input value.
+	StaticValue *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// The tooltip. This is a union type structure. For this structure to be valid,
+// only one of the attributes can be defined.
+type TooltipItem struct {
+
+	// The tooltip item for the columns that are not part of a field well.
+	ColumnTooltipItem *ColumnTooltipItem
+
+	// The tooltip item for the fields.
+	FieldTooltipItem *FieldTooltipItem
+
+	noSmithyDocumentSerde
+}
+
+// The display options for the visual tooltip.
+type TooltipOptions struct {
+
+	// The setup for the detailed tooltip. The tooltip setup is always saved. The
+	// display type is decided based on the tooltip type.
+	FieldBasedTooltip *FieldBasedTooltip
+
+	// The selected type for the tooltip. Choose one of the following options:
+	//
+	// *
+	// BASIC: A basic tooltip.
+	//
+	// * DETAILED: A detailed tooltip.
+	SelectedTooltipType SelectedTooltipType
+
+	// Determines whether or not the tooltip is visible.
+	TooltipVisibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// A TopBottomFilter filters values that are at the top or the bottom.
+type TopBottomFilter struct {
+
+	// The aggregation and sort configuration of the top bottom filter.
+	//
+	// This member is required.
+	AggregationSortConfigurations []AggregationSortConfiguration
+
+	// The column that the filter is applied to.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// An identifier that uniquely identifies a filter within a dashboard, analysis, or
+	// template.
+	//
+	// This member is required.
+	FilterId *string
+
+	// The number of items to include in the top bottom filter results.
+	Limit *int32
+
+	// The parameter whose value should be used for the filter value.
+	ParameterName *string
+
+	// The level of time precision that is used to aggregate DateTime values.
+	TimeGranularity TimeGranularity
+
+	noSmithyDocumentSerde
+}
+
+// The top movers and bottom movers computation setup.
+type TopBottomMoversComputation struct {
+
+	// The category field that is used in a computation.
+	//
+	// This member is required.
+	Category *DimensionField
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The time field that is used in a computation.
+	//
+	// This member is required.
+	Time *DimensionField
+
+	// The computation type. Choose from the following options:
+	//
+	// * TOP: Top movers
+	// computation.
+	//
+	// * BOTTOM: Bottom movers computation.
+	//
+	// This member is required.
+	Type TopBottomComputationType
+
+	// The mover size setup of the top and bottom movers computation.
+	MoverSize int32
+
+	// The name of a computation.
+	Name *string
+
+	// The sort order setup of the top and bottom movers computation.
+	SortOrder TopBottomSortOrder
+
+	// The value field that is used in a computation.
+	Value *MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The top ranked and bottom ranked computation configuration.
+type TopBottomRankedComputation struct {
+
+	// The category field that is used in a computation.
+	//
+	// This member is required.
+	Category *DimensionField
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The computation type. Choose one of the following options:
+	//
+	// * TOP: A top ranked
+	// computation.
+	//
+	// * BOTTOM: A bottom ranked computation.
+	//
+	// This member is required.
+	Type TopBottomComputationType
+
+	// The name of a computation.
+	Name *string
+
+	// The result size of a top and bottom ranked computation.
+	ResultSize int32
+
+	// The value field that is used in a computation.
+	Value *MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The total aggregation computation configuration.
+type TotalAggregationComputation struct {
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The value field that is used in a computation.
+	//
+	// This member is required.
+	Value *MeasureField
+
+	// The name of a computation.
+	Name *string
+
+	noSmithyDocumentSerde
+}
+
+// The total options for a table visual.
+type TotalOptions struct {
+
+	// The custom label string for the total cells.
+	CustomLabel *string
+
+	// The placement (start, end) for the total cells.
+	Placement TableTotalsPlacement
+
+	// The scroll status (pinned, scrolled) for the total cells.
+	ScrollStatus TableTotalsScrollStatus
+
+	// Cell styling options for the total cells.
+	TotalCellStyle *TableCellStyle
+
+	// The visibility configuration for the total cells.
+	TotalsVisibility Visibility
 
 	noSmithyDocumentSerde
 }
@@ -3046,6 +11439,121 @@ type TransformOperationMemberUntagColumnOperation struct {
 
 func (*TransformOperationMemberUntagColumnOperation) isTransformOperation() {}
 
+// Aggregated field wells of a tree map.
+type TreeMapAggregatedFieldWells struct {
+
+	// The color field well of a tree map. Values are grouped by aggregations based on
+	// group by fields.
+	Colors []MeasureField
+
+	// The group by field well of a tree map. Values are grouped based on group by
+	// fields.
+	Groups []DimensionField
+
+	// The size field well of a tree map. Values are aggregated based on group by
+	// fields.
+	Sizes []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a tree map.
+type TreeMapConfiguration struct {
+
+	// The label options (label text, label visibility) for the colors displayed in a
+	// tree map.
+	ColorLabelOptions *ChartAxisLabelOptions
+
+	// The color options (gradient color, point of divergence) of a tree map.
+	ColorScale *ColorScale
+
+	// The options that determine if visual data labels are displayed.
+	DataLabels *DataLabelOptions
+
+	// The field wells of the visual.
+	FieldWells *TreeMapFieldWells
+
+	// The label options (label text, label visibility) of the groups that are
+	// displayed in a tree map.
+	GroupLabelOptions *ChartAxisLabelOptions
+
+	// The legend display setup of the visual.
+	Legend *LegendOptions
+
+	// The label options (label text, label visibility) of the sizes that are displayed
+	// in a tree map.
+	SizeLabelOptions *ChartAxisLabelOptions
+
+	// The sort configuration of a tree map.
+	SortConfiguration *TreeMapSortConfiguration
+
+	// The tooltip display setup of the visual.
+	Tooltip *TooltipOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field wells of a tree map. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type TreeMapFieldWells struct {
+
+	// The aggregated field wells of a tree map.
+	TreeMapAggregatedFieldWells *TreeMapAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a tree map.
+type TreeMapSortConfiguration struct {
+
+	// The limit on the number of groups that are displayed.
+	TreeMapGroupItemsLimitConfiguration *ItemsLimitConfiguration
+
+	// The sort configuration of group by fields.
+	TreeMapSort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A tree map. For more information, see Using tree maps
+// (https://docs.aws.amazon.com/quicksight/latest/user/tree-map.html) in the Amazon
+// QuickSight User Guide.
+type TreeMapVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers..
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *TreeMapConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of trend arrows in a KPI visual.
+type TrendArrowOptions struct {
+
+	// The visibility of the trend arrows.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
 // The parameters for Twitter.
 type TwitterParameters struct {
 
@@ -3058,6 +11566,15 @@ type TwitterParameters struct {
 	//
 	// This member is required.
 	Query *string
+
+	noSmithyDocumentSerde
+}
+
+// Determines the typography options.
+type Typography struct {
+
+	// Determines the list of font families.
+	FontFamilies []Font
 
 	noSmithyDocumentSerde
 }
@@ -3131,6 +11648,44 @@ type UIColorPalette struct {
 	noSmithyDocumentSerde
 }
 
+// The unaggregated field for a table.
+type UnaggregatedField struct {
+
+	// The column that is used in the UnaggregatedField.
+	//
+	// This member is required.
+	Column *ColumnIdentifier
+
+	// The custom field ID.
+	//
+	// This member is required.
+	FieldId *string
+
+	// The format configuration of the field.
+	FormatConfiguration *FormatConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// The unique values computation configuration.
+type UniqueValuesComputation struct {
+
+	// The category field that is used in a computation.
+	//
+	// This member is required.
+	Category *DimensionField
+
+	// The ID for a computation.
+	//
+	// This member is required.
+	ComputationId *string
+
+	// The name of a computation.
+	Name *string
+
+	noSmithyDocumentSerde
+}
+
 // A transform operation that removes tags associated with a column.
 type UntagColumnOperation struct {
 
@@ -3151,7 +11706,7 @@ type UntagColumnOperation struct {
 type UploadSettings struct {
 
 	// Whether the file has a header row, or the files each have a header row.
-	ContainsHeader bool
+	ContainsHeader *bool
 
 	// The delimiter between values in the file.
 	Delimiter *string
@@ -3160,7 +11715,7 @@ type UploadSettings struct {
 	Format FileFormat
 
 	// A row number to start reading data from.
-	StartFromRow int32
+	StartFromRow *int32
 
 	// Text qualifier.
 	TextQualifier TextQualifier
@@ -3171,7 +11726,7 @@ type UploadSettings struct {
 // A registered user of Amazon QuickSight.
 type User struct {
 
-	// The active status of user. When you create an Amazon QuickSight user that’s not
+	// The active status of user. When you create an Amazon QuickSight user that's not
 	// an IAM user or an Active Directory user, that user is inactive until they sign
 	// in and provide a password.
 	Active bool
@@ -3226,9 +11781,255 @@ type User struct {
 	// RESTRICTED_AUTHOR: This role isn't currently available for use.
 	Role UserRole
 
-	// The user's user name. In the output, the value for UserName is N/A when the
-	// value for IdentityType is IAM and the corresponding IAM user is deleted.
+	// The user's user name. This value is required if you are registering a user that
+	// will be managed in Amazon QuickSight. In the output, the value for UserName is
+	// N/A when the value for IdentityType is IAM and the corresponding IAM user is
+	// deleted.
 	UserName *string
+
+	noSmithyDocumentSerde
+}
+
+// The range options for the data zoom scroll bar.
+type VisibleRangeOptions struct {
+
+	// The percent range in the visible range.
+	PercentRange *PercentVisibleRange
+
+	noSmithyDocumentSerde
+}
+
+// A visual displayed on a sheet in an analysis, dashboard, or template. This is a
+// union type structure. For this structure to be valid, only one of the attributes
+// can be defined.
+type Visual struct {
+
+	// A bar chart. For more information, see Using bar charts
+	// (https://docs.aws.amazon.com/quicksight/latest/user/bar-charts.html) in the
+	// Amazon QuickSight User Guide.
+	BarChartVisual *BarChartVisual
+
+	// A box plot. For more information, see Using box plots
+	// (https://docs.aws.amazon.com/quicksight/latest/user/box-plots.html) in the
+	// Amazon QuickSight User Guide.
+	BoxPlotVisual *BoxPlotVisual
+
+	// A combo chart. For more information, see Using combo charts
+	// (https://docs.aws.amazon.com/quicksight/latest/user/combo-charts.html) in the
+	// Amazon QuickSight User Guide.
+	ComboChartVisual *ComboChartVisual
+
+	// A visual that contains custom content. For more information, see Using custom
+	// visual content
+	// (https://docs.aws.amazon.com/quicksight/latest/user/custom-visual-content.html)
+	// in the Amazon QuickSight User Guide.
+	CustomContentVisual *CustomContentVisual
+
+	// An empty visual.
+	EmptyVisual *EmptyVisual
+
+	// A filled map. For more information, see Creating filled maps
+	// (https://docs.aws.amazon.com/quicksight/latest/user/filled-maps.html) in the
+	// Amazon QuickSight User Guide.
+	FilledMapVisual *FilledMapVisual
+
+	// A funnel chart. For more information, see Using funnel charts
+	// (https://docs.aws.amazon.com/quicksight/latest/user/funnel-visual-content.html)
+	// in the Amazon QuickSight User Guide.
+	FunnelChartVisual *FunnelChartVisual
+
+	// A gauge chart. For more information, see Using gauge charts
+	// (https://docs.aws.amazon.com/quicksight/latest/user/gauge-chart.html) in the
+	// Amazon QuickSight User Guide.
+	GaugeChartVisual *GaugeChartVisual
+
+	// A geospatial map or a points on map visual. For more information, see Creating
+	// point maps (https://docs.aws.amazon.com/quicksight/latest/user/point-maps.html)
+	// in the Amazon QuickSight User Guide.
+	GeospatialMapVisual *GeospatialMapVisual
+
+	// A heat map. For more information, see Using heat maps
+	// (https://docs.aws.amazon.com/quicksight/latest/user/heat-map.html) in the Amazon
+	// QuickSight User Guide.
+	HeatMapVisual *HeatMapVisual
+
+	// A histogram. For more information, see Using histograms
+	// (https://docs.aws.amazon.com/quicksight/latest/user/histogram-charts.html) in
+	// the Amazon QuickSight User Guide.
+	HistogramVisual *HistogramVisual
+
+	// An insight visual. For more information, see Working with insights
+	// (https://docs.aws.amazon.com/quicksight/latest/user/computational-insights.html)
+	// in the Amazon QuickSight User Guide.
+	InsightVisual *InsightVisual
+
+	// A key performance indicator (KPI). For more information, see Using KPIs
+	// (https://docs.aws.amazon.com/quicksight/latest/user/kpi.html) in the Amazon
+	// QuickSight User Guide.
+	KPIVisual *KPIVisual
+
+	// A line chart. For more information, see Using line charts
+	// (https://docs.aws.amazon.com/quicksight/latest/user/line-charts.html) in the
+	// Amazon QuickSight User Guide.
+	LineChartVisual *LineChartVisual
+
+	// A pie or donut chart. For more information, see Using pie charts
+	// (https://docs.aws.amazon.com/quicksight/latest/user/pie-chart.html) in the
+	// Amazon QuickSight User Guide.
+	PieChartVisual *PieChartVisual
+
+	// A pivot table. For more information, see Using pivot tables
+	// (https://docs.aws.amazon.com/quicksight/latest/user/pivot-table.html) in the
+	// Amazon QuickSight User Guide.
+	PivotTableVisual *PivotTableVisual
+
+	// A radar chart visual. For more information, see Using radar charts
+	// (https://docs.aws.amazon.com/quicksight/latest/user/radar-chart.html) in the
+	// Amazon QuickSight User Guide.
+	RadarChartVisual *RadarChartVisual
+
+	// A sankey diagram. For more information, see Using Sankey diagrams
+	// (https://docs.aws.amazon.com/quicksight/latest/user/sankey-diagram.html) in the
+	// Amazon QuickSight User Guide.
+	SankeyDiagramVisual *SankeyDiagramVisual
+
+	// A scatter plot. For more information, see Using scatter plots
+	// (https://docs.aws.amazon.com/quicksight/latest/user/scatter-plot.html) in the
+	// Amazon QuickSight User Guide.
+	ScatterPlotVisual *ScatterPlotVisual
+
+	// A table visual. For more information, see Using tables as visuals
+	// (https://docs.aws.amazon.com/quicksight/latest/user/tabular.html) in the Amazon
+	// QuickSight User Guide.
+	TableVisual *TableVisual
+
+	// A tree map. For more information, see Using tree maps
+	// (https://docs.aws.amazon.com/quicksight/latest/user/tree-map.html) in the Amazon
+	// QuickSight User Guide.
+	TreeMapVisual *TreeMapVisual
+
+	// A waterfall chart. For more information, see Using waterfall charts
+	// (https://docs.aws.amazon.com/quicksight/latest/user/waterfall-chart.html) in the
+	// Amazon QuickSight User Guide.
+	WaterfallVisual *WaterfallVisual
+
+	// A word cloud. For more information, see Using word clouds
+	// (https://docs.aws.amazon.com/quicksight/latest/user/word-cloud.html) in the
+	// Amazon QuickSight User Guide.
+	WordCloudVisual *WordCloudVisual
+
+	noSmithyDocumentSerde
+}
+
+// The axis sort options for a visual.
+type VisualAxisSortOption struct {
+
+	// The availaiblity status of a visual's axis sort options.
+	AvailabilityStatus DashboardBehavior
+
+	noSmithyDocumentSerde
+}
+
+// A custom action defined on a visual.
+type VisualCustomAction struct {
+
+	// A list of VisualCustomActionOperations. This is a union type structure. For this
+	// structure to be valid, only one of the attributes can be defined.
+	//
+	// This member is required.
+	ActionOperations []VisualCustomActionOperation
+
+	// The ID of the VisualCustomAction.
+	//
+	// This member is required.
+	CustomActionId *string
+
+	// The name of the VisualCustomAction.
+	//
+	// This member is required.
+	Name *string
+
+	// The trigger of the VisualCustomAction. Valid values are defined as follows:
+	//
+	// *
+	// DATA_POINT_CLICK: Initiates a custom action by a left pointer click on a data
+	// point.
+	//
+	// * DATA_POINT_MENU: Initiates a custom action by right pointer click from
+	// the menu.
+	//
+	// This member is required.
+	Trigger VisualCustomActionTrigger
+
+	// The status of the VisualCustomAction.
+	Status WidgetStatus
+
+	noSmithyDocumentSerde
+}
+
+// The operation that is defined by the custom action. This is a union type
+// structure. For this structure to be valid, only one of the attributes can be
+// defined.
+type VisualCustomActionOperation struct {
+
+	// The filter operation that filters data included in a visual or in an entire
+	// sheet.
+	FilterOperation *CustomActionFilterOperation
+
+	// The navigation operation that navigates between different sheets in the same
+	// analysis.
+	NavigationOperation *CustomActionNavigationOperation
+
+	// The set parameter operation that sets parameters in custom action.
+	SetParametersOperation *CustomActionSetParametersOperation
+
+	// The URL operation that opens a link to another webpage.
+	URLOperation *CustomActionURLOperation
+
+	noSmithyDocumentSerde
+}
+
+// The menu options for a visual.
+type VisualMenuOption struct {
+
+	// The availaiblity status of a visual's menu options.
+	AvailabilityStatus DashboardBehavior
+
+	noSmithyDocumentSerde
+}
+
+// The visual display options for the visual palette.
+type VisualPalette struct {
+
+	// The chart color options for the visual palette.
+	ChartColor *string
+
+	// The color map options for the visual palette.
+	ColorMap []DataPathColor
+
+	noSmithyDocumentSerde
+}
+
+// The subtitle label options for a visual.
+type VisualSubtitleLabelOptions struct {
+
+	// The long text format of the subtitle label, such as plain text or rich text.
+	FormatText *LongFormatText
+
+	// The visibility of the subtitle label.
+	Visibility Visibility
+
+	noSmithyDocumentSerde
+}
+
+// The title label options for a visual.
+type VisualTitleLabelOptions struct {
+
+	// The short text format of the title label, such as plain text or rich text.
+	FormatText *ShortFormatText
+
+	// The visibility of the title label.
+	Visibility Visibility
 
 	noSmithyDocumentSerde
 }
@@ -3240,6 +12041,265 @@ type VpcConnectionProperties struct {
 	//
 	// This member is required.
 	VpcConnectionArn *string
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a waterfall visual.
+type WaterfallChartAggregatedFieldWells struct {
+
+	// The breakdown field wells of a waterfall visual.
+	Breakdowns []DimensionField
+
+	// The category field wells of a waterfall visual.
+	Categories []DimensionField
+
+	// The value field wells of a waterfall visual.
+	Values []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration for a waterfall visual.
+type WaterfallChartConfiguration struct {
+
+	// The options that determine the presentation of the category axis.
+	CategoryAxisDisplayOptions *AxisDisplayOptions
+
+	// The options that determine the presentation of the category axis label.
+	CategoryAxisLabelOptions *ChartAxisLabelOptions
+
+	// The data label configuration of a waterfall visual.
+	DataLabels *DataLabelOptions
+
+	// The field well configuration of a waterfall visual.
+	FieldWells *WaterfallChartFieldWells
+
+	// The legend configuration of a waterfall visual.
+	Legend *LegendOptions
+
+	// The options that determine the presentation of the y-axis.
+	PrimaryYAxisDisplayOptions *AxisDisplayOptions
+
+	// The options that determine the presentation of the y-axis label.
+	PrimaryYAxisLabelOptions *ChartAxisLabelOptions
+
+	// The sort configuration of a waterfall visual.
+	SortConfiguration *WaterfallChartSortConfiguration
+
+	// The visual palette configuration of a waterfall visual.
+	VisualPalette *VisualPalette
+
+	// The options that determine the presentation of a waterfall visual.
+	WaterfallChartOptions *WaterfallChartOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field well configuration of a waterfall visual.
+type WaterfallChartFieldWells struct {
+
+	// The field well configuration of a waterfall visual.
+	WaterfallChartAggregatedFieldWells *WaterfallChartAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The options that determine the presentation of a waterfall visual.
+type WaterfallChartOptions struct {
+
+	// This option determines the total bar label of a waterfall visual.
+	TotalBarLabel *string
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a waterfall visual.
+type WaterfallChartSortConfiguration struct {
+
+	// The limit on the number of bar groups that are displayed.
+	BreakdownItemsLimit *ItemsLimitConfiguration
+
+	// The sort configuration of the category fields.
+	CategorySort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A waterfall chart. For more information, see Using waterfall charts
+// (https://docs.aws.amazon.com/quicksight/latest/user/waterfall-chart.html) in the
+// Amazon QuickSight User Guide.
+type WaterfallVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers.
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration for a waterfall visual.
+	ChartConfiguration *WaterfallChartConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
+
+	noSmithyDocumentSerde
+}
+
+// Provides the forecast to meet the target for a particular date.
+type WhatIfPointScenario struct {
+
+	// The date that you need the forecast results for.
+	//
+	// This member is required.
+	Date *time.Time
+
+	// The target value that you want to meet for the provided date.
+	//
+	// This member is required.
+	Value float64
+
+	noSmithyDocumentSerde
+}
+
+// Provides the forecast to meet the target for a particular date range.
+type WhatIfRangeScenario struct {
+
+	// The end date in the date range that you need the forecast results for.
+	//
+	// This member is required.
+	EndDate *time.Time
+
+	// The start date in the date range that you need the forecast results for.
+	//
+	// This member is required.
+	StartDate *time.Time
+
+	// The target value that you want to meet for the provided date range.
+	//
+	// This member is required.
+	Value float64
+
+	noSmithyDocumentSerde
+}
+
+// The aggregated field wells of a word cloud.
+type WordCloudAggregatedFieldWells struct {
+
+	// The group by field well of a word cloud. Values are grouped by group by fields.
+	GroupBy []DimensionField
+
+	// The size field well of a word cloud. Values are aggregated based on group by
+	// fields.
+	Size []MeasureField
+
+	noSmithyDocumentSerde
+}
+
+// The configuration of a word cloud visual.
+type WordCloudChartConfiguration struct {
+
+	// The label options (label text, label visibility, and sort icon visibility) for
+	// the word cloud category.
+	CategoryLabelOptions *ChartAxisLabelOptions
+
+	// The field wells of the visual.
+	FieldWells *WordCloudFieldWells
+
+	// The sort configuration of a word cloud visual.
+	SortConfiguration *WordCloudSortConfiguration
+
+	// The options for a word cloud visual.
+	WordCloudOptions *WordCloudOptions
+
+	noSmithyDocumentSerde
+}
+
+// The field wells of a word cloud visual. This is a union type structure. For this
+// structure to be valid, only one of the attributes can be defined.
+type WordCloudFieldWells struct {
+
+	// The aggregated field wells of a word cloud.
+	WordCloudAggregatedFieldWells *WordCloudAggregatedFieldWells
+
+	noSmithyDocumentSerde
+}
+
+// The word cloud options for a word cloud visual.
+type WordCloudOptions struct {
+
+	// The cloud layout options (fluid, normal) of a word cloud.
+	CloudLayout WordCloudCloudLayout
+
+	// The length limit of each word from 1-100.
+	MaximumStringLength *int32
+
+	// The word casing options (lower_case, existing_case) for the words in a word
+	// cloud.
+	WordCasing WordCloudWordCasing
+
+	// The word orientation options (horizontal, horizontal_and_vertical) for the words
+	// in a word cloud.
+	WordOrientation WordCloudWordOrientation
+
+	// The word padding options (none, small, medium, large) for the words in a word
+	// cloud.
+	WordPadding WordCloudWordPadding
+
+	// The word scaling options (emphasize, normal) for the words in a word cloud.
+	WordScaling WordCloudWordScaling
+
+	noSmithyDocumentSerde
+}
+
+// The sort configuration of a word cloud visual.
+type WordCloudSortConfiguration struct {
+
+	// The limit on the number of groups that are displayed in a word cloud.
+	CategoryItemsLimit *ItemsLimitConfiguration
+
+	// The sort configuration of group by fields.
+	CategorySort []FieldSortOptions
+
+	noSmithyDocumentSerde
+}
+
+// A word cloud. For more information, see Using word clouds
+// (https://docs.aws.amazon.com/quicksight/latest/user/word-cloud.html) in the
+// Amazon QuickSight User Guide.
+type WordCloudVisual struct {
+
+	// The unique identifier of a visual. This identifier must be unique within the
+	// context of a dashboard, template, or analysis. Two dashboards, analyses, or
+	// templates can have visuals with the same identifiers..
+	//
+	// This member is required.
+	VisualId *string
+
+	// The list of custom actions that are configured for a visual.
+	Actions []VisualCustomAction
+
+	// The configuration settings of the visual.
+	ChartConfiguration *WordCloudChartConfiguration
+
+	// The column hierarchy that is used during drill-downs and drill-ups.
+	ColumnHierarchies []ColumnHierarchy
+
+	// The subtitle that is displayed on the visual.
+	Subtitle *VisualSubtitleLabelOptions
+
+	// The title that is displayed on the visual.
+	Title *VisualTitleLabelOptions
 
 	noSmithyDocumentSerde
 }

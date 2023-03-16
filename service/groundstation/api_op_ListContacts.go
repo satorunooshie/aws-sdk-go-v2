@@ -32,12 +32,12 @@ func (c *Client) ListContacts(ctx context.Context, params *ListContactsInput, op
 
 type ListContactsInput struct {
 
-	// End time of a contact.
+	// End time of a contact in UTC.
 	//
 	// This member is required.
 	EndTime *time.Time
 
-	// Start time of a contact.
+	// Start time of a contact in UTC.
 	//
 	// This member is required.
 	StartTime *time.Time

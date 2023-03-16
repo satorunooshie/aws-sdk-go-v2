@@ -31,13 +31,13 @@ type PutProvisionedConcurrencyConfigInput struct {
 
 	// The name of the Lambda function. Name formats
 	//
-	// * Function name - my-function.
+	// * Function name – my-function.
 	//
 	// *
-	// Function ARN - arn:aws:lambda:us-west-2:123456789012:function:my-function.
+	// Function ARN – arn:aws:lambda:us-west-2:123456789012:function:my-function.
 	//
 	// *
-	// Partial ARN - 123456789012:function:my-function.
+	// Partial ARN – 123456789012:function:my-function.
 	//
 	// The length constraint applies
 	// only to the full ARN. If you specify only the function name, it is limited to 64
@@ -61,7 +61,9 @@ type PutProvisionedConcurrencyConfigInput struct {
 
 type PutProvisionedConcurrencyConfigOutput struct {
 
-	// The amount of provisioned concurrency allocated.
+	// The amount of provisioned concurrency allocated. When a weighted alias is used
+	// during linear and canary deployments, this value fluctuates depending on the
+	// amount of concurrency that is provisioned for the function versions.
 	AllocatedProvisionedConcurrentExecutions *int32
 
 	// The amount of provisioned concurrency available.

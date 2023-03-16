@@ -15,6 +15,12 @@ type AggregationConfig struct {
 	// or leave them unaggregated.
 	AggregationType AggregationType
 
+	// The desired file size, in MB, for each output file that Amazon AppFlow writes to
+	// the flow destination. For each file, Amazon AppFlow attempts to achieve the size
+	// that you specify. The actual file sizes might differ from this target based on
+	// the number and size of the records that each file contains.
+	TargetFileSize *int64
+
 	noSmithyDocumentSerde
 }
 
@@ -359,6 +365,9 @@ type ConnectorMetadata struct {
 	// The connector metadata specific to Marketo.
 	Marketo *MarketoMetadata
 
+	// The connector metadata specific to Salesforce Pardot.
+	Pardot *PardotMetadata
+
 	// The connector metadata specific to Amazon Redshift.
 	Redshift *RedshiftMetadata
 
@@ -437,6 +446,9 @@ type ConnectorOperator struct {
 	// The operation to be performed on the provided Marketo source fields.
 	Marketo MarketoConnectorOperator
 
+	// The operation to be performed on the provided Salesforce Pardot source fields.
+	Pardot PardotConnectorOperator
+
 	// The operation to be performed on the provided Amazon S3 source fields.
 	S3 S3ConnectorOperator
 
@@ -512,15 +524,13 @@ type ConnectorProfile struct {
 // profile.
 type ConnectorProfileConfig struct {
 
-	// The connector-specific credentials required by each connector.
-	//
-	// This member is required.
-	ConnectorProfileCredentials *ConnectorProfileCredentials
-
 	// The connector-specific properties of the profile configuration.
 	//
 	// This member is required.
 	ConnectorProfileProperties *ConnectorProfileProperties
+
+	// The connector-specific credentials required by each connector.
+	ConnectorProfileCredentials *ConnectorProfileCredentials
 
 	noSmithyDocumentSerde
 }
@@ -552,6 +562,9 @@ type ConnectorProfileCredentials struct {
 
 	// The connector-specific credentials required when using Marketo.
 	Marketo *MarketoConnectorProfileCredentials
+
+	// The connector-specific credentials required when using Salesforce Pardot.
+	Pardot *PardotConnectorProfileCredentials
 
 	// The connector-specific credentials required when using Amazon Redshift.
 	Redshift *RedshiftConnectorProfileCredentials
@@ -612,6 +625,9 @@ type ConnectorProfileProperties struct {
 
 	// The connector-specific properties required by Marketo.
 	Marketo *MarketoConnectorProfileProperties
+
+	// The connector-specific properties required by Salesforce Pardot.
+	Pardot *PardotConnectorProfileProperties
 
 	// The connector-specific properties required by Amazon Redshift.
 	Redshift *RedshiftConnectorProfileProperties
@@ -1093,6 +1109,10 @@ type ExecutionRecord struct {
 	// Specifies the time of the most recent update.
 	LastUpdatedAt *time.Time
 
+	// Describes the metadata catalog, metadata table, and data partitions that Amazon
+	// AppFlow used for the associated flow run.
+	MetadataCatalogDetails []MetadataCatalogDetail
+
 	// Specifies the start time of the flow run.
 	StartedAt *time.Time
 
@@ -1201,6 +1221,42 @@ type FlowDefinition struct {
 
 	// Specifies the type of flow trigger. This can be OnDemand, Scheduled, or Event.
 	TriggerType TriggerType
+
+	noSmithyDocumentSerde
+}
+
+// Specifies the configuration that Amazon AppFlow uses when it catalogs your data
+// with the Glue Data Catalog. When Amazon AppFlow catalogs your data, it stores
+// metadata in Data Catalog tables. This metadata represents the data that's
+// transferred by the flow that you configure with these settings. You can
+// configure a flow with these settings only when the flow destination is Amazon
+// S3.
+type GlueDataCatalogConfig struct {
+
+	// The name of the Data Catalog database that stores the metadata tables that
+	// Amazon AppFlow creates in your Amazon Web Services account. These tables contain
+	// metadata for the data that's transferred by the flow that you configure with
+	// this parameter. When you configure a new flow with this parameter, you must
+	// specify an existing database.
+	//
+	// This member is required.
+	DatabaseName *string
+
+	// The Amazon Resource Name (ARN) of an IAM role that grants Amazon AppFlow the
+	// permissions it needs to create Data Catalog tables, databases, and partitions.
+	// For an example IAM policy that has the required permissions, see Identity-based
+	// policy examples for Amazon AppFlow
+	// (https://docs.aws.amazon.com/appflow/latest/userguide/security_iam_id-based-policy-examples.html).
+	//
+	// This member is required.
+	RoleArn *string
+
+	// A naming prefix for each Data Catalog table that Amazon AppFlow creates for the
+	// flow that you configure with this setting. Amazon AppFlow adds the prefix to the
+	// beginning of the each table name.
+	//
+	// This member is required.
+	TablePrefix *string
 
 	noSmithyDocumentSerde
 }
@@ -1458,6 +1514,47 @@ type MarketoSourceProperties struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies the configuration that Amazon AppFlow uses when it catalogs your data.
+// When Amazon AppFlow catalogs your data, it stores metadata in a data catalog.
+type MetadataCatalogConfig struct {
+
+	// Specifies the configuration that Amazon AppFlow uses when it catalogs your data
+	// with the Glue Data Catalog.
+	GlueDataCatalog *GlueDataCatalogConfig
+
+	noSmithyDocumentSerde
+}
+
+// Describes the metadata catalog, metadata table, and data partitions that Amazon
+// AppFlow used for the associated flow run.
+type MetadataCatalogDetail struct {
+
+	// The type of metadata catalog that Amazon AppFlow used for the associated flow
+	// run. This parameter returns the following value: GLUE The metadata catalog is
+	// provided by the Glue Data Catalog. Glue includes the Glue Data Catalog as a
+	// component.
+	CatalogType CatalogType
+
+	// Describes the status of the attempt from Amazon AppFlow to register the data
+	// partitions with the metadata catalog. The data partitions organize the flow
+	// output into a hierarchical path, such as a folder path in an S3 bucket. Amazon
+	// AppFlow creates the partitions (if they don't already exist) based on your flow
+	// configuration.
+	PartitionRegistrationOutput *RegistrationOutput
+
+	// The name of the table that stores the metadata for the associated flow run. The
+	// table stores metadata that represents the data that the flow transferred. Amazon
+	// AppFlow stores the table in the metadata catalog.
+	TableName *string
+
+	// Describes the status of the attempt from Amazon AppFlow to register the metadata
+	// table with the metadata catalog. Amazon AppFlow creates or updates this table
+	// for the associated flow run.
+	TableRegistrationOutput *RegistrationOutput
+
+	noSmithyDocumentSerde
+}
+
 // The OAuth 2.0 credentials required for OAuth 2.0 authentication.
 type OAuth2Credentials struct {
 
@@ -1601,12 +1698,80 @@ type OAuthProperties struct {
 	noSmithyDocumentSerde
 }
 
-// Determines the prefix that Amazon AppFlow applies to the destination folder
-// name. You can name your destination folders according to the flow frequency and
-// date.
+// The connector-specific profile credentials required when using Salesforce
+// Pardot.
+type PardotConnectorProfileCredentials struct {
+
+	// The credentials used to access protected Salesforce Pardot resources.
+	AccessToken *string
+
+	// The secret manager ARN, which contains the client ID and client secret of the
+	// connected app.
+	ClientCredentialsArn *string
+
+	// Used by select connectors for which the OAuth workflow is supported, such as
+	// Salesforce, Google Analytics, Marketo, Zendesk, and Slack.
+	OAuthRequest *ConnectorOAuthRequest
+
+	// The credentials used to acquire new access tokens.
+	RefreshToken *string
+
+	noSmithyDocumentSerde
+}
+
+// The connector-specific profile properties required when using Salesforce Pardot.
+type PardotConnectorProfileProperties struct {
+
+	// The business unit id of Salesforce Pardot instance.
+	BusinessUnitId *string
+
+	// The location of the Salesforce Pardot resource.
+	InstanceUrl *string
+
+	// Indicates whether the connector profile applies to a sandbox or production
+	// environment.
+	IsSandboxEnvironment bool
+
+	noSmithyDocumentSerde
+}
+
+// The connector metadata specific to Salesforce Pardot.
+type PardotMetadata struct {
+	noSmithyDocumentSerde
+}
+
+// The properties that are applied when Salesforce Pardot is being used as a
+// source.
+type PardotSourceProperties struct {
+
+	// The object specified in the Salesforce Pardot flow source.
+	//
+	// This member is required.
+	Object *string
+
+	noSmithyDocumentSerde
+}
+
+// Specifies elements that Amazon AppFlow includes in the file and folder names in
+// the flow destination.
 type PrefixConfig struct {
 
-	// Determines the level of granularity that's included in the prefix.
+	// Specifies whether the destination file path includes either or both of the
+	// following elements: EXECUTION_ID The ID that Amazon AppFlow assigns to the flow
+	// run. SCHEMA_VERSION The version number of your data schema. Amazon AppFlow
+	// assigns this version number. The version number increases by one when you change
+	// any of the following settings in your flow configuration:
+	//
+	// *
+	// Source-to-destination field mappings
+	//
+	// * Field data types
+	//
+	// * Partition keys
+	PathPrefixHierarchy []PathPrefix
+
+	// Determines the level of granularity for the date and time that's included in the
+	// prefix.
 	PrefixFormat PrefixFormat
 
 	// Determines the format of the prefix, and whether it applies to the file name,
@@ -1647,13 +1812,9 @@ type Range struct {
 type RedshiftConnectorProfileCredentials struct {
 
 	// The password that corresponds to the user name.
-	//
-	// This member is required.
 	Password *string
 
 	// The name of the user.
-	//
-	// This member is required.
 	Username *string
 
 	noSmithyDocumentSerde
@@ -1667,12 +1828,11 @@ type RedshiftConnectorProfileProperties struct {
 	// This member is required.
 	BucketName *string
 
-	// The JDBC URL of the Amazon Redshift cluster.
-	//
-	// This member is required.
-	DatabaseUrl *string
-
-	// The Amazon Resource Name (ARN) of the IAM role.
+	// The Amazon Resource Name (ARN) of IAM role that grants Amazon Redshift read-only
+	// access to Amazon S3. For more information, and for the polices that you attach
+	// to this role, see Allow Amazon Redshift to access your Amazon AppFlow data in
+	// Amazon S3
+	// (https://docs.aws.amazon.com/appflow/latest/userguide/security_iam_service-role-policies.html#redshift-access-s3).
 	//
 	// This member is required.
 	RoleArn *string
@@ -1680,6 +1840,29 @@ type RedshiftConnectorProfileProperties struct {
 	// The object key for the destination bucket in which Amazon AppFlow places the
 	// files.
 	BucketPrefix *string
+
+	// The unique ID that's assigned to an Amazon Redshift cluster.
+	ClusterIdentifier *string
+
+	// The Amazon Resource Name (ARN) of an IAM role that permits Amazon AppFlow to
+	// access your Amazon Redshift database through the Data API. For more information,
+	// and for the polices that you attach to this role, see Allow Amazon AppFlow to
+	// access Amazon Redshift databases with the Data API
+	// (https://docs.aws.amazon.com/appflow/latest/userguide/security_iam_service-role-policies.html#access-redshift).
+	DataApiRoleArn *string
+
+	// The name of an Amazon Redshift database.
+	DatabaseName *string
+
+	// The JDBC URL of the Amazon Redshift cluster.
+	DatabaseUrl *string
+
+	// Indicates whether the connector profile defines a connection to an Amazon
+	// Redshift Serverless data warehouse.
+	IsRedshiftServerless bool
+
+	// The name of an Amazon Redshift workgroup.
+	WorkgroupName *string
 
 	noSmithyDocumentSerde
 }
@@ -1715,6 +1898,27 @@ type RedshiftDestinationProperties struct {
 
 // The connector metadata specific to Amazon Redshift.
 type RedshiftMetadata struct {
+	noSmithyDocumentSerde
+}
+
+// Describes the status of an attempt from Amazon AppFlow to register a resource.
+// When you run a flow that you've configured to use a metadata catalog, Amazon
+// AppFlow registers a metadata table and data partitions with that catalog. This
+// operation provides the status of that registration attempt. The operation also
+// indicates how many related resources Amazon AppFlow created or updated.
+type RegistrationOutput struct {
+
+	// Explains the status of the registration attempt from Amazon AppFlow. If the
+	// attempt fails, the message explains why.
+	Message *string
+
+	// Indicates the number of resources that Amazon AppFlow created or updated.
+	// Possible resources include metadata tables and data partitions.
+	Result *string
+
+	// Indicates the status of the registration attempt from Amazon AppFlow.
+	Status ExecutionStatus
+
 	noSmithyDocumentSerde
 }
 
@@ -1831,6 +2035,39 @@ type SalesforceConnectorProfileProperties struct {
 	// environment.
 	IsSandboxEnvironment bool
 
+	// If the connection mode for the connector profile is private, this parameter sets
+	// whether Amazon AppFlow uses the private network to send metadata and
+	// authorization calls to Salesforce. Amazon AppFlow sends private calls through
+	// Amazon Web Services PrivateLink. These calls travel through Amazon Web Services
+	// infrastructure without being exposed to the public internet. Set either of the
+	// following values: true Amazon AppFlow sends all calls to Salesforce over the
+	// private network. These private calls are:
+	//
+	// * Calls to get metadata about your
+	// Salesforce records. This metadata describes your Salesforce objects and their
+	// fields.
+	//
+	// * Calls to get or refresh access tokens that allow Amazon AppFlow to
+	// access your Salesforce records.
+	//
+	// * Calls to transfer your Salesforce records as
+	// part of a flow run.
+	//
+	// false The default value. Amazon AppFlow sends some calls to
+	// Salesforce privately and other calls over the public internet. The public calls
+	// are:
+	//
+	// * Calls to get metadata about your Salesforce records.
+	//
+	// * Calls to get or
+	// refresh access tokens.
+	//
+	// The private calls are:
+	//
+	// * Calls to transfer your
+	// Salesforce records as part of a flow run.
+	UsePrivateLinkForMetadataAndAuthorization bool
+
 	noSmithyDocumentSerde
 }
 
@@ -1841,6 +2078,33 @@ type SalesforceDestinationProperties struct {
 	//
 	// This member is required.
 	Object *string
+
+	// Specifies which Salesforce API is used by Amazon AppFlow when your flow
+	// transfers data to Salesforce. AUTOMATIC The default. Amazon AppFlow selects
+	// which API to use based on the number of records that your flow transfers to
+	// Salesforce. If your flow transfers fewer than 1,000 records, Amazon AppFlow uses
+	// Salesforce REST API. If your flow transfers 1,000 records or more, Amazon
+	// AppFlow uses Salesforce Bulk API 2.0. Each of these Salesforce APIs structures
+	// data differently. If Amazon AppFlow selects the API automatically, be aware
+	// that, for recurring flows, the data output might vary from one flow run to the
+	// next. For example, if a flow runs daily, it might use REST API on one day to
+	// transfer 900 records, and it might use Bulk API 2.0 on the next day to transfer
+	// 1,100 records. For each of these flow runs, the respective Salesforce API
+	// formats the data differently. Some of the differences include how dates are
+	// formatted and null values are represented. Also, Bulk API 2.0 doesn't transfer
+	// Salesforce compound fields. By choosing this option, you optimize flow
+	// performance for both small and large data transfers, but the tradeoff is
+	// inconsistent formatting in the output. BULKV2 Amazon AppFlow uses only
+	// Salesforce Bulk API 2.0. This API runs asynchronous data transfers, and it's
+	// optimal for large sets of data. By choosing this option, you ensure that your
+	// flow writes consistent output, but you optimize performance only for large data
+	// transfers. Note that Bulk API 2.0 does not transfer Salesforce compound fields.
+	// REST_SYNC Amazon AppFlow uses only Salesforce REST API. By choosing this option,
+	// you ensure that your flow writes consistent output, but you decrease performance
+	// for large data transfers that are better suited for Bulk API 2.0. In some cases,
+	// if your flow attempts to transfer a vary large set of data, it might fail with a
+	// timed out error.
+	DataTransferApi SalesforceDataTransferApi
 
 	// The settings that determine how Amazon AppFlow handles an error when placing
 	// data in the Salesforce destination. For example, this setting would determine if
@@ -1863,6 +2127,10 @@ type SalesforceDestinationProperties struct {
 // The connector metadata specific to Salesforce.
 type SalesforceMetadata struct {
 
+	// The Salesforce APIs that you can have Amazon AppFlow use when your flows
+	// transfers data to or from Salesforce.
+	DataTransferApis []SalesforceDataTransferApi
+
 	// The desired authorization scope for the Salesforce account.
 	OAuthScopes []string
 
@@ -1876,6 +2144,33 @@ type SalesforceSourceProperties struct {
 	//
 	// This member is required.
 	Object *string
+
+	// Specifies which Salesforce API is used by Amazon AppFlow when your flow
+	// transfers data from Salesforce. AUTOMATIC The default. Amazon AppFlow selects
+	// which API to use based on the number of records that your flow transfers from
+	// Salesforce. If your flow transfers fewer than 1,000,000 records, Amazon AppFlow
+	// uses Salesforce REST API. If your flow transfers 1,000,000 records or more,
+	// Amazon AppFlow uses Salesforce Bulk API 2.0. Each of these Salesforce APIs
+	// structures data differently. If Amazon AppFlow selects the API automatically, be
+	// aware that, for recurring flows, the data output might vary from one flow run to
+	// the next. For example, if a flow runs daily, it might use REST API on one day to
+	// transfer 900,000 records, and it might use Bulk API 2.0 on the next day to
+	// transfer 1,100,000 records. For each of these flow runs, the respective
+	// Salesforce API formats the data differently. Some of the differences include how
+	// dates are formatted and null values are represented. Also, Bulk API 2.0 doesn't
+	// transfer Salesforce compound fields. By choosing this option, you optimize flow
+	// performance for both small and large data transfers, but the tradeoff is
+	// inconsistent formatting in the output. BULKV2 Amazon AppFlow uses only
+	// Salesforce Bulk API 2.0. This API runs asynchronous data transfers, and it's
+	// optimal for large sets of data. By choosing this option, you ensure that your
+	// flow writes consistent output, but you optimize performance only for large data
+	// transfers. Note that Bulk API 2.0 does not transfer Salesforce compound fields.
+	// REST_SYNC Amazon AppFlow uses only Salesforce REST API. By choosing this option,
+	// you ensure that your flow writes consistent output, but you decrease performance
+	// for large data transfers that are better suited for Bulk API 2.0. In some cases,
+	// if your flow attempts to transfer a vary large set of data, it might fail wituh
+	// a timed out error.
+	DataTransferApi SalesforceDataTransferApi
 
 	// The flag that enables dynamic fetching of new (recently added) fields in the
 	// Salesforce objects while running a flow.
@@ -1920,7 +2215,7 @@ type SAPODataConnectorProfileProperties struct {
 	// The port number of the SAPOData instance.
 	//
 	// This member is required.
-	PortNumber int32
+	PortNumber *int32
 
 	// The logon language of SAPOData instance.
 	LogonLanguage *string
@@ -2000,7 +2295,7 @@ type ScheduledTriggerProperties struct {
 
 	// Defines how many times a scheduled flow fails consecutively before Amazon
 	// AppFlow deactivates it.
-	FlowErrorDeactivationThreshold int32
+	FlowErrorDeactivationThreshold *int32
 
 	// The time at which the scheduled flow ends. The time is formatted as a timestamp
 	// that follows the ISO 8601 standard, such as 2022-04-27T13:00:00-07:00.
@@ -2008,7 +2303,7 @@ type ScheduledTriggerProperties struct {
 
 	// Specifies the optional offset that is added to the time interval for a
 	// schedule-triggered flow.
-	ScheduleOffset int64
+	ScheduleOffset *int64
 
 	// The time at which the scheduled flow starts. The time is formatted as a
 	// timestamp that follows the ISO 8601 standard, such as 2022-04-26T13:00:00-07:00.
@@ -2270,6 +2565,9 @@ type SourceConnectorProperties struct {
 	// Specifies the information that is required for querying Marketo.
 	Marketo *MarketoSourceProperties
 
+	// Specifies the information that is required for querying Salesforce Pardot.
+	Pardot *PardotSourceProperties
+
 	// Specifies the information that is required for querying Amazon S3.
 	S3 *S3SourceProperties
 
@@ -2492,9 +2790,8 @@ type UpsolverMetadata struct {
 // data when Upsolver is used as the destination.
 type UpsolverS3OutputFormatConfig struct {
 
-	// Determines the prefix that Amazon AppFlow applies to the destination folder
-	// name. You can name your destination folders according to the flow frequency and
-	// date.
+	// Specifies elements that Amazon AppFlow includes in the file and folder names in
+	// the flow destination.
 	//
 	// This member is required.
 	PrefixConfig *PrefixConfig

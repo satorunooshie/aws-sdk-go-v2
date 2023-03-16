@@ -100,9 +100,7 @@ type CreateAccessInput struct {
 	// Amazon S3. Amazon EFS does not use session policies. For session policies,
 	// Transfer Family stores the policy as a JSON blob, instead of the Amazon Resource
 	// Name (ARN) of the policy. You save the policy as a JSON blob and pass it in the
-	// Policy argument.
-	//
-	// For an example of a session policy, see Example session policy
+	// Policy argument. For an example of a session policy, see Example session policy
 	// (https://docs.aws.amazon.com/transfer/latest/userguide/session-policy.html). For
 	// more information, see AssumeRole
 	// (https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html) in the
@@ -121,13 +119,13 @@ type CreateAccessInput struct {
 
 type CreateAccessOutput struct {
 
-	// The external ID of the group whose users have access to your Amazon S3 or Amazon
-	// EFS resources over the enabled protocols using Transfer Family.
+	// The external identifier of the group whose users have access to your Amazon S3
+	// or Amazon EFS resources over the enabled protocols using Transfer Family.
 	//
 	// This member is required.
 	ExternalId *string
 
-	// The ID of the server that the user is attached to.
+	// The identifier of the server that the user is attached to.
 	//
 	// This member is required.
 	ServerId *string

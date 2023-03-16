@@ -250,6 +250,26 @@ func (m *validateOpDeleteBucketPolicy) HandleInitialize(ctx context.Context, in 
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpDeleteBucketReplication struct {
+}
+
+func (*validateOpDeleteBucketReplication) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDeleteBucketReplication) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DeleteBucketReplicationInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDeleteBucketReplicationInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpDeleteBucketTagging struct {
 }
 
@@ -610,6 +630,26 @@ func (m *validateOpGetBucketPolicy) HandleInitialize(ctx context.Context, in mid
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpGetBucketReplication struct {
+}
+
+func (*validateOpGetBucketReplication) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpGetBucketReplication) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*GetBucketReplicationInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpGetBucketReplicationInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpGetBucketTagging struct {
 }
 
@@ -625,6 +665,26 @@ func (m *validateOpGetBucketTagging) HandleInitialize(ctx context.Context, in mi
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpGetBucketTaggingInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpGetBucketVersioning struct {
+}
+
+func (*validateOpGetBucketVersioning) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpGetBucketVersioning) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*GetBucketVersioningInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpGetBucketVersioningInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -705,6 +765,26 @@ func (m *validateOpGetMultiRegionAccessPointPolicyStatus) HandleInitialize(ctx c
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpGetMultiRegionAccessPointPolicyStatusInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpGetMultiRegionAccessPointRoutes struct {
+}
+
+func (*validateOpGetMultiRegionAccessPointRoutes) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpGetMultiRegionAccessPointRoutes) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*GetMultiRegionAccessPointRoutesInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpGetMultiRegionAccessPointRoutesInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -990,6 +1070,26 @@ func (m *validateOpPutBucketPolicy) HandleInitialize(ctx context.Context, in mid
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpPutBucketReplication struct {
+}
+
+func (*validateOpPutBucketReplication) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpPutBucketReplication) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*PutBucketReplicationInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpPutBucketReplicationInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpPutBucketTagging struct {
 }
 
@@ -1005,6 +1105,26 @@ func (m *validateOpPutBucketTagging) HandleInitialize(ctx context.Context, in mi
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpPutBucketTaggingInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpPutBucketVersioning struct {
+}
+
+func (*validateOpPutBucketVersioning) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpPutBucketVersioning) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*PutBucketVersioningInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpPutBucketVersioningInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -1110,6 +1230,26 @@ func (m *validateOpPutStorageLensConfigurationTagging) HandleInitialize(ctx cont
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpSubmitMultiRegionAccessPointRoutes struct {
+}
+
+func (*validateOpSubmitMultiRegionAccessPointRoutes) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpSubmitMultiRegionAccessPointRoutes) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*SubmitMultiRegionAccessPointRoutesInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpSubmitMultiRegionAccessPointRoutesInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpUpdateJobPriority struct {
 }
 
@@ -1198,6 +1338,10 @@ func addOpDeleteBucketPolicyValidationMiddleware(stack *middleware.Stack) error 
 	return stack.Initialize.Add(&validateOpDeleteBucketPolicy{}, middleware.After)
 }
 
+func addOpDeleteBucketReplicationValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDeleteBucketReplication{}, middleware.After)
+}
+
 func addOpDeleteBucketTaggingValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDeleteBucketTagging{}, middleware.After)
 }
@@ -1270,8 +1414,16 @@ func addOpGetBucketPolicyValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpGetBucketPolicy{}, middleware.After)
 }
 
+func addOpGetBucketReplicationValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpGetBucketReplication{}, middleware.After)
+}
+
 func addOpGetBucketTaggingValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpGetBucketTagging{}, middleware.After)
+}
+
+func addOpGetBucketVersioningValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpGetBucketVersioning{}, middleware.After)
 }
 
 func addOpGetJobTaggingValidationMiddleware(stack *middleware.Stack) error {
@@ -1288,6 +1440,10 @@ func addOpGetMultiRegionAccessPointPolicyValidationMiddleware(stack *middleware.
 
 func addOpGetMultiRegionAccessPointPolicyStatusValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpGetMultiRegionAccessPointPolicyStatus{}, middleware.After)
+}
+
+func addOpGetMultiRegionAccessPointRoutesValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpGetMultiRegionAccessPointRoutes{}, middleware.After)
 }
 
 func addOpGetPublicAccessBlockValidationMiddleware(stack *middleware.Stack) error {
@@ -1346,8 +1502,16 @@ func addOpPutBucketPolicyValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpPutBucketPolicy{}, middleware.After)
 }
 
+func addOpPutBucketReplicationValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpPutBucketReplication{}, middleware.After)
+}
+
 func addOpPutBucketTaggingValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpPutBucketTagging{}, middleware.After)
+}
+
+func addOpPutBucketVersioningValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpPutBucketVersioning{}, middleware.After)
 }
 
 func addOpPutJobTaggingValidationMiddleware(stack *middleware.Stack) error {
@@ -1370,12 +1534,31 @@ func addOpPutStorageLensConfigurationTaggingValidationMiddleware(stack *middlewa
 	return stack.Initialize.Add(&validateOpPutStorageLensConfigurationTagging{}, middleware.After)
 }
 
+func addOpSubmitMultiRegionAccessPointRoutesValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpSubmitMultiRegionAccessPointRoutes{}, middleware.After)
+}
+
 func addOpUpdateJobPriorityValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpUpdateJobPriority{}, middleware.After)
 }
 
 func addOpUpdateJobStatusValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpUpdateJobStatus{}, middleware.After)
+}
+
+func validateAccessControlTranslation(v *types.AccessControlTranslation) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "AccessControlTranslation"}
+	if len(v.Owner) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("Owner"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
 }
 
 func validateAccountLevel(v *types.AccountLevel) error {
@@ -1463,6 +1646,21 @@ func validateCreateMultiRegionAccessPointInput(v *types.CreateMultiRegionAccessP
 	}
 }
 
+func validateDeleteMarkerReplication(v *types.DeleteMarkerReplication) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DeleteMarkerReplication"}
+	if len(v.Status) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("Status"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateDeleteMultiRegionAccessPointInput(v *types.DeleteMultiRegionAccessPointInput) error {
 	if v == nil {
 		return nil
@@ -1470,6 +1668,51 @@ func validateDeleteMultiRegionAccessPointInput(v *types.DeleteMultiRegionAccessP
 	invalidParams := smithy.InvalidParamsError{Context: "DeleteMultiRegionAccessPointInput"}
 	if v.Name == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("Name"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDestination(v *types.Destination) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "Destination"}
+	if v.Bucket == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Bucket"))
+	}
+	if v.ReplicationTime != nil {
+		if err := validateReplicationTime(v.ReplicationTime); err != nil {
+			invalidParams.AddNested("ReplicationTime", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.AccessControlTranslation != nil {
+		if err := validateAccessControlTranslation(v.AccessControlTranslation); err != nil {
+			invalidParams.AddNested("AccessControlTranslation", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.Metrics != nil {
+		if err := validateMetrics(v.Metrics); err != nil {
+			invalidParams.AddNested("Metrics", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateExistingObjectReplication(v *types.ExistingObjectReplication) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ExistingObjectReplication"}
+	if len(v.Status) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("Status"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1715,6 +1958,36 @@ func validateLifecycleRules(v []types.LifecycleRule) error {
 	}
 }
 
+func validateMetrics(v *types.Metrics) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "Metrics"}
+	if len(v.Status) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("Status"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateMultiRegionAccessPointRoute(v *types.MultiRegionAccessPointRoute) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "MultiRegionAccessPointRoute"}
+	if v.TrafficDialPercentage == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("TrafficDialPercentage"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateObjectLambdaConfiguration(v *types.ObjectLambdaConfiguration) error {
 	if v == nil {
 		return nil
@@ -1850,6 +2123,179 @@ func validateRegionCreationList(v []types.Region) error {
 	invalidParams := smithy.InvalidParamsError{Context: "RegionCreationList"}
 	for i := range v {
 		if err := validateRegion(&v[i]); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateReplicaModifications(v *types.ReplicaModifications) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ReplicaModifications"}
+	if len(v.Status) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("Status"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateReplicationConfiguration(v *types.ReplicationConfiguration) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ReplicationConfiguration"}
+	if v.Role == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Role"))
+	}
+	if v.Rules == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Rules"))
+	} else if v.Rules != nil {
+		if err := validateReplicationRules(v.Rules); err != nil {
+			invalidParams.AddNested("Rules", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateReplicationRule(v *types.ReplicationRule) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ReplicationRule"}
+	if v.Filter != nil {
+		if err := validateReplicationRuleFilter(v.Filter); err != nil {
+			invalidParams.AddNested("Filter", err.(smithy.InvalidParamsError))
+		}
+	}
+	if len(v.Status) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("Status"))
+	}
+	if v.SourceSelectionCriteria != nil {
+		if err := validateSourceSelectionCriteria(v.SourceSelectionCriteria); err != nil {
+			invalidParams.AddNested("SourceSelectionCriteria", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.ExistingObjectReplication != nil {
+		if err := validateExistingObjectReplication(v.ExistingObjectReplication); err != nil {
+			invalidParams.AddNested("ExistingObjectReplication", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.Destination == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Destination"))
+	} else if v.Destination != nil {
+		if err := validateDestination(v.Destination); err != nil {
+			invalidParams.AddNested("Destination", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.DeleteMarkerReplication != nil {
+		if err := validateDeleteMarkerReplication(v.DeleteMarkerReplication); err != nil {
+			invalidParams.AddNested("DeleteMarkerReplication", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.Bucket == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Bucket"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateReplicationRuleAndOperator(v *types.ReplicationRuleAndOperator) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ReplicationRuleAndOperator"}
+	if v.Tags != nil {
+		if err := validateS3TagSet(v.Tags); err != nil {
+			invalidParams.AddNested("Tags", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateReplicationRuleFilter(v *types.ReplicationRuleFilter) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ReplicationRuleFilter"}
+	if v.Tag != nil {
+		if err := validateS3Tag(v.Tag); err != nil {
+			invalidParams.AddNested("Tag", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.And != nil {
+		if err := validateReplicationRuleAndOperator(v.And); err != nil {
+			invalidParams.AddNested("And", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateReplicationRules(v []types.ReplicationRule) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ReplicationRules"}
+	for i := range v {
+		if err := validateReplicationRule(&v[i]); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateReplicationTime(v *types.ReplicationTime) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ReplicationTime"}
+	if len(v.Status) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("Status"))
+	}
+	if v.Time == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Time"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateRouteList(v []types.MultiRegionAccessPointRoute) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "RouteList"}
+	for i := range v {
+		if err := validateMultiRegionAccessPointRoute(&v[i]); err != nil {
 			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
 		}
 	}
@@ -2099,6 +2545,28 @@ func validateS3TagSet(v []types.S3Tag) error {
 	}
 }
 
+func validateSourceSelectionCriteria(v *types.SourceSelectionCriteria) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "SourceSelectionCriteria"}
+	if v.SseKmsEncryptedObjects != nil {
+		if err := validateSseKmsEncryptedObjects(v.SseKmsEncryptedObjects); err != nil {
+			invalidParams.AddNested("SseKmsEncryptedObjects", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.ReplicaModifications != nil {
+		if err := validateReplicaModifications(v.ReplicaModifications); err != nil {
+			invalidParams.AddNested("ReplicaModifications", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateSSEKMS(v *types.SSEKMS) error {
 	if v == nil {
 		return nil
@@ -2106,6 +2574,21 @@ func validateSSEKMS(v *types.SSEKMS) error {
 	invalidParams := smithy.InvalidParamsError{Context: "SSEKMS"}
 	if v.KeyId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("KeyId"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateSseKmsEncryptedObjects(v *types.SseKmsEncryptedObjects) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "SseKmsEncryptedObjects"}
+	if len(v.Status) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("Status"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -2380,6 +2863,9 @@ func validateOpCreateJobInput(v *CreateJobInput) error {
 			invalidParams.AddNested("Manifest", err.(smithy.InvalidParamsError))
 		}
 	}
+	if v.Priority == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Priority"))
+	}
 	if v.RoleArn == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("RoleArn"))
 	}
@@ -2538,6 +3024,24 @@ func validateOpDeleteBucketPolicyInput(v *DeleteBucketPolicyInput) error {
 		return nil
 	}
 	invalidParams := smithy.InvalidParamsError{Context: "DeleteBucketPolicyInput"}
+	if v.AccountId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AccountId"))
+	}
+	if v.Bucket == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Bucket"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpDeleteBucketReplicationInput(v *DeleteBucketReplicationInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DeleteBucketReplicationInput"}
 	if v.AccountId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("AccountId"))
 	}
@@ -2879,11 +3383,47 @@ func validateOpGetBucketPolicyInput(v *GetBucketPolicyInput) error {
 	}
 }
 
+func validateOpGetBucketReplicationInput(v *GetBucketReplicationInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "GetBucketReplicationInput"}
+	if v.AccountId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AccountId"))
+	}
+	if v.Bucket == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Bucket"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpGetBucketTaggingInput(v *GetBucketTaggingInput) error {
 	if v == nil {
 		return nil
 	}
 	invalidParams := smithy.InvalidParamsError{Context: "GetBucketTaggingInput"}
+	if v.AccountId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AccountId"))
+	}
+	if v.Bucket == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Bucket"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpGetBucketVersioningInput(v *GetBucketVersioningInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "GetBucketVersioningInput"}
 	if v.AccountId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("AccountId"))
 	}
@@ -2961,6 +3501,24 @@ func validateOpGetMultiRegionAccessPointPolicyStatusInput(v *GetMultiRegionAcces
 	}
 	if v.Name == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("Name"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpGetMultiRegionAccessPointRoutesInput(v *GetMultiRegionAccessPointRoutesInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "GetMultiRegionAccessPointRoutesInput"}
+	if v.AccountId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AccountId"))
+	}
+	if v.Mrap == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Mrap"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -3221,6 +3779,31 @@ func validateOpPutBucketPolicyInput(v *PutBucketPolicyInput) error {
 	}
 }
 
+func validateOpPutBucketReplicationInput(v *PutBucketReplicationInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "PutBucketReplicationInput"}
+	if v.AccountId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AccountId"))
+	}
+	if v.Bucket == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Bucket"))
+	}
+	if v.ReplicationConfiguration == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ReplicationConfiguration"))
+	} else if v.ReplicationConfiguration != nil {
+		if err := validateReplicationConfiguration(v.ReplicationConfiguration); err != nil {
+			invalidParams.AddNested("ReplicationConfiguration", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpPutBucketTaggingInput(v *PutBucketTaggingInput) error {
 	if v == nil {
 		return nil
@@ -3238,6 +3821,27 @@ func validateOpPutBucketTaggingInput(v *PutBucketTaggingInput) error {
 		if err := validateTagging(v.Tagging); err != nil {
 			invalidParams.AddNested("Tagging", err.(smithy.InvalidParamsError))
 		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpPutBucketVersioningInput(v *PutBucketVersioningInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "PutBucketVersioningInput"}
+	if v.AccountId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AccountId"))
+	}
+	if v.Bucket == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Bucket"))
+	}
+	if v.VersioningConfiguration == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("VersioningConfiguration"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -3360,6 +3964,31 @@ func validateOpPutStorageLensConfigurationTaggingInput(v *PutStorageLensConfigur
 	} else if v.Tags != nil {
 		if err := validateStorageLensTags(v.Tags); err != nil {
 			invalidParams.AddNested("Tags", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpSubmitMultiRegionAccessPointRoutesInput(v *SubmitMultiRegionAccessPointRoutesInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "SubmitMultiRegionAccessPointRoutesInput"}
+	if v.AccountId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AccountId"))
+	}
+	if v.Mrap == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Mrap"))
+	}
+	if v.RouteUpdates == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("RouteUpdates"))
+	} else if v.RouteUpdates != nil {
+		if err := validateRouteList(v.RouteUpdates); err != nil {
+			invalidParams.AddNested("RouteUpdates", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {

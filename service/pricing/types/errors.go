@@ -7,9 +7,37 @@ import (
 	smithy "github.com/aws/smithy-go"
 )
 
+// General authentication failure. The request wasn't signed correctly.
+type AccessDeniedException struct {
+	Message *string
+
+	ErrorCodeOverride *string
+
+	noSmithyDocumentSerde
+}
+
+func (e *AccessDeniedException) Error() string {
+	return fmt.Sprintf("%s: %s", e.ErrorCode(), e.ErrorMessage())
+}
+func (e *AccessDeniedException) ErrorMessage() string {
+	if e.Message == nil {
+		return ""
+	}
+	return *e.Message
+}
+func (e *AccessDeniedException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "AccessDeniedException"
+	}
+	return *e.ErrorCodeOverride
+}
+func (e *AccessDeniedException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
+
 // The pagination token expired. Try again without a pagination token.
 type ExpiredNextTokenException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -23,13 +51,20 @@ func (e *ExpiredNextTokenException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *ExpiredNextTokenException) ErrorCode() string             { return "ExpiredNextTokenException" }
+func (e *ExpiredNextTokenException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "ExpiredNextTokenException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *ExpiredNextTokenException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // An error on the server occurred during the processing of your request. Try again
 // later.
 type InternalErrorException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -43,12 +78,19 @@ func (e *InternalErrorException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *InternalErrorException) ErrorCode() string             { return "InternalErrorException" }
+func (e *InternalErrorException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "InternalErrorException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *InternalErrorException) ErrorFault() smithy.ErrorFault { return smithy.FaultServer }
 
 // The pagination token is invalid. Try again without a pagination token.
 type InvalidNextTokenException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -62,12 +104,19 @@ func (e *InvalidNextTokenException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *InvalidNextTokenException) ErrorCode() string             { return "InvalidNextTokenException" }
+func (e *InvalidNextTokenException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "InvalidNextTokenException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *InvalidNextTokenException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // One or more parameters had an invalid value.
 type InvalidParameterException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -81,12 +130,19 @@ func (e *InvalidParameterException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *InvalidParameterException) ErrorCode() string             { return "InvalidParameterException" }
+func (e *InvalidParameterException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "InvalidParameterException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *InvalidParameterException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // The requested resource can't be found.
 type NotFoundException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -100,5 +156,10 @@ func (e *NotFoundException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *NotFoundException) ErrorCode() string             { return "NotFoundException" }
+func (e *NotFoundException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "NotFoundException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *NotFoundException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }

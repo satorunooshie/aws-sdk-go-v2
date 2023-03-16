@@ -78,7 +78,6 @@ public class AwsHttpPresignURLClientGenerator implements GoIntegration {
             "httpPresignerV4a"
     ).build();
 
-
     private static final Symbol v4NewPresignerSymbol = SymbolUtils.createPointableSymbolBuilder(
             "NewSigner", AwsGoDependency.AWS_SIGNER_V4
     ).build();
@@ -100,7 +99,9 @@ public class AwsHttpPresignURLClientGenerator implements GoIntegration {
                     ShapeId.from("com.amazonaws.s3#DeleteBucket")
             ),
             ShapeId.from("com.amazonaws.sts#AWSSecurityTokenServiceV20110615"), SetUtils.of(
-                    ShapeId.from("com.amazonaws.sts#GetCallerIdentity"))
+                    ShapeId.from("com.amazonaws.sts#GetCallerIdentity"),
+                    ShapeId.from("com.amazonaws.sts#AssumeRole")
+            )
     );
 
     // map of service to list of operations for which presignedURL client and operation should
@@ -449,7 +450,6 @@ public class AwsHttpPresignURLClientGenerator implements GoIntegration {
                 }).insertTrailingNewline();
     }
 
-
     /**
      * Writes the Presign client's type and methods.
      *
@@ -556,7 +556,6 @@ public class AwsHttpPresignURLClientGenerator implements GoIntegration {
         writer.write("");
     }
 
-
     /**
      * Writes the presigner sigv4a interface used by the presign url client
      */
@@ -656,7 +655,6 @@ public class AwsHttpPresignURLClientGenerator implements GoIntegration {
                 presignOptionsFromClientOptionsInternal.getName(), presignOptionsSymbol, () -> {
                     writer.write("o.ClientOptions = append(o.ClientOptions, w...)");
                 }).insertTrailingNewline();
-
 
         // s3 specific helpers
         if (isS3ServiceShape(model, serviceShape)) {

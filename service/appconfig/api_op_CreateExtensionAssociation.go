@@ -10,10 +10,10 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// When you create an extension or configure an Amazon Web Services-authored
+// When you create an extension or configure an Amazon Web Services authored
 // extension, you associate the extension with an AppConfig application,
 // environment, or configuration profile. For example, you can choose to run the
-// AppConfig deployment events to Amazon SNS Amazon Web Services-authored extension
+// AppConfig deployment events to Amazon SNS Amazon Web Services authored extension
 // and receive notifications on an Amazon SNS topic anytime a configuration
 // deployment is started for a specific application. Defining which extension to
 // associate with an AppConfig resource is called an extension association. An
@@ -52,7 +52,7 @@ type CreateExtensionAssociationInput struct {
 
 	// The version number of the extension. If not specified, AppConfig uses the
 	// maximum version of the extension.
-	ExtensionVersionNumber int32
+	ExtensionVersionNumber *int32
 
 	// The parameter names and values defined in the extensions. Extension parameters
 	// marked Required must be entered for this field.

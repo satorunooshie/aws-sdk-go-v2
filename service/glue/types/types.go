@@ -443,6 +443,33 @@ type BooleanColumnStatisticsData struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies a Delta Lake data source that is registered in the Glue Data Catalog.
+type CatalogDeltaSource struct {
+
+	// The name of the database to read from.
+	//
+	// This member is required.
+	Database *string
+
+	// The name of the Delta Lake data source.
+	//
+	// This member is required.
+	Name *string
+
+	// The name of the table in the database to read from.
+	//
+	// This member is required.
+	Table *string
+
+	// Specifies additional connection options.
+	AdditionalDeltaOptions map[string]string
+
+	// Specifies the data schema for the Delta Lake source.
+	OutputSchemas []GlueSchema
+
+	noSmithyDocumentSerde
+}
+
 // Specifies a table definition in the Glue Data Catalog.
 type CatalogEntry struct {
 
@@ -455,6 +482,33 @@ type CatalogEntry struct {
 	//
 	// This member is required.
 	TableName *string
+
+	noSmithyDocumentSerde
+}
+
+// Specifies a Hudi data source that is registered in the Glue Data Catalog.
+type CatalogHudiSource struct {
+
+	// The name of the database to read from.
+	//
+	// This member is required.
+	Database *string
+
+	// The name of the Hudi data source.
+	//
+	// This member is required.
+	Name *string
+
+	// The name of the table in the database to read from.
+	//
+	// This member is required.
+	Table *string
+
+	// Specifies additional connection options.
+	AdditionalHudiOptions map[string]string
+
+	// Specifies the data schema for the Hudi source.
+	OutputSchemas []GlueSchema
 
 	noSmithyDocumentSerde
 }
@@ -592,6 +646,13 @@ type CatalogTarget struct {
 	// Connection type.
 	ConnectionName *string
 
+	// A valid Amazon dead-letter SQS ARN. For example,
+	// arn:aws:sqs:region:account:deadLetterQueue.
+	DlqEventQueueArn *string
+
+	// A valid Amazon SQS ARN. For example, arn:aws:sqs:region:account:sqs.
+	EventQueueArn *string
+
 	noSmithyDocumentSerde
 }
 
@@ -648,6 +709,12 @@ type CodeGenConfigurationNode struct {
 	// Specifies a connector to an Amazon Athena data source.
 	AthenaConnectorSource *AthenaConnectorSource
 
+	// Specifies a Delta Lake data source that is registered in the Glue Data Catalog.
+	CatalogDeltaSource *CatalogDeltaSource
+
+	// Specifies a Hudi data source that is registered in the Glue Data Catalog.
+	CatalogHudiSource *CatalogHudiSource
+
 	// Specifies an Apache Kafka data store in the Data Catalog.
 	CatalogKafkaSource *CatalogKafkaSource
 
@@ -663,6 +730,9 @@ type CodeGenConfigurationNode struct {
 	// Specifies a transform that uses custom code you provide to perform the data
 	// transformation. The output is a collection of DynamicFrames.
 	CustomCode *CustomCode
+
+	// Specifies the direct JDBC source connection.
+	DirectJDBCSource *DirectJDBCSource
 
 	// Specifies an Apache Kafka data store.
 	DirectKafkaSource *DirectKafkaSource
@@ -682,8 +752,14 @@ type CodeGenConfigurationNode struct {
 	// placeholders such as zeros, are not automatically recognized as nulls.
 	DropNullFields *DropNullFields
 
-	// Specifies a DynamoDB data source in the Glue Data Catalog.
+	// Specifies a custom visual transform created by a user.
+	DynamicTransform *DynamicTransform
+
+	// Specifies a DynamoDBC Catalog data store in the Glue Data Catalog.
 	DynamoDBCatalogSource *DynamoDBCatalogSource
+
+	// Specifies your data quality evaluation criteria.
+	EvaluateDataQuality *EvaluateDataQuality
 
 	// Specifies a transform that locates records in the dataset that have missing
 	// values and adds a new field with a value determined by imputation. The input
@@ -751,11 +827,19 @@ type CodeGenConfigurationNode struct {
 	// Specifies a target that uses Amazon Redshift.
 	RedshiftTarget *RedshiftTarget
 
-	// Specifies a Relational database data source in the Glue Data Catalog.
+	// Specifies a relational catalog data store in the Glue Data Catalog.
 	RelationalCatalogSource *RelationalCatalogSource
 
 	// Specifies a transform that renames a single data property key.
 	RenameField *RenameField
+
+	// Specifies a Delta Lake data source that is registered in the Glue Data Catalog.
+	// The data source must be stored in Amazon S3.
+	S3CatalogDeltaSource *S3CatalogDeltaSource
+
+	// Specifies a Hudi data source that is registered in the Glue Data Catalog. The
+	// data source must be stored in Amazon S3.
+	S3CatalogHudiSource *S3CatalogHudiSource
 
 	// Specifies an Amazon S3 data store in the Glue Data Catalog.
 	S3CatalogSource *S3CatalogSource
@@ -766,12 +850,31 @@ type CodeGenConfigurationNode struct {
 	// Specifies a command-separated value (CSV) data store stored in Amazon S3.
 	S3CsvSource *S3CsvSource
 
+	// Specifies a target that writes to a Delta Lake data source in the Glue Data
+	// Catalog.
+	S3DeltaCatalogTarget *S3DeltaCatalogTarget
+
+	// Specifies a target that writes to a Delta Lake data source in Amazon S3.
+	S3DeltaDirectTarget *S3DeltaDirectTarget
+
+	// Specifies a Delta Lake data source stored in Amazon S3.
+	S3DeltaSource *S3DeltaSource
+
 	// Specifies a data target that writes to Amazon S3.
 	S3DirectTarget *S3DirectTarget
 
 	// Specifies a data target that writes to Amazon S3 in Apache Parquet columnar
 	// storage.
 	S3GlueParquetTarget *S3GlueParquetTarget
+
+	// Specifies a target that writes to a Hudi data source in the Glue Data Catalog.
+	S3HudiCatalogTarget *S3HudiCatalogTarget
+
+	// Specifies a target that writes to a Hudi data source in Amazon S3.
+	S3HudiDirectTarget *S3HudiDirectTarget
+
+	// Specifies a Hudi data source stored in Amazon S3.
+	S3HudiSource *S3HudiSource
 
 	// Specifies a JSON data store stored in Amazon S3.
 	S3JsonSource *S3JsonSource
@@ -919,9 +1022,13 @@ type ColumnImportance struct {
 	noSmithyDocumentSerde
 }
 
+// A filter that uses both column-level and row-level filtering.
 type ColumnRowFilter struct {
+
+	// A string containing the name of the column.
 	ColumnName *string
 
+	// A string containing the row-level filter expression.
 	RowFilterExpression *string
 
 	noSmithyDocumentSerde
@@ -1165,8 +1272,8 @@ type Connection struct {
 	// encrypted version of the Kafka client key password (if the user has the Glue
 	// encrypt passwords setting selected).
 	//
-	// * KAFKA_SASL_MECHANISM - "SCRAM-SHA-512"
-	// or "GSSAPI". These are the two supported SASL Mechanisms
+	// * KAFKA_SASL_MECHANISM - "SCRAM-SHA-512",
+	// "GSSAPI", or "AWS_MSK_IAM". These are the supported SASL Mechanisms
 	// (https://www.iana.org/assignments/sasl-mechanisms/sasl-mechanisms.xhtml).
 	//
 	// *
@@ -1242,33 +1349,90 @@ type ConnectionInput struct {
 	// The type of the connection. Currently, these types are supported:
 	//
 	// * JDBC -
-	// Designates a connection to a database through Java Database Connectivity
-	// (JDBC).
+	// Designates a connection to a database through Java Database Connectivity (JDBC).
+	// JDBC Connections use the following ConnectionParameters.
 	//
-	// * KAFKA - Designates a connection to an Apache Kafka streaming
-	// platform.
+	// * Required: All of
+	// (HOST, PORT, JDBC_ENGINE) or JDBC_CONNECTION_URL.
 	//
-	// * MONGODB - Designates a connection to a MongoDB document
-	// database.
+	// * Required: All of (USERNAME,
+	// PASSWORD) or SECRET_ID.
 	//
-	// * NETWORK - Designates a network connection to a data source within
-	// an Amazon Virtual Private Cloud environment (Amazon VPC).
+	// * Optional: JDBC_ENFORCE_SSL, CUSTOM_JDBC_CERT,
+	// CUSTOM_JDBC_CERT_STRING, SKIP_CUSTOM_JDBC_CERT_VALIDATION. These parameters are
+	// used to configure SSL with JDBC.
 	//
-	// * MARKETPLACE - Uses
-	// configuration settings contained in a connector purchased from Amazon Web
-	// Services Marketplace to read from and write to data stores that are not natively
-	// supported by Glue.
+	// * KAFKA - Designates a connection to an Apache
+	// Kafka streaming platform. KAFKA Connections use the following
+	// ConnectionParameters.
 	//
-	// * CUSTOM - Uses configuration settings contained in a custom
-	// connector to read from and write to data stores that are not natively supported
-	// by Glue.
+	// * Required: KAFKA_BOOTSTRAP_SERVERS.
 	//
-	// SFTP is not supported.
+	// * Optional:
+	// KAFKA_SSL_ENABLED, KAFKA_CUSTOM_CERT, KAFKA_SKIP_CUSTOM_CERT_VALIDATION. These
+	// parameters are used to configure SSL with KAFKA.
+	//
+	// * Optional:
+	// KAFKA_CLIENT_KEYSTORE, KAFKA_CLIENT_KEYSTORE_PASSWORD,
+	// KAFKA_CLIENT_KEY_PASSWORD, ENCRYPTED_KAFKA_CLIENT_KEYSTORE_PASSWORD,
+	// ENCRYPTED_KAFKA_CLIENT_KEY_PASSWORD. These parameters are used to configure TLS
+	// client configuration with SSL in KAFKA.
+	//
+	// * Optional: KAFKA_SASL_MECHANISM. Can
+	// be specified as SCRAM-SHA-512, GSSAPI, or AWS_MSK_IAM.
+	//
+	// * Optional:
+	// KAFKA_SASL_SCRAM_USERNAME, KAFKA_SASL_SCRAM_PASSWORD,
+	// ENCRYPTED_KAFKA_SASL_SCRAM_PASSWORD. These parameters are used to configure
+	// SASL/SCRAM-SHA-512 authentication with KAFKA.
+	//
+	// * Optional:
+	// KAFKA_SASL_GSSAPI_KEYTAB, KAFKA_SASL_GSSAPI_KRB5_CONF,
+	// KAFKA_SASL_GSSAPI_SERVICE, KAFKA_SASL_GSSAPI_PRINCIPAL. These parameters are
+	// used to configure SASL/GSSAPI authentication with KAFKA.
+	//
+	// * MONGODB - Designates
+	// a connection to a MongoDB document database. MONGODB Connections use the
+	// following ConnectionParameters.
+	//
+	// * Required: CONNECTION_URL.
+	//
+	// * Required: All of
+	// (USERNAME, PASSWORD) or SECRET_ID.
+	//
+	// * NETWORK - Designates a network connection
+	// to a data source within an Amazon Virtual Private Cloud environment (Amazon
+	// VPC). NETWORK Connections do not require ConnectionParameters. Instead, provide
+	// a PhysicalConnectionRequirements.
+	//
+	// * MARKETPLACE - Uses configuration settings
+	// contained in a connector purchased from Amazon Web Services Marketplace to read
+	// from and write to data stores that are not natively supported by Glue.
+	// MARKETPLACE Connections use the following ConnectionParameters.
+	//
+	// * Required:
+	// CONNECTOR_TYPE, CONNECTOR_URL, CONNECTOR_CLASS_NAME, CONNECTION_URL.
+	//
+	// * Required
+	// for JDBCCONNECTOR_TYPE connections: All of (USERNAME, PASSWORD) or SECRET_ID.
+	//
+	// *
+	// CUSTOM - Uses configuration settings contained in a custom connector to read
+	// from and write to data stores that are not natively supported by Glue.
+	//
+	// SFTP is
+	// not supported. For more information about how optional ConnectionProperties are
+	// used to configure features in Glue, consult Glue connection properties
+	// (https://docs.aws.amazon.com/glue/latest/dg/connection-defining.html). For more
+	// information about how optional ConnectionProperties are used to configure
+	// features in Glue Studio, consult Using connectors and connections
+	// (https://docs.aws.amazon.com/glue/latest/ug/connectors-chapter.html).
 	//
 	// This member is required.
 	ConnectionType ConnectionType
 
-	// The name of the connection.
+	// The name of the connection. Connection will not function as expected without a
+	// name.
 	//
 	// This member is required.
 	Name *string
@@ -1359,9 +1523,9 @@ type Crawler struct {
 	Classifiers []string
 
 	// Crawler configuration information. This versioned JSON string allows users to
-	// specify aspects of a crawler's behavior. For more information, see Include and
-	// Exclude Patterns
-	// (https://docs.aws.amazon.com/glue/latest/dg/define-crawler.html#crawler-data-stores-exclude).
+	// specify aspects of a crawler's behavior. For more information, see Setting
+	// crawler configuration options
+	// (https://docs.aws.amazon.com/glue/latest/dg/crawler-configuration.html).
 	Configuration *string
 
 	// If the crawler is running, contains the total time elapsed since the last crawl
@@ -1583,6 +1747,12 @@ type CreateCsvClassifierRequest struct {
 	// Indicates whether the CSV file contains a header.
 	ContainsHeader CsvHeaderOption
 
+	// Enables the configuration of custom datatypes.
+	CustomDatatypeConfigured *bool
+
+	// Creates a list of supported custom datatypes.
+	CustomDatatypes []string
+
 	// A custom symbol to denote what separates each column entry in the row.
 	Delimiter *string
 
@@ -1683,6 +1853,13 @@ type CsvClassifier struct {
 	// The time that this classifier was registered.
 	CreationTime *time.Time
 
+	// Enables the custom datatype to be configured.
+	CustomDatatypeConfigured *bool
+
+	// A list of custom datatypes including "BINARY", "BOOLEAN", "DATE", "DECIMAL",
+	// "DOUBLE", "FLOAT", "INT", "LONG", "SHORT", "STRING", "TIMESTAMP".
+	CustomDatatypes []string
+
 	// A custom symbol to denote what separates each column entry in the row.
 	Delimiter *string
 
@@ -1773,7 +1950,8 @@ type Database struct {
 	// The ID of the Data Catalog in which the database resides.
 	CatalogId *string
 
-	// Creates a set of default permissions on the table for principals.
+	// Creates a set of default permissions on the table for principals. Used by Lake
+	// Formation. Not used in the normal course of Glue operations.
 	CreateTableDefaultPermissions []PrincipalPermissions
 
 	// The time at which the metadata database was created in the catalog.
@@ -1816,7 +1994,8 @@ type DatabaseInput struct {
 	// This member is required.
 	Name *string
 
-	// Creates a set of default permissions on the table for principals.
+	// Creates a set of default permissions on the table for principals. Used by Lake
+	// Formation. Not used in the normal course of Glue operations.
 	CreateTableDefaultPermissions []PrincipalPermissions
 
 	// A description of the database.
@@ -1856,6 +2035,273 @@ type DataLakePrincipal struct {
 
 	// An identifier for the Lake Formation principal.
 	DataLakePrincipalIdentifier *string
+
+	noSmithyDocumentSerde
+}
+
+// Additional run options you can specify for an evaluation run.
+type DataQualityEvaluationRunAdditionalRunOptions struct {
+
+	// Whether or not to enable CloudWatch metrics.
+	CloudWatchMetricsEnabled *bool
+
+	// Prefix for Amazon S3 to store results.
+	ResultsS3Prefix *string
+
+	noSmithyDocumentSerde
+}
+
+// Describes a data quality result.
+type DataQualityResult struct {
+
+	// The date and time when this data quality run completed.
+	CompletedOn *time.Time
+
+	// The table associated with the data quality result, if any.
+	DataSource *DataSource
+
+	// In the context of a job in Glue Studio, each node in the canvas is typically
+	// assigned some sort of name and data quality nodes will have names. In the case
+	// of multiple nodes, the evaluationContext can differentiate the nodes.
+	EvaluationContext *string
+
+	// The job name associated with the data quality result, if any.
+	JobName *string
+
+	// The job run ID associated with the data quality result, if any.
+	JobRunId *string
+
+	// A unique result ID for the data quality result.
+	ResultId *string
+
+	// A list of DataQualityRuleResult objects representing the results for each rule.
+	RuleResults []DataQualityRuleResult
+
+	// The unique run ID for the ruleset evaluation for this data quality result.
+	RulesetEvaluationRunId *string
+
+	// The name of the ruleset associated with the data quality result.
+	RulesetName *string
+
+	// An aggregate data quality score. Represents the ratio of rules that passed to
+	// the total number of rules.
+	Score *float64
+
+	// The date and time when this data quality run started.
+	StartedOn *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Describes a data quality result.
+type DataQualityResultDescription struct {
+
+	// The table name associated with the data quality result.
+	DataSource *DataSource
+
+	// The job name associated with the data quality result.
+	JobName *string
+
+	// The job run ID associated with the data quality result.
+	JobRunId *string
+
+	// The unique result ID for this data quality result.
+	ResultId *string
+
+	// The time that the run started for this data quality result.
+	StartedOn *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Criteria used to return data quality results.
+type DataQualityResultFilterCriteria struct {
+
+	// Filter results by the specified data source. For example, retrieving all results
+	// for an Glue table.
+	DataSource *DataSource
+
+	// Filter results by the specified job name.
+	JobName *string
+
+	// Filter results by the specified job run ID.
+	JobRunId *string
+
+	// Filter results by runs that started after this time.
+	StartedAfter *time.Time
+
+	// Filter results by runs that started before this time.
+	StartedBefore *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Describes the result of a data quality rule recommendation run.
+type DataQualityRuleRecommendationRunDescription struct {
+
+	// The data source (Glue table) associated with the recommendation run.
+	DataSource *DataSource
+
+	// The unique run identifier associated with this run.
+	RunId *string
+
+	// The date and time when this run started.
+	StartedOn *time.Time
+
+	// The status for this run.
+	Status TaskStatusType
+
+	noSmithyDocumentSerde
+}
+
+// A filter for listing data quality recommendation runs.
+type DataQualityRuleRecommendationRunFilter struct {
+
+	// Filter based on a specified data source (Glue table).
+	//
+	// This member is required.
+	DataSource *DataSource
+
+	// Filter based on time for results started after provided time.
+	StartedAfter *time.Time
+
+	// Filter based on time for results started before provided time.
+	StartedBefore *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Describes the result of the evaluation of a data quality rule.
+type DataQualityRuleResult struct {
+
+	// A description of the data quality rule.
+	Description *string
+
+	// An evaluation message.
+	EvaluationMessage *string
+
+	// The name of the data quality rule.
+	Name *string
+
+	// A pass or fail status for the rule.
+	Result DataQualityRuleResultStatus
+
+	noSmithyDocumentSerde
+}
+
+// Describes the result of a data quality ruleset evaluation run.
+type DataQualityRulesetEvaluationRunDescription struct {
+
+	// The data source (an Glue table) associated with the run.
+	DataSource *DataSource
+
+	// The unique run identifier associated with this run.
+	RunId *string
+
+	// The date and time when the run started.
+	StartedOn *time.Time
+
+	// The status for this run.
+	Status TaskStatusType
+
+	noSmithyDocumentSerde
+}
+
+// The filter criteria.
+type DataQualityRulesetEvaluationRunFilter struct {
+
+	// Filter based on a data source (an Glue table) associated with the run.
+	//
+	// This member is required.
+	DataSource *DataSource
+
+	// Filter results by runs that started after this time.
+	StartedAfter *time.Time
+
+	// Filter results by runs that started before this time.
+	StartedBefore *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// The criteria used to filter data quality rulesets.
+type DataQualityRulesetFilterCriteria struct {
+
+	// Filter on rulesets created after this date.
+	CreatedAfter *time.Time
+
+	// Filter on rulesets created before this date.
+	CreatedBefore *time.Time
+
+	// The description of the ruleset filter criteria.
+	Description *string
+
+	// Filter on rulesets last modified after this date.
+	LastModifiedAfter *time.Time
+
+	// Filter on rulesets last modified before this date.
+	LastModifiedBefore *time.Time
+
+	// The name of the ruleset filter criteria.
+	Name *string
+
+	// The name and database name of the target table.
+	TargetTable *DataQualityTargetTable
+
+	noSmithyDocumentSerde
+}
+
+// Describes a data quality ruleset returned by GetDataQualityRuleset.
+type DataQualityRulesetListDetails struct {
+
+	// The date and time the data quality ruleset was created.
+	CreatedOn *time.Time
+
+	// A description of the data quality ruleset.
+	Description *string
+
+	// The date and time the data quality ruleset was last modified.
+	LastModifiedOn *time.Time
+
+	// The name of the data quality ruleset.
+	Name *string
+
+	// When a ruleset was created from a recommendation run, this run ID is generated
+	// to link the two together.
+	RecommendationRunId *string
+
+	// The number of rules in the ruleset.
+	RuleCount *int32
+
+	// An object representing an Glue table.
+	TargetTable *DataQualityTargetTable
+
+	noSmithyDocumentSerde
+}
+
+// An object representing an Glue table.
+type DataQualityTargetTable struct {
+
+	// The name of the database where the Glue table exists.
+	//
+	// This member is required.
+	DatabaseName *string
+
+	// The name of the Glue table.
+	//
+	// This member is required.
+	TableName *string
+
+	noSmithyDocumentSerde
+}
+
+// A data source (an Glue table) for which you want data quality results.
+type DataSource struct {
+
+	// An Glue table.
+	//
+	// This member is required.
+	GlueTable *GlueTable
 
 	noSmithyDocumentSerde
 }
@@ -1942,6 +2388,10 @@ type DeltaTarget struct {
 	// The name of the connection to use to connect to the Delta table target.
 	ConnectionName *string
 
+	// Specifies whether the crawler will create native tables, to allow integration
+	// with query engines that support querying of the Delta transaction log directly.
+	CreateNativeDeltaTable *bool
+
 	// A list of the Amazon S3 paths to the Delta tables.
 	DeltaTables []string
 
@@ -1966,7 +2416,7 @@ type DevEndpoint struct {
 	// Python 2.
 	Arguments map[string]string
 
-	// The AWS Availability Zone where this DevEndpoint is located.
+	// The Amazon Web Services Availability Zone where this DevEndpoint is located.
 	AvailabilityZone *string
 
 	// The point in time at which this DevEndpoint was created.
@@ -2105,6 +2555,40 @@ type DevEndpointCustomLibraries struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies the direct JDBC source connection.
+type DirectJDBCSource struct {
+
+	// The connection name of the JDBC source.
+	//
+	// This member is required.
+	ConnectionName *string
+
+	// The connection type of the JDBC source.
+	//
+	// This member is required.
+	ConnectionType JDBCConnectionType
+
+	// The database of the JDBC source connection.
+	//
+	// This member is required.
+	Database *string
+
+	// The name of the JDBC source connection.
+	//
+	// This member is required.
+	Name *string
+
+	// The table of the JDBC source connection.
+	//
+	// This member is required.
+	Table *string
+
+	// The temp directory of the JDBC Redshift source.
+	RedshiftTmpDir *string
+
+	noSmithyDocumentSerde
+}
+
 // Specifies an Apache Kafka data store.
 type DirectKafkaSource struct {
 
@@ -2192,6 +2676,35 @@ type DoubleColumnStatisticsData struct {
 	noSmithyDocumentSerde
 }
 
+// Options to configure how your data quality evaluation results are published.
+type DQResultsPublishingOptions struct {
+
+	// Enable metrics for your data quality results.
+	CloudWatchMetricsEnabled *bool
+
+	// The context of the evaluation.
+	EvaluationContext *string
+
+	// Enable publishing for your data quality results.
+	ResultsPublishingEnabled *bool
+
+	// The Amazon S3 prefix prepended to the results.
+	ResultsS3Prefix *string
+
+	noSmithyDocumentSerde
+}
+
+// Options to configure how your job will stop if your data quality evaluation
+// fails.
+type DQStopJobOnFailureOptions struct {
+
+	// When to stop job if your data quality evaluation fails. Options are Immediate or
+	// AfterDataLoad.
+	StopJobOnFailureTiming DQStopJobOnFailureTiming
+
+	noSmithyDocumentSerde
+}
+
 // Specifies a transform that removes rows of repeating data from a data set.
 type DropDuplicates struct {
 
@@ -2257,6 +2770,44 @@ type DropNullFields struct {
 	// unique to the dataset. The DropNullFields transform removes custom null values
 	// only if both the value of the null placeholder and the datatype match the data.
 	NullTextList []NullValueField
+
+	noSmithyDocumentSerde
+}
+
+// Specifies the set of parameters needed to perform the dynamic transform.
+type DynamicTransform struct {
+
+	// Specifies the name of the function of the dynamic transform.
+	//
+	// This member is required.
+	FunctionName *string
+
+	// Specifies the inputs for the dynamic transform that are required.
+	//
+	// This member is required.
+	Inputs []string
+
+	// Specifies the name of the dynamic transform.
+	//
+	// This member is required.
+	Name *string
+
+	// Specifies the path of the dynamic transform source and config files.
+	//
+	// This member is required.
+	Path *string
+
+	// Specifies the name of the dynamic transform as it appears in the Glue Studio
+	// visual editor.
+	//
+	// This member is required.
+	TransformName *string
+
+	// Specifies the parameters of the dynamic transform.
+	Parameters []TransformConfigParameter
+
+	// This field is not used and will be deprecated in future release.
+	Version *string
 
 	noSmithyDocumentSerde
 }
@@ -2369,6 +2920,37 @@ type ErrorDetails struct {
 
 	// The error message for an error.
 	ErrorMessage *string
+
+	noSmithyDocumentSerde
+}
+
+// Specifies your data quality evaluation criteria.
+type EvaluateDataQuality struct {
+
+	// The inputs of your data quality evaluation.
+	//
+	// This member is required.
+	Inputs []string
+
+	// The name of the data quality evaluation.
+	//
+	// This member is required.
+	Name *string
+
+	// The ruleset for your data quality evaluation.
+	//
+	// This member is required.
+	Ruleset *string
+
+	// The output of your data quality evaluation.
+	Output DQTransformOutput
+
+	// Options to configure how your results are published.
+	PublishingOptions *DQResultsPublishingOptions
+
+	// Options to configure how your job will stop if your data quality evaluation
+	// fails.
+	StopJobOnFailureOptions *DQStopJobOnFailureOptions
 
 	noSmithyDocumentSerde
 }
@@ -2647,7 +3229,7 @@ type GluePolicy struct {
 	noSmithyDocumentSerde
 }
 
-// Specifies a user-defined schema when a schema cannot be determined by AWS Glue.
+// Specifies a user-defined schema when a schema cannot be determined by Glue.
 type GlueSchema struct {
 
 	// Specifies the column definitions that make up a Glue schema.
@@ -2683,6 +3265,16 @@ type GlueTable struct {
 	//
 	// This member is required.
 	TableName *string
+
+	// Additional options for the table. Currently there are two keys supported:
+	//
+	// *
+	// pushDownPredicate: to filter on partitions without having to list and read all
+	// the files in your dataset.
+	//
+	// * catalogPartitionPredicate: to use server-side
+	// partition pruning using partition indexes in the Glue Data Catalog.
+	AdditionalOptions map[string]string
 
 	// A unique identifier for the Glue Data Catalog.
 	CatalogId *string
@@ -2937,6 +3529,12 @@ type JdbcTarget struct {
 	// The name of the connection to use to connect to the JDBC target.
 	ConnectionName *string
 
+	// Specify a value of RAWTYPES or COMMENTS to enable additional metadata in table
+	// responses. RAWTYPES provides the native-level datatype. COMMENTS provides
+	// comments associated with a column or table in the database. If you do not need
+	// additional metadata, keep the field empty.
+	EnableAdditionalMetadata []JdbcMetadataEntry
+
 	// A list of glob patterns used to exclude from the crawl. For more information,
 	// see Catalog Tables with a Crawler
 	// (https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html).
@@ -3059,6 +3657,10 @@ type Job struct {
 
 	// The name of the SecurityConfiguration structure to be used with this job.
 	SecurityConfiguration *string
+
+	// The details for a source control configuration for a job, allowing
+	// synchronization of job artifacts to or from a remote repository.
+	SourceControlDetails *SourceControlDetails
 
 	// The job timeout in minutes. This is the maximum time that a job run can consume
 	// resources before it is terminated and enters TIMEOUT status. The default is
@@ -3414,6 +4016,10 @@ type JobUpdate struct {
 	// The name of the SecurityConfiguration structure to be used with this job.
 	SecurityConfiguration *string
 
+	// The details for a source control configuration for a job, allowing
+	// synchronization of job artifacts to or from a remote repository.
+	SourceControlDetails *SourceControlDetails
+
 	// The job timeout in minutes. This is the maximum time that a job run can consume
 	// resources before it is terminated and enters TIMEOUT status. The default is
 	// 2,880 minutes (48 hours).
@@ -3519,6 +4125,12 @@ type JsonClassifier struct {
 // Additional options for streaming.
 type KafkaStreamingSourceOptions struct {
 
+	// When this option is set to 'true', the data output will contain an additional
+	// column named "__src_timestamp" that indicates the time when the corresponding
+	// record received by the topic. The default value is 'false'. This option is
+	// supported in Glue version 4.0 or later.
+	AddRecordTimestamp *string
+
 	// The specific TopicPartitions to consume. You must specify at least one of
 	// "topicName", "assign" or "subscribePattern".
 	Assign *string
@@ -3537,9 +4149,22 @@ type KafkaStreamingSourceOptions struct {
 	// Specifies the delimiter character.
 	Delimiter *string
 
+	// When this option is set to 'true', for each batch, it will emit the metrics for
+	// the duration between the oldest record received by the topic and the time it
+	// arrives in Glue to CloudWatch. The metric's name is
+	// "glue.driver.streaming.maxConsumerLagInMs". The default value is 'false'. This
+	// option is supported in Glue version 4.0 or later.
+	EmitConsumerLagMetrics *string
+
 	// The end point when a batch query is ended. Possible values are either "latest"
 	// or a JSON string that specifies an ending offset for each TopicPartition.
 	EndingOffsets *string
+
+	// Whether to include the Kafka headers. When the option is set to "true", the data
+	// output will contain an additional column named "glue_streaming_kafka_headers"
+	// with type Array[Struct(key: String, value: String)]. The default value is
+	// "false". This option is available in Glue version 3.0 or later only.
+	IncludeHeaders *bool
 
 	// The rate limit on the maximum number of offsets that are processed per trigger
 	// interval. The specified total number of offsets is proportionally split across
@@ -3607,6 +4232,12 @@ type KinesisStreamingSourceOptions struct {
 	// above.
 	AddIdleTimeBetweenReads *bool
 
+	// When this option is set to 'true', the data output will contain an additional
+	// column named "__src_timestamp" that indicates the time when the corresponding
+	// record received by the stream. The default value is 'false'. This option is
+	// supported in Glue version 4.0 or later.
+	AddRecordTimestamp *string
+
 	// Avoids creating an empty microbatch job by checking for unread data in the
 	// Kinesis data stream before the batch is started. The default value is "False".
 	AvoidEmptyBatches *bool
@@ -3620,6 +4251,13 @@ type KinesisStreamingSourceOptions struct {
 	// The minimum time interval between two ListShards API calls for your script to
 	// consider resharding. The default value is 1s.
 	DescribeShardInterval *int64
+
+	// When this option is set to 'true', for each batch, it will emit the metrics for
+	// the duration between the oldest record received by the stream and the time it
+	// arrives in Glue to CloudWatch. The metric's name is
+	// "glue.driver.streaming.maxConsumerLagInMs". The default value is 'false'. This
+	// option is supported in Glue version 4.0 or later.
+	EmitConsumerLagMetrics *string
 
 	// The URL of the Kinesis endpoint.
 	EndpointUrl *string
@@ -4822,6 +5460,62 @@ type ResourceUri struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies a Delta Lake data source that is registered in the Glue Data Catalog.
+// The data source must be stored in Amazon S3.
+type S3CatalogDeltaSource struct {
+
+	// The name of the database to read from.
+	//
+	// This member is required.
+	Database *string
+
+	// The name of the Delta Lake data source.
+	//
+	// This member is required.
+	Name *string
+
+	// The name of the table in the database to read from.
+	//
+	// This member is required.
+	Table *string
+
+	// Specifies additional connection options.
+	AdditionalDeltaOptions map[string]string
+
+	// Specifies the data schema for the Delta Lake source.
+	OutputSchemas []GlueSchema
+
+	noSmithyDocumentSerde
+}
+
+// Specifies a Hudi data source that is registered in the Glue Data Catalog. The
+// Hudi data source must be stored in Amazon S3.
+type S3CatalogHudiSource struct {
+
+	// The name of the database to read from.
+	//
+	// This member is required.
+	Database *string
+
+	// The name of the Hudi data source.
+	//
+	// This member is required.
+	Name *string
+
+	// The name of the table in the database to read from.
+	//
+	// This member is required.
+	Table *string
+
+	// Specifies additional connection options.
+	AdditionalHudiOptions map[string]string
+
+	// Specifies the data schema for the Hudi source.
+	OutputSchemas []GlueSchema
+
+	noSmithyDocumentSerde
+}
+
 // Specifies an Amazon S3 data store in the Glue Data Catalog.
 type S3CatalogSource struct {
 
@@ -4980,6 +5674,108 @@ type S3CsvSource struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies a target that writes to a Delta Lake data source in the Glue Data
+// Catalog.
+type S3DeltaCatalogTarget struct {
+
+	// The name of the database to write to.
+	//
+	// This member is required.
+	Database *string
+
+	// The nodes that are inputs to the data target.
+	//
+	// This member is required.
+	Inputs []string
+
+	// The name of the data target.
+	//
+	// This member is required.
+	Name *string
+
+	// The name of the table in the database to write to.
+	//
+	// This member is required.
+	Table *string
+
+	// Specifies additional connection options for the connector.
+	AdditionalOptions map[string]string
+
+	// Specifies native partitioning using a sequence of keys.
+	PartitionKeys [][]string
+
+	// A policy that specifies update behavior for the crawler.
+	SchemaChangePolicy *CatalogSchemaChangePolicy
+
+	noSmithyDocumentSerde
+}
+
+// Specifies a target that writes to a Delta Lake data source in Amazon S3.
+type S3DeltaDirectTarget struct {
+
+	// Specifies how the data is compressed. This is generally not necessary if the
+	// data has a standard file extension. Possible values are "gzip" and "bzip").
+	//
+	// This member is required.
+	Compression DeltaTargetCompressionType
+
+	// Specifies the data output format for the target.
+	//
+	// This member is required.
+	Format TargetFormat
+
+	// The nodes that are inputs to the data target.
+	//
+	// This member is required.
+	Inputs []string
+
+	// The name of the data target.
+	//
+	// This member is required.
+	Name *string
+
+	// The Amazon S3 path of your Delta Lake data source to write to.
+	//
+	// This member is required.
+	Path *string
+
+	// Specifies additional connection options for the connector.
+	AdditionalOptions map[string]string
+
+	// Specifies native partitioning using a sequence of keys.
+	PartitionKeys [][]string
+
+	// A policy that specifies update behavior for the crawler.
+	SchemaChangePolicy *DirectSchemaChangePolicy
+
+	noSmithyDocumentSerde
+}
+
+// Specifies a Delta Lake data source stored in Amazon S3.
+type S3DeltaSource struct {
+
+	// The name of the Delta Lake source.
+	//
+	// This member is required.
+	Name *string
+
+	// A list of the Amazon S3 paths to read from.
+	//
+	// This member is required.
+	Paths []string
+
+	// Specifies additional connection options.
+	AdditionalDeltaOptions map[string]string
+
+	// Specifies additional options for the connector.
+	AdditionalOptions *S3DirectSourceAdditionalOptions
+
+	// Specifies the data schema for the Delta Lake source.
+	OutputSchemas []GlueSchema
+
+	noSmithyDocumentSerde
+}
+
 // Specifies additional connection options for the Amazon S3 data store.
 type S3DirectSourceAdditionalOptions struct {
 
@@ -5076,6 +5872,111 @@ type S3GlueParquetTarget struct {
 
 	// A policy that specifies update behavior for the crawler.
 	SchemaChangePolicy *DirectSchemaChangePolicy
+
+	noSmithyDocumentSerde
+}
+
+// Specifies a target that writes to a Hudi data source in the Glue Data Catalog.
+type S3HudiCatalogTarget struct {
+
+	// Specifies additional connection options for the connector.
+	//
+	// This member is required.
+	AdditionalOptions map[string]string
+
+	// The name of the database to write to.
+	//
+	// This member is required.
+	Database *string
+
+	// The nodes that are inputs to the data target.
+	//
+	// This member is required.
+	Inputs []string
+
+	// The name of the data target.
+	//
+	// This member is required.
+	Name *string
+
+	// The name of the table in the database to write to.
+	//
+	// This member is required.
+	Table *string
+
+	// Specifies native partitioning using a sequence of keys.
+	PartitionKeys [][]string
+
+	// A policy that specifies update behavior for the crawler.
+	SchemaChangePolicy *CatalogSchemaChangePolicy
+
+	noSmithyDocumentSerde
+}
+
+// Specifies a target that writes to a Hudi data source in Amazon S3.
+type S3HudiDirectTarget struct {
+
+	// Specifies additional connection options for the connector.
+	//
+	// This member is required.
+	AdditionalOptions map[string]string
+
+	// Specifies how the data is compressed. This is generally not necessary if the
+	// data has a standard file extension. Possible values are "gzip" and "bzip").
+	//
+	// This member is required.
+	Compression HudiTargetCompressionType
+
+	// Specifies the data output format for the target.
+	//
+	// This member is required.
+	Format TargetFormat
+
+	// The nodes that are inputs to the data target.
+	//
+	// This member is required.
+	Inputs []string
+
+	// The name of the data target.
+	//
+	// This member is required.
+	Name *string
+
+	// The Amazon S3 path of your Hudi data source to write to.
+	//
+	// This member is required.
+	Path *string
+
+	// Specifies native partitioning using a sequence of keys.
+	PartitionKeys [][]string
+
+	// A policy that specifies update behavior for the crawler.
+	SchemaChangePolicy *DirectSchemaChangePolicy
+
+	noSmithyDocumentSerde
+}
+
+// Specifies a Hudi data source stored in Amazon S3.
+type S3HudiSource struct {
+
+	// The name of the Hudi source.
+	//
+	// This member is required.
+	Name *string
+
+	// A list of the Amazon S3 paths to read from.
+	//
+	// This member is required.
+	Paths []string
+
+	// Specifies additional connection options.
+	AdditionalHudiOptions map[string]string
+
+	// Specifies additional options for the connector.
+	AdditionalOptions *S3DirectSourceAdditionalOptions
+
+	// Specifies the data schema for the Hudi source.
+	OutputSchemas []GlueSchema
 
 	noSmithyDocumentSerde
 }
@@ -5343,7 +6244,7 @@ type SchemaReference struct {
 	SchemaVersionId *string
 
 	// The version number of the schema.
-	SchemaVersionNumber int64
+	SchemaVersionNumber *int64
 
 	noSmithyDocumentSerde
 }
@@ -5572,6 +6473,38 @@ type SortCriterion struct {
 
 	// An ascending or descending sort.
 	Sort Sort
+
+	noSmithyDocumentSerde
+}
+
+// The details for a source control configuration for a job, allowing
+// synchronization of job artifacts to or from a remote repository.
+type SourceControlDetails struct {
+
+	// The type of authentication, which can be an authentication token stored in
+	// Amazon Web Services Secrets Manager, or a personal access token.
+	AuthStrategy SourceControlAuthStrategy
+
+	// The value of an authorization token.
+	AuthToken *string
+
+	// An optional branch in the remote repository.
+	Branch *string
+
+	// An optional folder in the remote repository.
+	Folder *string
+
+	// The last commit ID for a commit in the remote repository.
+	LastCommitId *string
+
+	// The owner of the remote repository that contains the job artifacts.
+	Owner *string
+
+	// The provider for the remote repository.
+	Provider SourceControlProvider
+
+	// The name of the remote repository that contains the job artifacts.
+	Repository *string
 
 	noSmithyDocumentSerde
 }
@@ -5973,7 +6906,11 @@ type Table struct {
 	// table.
 	StorageDescriptor *StorageDescriptor
 
-	// The type of this table (EXTERNAL_TABLE, VIRTUAL_VIEW, etc.).
+	// The type of this table. Glue will create tables with the EXTERNAL_TABLE type.
+	// Other services, such as Athena, may create tables with additional table types.
+	// Glue related table types: EXTERNAL_TABLE Hive compatible attribute - indicates a
+	// non-Hive managed table. GOVERNED Used by Lake Formation. The Glue Data Catalog
+	// understands GOVERNED.
 	TableType *string
 
 	// A TableIdentifier structure that describes a target table for resource linking.
@@ -5985,10 +6922,13 @@ type Table struct {
 	// The ID of the table version.
 	VersionId *string
 
-	// If the table is a view, the expanded text of the view; otherwise null.
+	// Included for Apache Hive compatibility. Not used in the normal course of Glue
+	// operations.
 	ViewExpandedText *string
 
-	// If the table is a view, the original text of the view; otherwise null.
+	// Included for Apache Hive compatibility. Not used in the normal course of Glue
+	// operations. If the table is a VIRTUAL_VIEW, certain Athena configuration encoded
+	// in base64.
 	ViewOriginalText *string
 
 	noSmithyDocumentSerde
@@ -6039,7 +6979,8 @@ type TableInput struct {
 	// The last time that column statistics were computed for this table.
 	LastAnalyzedTime *time.Time
 
-	// The table owner.
+	// The table owner. Included for Apache Hive compatibility. Not used in the normal
+	// course of Glue operations.
 	Owner *string
 
 	// These key-value pairs define properties associated with the table.
@@ -6058,16 +6999,23 @@ type TableInput struct {
 	// table.
 	StorageDescriptor *StorageDescriptor
 
-	// The type of this table (EXTERNAL_TABLE, VIRTUAL_VIEW, etc.).
+	// The type of this table. Glue will create tables with the EXTERNAL_TABLE type.
+	// Other services, such as Athena, may create tables with additional table types.
+	// Glue related table types: EXTERNAL_TABLE Hive compatible attribute - indicates a
+	// non-Hive managed table. GOVERNED Used by Lake Formation. The Glue Data Catalog
+	// understands GOVERNED.
 	TableType *string
 
 	// A TableIdentifier structure that describes a target table for resource linking.
 	TargetTable *TableIdentifier
 
-	// If the table is a view, the expanded text of the view; otherwise null.
+	// Included for Apache Hive compatibility. Not used in the normal course of Glue
+	// operations.
 	ViewExpandedText *string
 
-	// If the table is a view, the original text of the view; otherwise null.
+	// Included for Apache Hive compatibility. Not used in the normal course of Glue
+	// operations. If the table is a VIRTUAL_VIEW, certain Athena configuration encoded
+	// in base64.
 	ViewOriginalText *string
 
 	noSmithyDocumentSerde
@@ -6193,6 +7141,40 @@ type TaskRunSortCriteria struct {
 	//
 	// This member is required.
 	SortDirection SortDirectionType
+
+	noSmithyDocumentSerde
+}
+
+// Specifies the parameters in the config file of the dynamic transform.
+type TransformConfigParameter struct {
+
+	// Specifies the name of the parameter in the config file of the dynamic transform.
+	//
+	// This member is required.
+	Name *string
+
+	// Specifies the parameter type in the config file of the dynamic transform.
+	//
+	// This member is required.
+	Type ParamType
+
+	// Specifies whether the parameter is optional or not in the config file of the
+	// dynamic transform.
+	IsOptional *bool
+
+	// Specifies the list type of the parameter in the config file of the dynamic
+	// transform.
+	ListType ParamType
+
+	// Specifies the validation message in the config file of the dynamic transform.
+	ValidationMessage *string
+
+	// Specifies the validation rule in the config file of the dynamic transform.
+	ValidationRule *string
+
+	// Specifies the value of the parameter in the config file of the dynamic
+	// transform.
+	Value []string
 
 	noSmithyDocumentSerde
 }
@@ -6372,12 +7354,17 @@ type TriggerUpdate struct {
 	noSmithyDocumentSerde
 }
 
+// A partition that contains unfiltered metadata.
 type UnfilteredPartition struct {
+
+	// The list of columns the user has permissions to access.
 	AuthorizedColumns []string
 
+	// A Boolean value indicating that the partition location is registered with Lake
+	// Formation.
 	IsRegisteredWithLakeFormation bool
 
-	// Represents a slice of table data.
+	// The partition object.
 	Partition *Partition
 
 	noSmithyDocumentSerde
@@ -6421,6 +7408,12 @@ type UpdateCsvClassifierRequest struct {
 
 	// Indicates whether the CSV file contains a header.
 	ContainsHeader CsvHeaderOption
+
+	// Specifies the configuration of custom datatypes.
+	CustomDatatypeConfigured *bool
+
+	// Specifies a list of supported custom datatypes.
+	CustomDatatypes []string
 
 	// A custom symbol to denote what separates each column entry in the row.
 	Delimiter *string

@@ -71,8 +71,21 @@ type DeleteCustomDBEngineVersionOutput struct {
 	// The creation time of the DB engine version.
 	CreateTime *time.Time
 
+	// JSON string that lists the installation files and parameters that RDS Custom
+	// uses to create a custom engine version (CEV). RDS Custom applies the patches in
+	// the order in which they're listed in the manifest. You can set the Oracle home,
+	// Oracle base, and UNIX/Linux user and group using the installation parameters.
+	// For more information, see JSON fields in the CEV manifest
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-cev.preparing.html#custom-cev.preparing.manifest.fields)
+	// in the Amazon RDS User Guide.
+	CustomDBEngineVersionManifest *string
+
 	// The description of the database engine.
 	DBEngineDescription *string
+
+	// A value that indicates the source media provider of the AMI based on the usage
+	// operation. Applicable for RDS Custom for SQL Server.
+	DBEngineMediaType *string
 
 	// The ARN of the custom engine version.
 	DBEngineVersionArn *string
@@ -104,6 +117,9 @@ type DeleteCustomDBEngineVersionOutput struct {
 	// CloudWatch Logs.
 	ExportableLogTypes []string
 
+	// The EC2 image
+	Image *types.CustomDBEngineVersionAMI
+
 	// The Amazon Web Services KMS key identifier for an encrypted CEV. This parameter
 	// is required for RDS Custom, but optional for Amazon RDS.
 	KMSKeyId *string
@@ -113,6 +129,15 @@ type DeleteCustomDBEngineVersionOutput struct {
 
 	// The status of the DB engine version, either available or deprecated.
 	Status *string
+
+	// A list of the supported CA certificate identifiers. For more information, see
+	// Using SSL/TLS to encrypt a connection to a DB instance
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html)
+	// in the Amazon RDS User Guide and  Using SSL/TLS to encrypt a connection to a DB
+	// cluster
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html)
+	// in the Amazon Aurora User Guide.
+	SupportedCACertificateIdentifiers []string
 
 	// A list of the character sets supported by this engine for the CharacterSetName
 	// parameter of the CreateDBInstance operation.
@@ -142,6 +167,10 @@ type DeleteCustomDBEngineVersionOutput struct {
 	// A value that indicates whether the engine version supports Babelfish for Aurora
 	// PostgreSQL.
 	SupportsBabelfish bool
+
+	// A value that indicates whether the engine version supports rotating the server
+	// certificate without rebooting the DB instance.
+	SupportsCertificateRotationWithoutRestart *bool
 
 	// A value that indicates whether you can use Aurora global databases with a
 	// specific DB engine version.

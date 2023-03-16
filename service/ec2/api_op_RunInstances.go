@@ -68,10 +68,10 @@ import (
 // (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Using_InstanceStraightToTerminated.html),
 // and Troubleshooting connecting to your instance
 // (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/TroubleshootingInstancesConnecting.html).
-// We are retiring EC2-Classic on August 15, 2022. We recommend that you migrate
-// from EC2-Classic to a VPC. For more information, see Migrate from EC2-Classic to
-// a VPC (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html) in
-// the Amazon EC2 User Guide.
+// We are retiring EC2-Classic. We recommend that you migrate from EC2-Classic to a
+// VPC. For more information, see Migrate from EC2-Classic to a VPC
+// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html) in the
+// Amazon EC2 User Guide.
 func (c *Client) RunInstances(ctx context.Context, params *RunInstancesInput, optFns ...func(*Options)) (*RunInstancesOutput, error) {
 	if params == nil {
 		params = &RunInstancesInput{}
@@ -315,9 +315,8 @@ type RunInstancesInput struct {
 	// of the network interface.
 	SecurityGroupIds []string
 
-	// [EC2-Classic, default VPC] The names of the security groups. For a nondefault
-	// VPC, you must use security group IDs instead. If you specify a network
-	// interface, you must specify any security groups as part of the network
+	// [EC2-Classic, default VPC] The names of the security groups. If you specify a
+	// network interface, you must specify any security groups as part of the network
 	// interface. Default: Amazon EC2 uses the default security group.
 	SecurityGroups []string
 
@@ -360,11 +359,7 @@ type RunInstancesInput struct {
 
 // Describes a launch request for one or more instances, and includes owner,
 // requester, and security group information that applies to all instances in the
-// launch request. We are retiring EC2-Classic on August 15, 2022. We recommend
-// that you migrate from EC2-Classic to a VPC. For more information, see Migrate
-// from EC2-Classic to a VPC
-// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-migrate.html) in the
-// Amazon EC2 User Guide.
+// launch request.
 type RunInstancesOutput struct {
 
 	// [EC2-Classic only] The security groups.

@@ -97,6 +97,13 @@ type BackupJob struct {
 	// names without those strings lack permissions to perform backup jobs.
 	IamRoleArn *string
 
+	// This is a boolean value indicating this is a parent (composite) backup job.
+	IsParent bool
+
+	// This uniquely identifies a request to Backup to back up a resource. The return
+	// will be the parent (composite) job ID.
+	ParentJobId *string
+
 	// Contains an estimated percentage complete of a job at the time the job status
 	// was queried.
 	PercentDone *string
@@ -108,6 +115,10 @@ type BackupJob struct {
 	// An ARN that uniquely identifies a resource. The format of the ARN depends on the
 	// resource type.
 	ResourceArn *string
+
+	// This is the non-unique name of the resource that belongs to the specified
+	// backup.
+	ResourceName *string
 
 	// The type of Amazon Web Services resource to be backed up; for example, an Amazon
 	// Elastic Block Store (Amazon EBS) volume or an Amazon Relational Database Service
@@ -303,7 +314,8 @@ type BackupRule struct {
 	ScheduleExpression *string
 
 	// A value in minutes after a backup is scheduled before a job will be canceled if
-	// it doesn't start successfully. This value is optional.
+	// it doesn't start successfully. This value is optional. If this value is
+	// included, it must be at least 60 minutes to avoid errors.
 	StartWindowMinutes *int64
 
 	noSmithyDocumentSerde
@@ -360,7 +372,8 @@ type BackupRuleInput struct {
 	ScheduleExpression *string
 
 	// A value in minutes after a backup is scheduled before a job will be canceled if
-	// it doesn't start successfully. This value is optional.
+	// it doesn't start successfully. This value is optional. If this value is
+	// included, it must be at least 60 minutes to avoid errors.
 	StartWindowMinutes *int64
 
 	noSmithyDocumentSerde
@@ -705,11 +718,21 @@ type CopyJob struct {
 	// The size, in bytes, of a copy job.
 	BackupSizeInBytes *int64
 
+	// This returns the statistics of the included child (nested) copy jobs.
+	ChildJobsInState map[string]int64
+
 	// The date and time a copy job is completed, in Unix format and Coordinated
 	// Universal Time (UTC). The value of CompletionDate is accurate to milliseconds.
 	// For example, the value 1516925490.087 represents Friday, January 26, 2018
 	// 12:11:30.087 AM.
 	CompletionDate *time.Time
+
+	// This is the identifier of a resource within a composite group, such as nested
+	// (child) recovery point belonging to a composite (parent) stack. The ID is
+	// transferred from the  logical ID
+	// (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-syntax)
+	// within a stack.
+	CompositeMemberIdentifier *string
 
 	// Uniquely identifies a copy job.
 	CopyJobId *string
@@ -736,10 +759,24 @@ type CopyJob struct {
 	// arn:aws:iam::123456789012:role/S3Access.
 	IamRoleArn *string
 
+	// This is a boolean value indicating this is a parent (composite) copy job.
+	IsParent bool
+
+	// This is the number of child (nested) copy jobs.
+	NumberOfChildJobs *int64
+
+	// This uniquely identifies a request to Backup to copy a resource. The return will
+	// be the parent (composite) job ID.
+	ParentJobId *string
+
 	// The Amazon Web Services resource to be copied; for example, an Amazon Elastic
 	// Block Store (Amazon EBS) volume or an Amazon Relational Database Service (Amazon
 	// RDS) database.
 	ResourceArn *string
+
+	// This is the non-unique name of the resource that belongs to the specified
+	// backup.
+	ResourceName *string
 
 	// The type of Amazon Web Services resource to be copied; for example, an Amazon
 	// Elastic Block Store (Amazon EBS) volume or an Amazon Relational Database Service
@@ -763,15 +800,39 @@ type CopyJob struct {
 	noSmithyDocumentSerde
 }
 
+// This is a resource filter containing FromDate: DateTime and ToDate: DateTime.
+// Both values are required. Future DateTime values are not permitted. The date and
+// time are in Unix format and Coordinated Universal Time (UTC), and it is accurate
+// to milliseconds ((milliseconds are optional). For example, the value
+// 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+type DateRange struct {
+
+	// This value is the beginning date, inclusive. The date and time are in Unix
+	// format and Coordinated Universal Time (UTC), and it is accurate to milliseconds
+	// (milliseconds are optional).
+	//
+	// This member is required.
+	FromDate *time.Time
+
+	// This value is the end date, inclusive. The date and time are in Unix format and
+	// Coordinated Universal Time (UTC), and it is accurate to milliseconds
+	// (milliseconds are optional).
+	//
+	// This member is required.
+	ToDate *time.Time
+
+	noSmithyDocumentSerde
+}
+
 // Contains detailed information about a framework. Frameworks contain controls,
 // which evaluate and report on your backup events and resources. Frameworks
 // generate daily compliance results.
 type Framework struct {
 
-	// The date and time that a framework is created, in Unix format and Coordinated
-	// Universal Time (UTC). The value of CreationTime is accurate to milliseconds. For
-	// example, the value 1516925490.087 represents Friday, January 26, 2018
-	// 12:11:30.087 AM.
+	// The date and time that a framework is created, in ISO 8601 representation. The
+	// value of CreationTime is accurate to milliseconds. For example,
+	// 2020-07-10T15:00:00.000-08:00 represents the 10th of July 2020 at 3:00 PM 8
+	// hours behind UTC.
 	CreationTime *time.Time
 
 	// The deployment status of a framework. The statuses are: CREATE_IN_PROGRESS |
@@ -817,6 +878,42 @@ type FrameworkControl struct {
 	noSmithyDocumentSerde
 }
 
+// A legal hold is an administrative tool that helps prevent backups from being
+// deleted while under a hold. While the hold is in place, backups under a hold
+// cannot be deleted and lifecycle policies that would alter the backup status
+// (such as transition to cold storage) are delayed until the legal hold is
+// removed. A backup can have more than one legal hold. Legal holds are applied to
+// one or more backups (also known as recovery points). These backups can be
+// filtered by resource types and by resource IDs.
+type LegalHold struct {
+
+	// This is the time in number format when legal hold was cancelled.
+	CancellationDate *time.Time
+
+	// This is the time in number format when legal hold was created.
+	CreationDate *time.Time
+
+	// This is the description of a legal hold.
+	Description *string
+
+	// This is an Amazon Resource Number (ARN) that uniquely identifies the legal hold;
+	// for example,
+	// arn:aws:backup:us-east-1:123456789012:recovery-point:1EB3B5E7-9EB0-435A-A80B-108B488B0D45.
+	LegalHoldArn *string
+
+	// ID of specific legal hold on one or more recovery points.
+	LegalHoldId *string
+
+	// This is the status of the legal hold. Statuses can be ACTIVE, CREATING,
+	// CANCELED, and CANCELING.
+	Status LegalHoldStatus
+
+	// This is the title of a legal hold.
+	Title *string
+
+	noSmithyDocumentSerde
+}
+
 // Contains an array of Transition objects specifying how long in days before a
 // recovery point transitions to cold storage or is deleted. Backups transitioned
 // to cold storage must be stored in cold storage for a minimum of 90 days.
@@ -852,6 +949,10 @@ type ProtectedResource struct {
 	// An Amazon Resource Name (ARN) that uniquely identifies a resource. The format of
 	// the ARN depends on the resource type.
 	ResourceArn *string
+
+	// This is the non-unique name of the resource that belongs to the specified
+	// backup.
+	ResourceName *string
 
 	// The type of Amazon Web Services resource; for example, an Amazon Elastic Block
 	// Store (Amazon EBS) volume or an Amazon Relational Database Service (Amazon RDS)
@@ -889,6 +990,13 @@ type RecoveryPointByBackupVault struct {
 	// 26, 2018 12:11:30.087 AM.
 	CompletionDate *time.Time
 
+	// This is the identifier of a resource within a composite group, such as nested
+	// (child) recovery point belonging to a composite (parent) stack. The ID is
+	// transferred from the  logical ID
+	// (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-syntax)
+	// within a stack.
+	CompositeMemberIdentifier *string
+
 	// Contains identifying information about the creation of a recovery point,
 	// including the BackupPlanArn, BackupPlanId, BackupPlanVersion, and BackupRuleId
 	// of the backup plan that is used to create it.
@@ -913,6 +1021,9 @@ type RecoveryPointByBackupVault struct {
 	// encrypted, or FALSE if the recovery point is not encrypted.
 	IsEncrypted bool
 
+	// This is a boolean value indicating this is a parent (composite) recovery point.
+	IsParent bool
+
 	// The date and time a recovery point was last restored, in Unix format and
 	// Coordinated Universal Time (UTC). The value of LastRestoreTime is accurate to
 	// milliseconds. For example, the value 1516925490.087 represents Friday, January
@@ -932,6 +1043,9 @@ type RecoveryPointByBackupVault struct {
 	// table. Backup ignores this expression for other resource types.
 	Lifecycle *Lifecycle
 
+	// This is the Amazon Resource Name (ARN) of the parent (composite) recovery point.
+	ParentRecoveryPointArn *string
+
 	// An Amazon Resource Name (ARN) that uniquely identifies a recovery point; for
 	// example,
 	// arn:aws:backup:us-east-1:123456789012:recovery-point:1EB3B5E7-9EB0-435A-A80B-108B488B0D45.
@@ -940,6 +1054,10 @@ type RecoveryPointByBackupVault struct {
 	// An ARN that uniquely identifies a resource. The format of the ARN depends on the
 	// resource type.
 	ResourceArn *string
+
+	// This is the non-unique name of the resource that belongs to the specified
+	// backup.
+	ResourceName *string
 
 	// The type of Amazon Web Services resource saved as a recovery point; for example,
 	// an Amazon Elastic Block Store (Amazon EBS) volume or an Amazon Relational
@@ -983,10 +1101,20 @@ type RecoveryPointByResource struct {
 	// arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab.
 	EncryptionKeyArn *string
 
+	// This is a boolean value indicating this is a parent (composite) recovery point.
+	IsParent bool
+
+	// This is the Amazon Resource Name (ARN) of the parent (composite) recovery point.
+	ParentRecoveryPointArn *string
+
 	// An Amazon Resource Name (ARN) that uniquely identifies a recovery point; for
 	// example,
 	// arn:aws:backup:us-east-1:123456789012:recovery-point:1EB3B5E7-9EB0-435A-A80B-108B488B0D45.
 	RecoveryPointArn *string
+
+	// This is the non-unique name of the resource that belongs to the specified
+	// backup.
+	ResourceName *string
 
 	// A status code specifying the state of the recovery point.
 	Status RecoveryPointStatus
@@ -1016,6 +1144,40 @@ type RecoveryPointCreator struct {
 	// Uniquely identifies a rule used to schedule the backup of a selection of
 	// resources.
 	BackupRuleId *string
+
+	noSmithyDocumentSerde
+}
+
+// This is a recovery point which is a child (nested) recovery point of a parent
+// (composite) recovery point. These recovery points can be disassociated from
+// their parent (composite) recovery point, in which case they will no longer be a
+// member.
+type RecoveryPointMember struct {
+
+	// This is the Amazon Resource Name (ARN) of the parent (composite) recovery point.
+	RecoveryPointArn *string
+
+	noSmithyDocumentSerde
+}
+
+// This specifies criteria to assign a set of resources, such as resource types or
+// backup vaults.
+type RecoveryPointSelection struct {
+
+	// This is a resource filter containing FromDate: DateTime and ToDate: DateTime.
+	// Both values are required. Future DateTime values are not permitted. The date and
+	// time are in Unix format and Coordinated Universal Time (UTC), and it is accurate
+	// to milliseconds ((milliseconds are optional). For example, the value
+	// 1516925490.087 represents Friday, January 26, 2018 12:11:30.087 AM.
+	DateRange *DateRange
+
+	// These are the resources included in the resource selection (including type of
+	// resources and vaults).
+	ResourceIdentifiers []string
+
+	// These are the names of the vaults in which the selected recovery points are
+	// contained.
+	VaultNames []string
 
 	noSmithyDocumentSerde
 }
@@ -1165,11 +1327,20 @@ type ReportSetting struct {
 	// This member is required.
 	ReportTemplate *string
 
+	// These are the accounts to be included in the report.
+	Accounts []string
+
 	// The Amazon Resource Names (ARNs) of the frameworks a report covers.
 	FrameworkArns []string
 
 	// The number of frameworks a report covers.
 	NumberOfFrameworks int32
+
+	// These are the Organizational Units to be included in the report.
+	OrganizationUnits []string
+
+	// These are the Regions to be included in the report.
+	Regions []string
 
 	noSmithyDocumentSerde
 }

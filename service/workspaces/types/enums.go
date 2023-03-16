@@ -62,6 +62,43 @@ func (AssociationStatus) Values() []AssociationStatus {
 	}
 }
 
+type BundleType string
+
+// Enum values for BundleType
+const (
+	BundleTypeRegular BundleType = "REGULAR"
+	BundleTypeStandby BundleType = "STANDBY"
+)
+
+// Values returns all known values for BundleType. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (BundleType) Values() []BundleType {
+	return []BundleType{
+		"REGULAR",
+		"STANDBY",
+	}
+}
+
+type CertificateBasedAuthStatusEnum string
+
+// Enum values for CertificateBasedAuthStatusEnum
+const (
+	CertificateBasedAuthStatusEnumDisabled CertificateBasedAuthStatusEnum = "DISABLED"
+	CertificateBasedAuthStatusEnumEnabled  CertificateBasedAuthStatusEnum = "ENABLED"
+)
+
+// Values returns all known values for CertificateBasedAuthStatusEnum. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (CertificateBasedAuthStatusEnum) Values() []CertificateBasedAuthStatusEnum {
+	return []CertificateBasedAuthStatusEnum{
+		"DISABLED",
+		"ENABLED",
+	}
+}
+
 type ClientDeviceType string
 
 // Enum values for ClientDeviceType
@@ -216,6 +253,23 @@ func (DedicatedTenancySupportResultEnum) Values() []DedicatedTenancySupportResul
 	}
 }
 
+type DeletableCertificateBasedAuthProperty string
+
+// Enum values for DeletableCertificateBasedAuthProperty
+const (
+	DeletableCertificateBasedAuthPropertyCertificateBasedAuthPropertiesCertificateAuthorityArn DeletableCertificateBasedAuthProperty = "CERTIFICATE_BASED_AUTH_PROPERTIES_CERTIFICATE_AUTHORITY_ARN"
+)
+
+// Values returns all known values for DeletableCertificateBasedAuthProperty. Note
+// that this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (DeletableCertificateBasedAuthProperty) Values() []DeletableCertificateBasedAuthProperty {
+	return []DeletableCertificateBasedAuthProperty{
+		"CERTIFICATE_BASED_AUTH_PROPERTIES_CERTIFICATE_AUTHORITY_ARN",
+	}
+}
+
 type DeletableSamlProperty string
 
 // Enum values for DeletableSamlProperty
@@ -249,6 +303,24 @@ func (ImageType) Values() []ImageType {
 	return []ImageType{
 		"OWNED",
 		"SHARED",
+	}
+}
+
+type LogUploadEnum string
+
+// Enum values for LogUploadEnum
+const (
+	LogUploadEnumEnabled  LogUploadEnum = "ENABLED"
+	LogUploadEnumDisabled LogUploadEnum = "DISABLED"
+)
+
+// Values returns all known values for LogUploadEnum. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (LogUploadEnum) Values() []LogUploadEnum {
+	return []LogUploadEnum{
+		"ENABLED",
+		"DISABLED",
 	}
 }
 
@@ -308,6 +380,24 @@ func (OperatingSystemType) Values() []OperatingSystemType {
 	}
 }
 
+type Protocol string
+
+// Enum values for Protocol
+const (
+	ProtocolPcoip Protocol = "PCOIP"
+	ProtocolWsp   Protocol = "WSP"
+)
+
+// Values returns all known values for Protocol. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (Protocol) Values() []Protocol {
+	return []Protocol{
+		"PCOIP",
+		"WSP",
+	}
+}
+
 type ReconnectEnum string
 
 // Enum values for ReconnectEnum
@@ -332,6 +422,7 @@ type RunningMode string
 const (
 	RunningModeAutoStop RunningMode = "AUTO_STOP"
 	RunningModeAlwaysOn RunningMode = "ALWAYS_ON"
+	RunningModeManual   RunningMode = "MANUAL"
 )
 
 // Values returns all known values for RunningMode. Note that this can be expanded
@@ -341,6 +432,7 @@ func (RunningMode) Values() []RunningMode {
 	return []RunningMode{
 		"AUTO_STOP",
 		"ALWAYS_ON",
+		"MANUAL",
 	}
 }
 
@@ -361,6 +453,25 @@ func (SamlStatusEnum) Values() []SamlStatusEnum {
 		"DISABLED",
 		"ENABLED",
 		"ENABLED_WITH_DIRECTORY_LOGIN_FALLBACK",
+	}
+}
+
+type StandbyWorkspaceRelationshipType string
+
+// Enum values for StandbyWorkspaceRelationshipType
+const (
+	StandbyWorkspaceRelationshipTypePrimary StandbyWorkspaceRelationshipType = "PRIMARY"
+	StandbyWorkspaceRelationshipTypeStandby StandbyWorkspaceRelationshipType = "STANDBY"
+)
+
+// Values returns all known values for StandbyWorkspaceRelationshipType. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (StandbyWorkspaceRelationshipType) Values() []StandbyWorkspaceRelationshipType {
+	return []StandbyWorkspaceRelationshipType{
+		"PRIMARY",
+		"STANDBY",
 	}
 }
 
@@ -397,6 +508,26 @@ func (Tenancy) Values() []Tenancy {
 	return []Tenancy{
 		"DEDICATED",
 		"SHARED",
+	}
+}
+
+type WorkspaceBundleState string
+
+// Enum values for WorkspaceBundleState
+const (
+	WorkspaceBundleStateAvailable WorkspaceBundleState = "AVAILABLE"
+	WorkspaceBundleStatePending   WorkspaceBundleState = "PENDING"
+	WorkspaceBundleStateError     WorkspaceBundleState = "ERROR"
+)
+
+// Values returns all known values for WorkspaceBundleState. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (WorkspaceBundleState) Values() []WorkspaceBundleState {
+	return []WorkspaceBundleState{
+		"AVAILABLE",
+		"PENDING",
+		"ERROR",
 	}
 }
 
@@ -446,11 +577,13 @@ type WorkspaceImageIngestionProcess string
 
 // Enum values for WorkspaceImageIngestionProcess
 const (
-	WorkspaceImageIngestionProcessByolRegular      WorkspaceImageIngestionProcess = "BYOL_REGULAR"
-	WorkspaceImageIngestionProcessByolGraphics     WorkspaceImageIngestionProcess = "BYOL_GRAPHICS"
-	WorkspaceImageIngestionProcessByolGraphicspro  WorkspaceImageIngestionProcess = "BYOL_GRAPHICSPRO"
-	WorkspaceImageIngestionProcessByolGraphicsG4dn WorkspaceImageIngestionProcess = "BYOL_GRAPHICS_G4DN"
-	WorkspaceImageIngestionProcessByolRegularWsp   WorkspaceImageIngestionProcess = "BYOL_REGULAR_WSP"
+	WorkspaceImageIngestionProcessByolRegular          WorkspaceImageIngestionProcess = "BYOL_REGULAR"
+	WorkspaceImageIngestionProcessByolGraphics         WorkspaceImageIngestionProcess = "BYOL_GRAPHICS"
+	WorkspaceImageIngestionProcessByolGraphicspro      WorkspaceImageIngestionProcess = "BYOL_GRAPHICSPRO"
+	WorkspaceImageIngestionProcessByolGraphicsG4dn     WorkspaceImageIngestionProcess = "BYOL_GRAPHICS_G4DN"
+	WorkspaceImageIngestionProcessByolRegularWsp       WorkspaceImageIngestionProcess = "BYOL_REGULAR_WSP"
+	WorkspaceImageIngestionProcessByolRegularByop      WorkspaceImageIngestionProcess = "BYOL_REGULAR_BYOP"
+	WorkspaceImageIngestionProcessByolGraphicsG4dnByop WorkspaceImageIngestionProcess = "BYOL_GRAPHICS_G4DN_BYOP"
 )
 
 // Values returns all known values for WorkspaceImageIngestionProcess. Note that
@@ -464,6 +597,8 @@ func (WorkspaceImageIngestionProcess) Values() []WorkspaceImageIngestionProcess 
 		"BYOL_GRAPHICSPRO",
 		"BYOL_GRAPHICS_G4DN",
 		"BYOL_REGULAR_WSP",
+		"BYOL_REGULAR_BYOP",
+		"BYOL_GRAPHICS_G4DN_BYOP",
 	}
 }
 

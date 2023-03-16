@@ -1,3 +1,72 @@
+# v1.25.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2023-02-23)
+
+* **Feature**: In this release, we add additional capabilities for the FUOTA which allows user to configure the fragment size, the sending interval and the redundancy ratio of the FUOTA tasks
+
+# v1.24.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.24.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.24.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.23.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.0 (2022-11-28)
+
+* **Feature**: This release includes a new feature for customers to calculate the position of their devices by adding three new APIs: UpdateResourcePosition, GetResourcePosition, and GetPositionEstimate.
+
+# v1.22.8 (2022-10-28)
+
+* No change notes available for this release.
+
+# v1.22.7 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.6 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.5 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.4 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.3 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.2 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.22.1 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

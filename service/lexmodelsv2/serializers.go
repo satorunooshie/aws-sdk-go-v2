@@ -16,6 +16,309 @@ import (
 	"math"
 )
 
+type awsRestjson1_serializeOpBatchCreateCustomVocabularyItem struct {
+}
+
+func (*awsRestjson1_serializeOpBatchCreateCustomVocabularyItem) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsRestjson1_serializeOpBatchCreateCustomVocabularyItem) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*BatchCreateCustomVocabularyItemInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	opPath, opQuery := httpbinding.SplitURI("/bots/{botId}/botversions/{botVersion}/botlocales/{localeId}/customvocabulary/DEFAULT/batchcreate")
+	request.URL.Path = smithyhttp.JoinPath(request.URL.Path, opPath)
+	request.URL.RawQuery = smithyhttp.JoinRawQuery(request.URL.RawQuery, opQuery)
+	request.Method = "PUT"
+	restEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if err := awsRestjson1_serializeOpHttpBindingsBatchCreateCustomVocabularyItemInput(input, restEncoder); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	restEncoder.SetHeader("Content-Type").String("application/json")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsRestjson1_serializeOpDocumentBatchCreateCustomVocabularyItemInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = restEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+func awsRestjson1_serializeOpHttpBindingsBatchCreateCustomVocabularyItemInput(v *BatchCreateCustomVocabularyItemInput, encoder *httpbinding.Encoder) error {
+	if v == nil {
+		return fmt.Errorf("unsupported serialization of nil %T", v)
+	}
+
+	if v.BotId == nil || len(*v.BotId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member botId must not be empty")}
+	}
+	if v.BotId != nil {
+		if err := encoder.SetURI("botId").String(*v.BotId); err != nil {
+			return err
+		}
+	}
+
+	if v.BotVersion == nil || len(*v.BotVersion) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member botVersion must not be empty")}
+	}
+	if v.BotVersion != nil {
+		if err := encoder.SetURI("botVersion").String(*v.BotVersion); err != nil {
+			return err
+		}
+	}
+
+	if v.LocaleId == nil || len(*v.LocaleId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member localeId must not be empty")}
+	}
+	if v.LocaleId != nil {
+		if err := encoder.SetURI("localeId").String(*v.LocaleId); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeOpDocumentBatchCreateCustomVocabularyItemInput(v *BatchCreateCustomVocabularyItemInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.CustomVocabularyItemList != nil {
+		ok := object.Key("customVocabularyItemList")
+		if err := awsRestjson1_serializeDocumentCreateCustomVocabularyItemsList(v.CustomVocabularyItemList, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+type awsRestjson1_serializeOpBatchDeleteCustomVocabularyItem struct {
+}
+
+func (*awsRestjson1_serializeOpBatchDeleteCustomVocabularyItem) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsRestjson1_serializeOpBatchDeleteCustomVocabularyItem) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*BatchDeleteCustomVocabularyItemInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	opPath, opQuery := httpbinding.SplitURI("/bots/{botId}/botversions/{botVersion}/botlocales/{localeId}/customvocabulary/DEFAULT/batchdelete")
+	request.URL.Path = smithyhttp.JoinPath(request.URL.Path, opPath)
+	request.URL.RawQuery = smithyhttp.JoinRawQuery(request.URL.RawQuery, opQuery)
+	request.Method = "POST"
+	restEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if err := awsRestjson1_serializeOpHttpBindingsBatchDeleteCustomVocabularyItemInput(input, restEncoder); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	restEncoder.SetHeader("Content-Type").String("application/json")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsRestjson1_serializeOpDocumentBatchDeleteCustomVocabularyItemInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = restEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+func awsRestjson1_serializeOpHttpBindingsBatchDeleteCustomVocabularyItemInput(v *BatchDeleteCustomVocabularyItemInput, encoder *httpbinding.Encoder) error {
+	if v == nil {
+		return fmt.Errorf("unsupported serialization of nil %T", v)
+	}
+
+	if v.BotId == nil || len(*v.BotId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member botId must not be empty")}
+	}
+	if v.BotId != nil {
+		if err := encoder.SetURI("botId").String(*v.BotId); err != nil {
+			return err
+		}
+	}
+
+	if v.BotVersion == nil || len(*v.BotVersion) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member botVersion must not be empty")}
+	}
+	if v.BotVersion != nil {
+		if err := encoder.SetURI("botVersion").String(*v.BotVersion); err != nil {
+			return err
+		}
+	}
+
+	if v.LocaleId == nil || len(*v.LocaleId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member localeId must not be empty")}
+	}
+	if v.LocaleId != nil {
+		if err := encoder.SetURI("localeId").String(*v.LocaleId); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeOpDocumentBatchDeleteCustomVocabularyItemInput(v *BatchDeleteCustomVocabularyItemInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.CustomVocabularyItemList != nil {
+		ok := object.Key("customVocabularyItemList")
+		if err := awsRestjson1_serializeDocumentDeleteCustomVocabularyItemsList(v.CustomVocabularyItemList, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+type awsRestjson1_serializeOpBatchUpdateCustomVocabularyItem struct {
+}
+
+func (*awsRestjson1_serializeOpBatchUpdateCustomVocabularyItem) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsRestjson1_serializeOpBatchUpdateCustomVocabularyItem) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*BatchUpdateCustomVocabularyItemInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	opPath, opQuery := httpbinding.SplitURI("/bots/{botId}/botversions/{botVersion}/botlocales/{localeId}/customvocabulary/DEFAULT/batchupdate")
+	request.URL.Path = smithyhttp.JoinPath(request.URL.Path, opPath)
+	request.URL.RawQuery = smithyhttp.JoinRawQuery(request.URL.RawQuery, opQuery)
+	request.Method = "PUT"
+	restEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if err := awsRestjson1_serializeOpHttpBindingsBatchUpdateCustomVocabularyItemInput(input, restEncoder); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	restEncoder.SetHeader("Content-Type").String("application/json")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsRestjson1_serializeOpDocumentBatchUpdateCustomVocabularyItemInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = restEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+func awsRestjson1_serializeOpHttpBindingsBatchUpdateCustomVocabularyItemInput(v *BatchUpdateCustomVocabularyItemInput, encoder *httpbinding.Encoder) error {
+	if v == nil {
+		return fmt.Errorf("unsupported serialization of nil %T", v)
+	}
+
+	if v.BotId == nil || len(*v.BotId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member botId must not be empty")}
+	}
+	if v.BotId != nil {
+		if err := encoder.SetURI("botId").String(*v.BotId); err != nil {
+			return err
+		}
+	}
+
+	if v.BotVersion == nil || len(*v.BotVersion) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member botVersion must not be empty")}
+	}
+	if v.BotVersion != nil {
+		if err := encoder.SetURI("botVersion").String(*v.BotVersion); err != nil {
+			return err
+		}
+	}
+
+	if v.LocaleId == nil || len(*v.LocaleId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member localeId must not be empty")}
+	}
+	if v.LocaleId != nil {
+		if err := encoder.SetURI("localeId").String(*v.LocaleId); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeOpDocumentBatchUpdateCustomVocabularyItemInput(v *BatchUpdateCustomVocabularyItemInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.CustomVocabularyItemList != nil {
+		ok := object.Key("customVocabularyItemList")
+		if err := awsRestjson1_serializeDocumentUpdateCustomVocabularyItemsList(v.CustomVocabularyItemList, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 type awsRestjson1_serializeOpBuildBotLocale struct {
 }
 
@@ -152,6 +455,13 @@ func awsRestjson1_serializeOpDocumentCreateBotInput(v *CreateBotInput, value smi
 	object := value.Object()
 	defer object.Close()
 
+	if v.BotMembers != nil {
+		ok := object.Key("botMembers")
+		if err := awsRestjson1_serializeDocumentBotMembers(v.BotMembers, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.BotName != nil {
 		ok := object.Key("botName")
 		ok.String(*v.BotName)
@@ -162,6 +472,11 @@ func awsRestjson1_serializeOpDocumentCreateBotInput(v *CreateBotInput, value smi
 		if err := awsRestjson1_serializeDocumentTagMap(v.BotTags, ok); err != nil {
 			return err
 		}
+	}
+
+	if len(v.BotType) > 0 {
+		ok := object.Key("botType")
+		ok.String(string(v.BotType))
 	}
 
 	if v.DataPrivacy != nil {
@@ -1096,6 +1411,13 @@ func awsRestjson1_serializeOpDocumentCreateSlotInput(v *CreateSlotInput, value s
 		ok.String(*v.SlotTypeId)
 	}
 
+	if v.SubSlotSetting != nil {
+		ok := object.Key("subSlotSetting")
+		if err := awsRestjson1_serializeDocumentSubSlotSetting(v.SubSlotSetting, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.ValueElicitationSetting != nil {
 		ok := object.Key("valueElicitationSetting")
 		if err := awsRestjson1_serializeDocumentSlotValueElicitationSetting(v.ValueElicitationSetting, ok); err != nil {
@@ -1196,6 +1518,13 @@ func awsRestjson1_serializeOpHttpBindingsCreateSlotTypeInput(v *CreateSlotTypeIn
 func awsRestjson1_serializeOpDocumentCreateSlotTypeInput(v *CreateSlotTypeInput, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
+
+	if v.CompositeSlotTypeSetting != nil {
+		ok := object.Key("compositeSlotTypeSetting")
+		if err := awsRestjson1_serializeDocumentCompositeSlotTypeSetting(v.CompositeSlotTypeSetting, ok); err != nil {
+			return err
+		}
+	}
 
 	if v.Description != nil {
 		ok := object.Key("description")
@@ -3874,6 +4203,110 @@ func awsRestjson1_serializeOpDocumentListBuiltInSlotTypesInput(v *ListBuiltInSlo
 	return nil
 }
 
+type awsRestjson1_serializeOpListCustomVocabularyItems struct {
+}
+
+func (*awsRestjson1_serializeOpListCustomVocabularyItems) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsRestjson1_serializeOpListCustomVocabularyItems) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*ListCustomVocabularyItemsInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	opPath, opQuery := httpbinding.SplitURI("/bots/{botId}/botversions/{botVersion}/botlocales/{localeId}/customvocabulary/DEFAULT/list")
+	request.URL.Path = smithyhttp.JoinPath(request.URL.Path, opPath)
+	request.URL.RawQuery = smithyhttp.JoinRawQuery(request.URL.RawQuery, opQuery)
+	request.Method = "POST"
+	restEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if err := awsRestjson1_serializeOpHttpBindingsListCustomVocabularyItemsInput(input, restEncoder); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	restEncoder.SetHeader("Content-Type").String("application/json")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsRestjson1_serializeOpDocumentListCustomVocabularyItemsInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = restEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+func awsRestjson1_serializeOpHttpBindingsListCustomVocabularyItemsInput(v *ListCustomVocabularyItemsInput, encoder *httpbinding.Encoder) error {
+	if v == nil {
+		return fmt.Errorf("unsupported serialization of nil %T", v)
+	}
+
+	if v.BotId == nil || len(*v.BotId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member botId must not be empty")}
+	}
+	if v.BotId != nil {
+		if err := encoder.SetURI("botId").String(*v.BotId); err != nil {
+			return err
+		}
+	}
+
+	if v.BotVersion == nil || len(*v.BotVersion) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member botVersion must not be empty")}
+	}
+	if v.BotVersion != nil {
+		if err := encoder.SetURI("botVersion").String(*v.BotVersion); err != nil {
+			return err
+		}
+	}
+
+	if v.LocaleId == nil || len(*v.LocaleId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member localeId must not be empty")}
+	}
+	if v.LocaleId != nil {
+		if err := encoder.SetURI("localeId").String(*v.LocaleId); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeOpDocumentListCustomVocabularyItemsInput(v *ListCustomVocabularyItemsInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.MaxResults != nil {
+		ok := object.Key("maxResults")
+		ok.Integer(*v.MaxResults)
+	}
+
+	if v.NextToken != nil {
+		ok := object.Key("nextToken")
+		ok.String(*v.NextToken)
+	}
+
+	return nil
+}
+
 type awsRestjson1_serializeOpListExports struct {
 }
 
@@ -5235,9 +5668,21 @@ func awsRestjson1_serializeOpDocumentUpdateBotInput(v *UpdateBotInput, value smi
 	object := value.Object()
 	defer object.Close()
 
+	if v.BotMembers != nil {
+		ok := object.Key("botMembers")
+		if err := awsRestjson1_serializeDocumentBotMembers(v.BotMembers, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.BotName != nil {
 		ok := object.Key("botName")
 		ok.String(*v.BotName)
+	}
+
+	if len(v.BotType) > 0 {
+		ok := object.Key("botType")
+		ok.String(string(v.BotType))
 	}
 
 	if v.DataPrivacy != nil {
@@ -6112,6 +6557,13 @@ func awsRestjson1_serializeOpDocumentUpdateSlotInput(v *UpdateSlotInput, value s
 		ok.String(*v.SlotTypeId)
 	}
 
+	if v.SubSlotSetting != nil {
+		ok := object.Key("subSlotSetting")
+		if err := awsRestjson1_serializeDocumentSubSlotSetting(v.SubSlotSetting, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.ValueElicitationSetting != nil {
 		ok := object.Key("valueElicitationSetting")
 		if err := awsRestjson1_serializeDocumentSlotValueElicitationSetting(v.ValueElicitationSetting, ok); err != nil {
@@ -6222,6 +6674,13 @@ func awsRestjson1_serializeOpDocumentUpdateSlotTypeInput(v *UpdateSlotTypeInput,
 	object := value.Object()
 	defer object.Close()
 
+	if v.CompositeSlotTypeSetting != nil {
+		ok := object.Key("compositeSlotTypeSetting")
+		if err := awsRestjson1_serializeDocumentCompositeSlotTypeSetting(v.CompositeSlotTypeSetting, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.Description != nil {
 		ok := object.Key("description")
 		ok.String(*v.Description)
@@ -6327,6 +6786,23 @@ func awsRestjson1_serializeDocumentAggregatedUtterancesSortBy(v *types.Aggregate
 	return nil
 }
 
+func awsRestjson1_serializeDocumentAllowedInputTypes(v *types.AllowedInputTypes, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.AllowAudioInput != nil {
+		ok := object.Key("allowAudioInput")
+		ok.Boolean(*v.AllowAudioInput)
+	}
+
+	if v.AllowDTMFInput != nil {
+		ok := object.Key("allowDTMFInput")
+		ok.Boolean(*v.AllowDTMFInput)
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentAssociatedTranscriptFilter(v *types.AssociatedTranscriptFilter, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -6356,6 +6832,32 @@ func awsRestjson1_serializeDocumentAssociatedTranscriptFilters(v []types.Associa
 			return err
 		}
 	}
+	return nil
+}
+
+func awsRestjson1_serializeDocumentAudioAndDTMFInputSpecification(v *types.AudioAndDTMFInputSpecification, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.AudioSpecification != nil {
+		ok := object.Key("audioSpecification")
+		if err := awsRestjson1_serializeDocumentAudioSpecification(v.AudioSpecification, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.DtmfSpecification != nil {
+		ok := object.Key("dtmfSpecification")
+		if err := awsRestjson1_serializeDocumentDTMFSpecification(v.DtmfSpecification, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.StartTimeoutMs != nil {
+		ok := object.Key("startTimeoutMs")
+		ok.Integer(*v.StartTimeoutMs)
+	}
+
 	return nil
 }
 
@@ -6402,6 +6904,23 @@ func awsRestjson1_serializeDocumentAudioLogSettingsList(v []types.AudioLogSettin
 			return err
 		}
 	}
+	return nil
+}
+
+func awsRestjson1_serializeDocumentAudioSpecification(v *types.AudioSpecification, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.EndTimeoutMs != nil {
+		ok := object.Key("endTimeoutMs")
+		ok.Integer(*v.EndTimeoutMs)
+	}
+
+	if v.MaxLengthMs != nil {
+		ok := object.Key("maxLengthMs")
+		ok.Integer(*v.MaxLengthMs)
+	}
+
 	return nil
 }
 
@@ -6658,6 +7177,51 @@ func awsRestjson1_serializeDocumentBotLocaleSortBy(v *types.BotLocaleSortBy, val
 	return nil
 }
 
+func awsRestjson1_serializeDocumentBotMember(v *types.BotMember, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.BotMemberAliasId != nil {
+		ok := object.Key("botMemberAliasId")
+		ok.String(*v.BotMemberAliasId)
+	}
+
+	if v.BotMemberAliasName != nil {
+		ok := object.Key("botMemberAliasName")
+		ok.String(*v.BotMemberAliasName)
+	}
+
+	if v.BotMemberId != nil {
+		ok := object.Key("botMemberId")
+		ok.String(*v.BotMemberId)
+	}
+
+	if v.BotMemberName != nil {
+		ok := object.Key("botMemberName")
+		ok.String(*v.BotMemberName)
+	}
+
+	if v.BotMemberVersion != nil {
+		ok := object.Key("botMemberVersion")
+		ok.String(*v.BotMemberVersion)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentBotMembers(v []types.BotMember, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		if err := awsRestjson1_serializeDocumentBotMember(&v[i], av); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func awsRestjson1_serializeDocumentBotSortBy(v *types.BotSortBy, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -6813,6 +7377,20 @@ func awsRestjson1_serializeDocumentCodeHookSpecification(v *types.CodeHookSpecif
 	return nil
 }
 
+func awsRestjson1_serializeDocumentCompositeSlotTypeSetting(v *types.CompositeSlotTypeSetting, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.SubSlots != nil {
+		ok := object.Key("subSlots")
+		if err := awsRestjson1_serializeDocumentSubSlotTypeList(v.SubSlots, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentCondition(v *types.Condition, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -6945,6 +7523,19 @@ func awsRestjson1_serializeDocumentConversationLogSettings(v *types.Conversation
 	return nil
 }
 
+func awsRestjson1_serializeDocumentCreateCustomVocabularyItemsList(v []types.NewCustomVocabularyItem, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		if err := awsRestjson1_serializeDocumentNewCustomVocabularyItem(&v[i], av); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func awsRestjson1_serializeDocumentCustomPayload(v *types.CustomPayload, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -6952,6 +7543,18 @@ func awsRestjson1_serializeDocumentCustomPayload(v *types.CustomPayload, value s
 	if v.Value != nil {
 		ok := object.Key("value")
 		ok.String(*v.Value)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentCustomVocabularyEntryId(v *types.CustomVocabularyEntryId, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.ItemId != nil {
+		ok := object.Key("itemId")
+		ok.String(*v.ItemId)
 	}
 
 	return nil
@@ -6996,6 +7599,33 @@ func awsRestjson1_serializeDocumentCustomVocabularyImportSpecification(v *types.
 	if v.LocaleId != nil {
 		ok := object.Key("localeId")
 		ok.String(*v.LocaleId)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentCustomVocabularyItem(v *types.CustomVocabularyItem, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.DisplayAs != nil {
+		ok := object.Key("displayAs")
+		ok.String(*v.DisplayAs)
+	}
+
+	if v.ItemId != nil {
+		ok := object.Key("itemId")
+		ok.String(*v.ItemId)
+	}
+
+	if v.Phrase != nil {
+		ok := object.Key("phrase")
+		ok.String(*v.Phrase)
+	}
+
+	if v.Weight != nil {
+		ok := object.Key("weight")
+		ok.Integer(*v.Weight)
 	}
 
 	return nil
@@ -7048,6 +7678,19 @@ func awsRestjson1_serializeDocumentDefaultConditionalBranch(v *types.DefaultCond
 		}
 	}
 
+	return nil
+}
+
+func awsRestjson1_serializeDocumentDeleteCustomVocabularyItemsList(v []types.CustomVocabularyEntryId, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		if err := awsRestjson1_serializeDocumentCustomVocabularyEntryId(&v[i], av); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -7137,6 +7780,33 @@ func awsRestjson1_serializeDocumentDialogState(v *types.DialogState, value smith
 		if err := awsRestjson1_serializeDocumentStringMap(v.SessionAttributes, ok); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentDTMFSpecification(v *types.DTMFSpecification, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.DeletionCharacter != nil {
+		ok := object.Key("deletionCharacter")
+		ok.String(*v.DeletionCharacter)
+	}
+
+	if v.EndCharacter != nil {
+		ok := object.Key("endCharacter")
+		ok.String(*v.EndCharacter)
+	}
+
+	if v.EndTimeoutMs != nil {
+		ok := object.Key("endTimeoutMs")
+		ok.Integer(*v.EndTimeoutMs)
+	}
+
+	if v.MaxLength != nil {
+		ok := object.Key("maxLength")
+		ok.Integer(*v.MaxLength)
 	}
 
 	return nil
@@ -7954,6 +8624,28 @@ func awsRestjson1_serializeDocumentMultipleValuesSetting(v *types.MultipleValues
 	return nil
 }
 
+func awsRestjson1_serializeDocumentNewCustomVocabularyItem(v *types.NewCustomVocabularyItem, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.DisplayAs != nil {
+		ok := object.Key("displayAs")
+		ok.String(*v.DisplayAs)
+	}
+
+	if v.Phrase != nil {
+		ok := object.Key("phrase")
+		ok.String(*v.Phrase)
+	}
+
+	if v.Weight != nil {
+		ok := object.Key("weight")
+		ok.Integer(*v.Weight)
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentObfuscationSetting(v *types.ObfuscationSetting, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -8219,6 +8911,53 @@ func awsRestjson1_serializeDocumentPrincipalList(v []types.Principal, value smit
 	return nil
 }
 
+func awsRestjson1_serializeDocumentPromptAttemptSpecification(v *types.PromptAttemptSpecification, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.AllowedInputTypes != nil {
+		ok := object.Key("allowedInputTypes")
+		if err := awsRestjson1_serializeDocumentAllowedInputTypes(v.AllowedInputTypes, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.AllowInterrupt != nil {
+		ok := object.Key("allowInterrupt")
+		ok.Boolean(*v.AllowInterrupt)
+	}
+
+	if v.AudioAndDTMFInputSpecification != nil {
+		ok := object.Key("audioAndDTMFInputSpecification")
+		if err := awsRestjson1_serializeDocumentAudioAndDTMFInputSpecification(v.AudioAndDTMFInputSpecification, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.TextInputSpecification != nil {
+		ok := object.Key("textInputSpecification")
+		if err := awsRestjson1_serializeDocumentTextInputSpecification(v.TextInputSpecification, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentPromptAttemptsSpecificationMap(v map[string]types.PromptAttemptSpecification, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	for key := range v {
+		om := object.Key(key)
+		mapVar := v[key]
+		if err := awsRestjson1_serializeDocumentPromptAttemptSpecification(&mapVar, om); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func awsRestjson1_serializeDocumentPromptSpecification(v *types.PromptSpecification, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -8243,6 +8982,13 @@ func awsRestjson1_serializeDocumentPromptSpecification(v *types.PromptSpecificat
 	if len(v.MessageSelectionStrategy) > 0 {
 		ok := object.Key("messageSelectionStrategy")
 		ok.String(string(v.MessageSelectionStrategy))
+	}
+
+	if v.PromptAttemptsSpecification != nil {
+		ok := object.Key("promptAttemptsSpecification")
+		if err := awsRestjson1_serializeDocumentPromptAttemptsSpecificationMap(v.PromptAttemptsSpecification, ok); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -8815,6 +9561,25 @@ func awsRestjson1_serializeDocumentSlotValueSelectionSetting(v *types.SlotValueS
 	return nil
 }
 
+func awsRestjson1_serializeDocumentSpecifications(v *types.Specifications, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.SlotTypeId != nil {
+		ok := object.Key("slotTypeId")
+		ok.String(*v.SlotTypeId)
+	}
+
+	if v.ValueElicitationSetting != nil {
+		ok := object.Key("valueElicitationSetting")
+		if err := awsRestjson1_serializeDocumentSubSlotValueElicitationSetting(v.ValueElicitationSetting, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentSSMLMessage(v *types.SSMLMessage, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -8867,6 +9632,104 @@ func awsRestjson1_serializeDocumentStringMap(v map[string]string, value smithyjs
 	return nil
 }
 
+func awsRestjson1_serializeDocumentSubSlotSetting(v *types.SubSlotSetting, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.Expression != nil {
+		ok := object.Key("expression")
+		ok.String(*v.Expression)
+	}
+
+	if v.SlotSpecifications != nil {
+		ok := object.Key("slotSpecifications")
+		if err := awsRestjson1_serializeDocumentSubSlotSpecificationMap(v.SlotSpecifications, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentSubSlotSpecificationMap(v map[string]types.Specifications, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	for key := range v {
+		om := object.Key(key)
+		mapVar := v[key]
+		if err := awsRestjson1_serializeDocumentSpecifications(&mapVar, om); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func awsRestjson1_serializeDocumentSubSlotTypeComposition(v *types.SubSlotTypeComposition, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.Name != nil {
+		ok := object.Key("name")
+		ok.String(*v.Name)
+	}
+
+	if v.SlotTypeId != nil {
+		ok := object.Key("slotTypeId")
+		ok.String(*v.SlotTypeId)
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentSubSlotTypeList(v []types.SubSlotTypeComposition, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		if err := awsRestjson1_serializeDocumentSubSlotTypeComposition(&v[i], av); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func awsRestjson1_serializeDocumentSubSlotValueElicitationSetting(v *types.SubSlotValueElicitationSetting, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.DefaultValueSpecification != nil {
+		ok := object.Key("defaultValueSpecification")
+		if err := awsRestjson1_serializeDocumentSlotDefaultValueSpecification(v.DefaultValueSpecification, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.PromptSpecification != nil {
+		ok := object.Key("promptSpecification")
+		if err := awsRestjson1_serializeDocumentPromptSpecification(v.PromptSpecification, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.SampleUtterances != nil {
+		ok := object.Key("sampleUtterances")
+		if err := awsRestjson1_serializeDocumentSampleUtterancesList(v.SampleUtterances, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.WaitAndContinueSpecification != nil {
+		ok := object.Key("waitAndContinueSpecification")
+		if err := awsRestjson1_serializeDocumentWaitAndContinueSpecification(v.WaitAndContinueSpecification, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentSynonymList(v []types.SampleValue, value smithyjson.Value) error {
 	array := value.Array()
 	defer array.Close()
@@ -8888,6 +9751,18 @@ func awsRestjson1_serializeDocumentTagMap(v map[string]string, value smithyjson.
 		om := object.Key(key)
 		om.String(v[key])
 	}
+	return nil
+}
+
+func awsRestjson1_serializeDocumentTextInputSpecification(v *types.TextInputSpecification, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.StartTimeoutMs != nil {
+		ok := object.Key("startTimeoutMs")
+		ok.Integer(*v.StartTimeoutMs)
+	}
+
 	return nil
 }
 
@@ -8962,6 +9837,19 @@ func awsRestjson1_serializeDocumentTranscriptSourceSetting(v *types.TranscriptSo
 		}
 	}
 
+	return nil
+}
+
+func awsRestjson1_serializeDocumentUpdateCustomVocabularyItemsList(v []types.CustomVocabularyItem, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		if err := awsRestjson1_serializeDocumentCustomVocabularyItem(&v[i], av); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 

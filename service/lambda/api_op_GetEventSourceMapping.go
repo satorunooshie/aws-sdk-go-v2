@@ -64,12 +64,14 @@ type GetEventSourceMappingOutput struct {
 	// records.
 	DestinationConfig *types.DestinationConfig
 
+	// Specific configuration settings for a DocumentDB event source.
+	DocumentDBEventSourceConfig *types.DocumentDBEventSourceConfig
+
 	// The Amazon Resource Name (ARN) of the event source.
 	EventSourceArn *string
 
-	// (Streams and Amazon SQS) An object that defines the filter criteria that
-	// determine whether Lambda should process an event. For more information, see
-	// Lambda event filtering
+	// An object that defines the filter criteria that determine whether Lambda should
+	// process an event. For more information, see Lambda event filtering
 	// (https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html).
 	FilterCriteria *types.FilterCriteria
 
@@ -87,10 +89,18 @@ type GetEventSourceMappingOutput struct {
 	// The result of the last Lambda invocation of your function.
 	LastProcessingResult *string
 
-	// (Streams and Amazon SQS standard queues) The maximum amount of time, in seconds,
-	// that Lambda spends gathering records before invoking the function. Default: 0
-	// Related setting: When you set BatchSize to a value greater than 10, you must set
-	// MaximumBatchingWindowInSeconds to at least 1.
+	// The maximum amount of time, in seconds, that Lambda spends gathering records
+	// before invoking the function. You can configure MaximumBatchingWindowInSeconds
+	// to any value from 0 seconds to 300 seconds in increments of seconds. For streams
+	// and Amazon SQS event sources, the default batching window is 0 seconds. For
+	// Amazon MSK, Self-managed Apache Kafka, and Amazon MQ event sources, the default
+	// batching window is 500 ms. Note that because you can only change
+	// MaximumBatchingWindowInSeconds in increments of seconds, you cannot revert back
+	// to the 500 ms default batching window after you have changed it. To restore the
+	// default batching window, you must create a new event source mapping. Related
+	// setting: For streams and Amazon SQS event sources, when you set BatchSize to a
+	// value greater than 10, you must set MaximumBatchingWindowInSeconds to at least
+	// 1.
 	MaximumBatchingWindowInSeconds *int32
 
 	// (Streams only) Discard records older than the specified age. The default value
@@ -110,6 +120,11 @@ type GetEventSourceMappingOutput struct {
 
 	// (Amazon MQ) The name of the Amazon MQ broker destination queue to consume.
 	Queues []string
+
+	// (Amazon SQS only) The scaling configuration for the event source. For more
+	// information, see Configuring maximum concurrency for Amazon SQS event sources
+	// (https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-max-concurrency).
+	ScalingConfig *types.ScalingConfig
 
 	// The self-managed Apache Kafka cluster for your event source.
 	SelfManagedEventSource *types.SelfManagedEventSource

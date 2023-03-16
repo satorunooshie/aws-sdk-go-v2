@@ -1,3 +1,84 @@
+# v1.23.3 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.2 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.23.1 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.0 (2023-02-16)
+
+* **Feature**: This release provides customers the ability to define a timeout period for procuring capacity during a resize operation for Instance Fleet clusters. Customers can specify this timeout using the ResizeSpecifications parameter supported by RunJobFlow, ModifyInstanceFleet and AddInstanceFleet APIs.
+
+# v1.22.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.22.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.22.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.21.0 (2022-12-29)
+
+* **Feature**: Added GetClusterSessionCredentials API to allow Amazon SageMaker Studio to connect to EMR on EC2 clusters with runtime roles and AWS Lake Formation-based access control for Apache Spark, Apache Hive, and Presto queries.
+
+# v1.20.18 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.17 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.16 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.20.15 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.20.14 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.20.13 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.12 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.11 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.10 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.9 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.8 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.20.7 (2022-08-30)
 
 * No change notes available for this release.

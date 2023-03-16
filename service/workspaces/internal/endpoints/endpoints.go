@@ -136,6 +136,9 @@ var defaultPartitions = endpoints.Partitions{
 		IsRegionalized: true,
 		Endpoints: endpoints.Endpoints{
 			endpoints.EndpointKey{
+				Region: "af-south-1",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
 				Region: "ap-northeast-1",
 			}: endpoints.Endpoint{},
 			endpoints.EndpointKey{
@@ -266,6 +269,9 @@ var defaultPartitions = endpoints.Partitions{
 		Endpoints: endpoints.Endpoints{
 			endpoints.EndpointKey{
 				Region: "us-iso-east-1",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region: "us-iso-west-1",
 			}: endpoints.Endpoint{},
 		},
 	},

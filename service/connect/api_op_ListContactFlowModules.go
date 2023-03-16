@@ -31,8 +31,9 @@ func (c *Client) ListContactFlowModules(ctx context.Context, params *ListContact
 
 type ListContactFlowModulesInput struct {
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	//
 	// This member is required.
 	InstanceId *string
@@ -41,7 +42,7 @@ type ListContactFlowModulesInput struct {
 	ContactFlowModuleState types.ContactFlowModuleState
 
 	// The maximum number of results to return per page.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token for the next set of results. Use the value returned in the previous
 	// response in the next request to retrieve the next set of results.
@@ -162,8 +163,8 @@ func NewListContactFlowModulesPaginator(client ListContactFlowModulesAPIClient, 
 	}
 
 	options := ListContactFlowModulesPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -193,7 +194,11 @@ func (p *ListContactFlowModulesPaginator) NextPage(ctx context.Context, optFns .
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListContactFlowModules(ctx, &params, optFns...)
 	if err != nil {

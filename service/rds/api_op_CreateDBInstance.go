@@ -123,87 +123,88 @@ type CreateDBInstanceInput struct {
 	// Constraints to the amount of storage for each storage type are the following:
 	//
 	// *
-	// General Purpose (SSD) storage (gp2): Must be an integer from 40 to 65536 for RDS
-	// Custom for Oracle, 16384 for RDS Custom for SQL Server.
+	// General Purpose (SSD) storage (gp2, gp3): Must be an integer from 40 to 65536
+	// for RDS Custom for Oracle, 16384 for RDS Custom for SQL Server.
+	//
+	// * Provisioned
+	// IOPS storage (io1): Must be an integer from 40 to 65536 for RDS Custom for
+	// Oracle, 16384 for RDS Custom for SQL Server.
+	//
+	// MySQL Constraints to the amount of
+	// storage for each storage type are the following:
+	//
+	// * General Purpose (SSD)
+	// storage (gp2, gp3): Must be an integer from 20 to 65536.
 	//
 	// * Provisioned IOPS
-	// storage (io1): Must be an integer from 40 to 65536 for RDS Custom for Oracle,
-	// 16384 for RDS Custom for SQL Server.
+	// storage (io1): Must be an integer from 100 to 65536.
 	//
-	// MySQL Constraints to the amount of storage
-	// for each storage type are the following:
+	// * Magnetic storage
+	// (standard): Must be an integer from 5 to 3072.
 	//
-	// * General Purpose (SSD) storage (gp2):
-	// Must be an integer from 20 to 65536.
+	// MariaDB Constraints to the
+	// amount of storage for each storage type are the following:
 	//
-	// * Provisioned IOPS storage (io1): Must be
-	// an integer from 100 to 65536.
+	// * General Purpose
+	// (SSD) storage (gp2, gp3): Must be an integer from 20 to 65536.
 	//
-	// * Magnetic storage (standard): Must be an integer
-	// from 5 to 3072.
+	// * Provisioned
+	// IOPS storage (io1): Must be an integer from 100 to 65536.
 	//
-	// MariaDB Constraints to the amount of storage for each storage
-	// type are the following:
+	// * Magnetic storage
+	// (standard): Must be an integer from 5 to 3072.
 	//
-	// * General Purpose (SSD) storage (gp2): Must be an
-	// integer from 20 to 65536.
+	// PostgreSQL Constraints to the
+	// amount of storage for each storage type are the following:
 	//
-	// * Provisioned IOPS storage (io1): Must be an integer
-	// from 100 to 65536.
+	// * General Purpose
+	// (SSD) storage (gp2, gp3): Must be an integer from 20 to 65536.
 	//
-	// * Magnetic storage (standard): Must be an integer from 5 to
-	// 3072.
+	// * Provisioned
+	// IOPS storage (io1): Must be an integer from 100 to 65536.
 	//
-	// PostgreSQL Constraints to the amount of storage for each storage type are
-	// the following:
+	// * Magnetic storage
+	// (standard): Must be an integer from 5 to 3072.
 	//
-	// * General Purpose (SSD) storage (gp2): Must be an integer from
-	// 20 to 65536.
+	// Oracle Constraints to the amount
+	// of storage for each storage type are the following:
 	//
-	// * Provisioned IOPS storage (io1): Must be an integer from 100 to
-	// 65536.
+	// * General Purpose (SSD)
+	// storage (gp2, gp3): Must be an integer from 20 to 65536.
 	//
-	// * Magnetic storage (standard): Must be an integer from 5 to
-	// 3072.
+	// * Provisioned IOPS
+	// storage (io1): Must be an integer from 100 to 65536.
 	//
-	// Oracle Constraints to the amount of storage for each storage type are the
-	// following:
+	// * Magnetic storage
+	// (standard): Must be an integer from 10 to 3072.
 	//
-	// * General Purpose (SSD) storage (gp2): Must be an integer from 20 to
-	// 65536.
+	// SQL Server Constraints to the
+	// amount of storage for each storage type are the following:
 	//
-	// * Provisioned IOPS storage (io1): Must be an integer from 100 to
-	// 65536.
+	// * General Purpose
+	// (SSD) storage (gp2, gp3):
 	//
-	// * Magnetic storage (standard): Must be an integer from 10 to 3072.
+	// * Enterprise and Standard editions: Must be an
+	// integer from 20 to 16384.
 	//
-	// SQL
-	// Server Constraints to the amount of storage for each storage type are the
-	// following:
-	//
-	// * General Purpose (SSD) storage (gp2):
-	//
-	// * Enterprise and Standard
-	// editions: Must be an integer from 20 to 16384.
-	//
-	// * Web and Express editions: Must
-	// be an integer from 20 to 16384.
+	// * Web and Express editions: Must be an integer from
+	// 20 to 16384.
 	//
 	// * Provisioned IOPS storage (io1):
 	//
-	// * Enterprise
-	// and Standard editions: Must be an integer from 100 to 16384.
-	//
-	// * Web and Express
+	// * Enterprise and Standard
 	// editions: Must be an integer from 100 to 16384.
 	//
-	// * Magnetic storage
-	// (standard):
+	// * Web and Express editions:
+	// Must be an integer from 100 to 16384.
 	//
-	// * Enterprise and Standard editions: Must be an integer from 20 to
-	// 1024.
+	// * Magnetic storage (standard):
 	//
-	// * Web and Express editions: Must be an integer from 20 to 1024.
+	// *
+	// Enterprise and Standard editions: Must be an integer from 20 to 1024.
+	//
+	// * Web and
+	// Express editions: Must be an integer from 20 to 1024.
 	AllocatedStorage *int32
 
 	// A value that indicates whether minor engine upgrades are applied automatically
@@ -247,6 +248,16 @@ type CreateDBInstanceInput struct {
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html) in
 	// the Amazon RDS User Guide.
 	BackupTarget *string
+
+	// Specifies the CA certificate identifier to use for the DB instance’s server
+	// certificate. This setting doesn't apply to RDS Custom. For more information, see
+	// Using SSL/TLS to encrypt a connection to a DB instance
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html)
+	// in the Amazon RDS User Guide and  Using SSL/TLS to encrypt a connection to a DB
+	// cluster
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/UsingWithRDS.SSL.html)
+	// in the Amazon Aurora User Guide.
+	CACertificateIdentifier *string
 
 	// For supported engines, this value indicates that the DB instance should be
 	// associated with the specified CharacterSet. This setting doesn't apply to RDS
@@ -363,11 +374,11 @@ type CreateDBInstanceInput struct {
 	// * It must contain 1 to 63 alphanumeric
 	// characters.
 	//
-	// * It must begin with a letter or an underscore. Subsequent
-	// characters can be letters, underscores, or digits (0 to 9).
+	// * It must begin with a letter. Subsequent characters can be
+	// letters, underscores, or digits (0 to 9).
 	//
-	// * It can't be a
-	// word reserved by the database engine.
+	// * It can't be a word reserved by the
+	// database engine.
 	DBName *string
 
 	// The name of the DB parameter group to associate with this DB instance. If you do
@@ -375,13 +386,13 @@ type CreateDBInstanceInput struct {
 	// engine and version is used. This setting doesn't apply to RDS Custom.
 	// Constraints:
 	//
-	// * Must be 1 to 255 letters, numbers, or hyphens.
+	// * It must be 1 to 255 letters, numbers, or hyphens.
 	//
-	// * First
-	// character must be a letter
+	// * The first
+	// character must be a letter.
 	//
-	// * Can't end with a hyphen or contain two consecutive
-	// hyphens
+	// * It can't end with a hyphen or contain two
+	// consecutive hyphens.
 	DBParameterGroupName *string
 
 	// A list of DB security groups to associate with this DB instance. This setting
@@ -441,7 +452,7 @@ type CreateDBInstanceInput struct {
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html) in
 	// the Amazon RDS User Guide. For more information about CoIPs, see Customer-owned
 	// IP addresses
-	// (https://docs.aws.amazon.com/outposts/latest/userguide/outposts-networking-components.html#ip-addressing)
+	// (https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing)
 	// in the Amazon Web Services Outposts User Guide.
 	EnableCustomerOwnedIp *bool
 
@@ -469,8 +480,8 @@ type CreateDBInstanceInput struct {
 	// number of the database engine to be used by the DB instance is managed by the DB
 	// cluster. Amazon RDS Custom for Oracle A custom engine version (CEV) that you
 	// have previously created. This setting is required for RDS Custom for Oracle. The
-	// CEV name has the following format: 19.customized_string . An example identifier
-	// is 19.my_cev1. For more information, see  Creating an RDS Custom for Oracle DB
+	// CEV name has the following format: 19.customized_string. A valid CEV name is
+	// 19.my_cev1. For more information, see  Creating an RDS Custom for Oracle DB
 	// instance
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/custom-creating.html#custom-creating.create)
 	// in the Amazon RDS User Guide. Amazon RDS Custom for SQL Server See RDS Custom
@@ -495,10 +506,10 @@ type CreateDBInstanceInput struct {
 	EngineVersion *string
 
 	// The amount of Provisioned IOPS (input/output operations per second) to be
-	// initially allocated for the DB instance. For information about valid Iops
-	// values, see Amazon RDS Provisioned IOPS storage to improve performance
-	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html#USER_PIOPS)
-	// in the Amazon RDS User Guide. Constraints: For MariaDB, MySQL, Oracle, and
+	// initially allocated for the DB instance. For information about valid IOPS
+	// values, see Amazon RDS DB instance storage
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html) in
+	// the Amazon RDS User Guide. Constraints: For MariaDB, MySQL, Oracle, and
 	// PostgreSQL DB instances, must be a multiple between .5 and 50 of the storage
 	// amount for the DB instance. For SQL Server DB instances, must be a multiple
 	// between 1 and 50 of the storage amount for the DB instance. Amazon Aurora Not
@@ -526,14 +537,41 @@ type CreateDBInstanceInput struct {
 	// RDS Custom. Amazon Aurora Not applicable.
 	LicenseModel *string
 
+	// A value that indicates whether to manage the master user password with Amazon
+	// Web Services Secrets Manager. For more information, see Password management with
+	// Amazon Web Services Secrets Manager
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html)
+	// in the Amazon RDS User Guide. Constraints:
+	//
+	// * Can't manage the master user
+	// password with Amazon Web Services Secrets Manager if MasterUserPassword is
+	// specified.
+	ManageMasterUserPassword *bool
+
 	// The password for the master user. The password can include any printable ASCII
 	// character except "/", """, or "@". Amazon Aurora Not applicable. The password
-	// for the master user is managed by the DB cluster. MariaDB Constraints: Must
+	// for the master user is managed by the DB cluster. Constraints: Can't be
+	// specified if ManageMasterUserPassword is turned on. MariaDB Constraints: Must
 	// contain from 8 to 41 characters. Microsoft SQL Server Constraints: Must contain
 	// from 8 to 128 characters. MySQL Constraints: Must contain from 8 to 41
 	// characters. Oracle Constraints: Must contain from 8 to 30 characters. PostgreSQL
 	// Constraints: Must contain from 8 to 128 characters.
 	MasterUserPassword *string
+
+	// The Amazon Web Services KMS key identifier to encrypt a secret that is
+	// automatically generated and managed in Amazon Web Services Secrets Manager. This
+	// setting is valid only if the master user password is managed by RDS in Amazon
+	// Web Services Secrets Manager for the DB instance. The Amazon Web Services KMS
+	// key identifier is the key ARN, key ID, alias ARN, or alias name for the KMS key.
+	// To use a KMS key in a different Amazon Web Services account, specify the key ARN
+	// or alias ARN. If you don't specify MasterUserSecretKmsKeyId, then the
+	// aws/secretsmanager KMS key is used to encrypt the secret. If the secret is in a
+	// different Amazon Web Services account, then you can't use the aws/secretsmanager
+	// KMS key to encrypt the secret, and you must use a customer managed KMS key.
+	// There is a default KMS key for your Amazon Web Services account. Your Amazon Web
+	// Services account has a different default KMS key for each Amazon Web Services
+	// Region.
+	MasterUserSecretKmsKeyId *string
 
 	// The name for the master user. Amazon Aurora Not applicable. The name for the
 	// master user is managed by the DB cluster. Amazon RDS Constraints:
@@ -730,10 +768,16 @@ type CreateDBInstanceInput struct {
 	// cluster.
 	StorageEncrypted *bool
 
+	// Specifies the storage throughput value for the DB instance. This setting applies
+	// only to the gp3 storage type. This setting doesn't apply to RDS Custom or Amazon
+	// Aurora.
+	StorageThroughput *int32
+
 	// Specifies the storage type to be associated with the DB instance. Valid values:
-	// standard | gp2 | io1 If you specify io1, you must also include a value for the
-	// Iops parameter. Default: io1 if the Iops parameter is specified, otherwise gp2
-	// Amazon Aurora Not applicable. Storage is managed by the DB cluster.
+	// gp2 | gp3 | io1 | standard If you specify io1 or gp3, you must also include a
+	// value for the Iops parameter. Default: io1 if the Iops parameter is specified,
+	// otherwise gp2 Amazon Aurora Not applicable. Storage is managed by the DB
+	// cluster.
 	StorageType *string
 
 	// Tags to assign to the DB instance.

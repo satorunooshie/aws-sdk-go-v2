@@ -32,11 +32,11 @@ func (c *Client) ListAppVersionResourceMappings(ctx context.Context, params *Lis
 
 type ListAppVersionResourceMappingsInput struct {
 
-	// The Amazon Resource Name (ARN) of the application. The format for this ARN is:
-	// arn:partition:resiliencehub:region:account:app/app-id. For more information
-	// about ARNs, see  Amazon Resource Names (ARNs)
+	// The Amazon Resource Name (ARN) of the AWS Resilience Hub application. The format
+	// for this ARN is: arn:partition:resiliencehub:region:account:app/app-id. For more
+	// information about ARNs, see  Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the AWS General Reference guide.
 	//
 	// This member is required.
 	AppArn *string
@@ -151,6 +151,11 @@ var _ ListAppVersionResourceMappingsAPIClient = (*Client)(nil)
 // ListAppVersionResourceMappingsPaginatorOptions is the paginator options for
 // ListAppVersionResourceMappings
 type ListAppVersionResourceMappingsPaginatorOptions struct {
+	// The maximum number of results to include in the response. If more results exist
+	// than the specified MaxResults value, a token is included in the response so that
+	// the remaining results can be retrieved.
+	Limit int32
+
 	// Set to true if pagination should stop if the service returns a pagination token
 	// that matches the most recent token provided to the service.
 	StopOnDuplicateToken bool
@@ -174,6 +179,9 @@ func NewListAppVersionResourceMappingsPaginator(client ListAppVersionResourceMap
 	}
 
 	options := ListAppVersionResourceMappingsPaginatorOptions{}
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
+	}
 
 	for _, fn := range optFns {
 		fn(&options)
@@ -201,6 +209,12 @@ func (p *ListAppVersionResourceMappingsPaginator) NextPage(ctx context.Context, 
 
 	params := *p.params
 	params.NextToken = p.nextToken
+
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListAppVersionResourceMappings(ctx, &params, optFns...)
 	if err != nil {

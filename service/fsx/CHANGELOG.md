@@ -1,3 +1,89 @@
+# v1.28.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.28.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.28.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.28.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.27.0 (2022-12-23)
+
+* **Feature**: Fix a bug where a recent release might break certain existing SDKs.
+
+# v1.26.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.0 (2022-11-29)
+
+* **Feature**: This release adds support for 4GB/s / 160K PIOPS FSx for ONTAP file systems and 10GB/s / 350K PIOPS FSx for OpenZFS file systems (Single_AZ_2). For FSx for ONTAP, this also adds support for DP volumes, snapshot policy, copy tags to backups, and Multi-AZ route table updates.
+
+# v1.25.4 (2022-10-31)
+
+* No change notes available for this release.
+
+# v1.25.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.1 (2022-10-19)
+
+* No change notes available for this release.
+
+# v1.25.0 (2022-09-29)
+
+* **Feature**: This release adds support for Amazon File Cache.
+
+# v1.24.14 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.13 (2022-09-19)
+
+* No change notes available for this release.
+
+# v1.24.12 (2022-09-14)
+
+* **Documentation**: Documentation update for Amazon FSx.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.11 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.10 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.24.9 (2022-08-29)
 
 * **Documentation**: Documentation updates for Amazon FSx for NetApp ONTAP.

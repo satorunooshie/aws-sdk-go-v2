@@ -13,9 +13,9 @@ import (
 
 // Creates or updates a destination. This operation is used only to create
 // destinations for cross-account subscriptions. A destination encapsulates a
-// physical resource (such as an Amazon Kinesis stream) and enables you to
-// subscribe to a real-time stream of log events for a different account, ingested
-// using PutLogEvents
+// physical resource (such as an Amazon Kinesis stream). With a destination, you
+// can subscribe to a real-time stream of log events for a different account,
+// ingested using PutLogEvents
 // (https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutLogEvents.html).
 // Through an access policy, a destination controls what is written to it. By
 // default, PutDestination does not set any access policy with the destination,
@@ -58,6 +58,11 @@ type PutDestinationInput struct {
 	//
 	// This member is required.
 	TargetArn *string
+
+	// An optional list of key-value pairs to associate with the resource. For more
+	// information about tagging, see Tagging Amazon Web Services resources
+	// (https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html)
+	Tags map[string]string
 
 	noSmithyDocumentSerde
 }

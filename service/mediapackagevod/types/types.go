@@ -157,6 +157,9 @@ type DashPackage struct {
 	// during content playback.
 	IncludeEncoderConfigurationInSegments bool
 
+	// When enabled, an I-Frame only stream will be included in the output.
+	IncludeIframeOnlyStream bool
+
 	// A list of triggers that controls when the outgoing Dynamic Adaptive Streaming
 	// over HTTP (DASH) Media Presentation Description (MPD) will be partitioned into
 	// multiple periods. If empty, the content will not be partitioned into more than
@@ -201,6 +204,30 @@ type EgressEndpoint struct {
 
 	// The URL of the parent manifest for the repackaged Asset.
 	Url *string
+
+	noSmithyDocumentSerde
+}
+
+// Use encryptionContractConfiguration to configure one or more content encryption
+// keys for your endpoints that use SPEKE 2.0. The encryption contract defines
+// which content keys are used to encrypt the audio and video tracks in your
+// stream. To configure the encryption contract, specify which audio and video
+// encryption presets to use. Note the following considerations when using
+// encryptionContractConfiguration: encryptionContractConfiguration can be used for
+// DASH endpoints that use SPEKE 2.0. SPEKE 2.0 relies on the CPIX 2.3
+// specification. You must disable key rotation for this endpoint by setting
+// keyRotationIntervalSeconds to 0.
+type EncryptionContractConfiguration struct {
+
+	// A collection of audio encryption presets.
+	//
+	// This member is required.
+	PresetSpeke20Audio PresetSpeke20Audio
+
+	// A collection of video encryption presets.
+	//
+	// This member is required.
+	PresetSpeke20Video PresetSpeke20Video
 
 	noSmithyDocumentSerde
 }
@@ -335,6 +362,9 @@ type PackagingConfiguration struct {
 	// A CMAF packaging configuration.
 	CmafPackage *CmafPackage
 
+	// The time the PackagingConfiguration was created.
+	CreatedAt *string
+
 	// A Dynamic Adaptive Streaming over HTTP (DASH) packaging configuration.
 	DashPackage *DashPackage
 
@@ -359,11 +389,17 @@ type PackagingConfiguration struct {
 // A MediaPackage VOD PackagingGroup resource.
 type PackagingGroup struct {
 
+	// The approximate asset count of the PackagingGroup.
+	ApproximateAssetCount int32
+
 	// The ARN of the PackagingGroup.
 	Arn *string
 
 	// CDN Authorization credentials
 	Authorization *Authorization
+
+	// The time the PackagingGroup was created.
+	CreatedAt *string
 
 	// The fully qualified domain name for Assets in the PackagingGroup.
 	DomainName *string
@@ -399,6 +435,17 @@ type SpekeKeyProvider struct {
 	//
 	// This member is required.
 	Url *string
+
+	// Use encryptionContractConfiguration to configure one or more content encryption
+	// keys for your endpoints that use SPEKE 2.0. The encryption contract defines
+	// which content keys are used to encrypt the audio and video tracks in your
+	// stream. To configure the encryption contract, specify which audio and video
+	// encryption presets to use. Note the following considerations when using
+	// encryptionContractConfiguration: encryptionContractConfiguration can be used for
+	// DASH endpoints that use SPEKE 2.0. SPEKE 2.0 relies on the CPIX 2.3
+	// specification. You must disable key rotation for this endpoint by setting
+	// keyRotationIntervalSeconds to 0.
+	EncryptionContractConfiguration *EncryptionContractConfiguration
 
 	noSmithyDocumentSerde
 }

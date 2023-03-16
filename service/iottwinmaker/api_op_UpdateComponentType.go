@@ -35,10 +35,13 @@ type UpdateComponentTypeInput struct {
 	// This member is required.
 	ComponentTypeId *string
 
-	// The ID of the workspace that contains the component type.
+	// The ID of the workspace.
 	//
 	// This member is required.
 	WorkspaceId *string
+
+	// The component type name.
+	ComponentTypeName *string
 
 	// The description of the component type.
 	Description *string
@@ -57,6 +60,9 @@ type UpdateComponentTypeInput struct {
 	// An object that maps strings to the property definitions in the component type.
 	// Each string in the mapping must be unique to this object.
 	PropertyDefinitions map[string]types.PropertyDefinitionRequest
+
+	// The property groups
+	PropertyGroups map[string]types.PropertyGroupRequest
 
 	noSmithyDocumentSerde
 }

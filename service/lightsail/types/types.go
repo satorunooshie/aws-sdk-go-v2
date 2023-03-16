@@ -56,12 +56,12 @@ type AccessKeyLastUsed struct {
 	// if the access key has not been used.
 	LastUsedDate *time.Time
 
-	// The AWS Region where this access key was most recently used. This value is N/A
-	// if the access key has not been used.
+	// The Amazon Web Services Region where this access key was most recently used.
+	// This value is N/A if the access key has not been used.
 	Region *string
 
-	// The name of the AWS service with which this access key was most recently used.
-	// This value is N/A if the access key has not been used.
+	// The name of the Amazon Web Services service with which this access key was most
+	// recently used. This value is N/A if the access key has not been used.
 	ServiceName *string
 
 	noSmithyDocumentSerde
@@ -189,6 +189,11 @@ type AccountLevelBpaSync struct {
 // Describes an add-on that is enabled for an Amazon Lightsail resource.
 type AddOn struct {
 
+	// The amount of idle time in minutes after which your virtual computer will
+	// automatically stop. This add-on only applies to Lightsail for Research
+	// resources.
+	Duration *string
+
 	// The name of the add-on.
 	Name *string
 
@@ -204,6 +209,10 @@ type AddOn struct {
 
 	// The status of the add-on.
 	Status *string
+
+	// The trigger threshold of the action. This add-on only applies to Lightsail for
+	// Research resources.
+	Threshold *string
 
 	noSmithyDocumentSerde
 }
@@ -222,6 +231,11 @@ type AddOnRequest struct {
 	// An object that represents additional parameters when enabling or modifying the
 	// automatic snapshot add-on.
 	AutoSnapshotAddOnRequest *AutoSnapshotAddOnRequest
+
+	// An object that represents additional parameters when enabling or modifying the
+	// StopInstanceOnIdle add-on. This object only applies to Lightsail for Research
+	// resources.
+	StopInstanceOnIdleRequest *StopInstanceOnIdleRequest
 
 	noSmithyDocumentSerde
 }
@@ -425,7 +439,8 @@ type AutoSnapshotDetails struct {
 	noSmithyDocumentSerde
 }
 
-// Describes an Availability Zone.
+// Describes an Availability Zone. This is returned only as part of a GetRegions
+// request.
 type AvailabilityZone struct {
 
 	// The state of the Availability Zone.
@@ -439,6 +454,10 @@ type AvailabilityZone struct {
 
 // Describes a blueprint (a virtual private server image).
 type Blueprint struct {
+
+	// Virtual computer blueprints that are supported by Lightsail for Research. This
+	// parameter only applies to Lightsail for Research resources.
+	AppCategory AppCategory
 
 	// The ID for the virtual private server image (e.g., app_wordpress_4_4 or
 	// app_lamp_7_0).
@@ -680,6 +699,10 @@ type Bundle struct {
 	// The amount of RAM in GB (e.g., 2.0).
 	RamSizeInGb *float32
 
+	// Virtual computer blueprints that are supported by a Lightsail for Research
+	// bundle. This parameter only applies to Lightsail for Research resources.
+	SupportedAppCategories []AppCategory
+
 	// The operating system platform (Linux/Unix-based or Windows Server-based) that
 	// the bundle supports. You can only launch a WINDOWS bundle on a blueprint that
 	// supports the WINDOWS platform. LINUX_UNIX blueprints require a LINUX_UNIX
@@ -889,24 +912,24 @@ type Certificate struct {
 	// ADDITIONAL_VERIFICATION_REQUIRED - Lightsail requires additional information to
 	// process this certificate request. This can happen as a fraud-protection measure,
 	// such as when the domain ranks within the Alexa top 1000 websites. To provide the
-	// required information, use the AWS Support Center
-	// (https://console.aws.amazon.com/support/home) to contact AWS Support. You cannot
-	// request a certificate for Amazon-owned domain names such as those ending in
-	// amazonaws.com, cloudfront.net, or elasticbeanstalk.com.
+	// required information, use the Amazon Web Services Support Center
+	// (https://console.aws.amazon.com/support/home) to contact Amazon Web Services
+	// Support. You cannot request a certificate for Amazon-owned domain names such as
+	// those ending in amazonaws.com, cloudfront.net, or elasticbeanstalk.com.
 	//
-	// * DOMAIN_NOT_ALLOWED -
-	// One or more of the domain names in the certificate request was reported as an
-	// unsafe domain by VirusTotal (https://www.virustotal.com/gui/home/url). To
-	// correct the problem, search for your domain name on the VirusTotal
-	// (https://www.virustotal.com/gui/home/url) website. If your domain is reported as
-	// suspicious, see Google Help for Hacked Websites
-	// (https://developers.google.com/web/fundamentals/security/hacked) to learn what
-	// you can do. If you believe that the result is a false positive, notify the
-	// organization that is reporting the domain. VirusTotal is an aggregate of several
-	// antivirus and URL scanners and cannot remove your domain from a block list
-	// itself. After you correct the problem and the VirusTotal registry has been
+	// *
+	// DOMAIN_NOT_ALLOWED - One or more of the domain names in the certificate request
+	// was reported as an unsafe domain by VirusTotal
+	// (https://www.virustotal.com/gui/home/url). To correct the problem, search for
+	// your domain name on the VirusTotal (https://www.virustotal.com/gui/home/url)
+	// website. If your domain is reported as suspicious, see Google Help for Hacked
+	// Websites (https://developers.google.com/web/fundamentals/security/hacked) to
+	// learn what you can do. If you believe that the result is a false positive,
+	// notify the organization that is reporting the domain. VirusTotal is an aggregate
+	// of several antivirus and URL scanners and cannot remove your domain from a block
+	// list itself. After you correct the problem and the VirusTotal registry has been
 	// updated, request a new certificate. If you see this error and your domain is not
-	// included in the VirusTotal list, visit the AWS Support Center
+	// included in the VirusTotal list, visit the Amazon Web Services Support Center
 	// (https://console.aws.amazon.com/support/home) and create a case.
 	//
 	// *
@@ -1423,11 +1446,11 @@ type ContainerServicePower struct {
 	noSmithyDocumentSerde
 }
 
-// Describes the login information for the container image registry of an Amazon
+// Describes the sign-in credentials for the container image registry of an Amazon
 // Lightsail account.
 type ContainerServiceRegistryLogin struct {
 
-	// The timestamp of when the container image registry username and password expire.
+	// The timestamp of when the container image registry sign-in credentials expire.
 	// The log in credentials expire 12 hours after they are created, at which point
 	// you will need to create a new set of log in credentials using the
 	// CreateContainerServiceRegistryLogin action.
@@ -1515,6 +1538,20 @@ type CookieObject struct {
 	noSmithyDocumentSerde
 }
 
+// Describes the estimated cost for resources in your Lightsail for Research
+// account.
+type CostEstimate struct {
+
+	// The cost estimate result that's associated with a time period.
+	ResultsByTime []EstimateByTime
+
+	// The types of usage that are included in the estimate, such as costs, usage, or
+	// data transfer.
+	UsageType *string
+
+	noSmithyDocumentSerde
+}
+
 // Describes the destination of a record.
 type DestinationInfo struct {
 
@@ -1545,6 +1582,10 @@ type Disk struct {
 	//
 	// Deprecated: This member has been deprecated.
 	AttachmentState *string
+
+	// The status of automatically mounting a storage disk to a virtual computer. This
+	// parameter only applies to Lightsail for Research resources.
+	AutoMountStatus AutoMountStatus
 
 	// The date when the disk was created.
 	CreatedAt *time.Time
@@ -1718,6 +1759,39 @@ type DistributionBundle struct {
 	noSmithyDocumentSerde
 }
 
+// Describes the creation state of the canonical name (CNAME) records that are
+// automatically added by Amazon Lightsail to the DNS of a domain to validate
+// domain ownership for an SSL/TLS certificate. When you create an SSL/TLS
+// certificate for a Lightsail resource, you must add a set of CNAME records to the
+// DNS of the domains for the certificate to validate that you own the domains.
+// Lightsail can automatically add the CNAME records to the DNS of the domain if
+// the DNS zone for the domain exists within your Lightsail account. If automatic
+// record addition fails, or if you manage the DNS of your domain using a
+// third-party service, then you must manually add the CNAME records to the DNS of
+// your domain. For more information, see Verify an SSL/TLS certificate in Amazon
+// Lightsail
+// (https://lightsail.aws.amazon.com/ls/docs/en_us/articles/verify-tls-ssl-certificate-using-dns-cname-https)
+// in the Amazon Lightsail Developer Guide.
+type DnsRecordCreationState struct {
+
+	// The status code for the automated DNS record creation. Following are the
+	// possible values:
+	//
+	// * SUCCEEDED - The validation records were successfully added
+	// to the domain.
+	//
+	// * STARTED - The automatic DNS record creation has started.
+	//
+	// *
+	// FAILED - The validation records failed to be added to the domain.
+	Code DnsRecordCreationStateCode
+
+	// The message that describes the reason for the status code.
+	Message *string
+
+	noSmithyDocumentSerde
+}
+
 // Describes a domain where you are storing recordsets.
 type Domain struct {
 
@@ -1736,6 +1810,10 @@ type Domain struct {
 
 	// The name of the domain.
 	Name *string
+
+	// An object that describes the state of the Route 53 domain delegation to a
+	// Lightsail DNS zone.
+	RegisteredDomainDelegationInfo *RegisteredDomainDelegationInfo
 
 	// The resource type.
 	ResourceType ResourceType
@@ -1760,8 +1838,11 @@ type DomainEntry struct {
 	Id *string
 
 	// When true, specifies whether the domain entry is an alias used by the Lightsail
-	// load balancer. You can include an alias (A type) record in your request, which
-	// points to a load balancer DNS name and routes traffic to your load balancer.
+	// load balancer, Lightsail container service, Lightsail content delivery network
+	// (CDN) distribution, or another Amazon Web Services resource. You can include an
+	// alias (A type) record in your request, which points to the DNS name of a load
+	// balancer, container service, CDN distribution, or other Amazon Web Services
+	// resource and routes traffic to that resource.
 	IsAlias *bool
 
 	// The name of the domain.
@@ -1808,9 +1889,15 @@ type DomainEntry struct {
 	noSmithyDocumentSerde
 }
 
-// Describes the domain validation records of an Amazon Lightsail SSL/TLS
+// Describes the domain name system (DNS) records that you must add to the DNS of
+// your registered domain to validate ownership for an Amazon Lightsail SSL/TLS
 // certificate.
 type DomainValidationRecord struct {
+
+	// An object that describes the state of the canonical name (CNAME) records that
+	// are automatically added by Lightsail to the DNS of the domain to validate domain
+	// ownership.
+	DnsRecordCreationState *DnsRecordCreationState
 
 	// The domain name of the certificate validation record. For example, example.com
 	// or www.example.com.
@@ -1819,6 +1906,9 @@ type DomainValidationRecord struct {
 	// An object that describes the DNS records to add to your domain's DNS to validate
 	// it for the certificate.
 	ResourceRecord *ResourceRecord
+
+	// The validation status of the record.
+	ValidationStatus CertificateDomainValidationStatus
 
 	noSmithyDocumentSerde
 }
@@ -1839,6 +1929,29 @@ type EndpointRequest struct {
 
 	// An object that describes the health check configuration of the container.
 	HealthCheck *ContainerServiceHealthCheckConfig
+
+	noSmithyDocumentSerde
+}
+
+// An estimate that's associated with a time period.
+type EstimateByTime struct {
+
+	// The currency of the estimate in USD.
+	Currency Currency
+
+	// The unit of measurement that's used for the cost estimate.
+	PricingUnit PricingUnit
+
+	// The period of time, in days, that an estimate covers. The period has a start
+	// date and an end date. The start date must come before the end date.
+	TimePeriod *TimePeriod
+
+	// The number of pricing units used to calculate the total number of hours. For
+	// example, 1 unit equals 1 hour.
+	Unit *float64
+
+	// The amount of cost or usage that's measured for the cost estimate.
+	UsageCost *float64
 
 	noSmithyDocumentSerde
 }
@@ -2036,6 +2149,9 @@ type Instance struct {
 
 	// The region name and Availability Zone where the instance is located.
 	Location *ResourceLocation
+
+	// The metadata options for the Amazon Lightsail instance.
+	MetadataOptions *InstanceMetadataOptions
 
 	// The name the user gave the instance (e.g., Amazon_Linux-1GB-Ohio-1).
 	Name *string
@@ -2270,6 +2386,51 @@ type InstanceHealthSummary struct {
 	// The name of the Lightsail instance for which you are requesting health check
 	// data.
 	InstanceName *string
+
+	noSmithyDocumentSerde
+}
+
+// The metadata options for the instance.
+type InstanceMetadataOptions struct {
+
+	// Indicates whether the HTTP metadata endpoint on your instances is enabled or
+	// disabled. If the value is disabled, you cannot access your instance metadata.
+	HttpEndpoint HttpEndpoint
+
+	// Indicates whether the IPv6 endpoint for the instance metadata service is enabled
+	// or disabled.
+	HttpProtocolIpv6 HttpProtocolIpv6
+
+	// The desired HTTP PUT response hop limit for instance metadata requests. A larger
+	// number means that the instance metadata requests can travel farther.
+	HttpPutResponseHopLimit *int32
+
+	// The state of token usage for your instance metadata requests. If the state is
+	// optional, you can choose whether to retrieve instance metadata with a signed
+	// token header on your request. If you retrieve the IAM role credentials without a
+	// token, the version 1.0 role credentials are returned. If you retrieve the IAM
+	// role credentials by using a valid signed token, the version 2.0 role credentials
+	// are returned. If the state is required, you must send a signed token header with
+	// all instance metadata retrieval requests. In this state, retrieving the IAM role
+	// credential always returns the version 2.0 credentials. The version 1.0
+	// credentials are not available. Not all instance blueprints in Lightsail support
+	// version 2.0 credentials. Use the MetadataNoToken instance metric to track the
+	// number of calls to the instance metadata service that are using version 1.0
+	// credentials. For more information, see Viewing instance metrics in Amazon
+	// Lightsail
+	// (https://lightsail.aws.amazon.com/ls/docs/en_us/articles/amazon-lightsail-viewing-instance-health-metrics)
+	// in the Amazon Lightsail Developer Guide.
+	HttpTokens HttpTokens
+
+	// The state of the metadata option changes. The following states are possible:
+	//
+	// *
+	// pending - The metadata options are being updated. The instance is not yet ready
+	// to process metadata traffic with the new selection.
+	//
+	// * applied - The metadata
+	// options have been successfully applied to the instance.
+	State InstanceMetadataState
 
 	noSmithyDocumentSerde
 }
@@ -2856,7 +3017,8 @@ type LoadBalancerTlsCertificate struct {
 	// The load balancer name where your SSL/TLS certificate is attached.
 	LoadBalancerName *string
 
-	// The AWS Region and Availability Zone where you created your certificate.
+	// The Amazon Web Services Region and Availability Zone where you created your
+	// certificate.
 	Location *ResourceLocation
 
 	// The name of the SSL/TLS certificate (e.g., my-certificate).
@@ -2939,6 +3101,29 @@ type LoadBalancerTlsCertificate struct {
 	noSmithyDocumentSerde
 }
 
+// An object that describes the state of the canonical name (CNAME) records that
+// are automatically added by Lightsail to the DNS of the domain to validate domain
+// ownership.
+type LoadBalancerTlsCertificateDnsRecordCreationState struct {
+
+	// The status code for the automated DNS record creation. Following are the
+	// possible values:
+	//
+	// * SUCCEEDED - The validation records were successfully
+	// added.
+	//
+	// * STARTED - The automatic DNS record creation has started.
+	//
+	// * FAILED -
+	// The validation record addition failed.
+	Code LoadBalancerTlsCertificateDnsRecordCreationStateCode
+
+	// The message that describes the reason for the status code.
+	Message *string
+
+	noSmithyDocumentSerde
+}
+
 // Contains information about the domain names on an SSL/TLS certificate that you
 // will use to validate domain ownership.
 type LoadBalancerTlsCertificateDomainValidationOption struct {
@@ -2954,6 +3139,11 @@ type LoadBalancerTlsCertificateDomainValidationOption struct {
 
 // Describes the validation record of each domain name in the SSL/TLS certificate.
 type LoadBalancerTlsCertificateDomainValidationRecord struct {
+
+	// An object that describes the state of the canonical name (CNAME) records that
+	// are automatically added by Lightsail to the DNS of a domain to validate domain
+	// ownership.
+	DnsRecordCreationState *LoadBalancerTlsCertificateDnsRecordCreationState
 
 	// The domain name against which your SSL/TLS certificate was validated.
 	DomainName *string
@@ -3130,6 +3320,34 @@ type MonthlyTransfer struct {
 
 	// The amount allocated per month (in GB).
 	GbPerMonthAllocated *int32
+
+	noSmithyDocumentSerde
+}
+
+// Describes the state of the name server records update made by Amazon Lightsail
+// to an Amazon Route 53 registered domain. For more information, see DNS in Amazon
+// Lightsail
+// (https://lightsail.aws.amazon.com/ls/docs/en_us/articles/understanding-dns-in-amazon-lightsail)
+// in the Amazon Lightsail Developer Guide.
+type NameServersUpdateState struct {
+
+	// The status code for the name servers update. Following are the possible
+	// values:
+	//
+	// * SUCCEEDED - The name server records were successfully updated.
+	//
+	// *
+	// PENDING - The name server record update is in progress.
+	//
+	// * FAILED - The name
+	// server record update failed.
+	//
+	// * STARTED - The automatic name server record
+	// update started.
+	Code NameServersUpdateStateCode
+
+	// The message that describes the reason for the status code.
+	Message *string
 
 	noSmithyDocumentSerde
 }
@@ -3407,7 +3625,31 @@ type QueryStringObject struct {
 	noSmithyDocumentSerde
 }
 
-// Describes the AWS Region.
+// Describes the deletion state of an Amazon Route 53 hosted zone for a domain that
+// is being automatically delegated to an Amazon Lightsail DNS zone.
+type R53HostedZoneDeletionState struct {
+
+	// The status code for the deletion state. Following are the possible values:
+	//
+	// *
+	// SUCCEEDED - The hosted zone was successfully deleted.
+	//
+	// * PENDING - The hosted
+	// zone deletion is in progress.
+	//
+	// * FAILED - The hosted zone deletion failed.
+	//
+	// *
+	// STARTED - The hosted zone deletion started.
+	Code R53HostedZoneDeletionStateCode
+
+	// The message that describes the reason for the status code.
+	Message *string
+
+	noSmithyDocumentSerde
+}
+
+// Describes the Amazon Web Services Region.
 type Region struct {
 
 	// The Availability Zones. Follows the format us-east-2a (case-sensitive).
@@ -3416,8 +3658,8 @@ type Region struct {
 	// The continent code (e.g., NA, meaning North America).
 	ContinentCode *string
 
-	// The description of the AWS Region (e.g., This region is recommended to serve
-	// users in the eastern United States and eastern Canada).
+	// The description of the Amazon Web Services Region (e.g., This region is
+	// recommended to serve users in the eastern United States and eastern Canada).
 	Description *string
 
 	// The display name (e.g., Ohio).
@@ -3429,6 +3671,46 @@ type Region struct {
 	// The Availability Zones for databases. Follows the format us-east-2a
 	// (case-sensitive).
 	RelationalDatabaseAvailabilityZones []AvailabilityZone
+
+	noSmithyDocumentSerde
+}
+
+// Describes the delegation state of an Amazon Route 53 registered domain to Amazon
+// Lightsail. When you delegate an Amazon Route 53 registered domain to Lightsail,
+// you can manage the DNS of the domain using a Lightsail DNS zone. You no longer
+// use the Route 53 hosted zone to manage the DNS of the domain. To delegate the
+// domain, Lightsail automatically updates the domain's name servers in Route 53 to
+// the name servers of the Lightsail DNS zone. Then, Lightsail automatically
+// deletes the Route 53 hosted zone for the domain. All of the following conditions
+// must be true for automatic domain delegation to be successful:
+//
+// * The registered
+// domain must be in the same Amazon Web Services account as the Lightsail account
+// making the request.
+//
+// * The user or entity making the request must have
+// permission to manage domains in Route 53.
+//
+// * The Route 53 hosted zone for the
+// domain must be empty. It cannot contain DNS records other than start of
+// authority (SOA) and name server records.
+//
+// If automatic domain delegation fails,
+// or if you manage the DNS of your domain using a service other than Route 53,
+// then you must manually add the Lightsail DNS zone name servers to your domain in
+// order to delegate management of its DNS to Lightsail. For more information, see
+// Creating a DNS zone to manage your domain’s records in Amazon Lightsail
+// (https://lightsail.aws.amazon.com/ls/docs/en_us/articles/lightsail-how-to-create-dns-entry)
+// in the Amazon Lightsail Developer Guide.
+type RegisteredDomainDelegationInfo struct {
+
+	// An object that describes the state of the name server records that are
+	// automatically added to the Route 53 domain by Lightsail.
+	NameServersUpdateState *NameServersUpdateState
+
+	// Describes the deletion state of an Amazon Route 53 hosted zone for a domain that
+	// is being automatically delegated to an Amazon Lightsail DNS zone.
+	R53HostedZoneDeletionState *R53HostedZoneDeletionState
 
 	noSmithyDocumentSerde
 }
@@ -3761,13 +4043,34 @@ type RenewalSummary struct {
 	noSmithyDocumentSerde
 }
 
+// Describes the estimated cost or usage that a budget tracks.
+type ResourceBudgetEstimate struct {
+
+	// The cost estimate for the specified budget.
+	CostEstimates []CostEstimate
+
+	// The estimate end time.
+	EndTime *time.Time
+
+	// The resource name.
+	ResourceName *string
+
+	// The type of resource the budget will track.
+	ResourceType ResourceType
+
+	// The estimate start time.
+	StartTime *time.Time
+
+	noSmithyDocumentSerde
+}
+
 // Describes the resource location.
 type ResourceLocation struct {
 
 	// The Availability Zone. Follows the format us-east-2a (case-sensitive).
 	AvailabilityZone *string
 
-	// The AWS Region name.
+	// The Amazon Web Services Region name.
 	RegionName RegionName
 
 	noSmithyDocumentSerde
@@ -3797,6 +4100,24 @@ type ResourceRecord struct {
 
 	// The value for the DNS record.
 	Value *string
+
+	noSmithyDocumentSerde
+}
+
+// Describes a web-based, remote graphical user interface (GUI), NICE DCV session.
+// The session is used to access a virtual computer’s operating system or
+// application.
+type Session struct {
+
+	// When true, this Boolean value indicates the primary session for the specified
+	// resource.
+	IsPrimary *bool
+
+	// The session name.
+	Name *string
+
+	// The session URL.
+	Url *string
 
 	noSmithyDocumentSerde
 }
@@ -3837,6 +4158,20 @@ type StaticIp struct {
 	noSmithyDocumentSerde
 }
 
+// Describes a request to create or edit the StopInstanceOnIdle add-on. This add-on
+// only applies to Lightsail for Research resources.
+type StopInstanceOnIdleRequest struct {
+
+	// The amount of idle time in minutes after which your virtual computer will
+	// automatically stop.
+	Duration *string
+
+	// The value to compare with the duration.
+	Threshold *string
+
+	noSmithyDocumentSerde
+}
+
 // Describes a tag key and optional value assigned to an Amazon Lightsail resource.
 // For more information about tags in Lightsail, see the Amazon Lightsail Developer
 // Guide
@@ -3850,6 +4185,26 @@ type Tag struct {
 	// The value of the tag. Constraints: Tag values accept a maximum of 256 letters,
 	// numbers, spaces in UTF-8, or the following characters: + - = . _ : / @
 	Value *string
+
+	noSmithyDocumentSerde
+}
+
+// Sets the start date and end date for retrieving a cost estimate. The start date
+// is inclusive, but the end date is exclusive. For example, if start is 2017-01-01
+// and end is 2017-05-01, then the cost and usage data is retrieved from 2017-01-01
+// up to and including 2017-04-30 but not including 2017-05-01.
+type TimePeriod struct {
+
+	// The end of the time period. The end date is exclusive. For example, if end is
+	// 2017-05-01, Lightsail for Research retrieves cost and usage data from the start
+	// date up to, but not including, 2017-05-01.
+	End *time.Time
+
+	// The beginning of the time period. The start date is inclusive. For example, if
+	// start is 2017-01-01, Lightsail for Research retrieves cost and usage data
+	// starting at 2017-01-01 up to the end date. The start date must be equal to or no
+	// later than the current date to avoid a validation error.
+	Start *time.Time
 
 	noSmithyDocumentSerde
 }

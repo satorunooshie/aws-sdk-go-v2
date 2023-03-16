@@ -1,3 +1,64 @@
+# v1.25.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.25.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.25.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2023-02-01)
+
+* **Feature**: This release will enable customer select INCREMENTAL as ImportModel in Forecast's CreateDatasetImportJob API. Verified latest SDK containing required attribute, following https://w.amazon.com/bin/view/AWS-Seer/Launch/Trebuchet/
+
+# v1.24.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.23.9 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.8 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.7 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.6 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.5 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.4 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.3 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.2 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.23.1 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

@@ -1,3 +1,102 @@
+# v1.24.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.0 (2023-02-23)
+
+* **Feature**: This release supports deleting Amazon ECS task definitions that are in the INACTIVE state.
+
+# v1.23.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.23.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.23.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.23.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.22.0 (2022-12-19)
+
+* **Feature**: This release adds support for alarm-based rollbacks in ECS, a new feature that allows customers to add automated safeguards for Amazon ECS service rolling updates.
+
+# v1.21.0 (2022-12-15)
+
+* **Feature**: This release adds support for container port ranges in ECS, a new capability that allows customers to provide container port ranges to simplify use cases where multiple ports are in use in a container. This release updates TaskDefinition mutation APIs and the Task description APIs.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.1 (2022-12-02)
+
+* **Documentation**: Documentation updates for Amazon ECS
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.0 (2022-11-28)
+
+* **Feature**: This release adds support for ECS Service Connect, a new capability that simplifies writing and operating resilient distributed applications. This release updates the TaskDefinition, Cluster, Service mutation APIs with Service connect constructs and also adds a new ListServicesByNamespace API.
+
+# v1.19.2 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.19.1 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.19.0 (2022-11-10)
+
+* **Feature**: This release adds support for task scale-in protection with updateTaskProtection and getTaskProtection APIs. UpdateTaskProtection API can be used to protect a service managed task from being terminated by scale-in events and getTaskProtection API to get the scale-in protection status of a task.
+
+# v1.18.26 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.25 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.24 (2022-10-13)
+
+* **Documentation**: Documentation update to address tickets.
+
+# v1.18.23 (2022-10-04)
+
+* **Documentation**: Documentation updates to address various Amazon ECS tickets.
+
+# v1.18.22 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.21 (2022-09-16)
+
+* **Documentation**: This release supports new task definition sizes.
+
+# v1.18.20 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.19 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.18 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.18.17 (2022-08-30)
 
 * No change notes available for this release.

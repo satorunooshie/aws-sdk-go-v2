@@ -75,29 +75,50 @@ type GetCurrentMetricDataInput struct {
 	// This member is required.
 	CurrentMetrics []types.CurrentMetric
 
-	// The queues, up to 100, or channels, to use to filter the metrics returned.
-	// Metric data is retrieved only for the resources associated with the queues or
-	// channels included in the filter. You can include both queue IDs and queue ARNs
-	// in the same request. VOICE, CHAT, and TASK channels are supported.
+	// The filters to apply to returned metrics. You can filter up to the following
+	// limits:
+	//
+	// * Queues: 100
+	//
+	// * Routing profiles: 100
+	//
+	// * Channels: 3 (VOICE, CHAT, and
+	// TASK channels are supported.)
+	//
+	// Metric data is retrieved only for the resources
+	// associated with the queues or routing profiles, and by any channels included in
+	// the filter. (You cannot filter by both queue AND routing profile.) You can
+	// include both resource IDs and resource ARNs in the same request. Currently
+	// tagging is only supported on the resources that are passed in the filter.
 	//
 	// This member is required.
 	Filters *types.Filters
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	//
 	// This member is required.
 	InstanceId *string
 
 	// The grouping applied to the metrics returned. For example, when grouped by
 	// QUEUE, the metrics returned apply to each queue rather than aggregated for all
-	// queues. If you group by CHANNEL, you should include a Channels filter. VOICE,
-	// CHAT, and TASK channels are supported. If no Grouping is included in the
-	// request, a summary of metrics is returned.
+	// queues.
+	//
+	// * If you group by CHANNEL, you should include a Channels filter. VOICE,
+	// CHAT, and TASK channels are supported.
+	//
+	// * If you group by ROUTING_PROFILE, you
+	// must include either a queue or routing profile filter. In addition, a routing
+	// profile filter is required for metrics CONTACTS_SCHEDULED, CONTACTS_IN_QUEUE,
+	// and  OLDEST_CONTACT_AGE.
+	//
+	// * If no Grouping is included in the request, a summary
+	// of metrics is returned.
 	Groupings []types.Grouping
 
 	// The maximum number of results to return per page.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token for the next set of results. Use the value returned in the previous
 	// response in the next request to retrieve the next set of results. The token
@@ -106,10 +127,21 @@ type GetCurrentMetricDataInput struct {
 	// the token.
 	NextToken *string
 
+	// The way to sort the resulting response based on metrics. You can enter one sort
+	// criteria. By default resources are sorted based on AGENTS_ONLINE, DESCENDING.
+	// The metric collection is sorted based on the input metrics. Note the
+	// following:
+	//
+	// * Sorting on SLOTS_ACTIVE and SLOTS_AVAILABLE is not supported.
+	SortCriteria []types.CurrentMetricSortCriteria
+
 	noSmithyDocumentSerde
 }
 
 type GetCurrentMetricDataOutput struct {
+
+	// The total count of the result, regardless of the current page size.
+	ApproximateTotalCount *int64
 
 	// The time at which the metrics were retrieved and cached for pagination.
 	DataSnapshotTime *time.Time
@@ -227,8 +259,8 @@ func NewGetCurrentMetricDataPaginator(client GetCurrentMetricDataAPIClient, para
 	}
 
 	options := GetCurrentMetricDataPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -258,7 +290,11 @@ func (p *GetCurrentMetricDataPaginator) NextPage(ctx context.Context, optFns ...
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.GetCurrentMetricData(ctx, &params, optFns...)
 	if err != nil {

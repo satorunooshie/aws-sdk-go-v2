@@ -146,11 +146,12 @@ type ConfigRecommendationOptimizationType string
 
 // Enum values for ConfigRecommendationOptimizationType
 const (
-	ConfigRecommendationOptimizationTypeLeastCost      ConfigRecommendationOptimizationType = "LeastCost"
-	ConfigRecommendationOptimizationTypeLeastChange    ConfigRecommendationOptimizationType = "LeastChange"
-	ConfigRecommendationOptimizationTypeBestAzRecovery ConfigRecommendationOptimizationType = "BestAZRecovery"
-	ConfigRecommendationOptimizationTypeLeastErrors    ConfigRecommendationOptimizationType = "LeastErrors"
-	ConfigRecommendationOptimizationTypeBestAttainable ConfigRecommendationOptimizationType = "BestAttainable"
+	ConfigRecommendationOptimizationTypeLeastCost          ConfigRecommendationOptimizationType = "LeastCost"
+	ConfigRecommendationOptimizationTypeLeastChange        ConfigRecommendationOptimizationType = "LeastChange"
+	ConfigRecommendationOptimizationTypeBestAzRecovery     ConfigRecommendationOptimizationType = "BestAZRecovery"
+	ConfigRecommendationOptimizationTypeLeastErrors        ConfigRecommendationOptimizationType = "LeastErrors"
+	ConfigRecommendationOptimizationTypeBestAttainable     ConfigRecommendationOptimizationType = "BestAttainable"
+	ConfigRecommendationOptimizationTypeBestRegionRecovery ConfigRecommendationOptimizationType = "BestRegionRecovery"
 )
 
 // Values returns all known values for ConfigRecommendationOptimizationType. Note
@@ -164,6 +165,7 @@ func (ConfigRecommendationOptimizationType) Values() []ConfigRecommendationOptim
 		"BestAZRecovery",
 		"LeastErrors",
 		"BestAttainable",
+		"BestRegionRecovery",
 	}
 }
 
@@ -401,6 +403,24 @@ func (ResourceImportStatusType) Values() []ResourceImportStatusType {
 		"InProgress",
 		"Failed",
 		"Success",
+	}
+}
+
+type ResourceImportStrategyType string
+
+// Enum values for ResourceImportStrategyType
+const (
+	ResourceImportStrategyTypeAddOnly    ResourceImportStrategyType = "AddOnly"
+	ResourceImportStrategyTypeReplaceAll ResourceImportStrategyType = "ReplaceAll"
+)
+
+// Values returns all known values for ResourceImportStrategyType. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (ResourceImportStrategyType) Values() []ResourceImportStrategyType {
+	return []ResourceImportStrategyType{
+		"AddOnly",
+		"ReplaceAll",
 	}
 }
 

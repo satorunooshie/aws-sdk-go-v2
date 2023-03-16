@@ -1,3 +1,72 @@
+# v1.20.4 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.3 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.20.2 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.1 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.20.0 (2023-02-08)
+
+* **Feature**: This release added one attribute (resource name) in the output model of our 9 existing APIs in AWS backup so that customers will see the resource name at the output. No input required from Customers.
+
+# v1.19.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.1 (2023-01-17)
+
+* No change notes available for this release.
+
+# v1.19.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.18.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.0 (2022-11-28)
+
+* **Feature**: AWS Backup introduces support for legal hold and application stack backups. AWS Backup Audit Manager introduces support for cross-Region, cross-account reports.
+
+# v1.17.11 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.10 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.9 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.8 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.7 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.6 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.17.5 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

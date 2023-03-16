@@ -103,6 +103,25 @@ func (CertificateSource) Values() []CertificateSource {
 	}
 }
 
+type ContinuousDeploymentPolicyType string
+
+// Enum values for ContinuousDeploymentPolicyType
+const (
+	ContinuousDeploymentPolicyTypeSingleWeight ContinuousDeploymentPolicyType = "SingleWeight"
+	ContinuousDeploymentPolicyTypeSingleHeader ContinuousDeploymentPolicyType = "SingleHeader"
+)
+
+// Values returns all known values for ContinuousDeploymentPolicyType. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (ContinuousDeploymentPolicyType) Values() []ContinuousDeploymentPolicyType {
+	return []ContinuousDeploymentPolicyType{
+		"SingleWeight",
+		"SingleHeader",
+	}
+}
+
 type EventType string
 
 // Enum values for EventType
@@ -335,7 +354,8 @@ type OriginAccessControlOriginTypes string
 
 // Enum values for OriginAccessControlOriginTypes
 const (
-	OriginAccessControlOriginTypesS3 OriginAccessControlOriginTypes = "s3"
+	OriginAccessControlOriginTypesS3         OriginAccessControlOriginTypes = "s3"
+	OriginAccessControlOriginTypesMediastore OriginAccessControlOriginTypes = "mediastore"
 )
 
 // Values returns all known values for OriginAccessControlOriginTypes. Note that
@@ -345,6 +365,7 @@ const (
 func (OriginAccessControlOriginTypes) Values() []OriginAccessControlOriginTypes {
 	return []OriginAccessControlOriginTypes{
 		"s3",
+		"mediastore",
 	}
 }
 
@@ -413,6 +434,7 @@ const (
 	OriginRequestPolicyCookieBehaviorNone      OriginRequestPolicyCookieBehavior = "none"
 	OriginRequestPolicyCookieBehaviorWhitelist OriginRequestPolicyCookieBehavior = "whitelist"
 	OriginRequestPolicyCookieBehaviorAll       OriginRequestPolicyCookieBehavior = "all"
+	OriginRequestPolicyCookieBehaviorAllExcept OriginRequestPolicyCookieBehavior = "allExcept"
 )
 
 // Values returns all known values for OriginRequestPolicyCookieBehavior. Note that
@@ -424,6 +446,7 @@ func (OriginRequestPolicyCookieBehavior) Values() []OriginRequestPolicyCookieBeh
 		"none",
 		"whitelist",
 		"all",
+		"allExcept",
 	}
 }
 
@@ -435,6 +458,7 @@ const (
 	OriginRequestPolicyHeaderBehaviorWhitelist                       OriginRequestPolicyHeaderBehavior = "whitelist"
 	OriginRequestPolicyHeaderBehaviorAllViewer                       OriginRequestPolicyHeaderBehavior = "allViewer"
 	OriginRequestPolicyHeaderBehaviorAllViewerAndWhitelistCloudFront OriginRequestPolicyHeaderBehavior = "allViewerAndWhitelistCloudFront"
+	OriginRequestPolicyHeaderBehaviorAllExcept                       OriginRequestPolicyHeaderBehavior = "allExcept"
 )
 
 // Values returns all known values for OriginRequestPolicyHeaderBehavior. Note that
@@ -447,6 +471,7 @@ func (OriginRequestPolicyHeaderBehavior) Values() []OriginRequestPolicyHeaderBeh
 		"whitelist",
 		"allViewer",
 		"allViewerAndWhitelistCloudFront",
+		"allExcept",
 	}
 }
 
@@ -457,6 +482,7 @@ const (
 	OriginRequestPolicyQueryStringBehaviorNone      OriginRequestPolicyQueryStringBehavior = "none"
 	OriginRequestPolicyQueryStringBehaviorWhitelist OriginRequestPolicyQueryStringBehavior = "whitelist"
 	OriginRequestPolicyQueryStringBehaviorAll       OriginRequestPolicyQueryStringBehavior = "all"
+	OriginRequestPolicyQueryStringBehaviorAllExcept OriginRequestPolicyQueryStringBehavior = "allExcept"
 )
 
 // Values returns all known values for OriginRequestPolicyQueryStringBehavior. Note
@@ -468,6 +494,7 @@ func (OriginRequestPolicyQueryStringBehavior) Values() []OriginRequestPolicyQuer
 		"none",
 		"whitelist",
 		"all",
+		"allExcept",
 	}
 }
 

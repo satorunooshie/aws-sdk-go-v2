@@ -7,6 +7,69 @@ import (
 	"time"
 )
 
+// The properties of the Accessor.
+type Accessor struct {
+
+	// The Amazon Resource Name (ARN) of the accessor. For more information about ARNs
+	// and their format, see Amazon Resource Names (ARNs)
+	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
+	// the Amazon Web Services General Reference.
+	Arn *string
+
+	// The billing token is a property of the accessor. Use this token to make Ethereum
+	// API calls to your Ethereum node. The billing token is used to track your
+	// accessor object for billing Ethereum API requests made to your Ethereum nodes.
+	BillingToken *string
+
+	// The creation date and time of the accessor.
+	CreationDate *time.Time
+
+	// The unique identifier of the accessor.
+	Id *string
+
+	// The current status of the accessor.
+	Status AccessorStatus
+
+	// The tags assigned to the Accessor. For more information about tags, see Tagging
+	// Resources
+	// (https://docs.aws.amazon.com/managed-blockchain/latest/ethereum-dev/tagging-resources.html)
+	// in the Amazon Managed Blockchain Ethereum Developer Guide, or Tagging Resources
+	// (https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/tagging-resources.html)
+	// in the Amazon Managed Blockchain Hyperledger Fabric Developer Guide.
+	Tags map[string]string
+
+	// The type of the accessor. Currently accessor type is restricted to
+	// BILLING_TOKEN.
+	Type AccessorType
+
+	noSmithyDocumentSerde
+}
+
+// A summary of accessor properties.
+type AccessorSummary struct {
+
+	// The Amazon Resource Name (ARN) of the accessor. For more information about ARNs
+	// and their format, see Amazon Resource Names (ARNs)
+	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
+	// the Amazon Web Services General Reference.
+	Arn *string
+
+	// The creation date and time of the accessor.
+	CreationDate *time.Time
+
+	// The unique identifier of the accessor.
+	Id *string
+
+	// The current status of the accessor.
+	Status AccessorStatus
+
+	// The type of the accessor. Currently accessor type is restricted to
+	// BILLING_TOKEN.
+	Type AccessorType
+
+	noSmithyDocumentSerde
+}
+
 // A policy type that defines the voting rules for the network. The rules decide if
 // a proposal is approved. Approval may be based on criteria such as the percentage
 // of YES votes and the duration of the proposal. The policy applies to all
@@ -17,7 +80,7 @@ type ApprovalThresholdPolicy struct {
 	// The duration from the time that a proposal is created until it expires. If
 	// members cast neither the required number of YES votes to approve the proposal
 	// nor the number of NO votes required to reject it before the duration expires,
-	// the proposal is EXPIRED and ProposalActions are not carried out.
+	// the proposal is EXPIRED and ProposalActions aren't carried out.
 	ProposalDurationInHours *int32
 
 	// Determines whether the vote percentage must be greater than the
@@ -36,14 +99,14 @@ type ApprovalThresholdPolicy struct {
 	noSmithyDocumentSerde
 }
 
-// An invitation to an AWS account to create a member and join the network. Applies
-// only to Hyperledger Fabric.
+// An invitation to an Amazon Web Services account to create a member and join the
+// network. Applies only to Hyperledger Fabric.
 type Invitation struct {
 
 	// The Amazon Resource Name (ARN) of the invitation. For more information about
 	// ARNs and their format, see Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the Amazon Web Services General Reference.
 	Arn *string
 
 	// The date and time that the invitation was created.
@@ -63,11 +126,11 @@ type Invitation struct {
 
 	// The status of the invitation:
 	//
-	// * PENDING - The invitee has not created a member
-	// to join the network, and the invitation has not yet expired.
+	// * PENDING - The invitee hasn't created a member
+	// to join the network, and the invitation hasn't yet expired.
 	//
 	// * ACCEPTING - The
-	// invitee has begun creating a member, and creation has not yet completed.
+	// invitee has begun creating a member, and creation hasn't yet completed.
 	//
 	// *
 	// ACCEPTED - The invitee created a member and joined the network using the
@@ -83,12 +146,12 @@ type Invitation struct {
 	noSmithyDocumentSerde
 }
 
-// An action to invite a specific AWS account to create a member and join the
-// network. The InviteAction is carried out when a Proposal is APPROVED. Applies
-// only to Hyperledger Fabric.
+// An action to invite a specific Amazon Web Services account to create a member
+// and join the network. The InviteAction is carried out when a Proposal is
+// APPROVED. Applies only to Hyperledger Fabric.
 type InviteAction struct {
 
-	// The AWS account ID to invite.
+	// The Amazon Web Services account ID to invite.
 	//
 	// This member is required.
 	Principal *string
@@ -120,7 +183,7 @@ type Member struct {
 	// The Amazon Resource Name (ARN) of the member. For more information about ARNs
 	// and their format, see Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the Amazon Web Services General Reference.
 	Arn *string
 
 	// The date and time that the member was created.
@@ -136,10 +199,13 @@ type Member struct {
 	// The unique identifier of the member.
 	Id *string
 
-	// The Amazon Resource Name (ARN) of the customer managed key in AWS Key Management
-	// Service (AWS KMS) that the member uses for encryption at rest. If the value of
-	// this parameter is "AWS Owned KMS Key", the member uses an AWS owned KMS key for
-	// encryption. This parameter is inherited by the nodes that this member owns.
+	// The Amazon Resource Name (ARN) of the customer managed key in Key Management
+	// Service (KMS) that the member uses for encryption at rest. If the value of this
+	// parameter is "AWS Owned KMS Key", the member uses an Amazon Web Services owned
+	// KMS key for encryption. This parameter is inherited by the nodes that this
+	// member owns. For more information, see Encryption at Rest
+	// (https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/managed-blockchain-encryption-at-rest.html)
+	// in the Amazon Managed Blockchain Hyperledger Fabric Developer Guide.
 	KmsKeyArn *string
 
 	// Configuration properties for logging events associated with a member.
@@ -153,39 +219,42 @@ type Member struct {
 
 	// The status of a member.
 	//
-	// * CREATING - The AWS account is in the process of
-	// creating a member.
+	// * CREATING - The Amazon Web Services account is in the
+	// process of creating a member.
 	//
 	// * AVAILABLE - The member has been created and can
 	// participate in the network.
 	//
-	// * CREATE_FAILED - The AWS account attempted to
-	// create a member and creation failed.
+	// * CREATE_FAILED - The Amazon Web Services account
+	// attempted to create a member and creation failed.
 	//
-	// * UPDATING - The member is in the process
-	// of being updated.
+	// * UPDATING - The member is in
+	// the process of being updated.
 	//
-	// * DELETING - The member and all associated resources are in
-	// the process of being deleted. Either the AWS account that owns the member
-	// deleted it, or the member is being deleted as the result of an APPROVEDPROPOSAL
-	// to remove the member.
+	// * DELETING - The member and all associated
+	// resources are in the process of being deleted. Either the Amazon Web Services
+	// account that owns the member deleted it, or the member is being deleted as the
+	// result of an APPROVEDPROPOSAL to remove the member.
 	//
-	// * DELETED - The member can no longer participate on the
-	// network and all associated resources are deleted. Either the AWS account that
-	// owns the member deleted it, or the member is being deleted as the result of an
-	// APPROVEDPROPOSAL to remove the member.
+	// * DELETED - The member can
+	// no longer participate on the network and all associated resources are deleted.
+	// Either the Amazon Web Services account that owns the member deleted it, or the
+	// member is being deleted as the result of an APPROVEDPROPOSAL to remove the
+	// member.
 	//
-	// * INACCESSIBLE_ENCRYPTION_KEY - The
-	// member is impaired and might not function as expected because it cannot access
-	// the specified customer managed key in AWS KMS for encryption at rest. Either the
-	// KMS key was disabled or deleted, or the grants on the key were revoked. The
-	// effect of disabling or deleting a key, or revoking a grant is not immediate. The
-	// member resource might take some time to find that the key is inaccessible. When
-	// a resource is in this state, we recommend deleting and recreating the resource.
+	// * INACCESSIBLE_ENCRYPTION_KEY - The member is impaired and might not
+	// function as expected because it cannot access the specified customer managed key
+	// in KMS for encryption at rest. Either the KMS key was disabled or deleted, or
+	// the grants on the key were revoked. The effect of disabling or deleting a key or
+	// of revoking a grant isn't immediate. It might take some time for the member
+	// resource to discover that the key is inaccessible. When a resource is in this
+	// state, we recommend deleting and recreating the resource.
 	Status MemberStatus
 
 	// Tags assigned to the member. Tags consist of a key and optional value. For more
 	// information about tags, see Tagging Resources
+	// (https://docs.aws.amazon.com/managed-blockchain/latest/ethereum-dev/tagging-resources.html)
+	// in the Amazon Managed Blockchain Ethereum Developer Guide, or Tagging Resources
 	// (https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/tagging-resources.html)
 	// in the Amazon Managed Blockchain Hyperledger Fabric Developer Guide.
 	Tags map[string]string
@@ -209,21 +278,25 @@ type MemberConfiguration struct {
 	// An optional description of the member.
 	Description *string
 
-	// The Amazon Resource Name (ARN) of the customer managed key in AWS Key Management
-	// Service (AWS KMS) to use for encryption at rest in the member. This parameter is
-	// inherited by any nodes that this member creates. Use one of the following
-	// options to specify this parameter:
+	// The Amazon Resource Name (ARN) of the customer managed key in Key Management
+	// Service (KMS) to use for encryption at rest in the member. This parameter is
+	// inherited by any nodes that this member creates. For more information, see
+	// Encryption at Rest
+	// (https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/managed-blockchain-encryption-at-rest.html)
+	// in the Amazon Managed Blockchain Hyperledger Fabric Developer Guide. Use one of
+	// the following options to specify this parameter:
 	//
-	// * Undefined or empty string - The member
-	// uses an AWS owned KMS key for encryption by default.
+	// * Undefined or empty string -
+	// By default, use an KMS key that is owned and managed by Amazon Web Services on
+	// your behalf.
 	//
-	// * A valid symmetric
-	// customer managed KMS key - The member uses the specified key for encryption.
-	// Amazon Managed Blockchain doesn't support asymmetric keys. For more information,
-	// see Using symmetric and asymmetric keys
+	// * A valid symmetric customer managed KMS key - Use the specified
+	// KMS key in your account that you create, own, and manage. Amazon Managed
+	// Blockchain doesn't support asymmetric keys. For more information, see Using
+	// symmetric and asymmetric keys
 	// (https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html)
-	// in the AWS Key Management Service Developer Guide. The following is an example
-	// of a KMS key ARN:
+	// in the Key Management Service Developer Guide. The following is an example of a
+	// KMS key ARN:
 	// arn:aws:kms:us-east-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
 	KmsKeyArn *string
 
@@ -231,12 +304,14 @@ type MemberConfiguration struct {
 	// Managed Blockchain network.
 	LogPublishingConfiguration *MemberLogPublishingConfiguration
 
-	// Tags assigned to the member. Tags consist of a key and optional value. For more
-	// information about tags, see Tagging Resources
-	// (https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/tagging-resources.html)
-	// in the Amazon Managed Blockchain Hyperledger Fabric Developer Guide. When
+	// Tags assigned to the member. Tags consist of a key and optional value. When
 	// specifying tags during creation, you can specify multiple key-value pairs in a
-	// single request, with an overall maximum of 50 tags added to each resource.
+	// single request, with an overall maximum of 50 tags added to each resource. For
+	// more information about tags, see Tagging Resources
+	// (https://docs.aws.amazon.com/managed-blockchain/latest/ethereum-dev/tagging-resources.html)
+	// in the Amazon Managed Blockchain Ethereum Developer Guide, or Tagging Resources
+	// (https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/tagging-resources.html)
+	// in the Amazon Managed Blockchain Hyperledger Fabric Developer Guide.
 	Tags map[string]string
 
 	noSmithyDocumentSerde
@@ -328,7 +403,7 @@ type MemberSummary struct {
 	// The Amazon Resource Name (ARN) of the member. For more information about ARNs
 	// and their format, see Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the Amazon Web Services General Reference.
 	Arn *string
 
 	// The date and time that the member was created.
@@ -340,8 +415,8 @@ type MemberSummary struct {
 	// The unique identifier of the member.
 	Id *string
 
-	// An indicator of whether the member is owned by your AWS account or a different
-	// AWS account.
+	// An indicator of whether the member is owned by your Amazon Web Services account
+	// or a different Amazon Web Services account.
 	IsOwned *bool
 
 	// The name of the member.
@@ -349,36 +424,37 @@ type MemberSummary struct {
 
 	// The status of the member.
 	//
-	// * CREATING - The AWS account is in the process of
-	// creating a member.
+	// * CREATING - The Amazon Web Services account is in
+	// the process of creating a member.
 	//
-	// * AVAILABLE - The member has been created and can
-	// participate in the network.
+	// * AVAILABLE - The member has been created and
+	// can participate in the network.
 	//
-	// * CREATE_FAILED - The AWS account attempted to
-	// create a member and creation failed.
+	// * CREATE_FAILED - The Amazon Web Services
+	// account attempted to create a member and creation failed.
 	//
-	// * UPDATING - The member is in the process
-	// of being updated.
+	// * UPDATING - The
+	// member is in the process of being updated.
 	//
-	// * DELETING - The member and all associated resources are in
-	// the process of being deleted. Either the AWS account that owns the member
-	// deleted it, or the member is being deleted as the result of an APPROVEDPROPOSAL
-	// to remove the member.
+	// * DELETING - The member and all
+	// associated resources are in the process of being deleted. Either the Amazon Web
+	// Services account that owns the member deleted it, or the member is being deleted
+	// as the result of an APPROVEDPROPOSAL to remove the member.
 	//
-	// * DELETED - The member can no longer participate on the
-	// network and all associated resources are deleted. Either the AWS account that
-	// owns the member deleted it, or the member is being deleted as the result of an
-	// APPROVEDPROPOSAL to remove the member.
+	// * DELETED - The
+	// member can no longer participate on the network and all associated resources are
+	// deleted. Either the Amazon Web Services account that owns the member deleted it,
+	// or the member is being deleted as the result of an APPROVEDPROPOSAL to remove
+	// the member.
 	//
-	// * INACCESSIBLE_ENCRYPTION_KEY - The
-	// member is impaired and might not function as expected because it cannot access
-	// the specified customer managed key in AWS Key Management Service (AWS KMS) for
-	// encryption at rest. Either the KMS key was disabled or deleted, or the grants on
-	// the key were revoked. The effect of disabling or deleting a key, or revoking a
-	// grant is not immediate. The member resource might take some time to find that
-	// the key is inaccessible. When a resource is in this state, we recommend deleting
-	// and recreating the resource.
+	// * INACCESSIBLE_ENCRYPTION_KEY - The member is impaired and might
+	// not function as expected because it cannot access the specified customer managed
+	// key in Key Management Service (KMS) for encryption at rest. Either the KMS key
+	// was disabled or deleted, or the grants on the key were revoked. The effect of
+	// disabling or deleting a key or of revoking a grant isn't immediate. It might
+	// take some time for the member resource to discover that the key is inaccessible.
+	// When a resource is in this state, we recommend deleting and recreating the
+	// resource.
 	Status MemberStatus
 
 	noSmithyDocumentSerde
@@ -390,7 +466,7 @@ type Network struct {
 	// The Amazon Resource Name (ARN) of the network. For more information about ARNs
 	// and their format, see Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the Amazon Web Services General Reference.
 	Arn *string
 
 	// The date and time that the network was created.
@@ -443,6 +519,8 @@ type NetworkEthereumAttributes struct {
 	// follows:
 	//
 	// * mainnet = 1
+	//
+	// * goerli = 5
 	//
 	// * rinkeby = 4
 	//
@@ -511,7 +589,7 @@ type NetworkSummary struct {
 	// The Amazon Resource Name (ARN) of the network. For more information about ARNs
 	// and their format, see Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the Amazon Web Services General Reference.
 	Arn *string
 
 	// The date and time that the network was created.
@@ -544,7 +622,7 @@ type Node struct {
 	// The Amazon Resource Name (ARN) of the node. For more information about ARNs and
 	// their format, see Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the Amazon Web Services General Reference.
 	Arn *string
 
 	// The Availability Zone in which the node exists. Required for Ethereum nodes.
@@ -562,11 +640,14 @@ type Node struct {
 	// The instance type of the node.
 	InstanceType *string
 
-	// The Amazon Resource Name (ARN) of the customer managed key in AWS Key Management
-	// Service (AWS KMS) that the node uses for encryption at rest. If the value of
-	// this parameter is "AWS Owned KMS Key", the node uses an AWS owned KMS key for
-	// encryption. The node inherits this parameter from the member that it belongs to.
-	// Applies only to Hyperledger Fabric.
+	// The Amazon Resource Name (ARN) of the customer managed key in Key Management
+	// Service (KMS) that the node uses for encryption at rest. If the value of this
+	// parameter is "AWS Owned KMS Key", the node uses an Amazon Web Services owned KMS
+	// key for encryption. The node inherits this parameter from the member that it
+	// belongs to. For more information, see Encryption at Rest
+	// (https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/managed-blockchain-encryption-at-rest.html)
+	// in the Amazon Managed Blockchain Hyperledger Fabric Developer Guide. Applies
+	// only to Hyperledger Fabric.
 	KmsKeyArn *string
 
 	// Configuration properties for logging events associated with a peer node on a
@@ -586,39 +667,39 @@ type Node struct {
 
 	// The status of the node.
 	//
-	// * CREATING - The AWS account is in the process of
-	// creating a node.
+	// * CREATING - The Amazon Web Services account is in the
+	// process of creating a node.
 	//
-	// * AVAILABLE - The node has been created and can participate in
-	// the network.
+	// * AVAILABLE - The node has been created and can
+	// participate in the network.
 	//
-	// * UNHEALTHY - The node is impaired and might not function as
-	// expected. Amazon Managed Blockchain automatically finds nodes in this state and
-	// tries to recover them. If a node is recoverable, it returns to AVAILABLE.
-	// Otherwise, it moves to FAILED status.
+	// * UNHEALTHY - The node is impaired and might not
+	// function as expected. Amazon Managed Blockchain automatically finds nodes in
+	// this state and tries to recover them. If a node is recoverable, it returns to
+	// AVAILABLE. Otherwise, it moves to FAILED status.
 	//
-	// * CREATE_FAILED - The AWS account
-	// attempted to create a node and creation failed.
+	// * CREATE_FAILED - The Amazon
+	// Web Services account attempted to create a node and creation failed.
 	//
-	// * UPDATING - The node is in the
-	// process of being updated.
+	// * UPDATING
+	// - The node is in the process of being updated.
 	//
-	// * DELETING - The node is in the process of being
-	// deleted.
+	// * DELETING - The node is in the
+	// process of being deleted.
 	//
-	// * DELETED - The node can no longer participate on the network.
+	// * DELETED - The node can no longer participate on the
+	// network.
 	//
-	// *
-	// FAILED - The node is no longer functional, cannot be recovered, and must be
-	// deleted.
+	// * FAILED - The node is no longer functional, cannot be recovered, and
+	// must be deleted.
 	//
-	// * INACCESSIBLE_ENCRYPTION_KEY - The node is impaired and might not
-	// function as expected because it cannot access the specified customer managed key
-	// in AWS KMS for encryption at rest. Either the KMS key was disabled or deleted,
-	// or the grants on the key were revoked. The effect of disabling or deleting a
-	// key, or revoking a grant is not immediate. The node resource might take some
-	// time to find that the key is inaccessible. When a resource is in this state, we
-	// recommend deleting and recreating the resource.
+	// * INACCESSIBLE_ENCRYPTION_KEY - The node is impaired and might
+	// not function as expected because it cannot access the specified customer managed
+	// key in KMS for encryption at rest. Either the KMS key was disabled or deleted,
+	// or the grants on the key were revoked. The effect of disabling or deleting a key
+	// or of revoking a grant isn't immediate. It might take some time for the node
+	// resource to discover that the key is inaccessible. When a resource is in this
+	// state, we recommend deleting and recreating the resource.
 	Status NodeStatus
 
 	// Tags assigned to the node. Each tag consists of a key and optional value. For
@@ -658,16 +739,16 @@ type NodeConfiguration struct {
 // Attributes of an Ethereum node.
 type NodeEthereumAttributes struct {
 
-	// The endpoint on which the Ethereum node listens to run Ethereum JSON-RPC methods
-	// over HTTP connections from a client. Use this endpoint in client code for smart
+	// The endpoint on which the Ethereum node listens to run Ethereum API methods over
+	// HTTP connections from a client. Use this endpoint in client code for smart
 	// contracts when using an HTTP connection. Connections to this endpoint are
 	// authenticated using Signature Version 4
 	// (https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html).
 	HttpEndpoint *string
 
 	// The endpoint on which the Ethereum node listens to run Ethereum JSON-RPC methods
-	// over WebSockets connections from a client. Use this endpoint in client code for
-	// smart contracts when using a WebSockets connection. Connections to this endpoint
+	// over WebSocket connections from a client. Use this endpoint in client code for
+	// smart contracts when using a WebSocket connection. Connections to this endpoint
 	// are authenticated using Signature Version 4
 	// (https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html).
 	WebSocketEndpoint *string
@@ -743,7 +824,7 @@ type NodeSummary struct {
 	// The Amazon Resource Name (ARN) of the node. For more information about ARNs and
 	// their format, see Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the Amazon Web Services General Reference.
 	Arn *string
 
 	// The Availability Zone in which the node exists.
@@ -774,7 +855,7 @@ type Proposal struct {
 	// The Amazon Resource Name (ARN) of the proposal. For more information about ARNs
 	// and their format, see Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the Amazon Web Services General Reference.
 	Arn *string
 
 	// The date and time that the proposal was created.
@@ -785,9 +866,9 @@ type Proposal struct {
 
 	// The date and time that the proposal expires. This is the CreationDate plus the
 	// ProposalDurationInHours that is specified in the ProposalThresholdPolicy. After
-	// this date and time, if members have not cast enough votes to determine the
-	// outcome according to the voting policy, the proposal is EXPIRED and Actions are
-	// not carried out.
+	// this date and time, if members haven't cast enough votes to determine the
+	// outcome according to the voting policy, the proposal is EXPIRED and Actions
+	// aren't carried out.
 	ExpirationDate *time.Time
 
 	// The unique identifier of the network for which the proposal is made.
@@ -820,15 +901,15 @@ type Proposal struct {
 	//
 	// * REJECTED -
 	// The proposal was rejected with insufficient YES votes among members according to
-	// the VotingPolicy specified for the Network. The specified ProposalActions are
-	// not carried out.
+	// the VotingPolicy specified for the Network. The specified ProposalActions aren't
+	// carried out.
 	//
-	// * EXPIRED - Members did not cast the number of votes required
-	// to determine the proposal outcome before the proposal expired. The specified
-	// ProposalActions are not carried out.
+	// * EXPIRED - Members didn't cast the number of votes required to
+	// determine the proposal outcome before the proposal expired. The specified
+	// ProposalActions aren't carried out.
 	//
 	// * ACTION_FAILED - One or more of the
-	// specified ProposalActions in a proposal that was approved could not be completed
+	// specified ProposalActions in a proposal that was approved couldn't be completed
 	// because of an error. The ACTION_FAILED status occurs even if only one
 	// ProposalAction fails and other actions are successful.
 	Status ProposalStatus
@@ -851,8 +932,8 @@ type Proposal struct {
 // Fabric.
 type ProposalActions struct {
 
-	// The actions to perform for an APPROVED proposal to invite an AWS account to
-	// create a member and join the network.
+	// The actions to perform for an APPROVED proposal to invite an Amazon Web Services
+	// account to create a member and join the network.
 	Invitations []InviteAction
 
 	// The actions to perform for an APPROVED proposal to remove a member from the
@@ -869,7 +950,7 @@ type ProposalSummary struct {
 	// The Amazon Resource Name (ARN) of the proposal. For more information about ARNs
 	// and their format, see Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the Amazon Web Services General Reference.
 	Arn *string
 
 	// The date and time that the proposal was created.
@@ -880,9 +961,9 @@ type ProposalSummary struct {
 
 	// The date and time that the proposal expires. This is the CreationDate plus the
 	// ProposalDurationInHours that is specified in the ProposalThresholdPolicy. After
-	// this date and time, if members have not cast enough votes to determine the
-	// outcome according to the voting policy, the proposal is EXPIRED and Actions are
-	// not carried out.
+	// this date and time, if members haven't cast enough votes to determine the
+	// outcome according to the voting policy, the proposal is EXPIRED and Actions
+	// aren't carried out.
 	ExpirationDate *time.Time
 
 	// The unique identifier of the proposal.
@@ -905,15 +986,15 @@ type ProposalSummary struct {
 	//
 	// * REJECTED -
 	// The proposal was rejected with insufficient YES votes among members according to
-	// the VotingPolicy specified for the Network. The specified ProposalActions are
-	// not carried out.
+	// the VotingPolicy specified for the Network. The specified ProposalActions aren't
+	// carried out.
 	//
-	// * EXPIRED - Members did not cast the number of votes required
-	// to determine the proposal outcome before the proposal expired. The specified
-	// ProposalActions are not carried out.
+	// * EXPIRED - Members didn't cast the number of votes required to
+	// determine the proposal outcome before the proposal expired. The specified
+	// ProposalActions aren't carried out.
 	//
 	// * ACTION_FAILED - One or more of the
-	// specified ProposalActions in a proposal that was approved could not be completed
+	// specified ProposalActions in a proposal that was approved couldn't be completed
 	// because of an error.
 	Status ProposalStatus
 

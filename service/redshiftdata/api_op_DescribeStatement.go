@@ -15,7 +15,10 @@ import (
 // Describes the details about a specific instance when a query was run by the
 // Amazon Redshift Data API. The information includes when the query started, when
 // it finished, the query status, the number of rows returned, and the SQL
-// statement.
+// statement. For more information about the Amazon Redshift Data API and CLI usage
+// examples, see Using the Amazon Redshift Data API
+// (https://docs.aws.amazon.com/redshift/latest/mgmt/data-api.html) in the Amazon
+// Redshift Management Guide.
 func (c *Client) DescribeStatement(ctx context.Context, params *DescribeStatementInput, optFns ...func(*Options)) (*DescribeStatementOutput, error) {
 	if params == nil {
 		params = &DescribeStatementInput{}
@@ -133,7 +136,7 @@ type DescribeStatementOutput struct {
 	// updated. An example is the time the status last changed.
 	UpdatedAt *time.Time
 
-	// The serverless workgroup name.
+	// The serverless workgroup name or Amazon Resource Name (ARN).
 	WorkgroupName *string
 
 	// Metadata pertaining to the operation's result.

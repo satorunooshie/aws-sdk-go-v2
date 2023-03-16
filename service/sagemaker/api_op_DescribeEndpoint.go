@@ -117,6 +117,9 @@ type DescribeEndpointOutput struct {
 	// The currently active data capture configuration used by your Endpoint.
 	DataCaptureConfig *types.DataCaptureConfigSummary
 
+	// The configuration parameters for an explainer.
+	ExplainerConfig *types.ExplainerConfig
+
 	// If the status of the endpoint is Failed, the reason why it failed.
 	FailureReason *string
 
@@ -130,6 +133,11 @@ type DescribeEndpointOutput struct {
 	// An array of ProductionVariantSummary objects, one for each model hosted behind
 	// this endpoint.
 	ProductionVariants []types.ProductionVariantSummary
+
+	// An array of ProductionVariantSummary objects, one for each model that you want
+	// to host at this endpoint in shadow mode with production traffic replicated from
+	// the model specified on ProductionVariants.
+	ShadowProductionVariants []types.ProductionVariantSummary
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata

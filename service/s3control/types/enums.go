@@ -80,6 +80,62 @@ func (BucketLocationConstraint) Values() []BucketLocationConstraint {
 	}
 }
 
+type BucketVersioningStatus string
+
+// Enum values for BucketVersioningStatus
+const (
+	BucketVersioningStatusEnabled   BucketVersioningStatus = "Enabled"
+	BucketVersioningStatusSuspended BucketVersioningStatus = "Suspended"
+)
+
+// Values returns all known values for BucketVersioningStatus. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (BucketVersioningStatus) Values() []BucketVersioningStatus {
+	return []BucketVersioningStatus{
+		"Enabled",
+		"Suspended",
+	}
+}
+
+type DeleteMarkerReplicationStatus string
+
+// Enum values for DeleteMarkerReplicationStatus
+const (
+	DeleteMarkerReplicationStatusEnabled  DeleteMarkerReplicationStatus = "Enabled"
+	DeleteMarkerReplicationStatusDisabled DeleteMarkerReplicationStatus = "Disabled"
+)
+
+// Values returns all known values for DeleteMarkerReplicationStatus. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (DeleteMarkerReplicationStatus) Values() []DeleteMarkerReplicationStatus {
+	return []DeleteMarkerReplicationStatus{
+		"Enabled",
+		"Disabled",
+	}
+}
+
+type ExistingObjectReplicationStatus string
+
+// Enum values for ExistingObjectReplicationStatus
+const (
+	ExistingObjectReplicationStatusEnabled  ExistingObjectReplicationStatus = "Enabled"
+	ExistingObjectReplicationStatusDisabled ExistingObjectReplicationStatus = "Disabled"
+)
+
+// Values returns all known values for ExistingObjectReplicationStatus. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (ExistingObjectReplicationStatus) Values() []ExistingObjectReplicationStatus {
+	return []ExistingObjectReplicationStatus{
+		"Enabled",
+		"Disabled",
+	}
+}
+
 type ExpirationStatus string
 
 // Enum values for ExpirationStatus
@@ -246,6 +302,60 @@ func (JobStatus) Values() []JobStatus {
 	}
 }
 
+type MetricsStatus string
+
+// Enum values for MetricsStatus
+const (
+	MetricsStatusEnabled  MetricsStatus = "Enabled"
+	MetricsStatusDisabled MetricsStatus = "Disabled"
+)
+
+// Values returns all known values for MetricsStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (MetricsStatus) Values() []MetricsStatus {
+	return []MetricsStatus{
+		"Enabled",
+		"Disabled",
+	}
+}
+
+type MFADelete string
+
+// Enum values for MFADelete
+const (
+	MFADeleteEnabled  MFADelete = "Enabled"
+	MFADeleteDisabled MFADelete = "Disabled"
+)
+
+// Values returns all known values for MFADelete. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (MFADelete) Values() []MFADelete {
+	return []MFADelete{
+		"Enabled",
+		"Disabled",
+	}
+}
+
+type MFADeleteStatus string
+
+// Enum values for MFADeleteStatus
+const (
+	MFADeleteStatusEnabled  MFADeleteStatus = "Enabled"
+	MFADeleteStatusDisabled MFADeleteStatus = "Disabled"
+)
+
+// Values returns all known values for MFADeleteStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (MFADeleteStatus) Values() []MFADeleteStatus {
+	return []MFADeleteStatus{
+		"Enabled",
+		"Disabled",
+	}
+}
+
 type MultiRegionAccessPointStatus string
 
 // Enum values for MultiRegionAccessPointStatus
@@ -290,12 +400,33 @@ func (NetworkOrigin) Values() []NetworkOrigin {
 	}
 }
 
+type ObjectLambdaAccessPointAliasStatus string
+
+// Enum values for ObjectLambdaAccessPointAliasStatus
+const (
+	ObjectLambdaAccessPointAliasStatusProvisioning ObjectLambdaAccessPointAliasStatus = "PROVISIONING"
+	ObjectLambdaAccessPointAliasStatusReady        ObjectLambdaAccessPointAliasStatus = "READY"
+)
+
+// Values returns all known values for ObjectLambdaAccessPointAliasStatus. Note
+// that this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (ObjectLambdaAccessPointAliasStatus) Values() []ObjectLambdaAccessPointAliasStatus {
+	return []ObjectLambdaAccessPointAliasStatus{
+		"PROVISIONING",
+		"READY",
+	}
+}
+
 type ObjectLambdaAllowedFeature string
 
 // Enum values for ObjectLambdaAllowedFeature
 const (
-	ObjectLambdaAllowedFeatureGetObjectRange      ObjectLambdaAllowedFeature = "GetObject-Range"
-	ObjectLambdaAllowedFeatureGetObjectPartNumber ObjectLambdaAllowedFeature = "GetObject-PartNumber"
+	ObjectLambdaAllowedFeatureGetObjectRange       ObjectLambdaAllowedFeature = "GetObject-Range"
+	ObjectLambdaAllowedFeatureGetObjectPartNumber  ObjectLambdaAllowedFeature = "GetObject-PartNumber"
+	ObjectLambdaAllowedFeatureHeadObjectRange      ObjectLambdaAllowedFeature = "HeadObject-Range"
+	ObjectLambdaAllowedFeatureHeadObjectPartNumber ObjectLambdaAllowedFeature = "HeadObject-PartNumber"
 )
 
 // Values returns all known values for ObjectLambdaAllowedFeature. Note that this
@@ -305,6 +436,8 @@ func (ObjectLambdaAllowedFeature) Values() []ObjectLambdaAllowedFeature {
 	return []ObjectLambdaAllowedFeature{
 		"GetObject-Range",
 		"GetObject-PartNumber",
+		"HeadObject-Range",
+		"HeadObject-PartNumber",
 	}
 }
 
@@ -312,7 +445,10 @@ type ObjectLambdaTransformationConfigurationAction string
 
 // Enum values for ObjectLambdaTransformationConfigurationAction
 const (
-	ObjectLambdaTransformationConfigurationActionGetObject ObjectLambdaTransformationConfigurationAction = "GetObject"
+	ObjectLambdaTransformationConfigurationActionGetObject     ObjectLambdaTransformationConfigurationAction = "GetObject"
+	ObjectLambdaTransformationConfigurationActionHeadObject    ObjectLambdaTransformationConfigurationAction = "HeadObject"
+	ObjectLambdaTransformationConfigurationActionListObjects   ObjectLambdaTransformationConfigurationAction = "ListObjects"
+	ObjectLambdaTransformationConfigurationActionListObjectsV2 ObjectLambdaTransformationConfigurationAction = "ListObjectsV2"
 )
 
 // Values returns all known values for
@@ -322,6 +458,9 @@ const (
 func (ObjectLambdaTransformationConfigurationAction) Values() []ObjectLambdaTransformationConfigurationAction {
 	return []ObjectLambdaTransformationConfigurationAction{
 		"GetObject",
+		"HeadObject",
+		"ListObjects",
+		"ListObjectsV2",
 	}
 }
 
@@ -373,6 +512,58 @@ func (OutputSchemaVersion) Values() []OutputSchemaVersion {
 	}
 }
 
+type OwnerOverride string
+
+// Enum values for OwnerOverride
+const (
+	OwnerOverrideDestination OwnerOverride = "Destination"
+)
+
+// Values returns all known values for OwnerOverride. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (OwnerOverride) Values() []OwnerOverride {
+	return []OwnerOverride{
+		"Destination",
+	}
+}
+
+type ReplicaModificationsStatus string
+
+// Enum values for ReplicaModificationsStatus
+const (
+	ReplicaModificationsStatusEnabled  ReplicaModificationsStatus = "Enabled"
+	ReplicaModificationsStatusDisabled ReplicaModificationsStatus = "Disabled"
+)
+
+// Values returns all known values for ReplicaModificationsStatus. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (ReplicaModificationsStatus) Values() []ReplicaModificationsStatus {
+	return []ReplicaModificationsStatus{
+		"Enabled",
+		"Disabled",
+	}
+}
+
+type ReplicationRuleStatus string
+
+// Enum values for ReplicationRuleStatus
+const (
+	ReplicationRuleStatusEnabled  ReplicationRuleStatus = "Enabled"
+	ReplicationRuleStatusDisabled ReplicationRuleStatus = "Disabled"
+)
+
+// Values returns all known values for ReplicationRuleStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ReplicationRuleStatus) Values() []ReplicationRuleStatus {
+	return []ReplicationRuleStatus{
+		"Enabled",
+		"Disabled",
+	}
+}
+
 type ReplicationStatus string
 
 // Enum values for ReplicationStatus
@@ -392,6 +583,56 @@ func (ReplicationStatus) Values() []ReplicationStatus {
 		"FAILED",
 		"REPLICA",
 		"NONE",
+	}
+}
+
+type ReplicationStorageClass string
+
+// Enum values for ReplicationStorageClass
+const (
+	ReplicationStorageClassStandard           ReplicationStorageClass = "STANDARD"
+	ReplicationStorageClassReducedRedundancy  ReplicationStorageClass = "REDUCED_REDUNDANCY"
+	ReplicationStorageClassStandardIa         ReplicationStorageClass = "STANDARD_IA"
+	ReplicationStorageClassOnezoneIa          ReplicationStorageClass = "ONEZONE_IA"
+	ReplicationStorageClassIntelligentTiering ReplicationStorageClass = "INTELLIGENT_TIERING"
+	ReplicationStorageClassGlacier            ReplicationStorageClass = "GLACIER"
+	ReplicationStorageClassDeepArchive        ReplicationStorageClass = "DEEP_ARCHIVE"
+	ReplicationStorageClassOutposts           ReplicationStorageClass = "OUTPOSTS"
+	ReplicationStorageClassGlacierIr          ReplicationStorageClass = "GLACIER_IR"
+)
+
+// Values returns all known values for ReplicationStorageClass. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ReplicationStorageClass) Values() []ReplicationStorageClass {
+	return []ReplicationStorageClass{
+		"STANDARD",
+		"REDUCED_REDUNDANCY",
+		"STANDARD_IA",
+		"ONEZONE_IA",
+		"INTELLIGENT_TIERING",
+		"GLACIER",
+		"DEEP_ARCHIVE",
+		"OUTPOSTS",
+		"GLACIER_IR",
+	}
+}
+
+type ReplicationTimeStatus string
+
+// Enum values for ReplicationTimeStatus
+const (
+	ReplicationTimeStatusEnabled  ReplicationTimeStatus = "Enabled"
+	ReplicationTimeStatusDisabled ReplicationTimeStatus = "Disabled"
+)
+
+// Values returns all known values for ReplicationTimeStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ReplicationTimeStatus) Values() []ReplicationTimeStatus {
+	return []ReplicationTimeStatus{
+		"Enabled",
+		"Disabled",
 	}
 }
 
@@ -640,6 +881,24 @@ func (S3StorageClass) Values() []S3StorageClass {
 		"INTELLIGENT_TIERING",
 		"DEEP_ARCHIVE",
 		"GLACIER_IR",
+	}
+}
+
+type SseKmsEncryptedObjectsStatus string
+
+// Enum values for SseKmsEncryptedObjectsStatus
+const (
+	SseKmsEncryptedObjectsStatusEnabled  SseKmsEncryptedObjectsStatus = "Enabled"
+	SseKmsEncryptedObjectsStatusDisabled SseKmsEncryptedObjectsStatus = "Disabled"
+)
+
+// Values returns all known values for SseKmsEncryptedObjectsStatus. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (SseKmsEncryptedObjectsStatus) Values() []SseKmsEncryptedObjectsStatus {
+	return []SseKmsEncryptedObjectsStatus{
+		"Enabled",
+		"Disabled",
 	}
 }
 

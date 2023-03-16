@@ -10,6 +10,66 @@ import (
 	"github.com/aws/smithy-go/middleware"
 )
 
+type validateOpBatchCreateCustomVocabularyItem struct {
+}
+
+func (*validateOpBatchCreateCustomVocabularyItem) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpBatchCreateCustomVocabularyItem) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*BatchCreateCustomVocabularyItemInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpBatchCreateCustomVocabularyItemInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpBatchDeleteCustomVocabularyItem struct {
+}
+
+func (*validateOpBatchDeleteCustomVocabularyItem) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpBatchDeleteCustomVocabularyItem) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*BatchDeleteCustomVocabularyItemInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpBatchDeleteCustomVocabularyItemInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpBatchUpdateCustomVocabularyItem struct {
+}
+
+func (*validateOpBatchUpdateCustomVocabularyItem) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpBatchUpdateCustomVocabularyItem) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*BatchUpdateCustomVocabularyItemInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpBatchUpdateCustomVocabularyItemInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpBuildBotLocale struct {
 }
 
@@ -890,6 +950,26 @@ func (m *validateOpListBuiltInSlotTypes) HandleInitialize(ctx context.Context, i
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpListCustomVocabularyItems struct {
+}
+
+func (*validateOpListCustomVocabularyItems) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpListCustomVocabularyItems) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*ListCustomVocabularyItemsInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpListCustomVocabularyItemsInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpListExports struct {
 }
 
@@ -1330,6 +1410,18 @@ func (m *validateOpUpdateSlotType) HandleInitialize(ctx context.Context, in midd
 	return next.HandleInitialize(ctx, in)
 }
 
+func addOpBatchCreateCustomVocabularyItemValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpBatchCreateCustomVocabularyItem{}, middleware.After)
+}
+
+func addOpBatchDeleteCustomVocabularyItemValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpBatchDeleteCustomVocabularyItem{}, middleware.After)
+}
+
+func addOpBatchUpdateCustomVocabularyItemValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpBatchUpdateCustomVocabularyItem{}, middleware.After)
+}
+
 func addOpBuildBotLocaleValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpBuildBotLocale{}, middleware.After)
 }
@@ -1506,6 +1598,10 @@ func addOpListBuiltInSlotTypesValidationMiddleware(stack *middleware.Stack) erro
 	return stack.Initialize.Add(&validateOpListBuiltInSlotTypes{}, middleware.After)
 }
 
+func addOpListCustomVocabularyItemsValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpListCustomVocabularyItems{}, middleware.After)
+}
+
 func addOpListExportsValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpListExports{}, middleware.After)
 }
@@ -1650,6 +1746,24 @@ func validateAggregatedUtterancesSortBy(v *types.AggregatedUtterancesSortBy) err
 	}
 }
 
+func validateAllowedInputTypes(v *types.AllowedInputTypes) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "AllowedInputTypes"}
+	if v.AllowAudioInput == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AllowAudioInput"))
+	}
+	if v.AllowDTMFInput == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AllowDTMFInput"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateAssociatedTranscriptFilter(v *types.AssociatedTranscriptFilter) error {
 	if v == nil {
 		return nil
@@ -1676,6 +1790,31 @@ func validateAssociatedTranscriptFilters(v []types.AssociatedTranscriptFilter) e
 	for i := range v {
 		if err := validateAssociatedTranscriptFilter(&v[i]); err != nil {
 			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateAudioAndDTMFInputSpecification(v *types.AudioAndDTMFInputSpecification) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "AudioAndDTMFInputSpecification"}
+	if v.StartTimeoutMs == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("StartTimeoutMs"))
+	}
+	if v.AudioSpecification != nil {
+		if err := validateAudioSpecification(v.AudioSpecification); err != nil {
+			invalidParams.AddNested("AudioSpecification", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.DtmfSpecification != nil {
+		if err := validateDTMFSpecification(v.DtmfSpecification); err != nil {
+			invalidParams.AddNested("DtmfSpecification", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {
@@ -1732,6 +1871,24 @@ func validateAudioLogSettingsList(v []types.AudioLogSetting) error {
 		if err := validateAudioLogSetting(&v[i]); err != nil {
 			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
 		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateAudioSpecification(v *types.AudioSpecification) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "AudioSpecification"}
+	if v.MaxLengthMs == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("MaxLengthMs"))
+	}
+	if v.EndTimeoutMs == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("EndTimeoutMs"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1959,6 +2116,50 @@ func validateBotLocaleSortBy(v *types.BotLocaleSortBy) error {
 	}
 }
 
+func validateBotMember(v *types.BotMember) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "BotMember"}
+	if v.BotMemberId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotMemberId"))
+	}
+	if v.BotMemberName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotMemberName"))
+	}
+	if v.BotMemberAliasId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotMemberAliasId"))
+	}
+	if v.BotMemberAliasName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotMemberAliasName"))
+	}
+	if v.BotMemberVersion == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotMemberVersion"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateBotMembers(v []types.BotMember) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "BotMembers"}
+	for i := range v {
+		if err := validateBotMember(&v[i]); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateBotSortBy(v *types.BotSortBy) error {
 	if v == nil {
 		return nil
@@ -2136,6 +2337,23 @@ func validateCodeHookSpecification(v *types.CodeHookSpecification) error {
 	}
 }
 
+func validateCompositeSlotTypeSetting(v *types.CompositeSlotTypeSetting) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "CompositeSlotTypeSetting"}
+	if v.SubSlots != nil {
+		if err := validateSubSlotTypeList(v.SubSlots); err != nil {
+			invalidParams.AddNested("SubSlots", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateCondition(v *types.Condition) error {
 	if v == nil {
 		return nil
@@ -2253,6 +2471,23 @@ func validateConversationLogSettings(v *types.ConversationLogSettings) error {
 	}
 }
 
+func validateCreateCustomVocabularyItemsList(v []types.NewCustomVocabularyItem) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "CreateCustomVocabularyItemsList"}
+	for i := range v {
+		if err := validateNewCustomVocabularyItem(&v[i]); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateCustomPayload(v *types.CustomPayload) error {
 	if v == nil {
 		return nil
@@ -2260,6 +2495,21 @@ func validateCustomPayload(v *types.CustomPayload) error {
 	invalidParams := smithy.InvalidParamsError{Context: "CustomPayload"}
 	if v.Value == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("Value"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateCustomVocabularyEntryId(v *types.CustomVocabularyEntryId) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "CustomVocabularyEntryId"}
+	if v.ItemId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ItemId"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -2302,6 +2552,24 @@ func validateCustomVocabularyImportSpecification(v *types.CustomVocabularyImport
 	}
 	if v.LocaleId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("LocaleId"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateCustomVocabularyItem(v *types.CustomVocabularyItem) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "CustomVocabularyItem"}
+	if v.ItemId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ItemId"))
+	}
+	if v.Phrase == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Phrase"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -2353,6 +2621,23 @@ func validateDefaultConditionalBranch(v *types.DefaultConditionalBranch) error {
 	if v.Response != nil {
 		if err := validateResponseSpecification(v.Response); err != nil {
 			invalidParams.AddNested("Response", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDeleteCustomVocabularyItemsList(v []types.CustomVocabularyEntryId) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DeleteCustomVocabularyItemsList"}
+	for i := range v {
+		if err := validateCustomVocabularyEntryId(&v[i]); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {
@@ -2423,6 +2708,30 @@ func validateDialogState(v *types.DialogState) error {
 		if err := validateDialogAction(v.DialogAction); err != nil {
 			invalidParams.AddNested("DialogAction", err.(smithy.InvalidParamsError))
 		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateDTMFSpecification(v *types.DTMFSpecification) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DTMFSpecification"}
+	if v.MaxLength == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("MaxLength"))
+	}
+	if v.EndTimeoutMs == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("EndTimeoutMs"))
+	}
+	if v.DeletionCharacter == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DeletionCharacter"))
+	}
+	if v.EndCharacter == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("EndCharacter"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -3136,6 +3445,21 @@ func validateMessageVariationsList(v []types.Message) error {
 	}
 }
 
+func validateNewCustomVocabularyItem(v *types.NewCustomVocabularyItem) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "NewCustomVocabularyItem"}
+	if v.Phrase == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Phrase"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateObfuscationSetting(v *types.ObfuscationSetting) error {
 	if v == nil {
 		return nil
@@ -3318,6 +3642,53 @@ func validatePostFulfillmentStatusSpecification(v *types.PostFulfillmentStatusSp
 	}
 }
 
+func validatePromptAttemptSpecification(v *types.PromptAttemptSpecification) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "PromptAttemptSpecification"}
+	if v.AllowedInputTypes == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("AllowedInputTypes"))
+	} else if v.AllowedInputTypes != nil {
+		if err := validateAllowedInputTypes(v.AllowedInputTypes); err != nil {
+			invalidParams.AddNested("AllowedInputTypes", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.AudioAndDTMFInputSpecification != nil {
+		if err := validateAudioAndDTMFInputSpecification(v.AudioAndDTMFInputSpecification); err != nil {
+			invalidParams.AddNested("AudioAndDTMFInputSpecification", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.TextInputSpecification != nil {
+		if err := validateTextInputSpecification(v.TextInputSpecification); err != nil {
+			invalidParams.AddNested("TextInputSpecification", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validatePromptAttemptsSpecificationMap(v map[string]types.PromptAttemptSpecification) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "PromptAttemptsSpecificationMap"}
+	for key := range v {
+		value := v[key]
+		if err := validatePromptAttemptSpecification(&value); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%q]", key), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validatePromptSpecification(v *types.PromptSpecification) error {
 	if v == nil {
 		return nil
@@ -3332,6 +3703,11 @@ func validatePromptSpecification(v *types.PromptSpecification) error {
 	}
 	if v.MaxRetries == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("MaxRetries"))
+	}
+	if v.PromptAttemptsSpecification != nil {
+		if err := validatePromptAttemptsSpecificationMap(v.PromptAttemptsSpecification); err != nil {
+			invalidParams.AddNested("PromptAttemptsSpecification", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -3838,6 +4214,28 @@ func validateSlotValueSelectionSetting(v *types.SlotValueSelectionSetting) error
 	}
 }
 
+func validateSpecifications(v *types.Specifications) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "Specifications"}
+	if v.SlotTypeId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("SlotTypeId"))
+	}
+	if v.ValueElicitationSetting == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ValueElicitationSetting"))
+	} else if v.ValueElicitationSetting != nil {
+		if err := validateSubSlotValueElicitationSetting(v.ValueElicitationSetting); err != nil {
+			invalidParams.AddNested("ValueElicitationSetting", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateSSMLMessage(v *types.SSMLMessage) error {
 	if v == nil {
 		return nil
@@ -3878,6 +4276,110 @@ func validateStillWaitingResponseSpecification(v *types.StillWaitingResponseSpec
 	}
 }
 
+func validateSubSlotSetting(v *types.SubSlotSetting) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "SubSlotSetting"}
+	if v.SlotSpecifications != nil {
+		if err := validateSubSlotSpecificationMap(v.SlotSpecifications); err != nil {
+			invalidParams.AddNested("SlotSpecifications", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateSubSlotSpecificationMap(v map[string]types.Specifications) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "SubSlotSpecificationMap"}
+	for key := range v {
+		value := v[key]
+		if err := validateSpecifications(&value); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%q]", key), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateSubSlotTypeComposition(v *types.SubSlotTypeComposition) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "SubSlotTypeComposition"}
+	if v.Name == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Name"))
+	}
+	if v.SlotTypeId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("SlotTypeId"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateSubSlotTypeList(v []types.SubSlotTypeComposition) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "SubSlotTypeList"}
+	for i := range v {
+		if err := validateSubSlotTypeComposition(&v[i]); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateSubSlotValueElicitationSetting(v *types.SubSlotValueElicitationSetting) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "SubSlotValueElicitationSetting"}
+	if v.DefaultValueSpecification != nil {
+		if err := validateSlotDefaultValueSpecification(v.DefaultValueSpecification); err != nil {
+			invalidParams.AddNested("DefaultValueSpecification", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.PromptSpecification == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("PromptSpecification"))
+	} else if v.PromptSpecification != nil {
+		if err := validatePromptSpecification(v.PromptSpecification); err != nil {
+			invalidParams.AddNested("PromptSpecification", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.SampleUtterances != nil {
+		if err := validateSampleUtterancesList(v.SampleUtterances); err != nil {
+			invalidParams.AddNested("SampleUtterances", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.WaitAndContinueSpecification != nil {
+		if err := validateWaitAndContinueSpecification(v.WaitAndContinueSpecification); err != nil {
+			invalidParams.AddNested("WaitAndContinueSpecification", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateSynonymList(v []types.SampleValue) error {
 	if v == nil {
 		return nil
@@ -3887,6 +4389,21 @@ func validateSynonymList(v []types.SampleValue) error {
 		if err := validateSampleValue(&v[i]); err != nil {
 			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
 		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateTextInputSpecification(v *types.TextInputSpecification) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "TextInputSpecification"}
+	if v.StartTimeoutMs == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("StartTimeoutMs"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -3984,6 +4501,23 @@ func validateTranscriptSourceSetting(v *types.TranscriptSourceSetting) error {
 	}
 }
 
+func validateUpdateCustomVocabularyItemsList(v []types.CustomVocabularyItem) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "UpdateCustomVocabularyItemsList"}
+	for i := range v {
+		if err := validateCustomVocabularyItem(&v[i]); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateUtteranceAggregationDuration(v *types.UtteranceAggregationDuration) error {
 	if v == nil {
 		return nil
@@ -4040,6 +4574,90 @@ func validateWaitAndContinueSpecification(v *types.WaitAndContinueSpecification)
 	if v.StillWaitingResponse != nil {
 		if err := validateStillWaitingResponseSpecification(v.StillWaitingResponse); err != nil {
 			invalidParams.AddNested("StillWaitingResponse", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpBatchCreateCustomVocabularyItemInput(v *BatchCreateCustomVocabularyItemInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "BatchCreateCustomVocabularyItemInput"}
+	if v.BotId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotId"))
+	}
+	if v.BotVersion == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotVersion"))
+	}
+	if v.LocaleId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("LocaleId"))
+	}
+	if v.CustomVocabularyItemList == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("CustomVocabularyItemList"))
+	} else if v.CustomVocabularyItemList != nil {
+		if err := validateCreateCustomVocabularyItemsList(v.CustomVocabularyItemList); err != nil {
+			invalidParams.AddNested("CustomVocabularyItemList", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpBatchDeleteCustomVocabularyItemInput(v *BatchDeleteCustomVocabularyItemInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "BatchDeleteCustomVocabularyItemInput"}
+	if v.BotId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotId"))
+	}
+	if v.BotVersion == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotVersion"))
+	}
+	if v.LocaleId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("LocaleId"))
+	}
+	if v.CustomVocabularyItemList == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("CustomVocabularyItemList"))
+	} else if v.CustomVocabularyItemList != nil {
+		if err := validateDeleteCustomVocabularyItemsList(v.CustomVocabularyItemList); err != nil {
+			invalidParams.AddNested("CustomVocabularyItemList", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpBatchUpdateCustomVocabularyItemInput(v *BatchUpdateCustomVocabularyItemInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "BatchUpdateCustomVocabularyItemInput"}
+	if v.BotId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotId"))
+	}
+	if v.BotVersion == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotVersion"))
+	}
+	if v.LocaleId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("LocaleId"))
+	}
+	if v.CustomVocabularyItemList == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("CustomVocabularyItemList"))
+	} else if v.CustomVocabularyItemList != nil {
+		if err := validateUpdateCustomVocabularyItemsList(v.CustomVocabularyItemList); err != nil {
+			invalidParams.AddNested("CustomVocabularyItemList", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {
@@ -4123,6 +4741,11 @@ func validateOpCreateBotInput(v *CreateBotInput) error {
 	}
 	if v.IdleSessionTTLInSeconds == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("IdleSessionTTLInSeconds"))
+	}
+	if v.BotMembers != nil {
+		if err := validateBotMembers(v.BotMembers); err != nil {
+			invalidParams.AddNested("BotMembers", err.(smithy.InvalidParamsError))
+		}
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -4350,6 +4973,11 @@ func validateOpCreateSlotInput(v *CreateSlotInput) error {
 	if v.IntentId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("IntentId"))
 	}
+	if v.SubSlotSetting != nil {
+		if err := validateSubSlotSetting(v.SubSlotSetting); err != nil {
+			invalidParams.AddNested("SubSlotSetting", err.(smithy.InvalidParamsError))
+		}
+	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	} else {
@@ -4387,6 +5015,11 @@ func validateOpCreateSlotTypeInput(v *CreateSlotTypeInput) error {
 	if v.ExternalSourceSetting != nil {
 		if err := validateExternalSourceSetting(v.ExternalSourceSetting); err != nil {
 			invalidParams.AddNested("ExternalSourceSetting", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.CompositeSlotTypeSetting != nil {
+		if err := validateCompositeSlotTypeSetting(v.CompositeSlotTypeSetting); err != nil {
+			invalidParams.AddNested("CompositeSlotTypeSetting", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {
@@ -5060,6 +5693,27 @@ func validateOpListBuiltInSlotTypesInput(v *ListBuiltInSlotTypesInput) error {
 	}
 }
 
+func validateOpListCustomVocabularyItemsInput(v *ListCustomVocabularyItemsInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ListCustomVocabularyItemsInput"}
+	if v.BotId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotId"))
+	}
+	if v.BotVersion == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("BotVersion"))
+	}
+	if v.LocaleId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("LocaleId"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpListExportsInput(v *ListExportsInput) error {
 	if v == nil {
 		return nil
@@ -5443,6 +6097,11 @@ func validateOpUpdateBotInput(v *UpdateBotInput) error {
 	if v.IdleSessionTTLInSeconds == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("IdleSessionTTLInSeconds"))
 	}
+	if v.BotMembers != nil {
+		if err := validateBotMembers(v.BotMembers); err != nil {
+			invalidParams.AddNested("BotMembers", err.(smithy.InvalidParamsError))
+		}
+	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	} else {
@@ -5651,6 +6310,11 @@ func validateOpUpdateSlotInput(v *UpdateSlotInput) error {
 	if v.IntentId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("IntentId"))
 	}
+	if v.SubSlotSetting != nil {
+		if err := validateSubSlotSetting(v.SubSlotSetting); err != nil {
+			invalidParams.AddNested("SubSlotSetting", err.(smithy.InvalidParamsError))
+		}
+	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	} else {
@@ -5691,6 +6355,11 @@ func validateOpUpdateSlotTypeInput(v *UpdateSlotTypeInput) error {
 	if v.ExternalSourceSetting != nil {
 		if err := validateExternalSourceSetting(v.ExternalSourceSetting); err != nil {
 			invalidParams.AddNested("ExternalSourceSetting", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.CompositeSlotTypeSetting != nil {
+		if err := validateCompositeSlotTypeSetting(v.CompositeSlotTypeSetting); err != nil {
+			invalidParams.AddNested("CompositeSlotTypeSetting", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {

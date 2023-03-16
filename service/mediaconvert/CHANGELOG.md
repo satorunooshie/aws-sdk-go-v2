@@ -1,3 +1,89 @@
+# v1.33.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.0 (2023-03-03)
+
+* **Feature**: The AWS Elemental MediaConvert SDK has improved handling for different input and output color space combinations.
+
+# v1.32.0 (2023-02-27)
+
+* **Feature**: The AWS Elemental MediaConvert SDK has added support for HDR10 to SDR tone mapping, and animated GIF video input sources.
+
+# v1.31.3 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.31.2 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.31.1 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.31.0 (2023-02-06)
+
+* **Feature**: The AWS Elemental MediaConvert SDK has added improved scene change detection capabilities and a bandwidth reduction filter, along with video quality enhancements, to the AVC encoder.
+
+# v1.30.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.30.0 (2023-01-12)
+
+* **Feature**: The AWS Elemental MediaConvert SDK has added support for compact DASH manifest generation, audio normalization using TruePeak measurements, and the ability to clip the sample range in the color corrector.
+
+# v1.29.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.28.2 (2022-12-21)
+
+* No change notes available for this release.
+
+# v1.28.1 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.0 (2022-12-02)
+
+* **Feature**: The AWS Elemental MediaConvert SDK has added support for configurable ID3 eMSG box attributes and the ability to signal them with InbandEventStream tags in DASH and CMAF outputs.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.0 (2022-11-07)
+
+* **Feature**: The AWS Elemental MediaConvert SDK has added support for setting the SDR reference white point for HDR conversions and conversion of HDR10 to DolbyVision without mastering metadata.
+
+# v1.26.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.0 (2022-10-14)
+
+* **Feature**: MediaConvert now supports specifying the minimum percentage of the HRD buffer available at the end of each encoded video segment.
+
+# v1.25.12 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.11 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.10 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.9 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.25.8 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

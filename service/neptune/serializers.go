@@ -13,6 +13,7 @@ import (
 	"github.com/aws/smithy-go/middleware"
 	smithytime "github.com/aws/smithy-go/time"
 	smithyhttp "github.com/aws/smithy-go/transport/http"
+	"math"
 	"path"
 )
 
@@ -4432,9 +4433,6 @@ func (m *awsAwsquery_serializeOpStopDBCluster) HandleSerialize(ctx context.Conte
 	return next.HandleSerialize(ctx, in)
 }
 func awsAwsquery_serializeDocumentAttributeValueList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("AttributeValue")
 
 	for i := range v {
@@ -4445,9 +4443,6 @@ func awsAwsquery_serializeDocumentAttributeValueList(v []string, value query.Val
 }
 
 func awsAwsquery_serializeDocumentAvailabilityZones(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("AvailabilityZone")
 
 	for i := range v {
@@ -4479,9 +4474,6 @@ func awsAwsquery_serializeDocumentCloudwatchLogsExportConfiguration(v *types.Clo
 }
 
 func awsAwsquery_serializeDocumentDBSecurityGroupNameList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("DBSecurityGroupName")
 
 	for i := range v {
@@ -4492,9 +4484,6 @@ func awsAwsquery_serializeDocumentDBSecurityGroupNameList(v []string, value quer
 }
 
 func awsAwsquery_serializeDocumentEventCategoriesList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("EventCategory")
 
 	for i := range v {
@@ -4524,9 +4513,6 @@ func awsAwsquery_serializeDocumentFilter(v *types.Filter, value query.Value) err
 }
 
 func awsAwsquery_serializeDocumentFilterList(v []types.Filter, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("Filter")
 
 	for i := range v {
@@ -4539,9 +4525,6 @@ func awsAwsquery_serializeDocumentFilterList(v []types.Filter, value query.Value
 }
 
 func awsAwsquery_serializeDocumentFilterValueList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("Value")
 
 	for i := range v {
@@ -4552,9 +4535,6 @@ func awsAwsquery_serializeDocumentFilterValueList(v []string, value query.Value)
 }
 
 func awsAwsquery_serializeDocumentKeyList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4565,9 +4545,6 @@ func awsAwsquery_serializeDocumentKeyList(v []string, value query.Value) error {
 }
 
 func awsAwsquery_serializeDocumentLogTypeList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4635,9 +4612,6 @@ func awsAwsquery_serializeDocumentParameter(v *types.Parameter, value query.Valu
 }
 
 func awsAwsquery_serializeDocumentParametersList(v []types.Parameter, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("Parameter")
 
 	for i := range v {
@@ -4649,10 +4623,50 @@ func awsAwsquery_serializeDocumentParametersList(v []types.Parameter, value quer
 	return nil
 }
 
-func awsAwsquery_serializeDocumentSourceIdsList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
+func awsAwsquery_serializeDocumentServerlessV2ScalingConfiguration(v *types.ServerlessV2ScalingConfiguration, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.MaxCapacity != nil {
+		objectKey := object.Key("MaxCapacity")
+		switch {
+		case math.IsNaN(*v.MaxCapacity):
+			objectKey.String("NaN")
+
+		case math.IsInf(*v.MaxCapacity, 1):
+			objectKey.String("Infinity")
+
+		case math.IsInf(*v.MaxCapacity, -1):
+			objectKey.String("-Infinity")
+
+		default:
+			objectKey.Double(*v.MaxCapacity)
+
+		}
 	}
+
+	if v.MinCapacity != nil {
+		objectKey := object.Key("MinCapacity")
+		switch {
+		case math.IsNaN(*v.MinCapacity):
+			objectKey.String("NaN")
+
+		case math.IsInf(*v.MinCapacity, 1):
+			objectKey.String("Infinity")
+
+		case math.IsInf(*v.MinCapacity, -1):
+			objectKey.String("-Infinity")
+
+		default:
+			objectKey.Double(*v.MinCapacity)
+
+		}
+	}
+
+	return nil
+}
+
+func awsAwsquery_serializeDocumentSourceIdsList(v []string, value query.Value) error {
 	array := value.Array("SourceId")
 
 	for i := range v {
@@ -4663,9 +4677,6 @@ func awsAwsquery_serializeDocumentSourceIdsList(v []string, value query.Value) e
 }
 
 func awsAwsquery_serializeDocumentStringList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4676,9 +4687,6 @@ func awsAwsquery_serializeDocumentStringList(v []string, value query.Value) erro
 }
 
 func awsAwsquery_serializeDocumentSubnetIdentifierList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("SubnetIdentifier")
 
 	for i := range v {
@@ -4706,9 +4714,6 @@ func awsAwsquery_serializeDocumentTag(v *types.Tag, value query.Value) error {
 }
 
 func awsAwsquery_serializeDocumentTagList(v []types.Tag, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("Tag")
 
 	for i := range v {
@@ -4721,9 +4726,6 @@ func awsAwsquery_serializeDocumentTagList(v []types.Tag, value query.Value) erro
 }
 
 func awsAwsquery_serializeDocumentVpcSecurityGroupIdList(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("VpcSecurityGroupId")
 
 	for i := range v {
@@ -5084,6 +5086,13 @@ func awsAwsquery_serializeOpDocumentCreateDBClusterInput(v *CreateDBClusterInput
 	if v.ReplicationSourceIdentifier != nil {
 		objectKey := object.Key("ReplicationSourceIdentifier")
 		objectKey.String(*v.ReplicationSourceIdentifier)
+	}
+
+	if v.ServerlessV2ScalingConfiguration != nil {
+		objectKey := object.Key("ServerlessV2ScalingConfiguration")
+		if err := awsAwsquery_serializeDocumentServerlessV2ScalingConfiguration(v.ServerlessV2ScalingConfiguration, objectKey); err != nil {
+			return err
+		}
 	}
 
 	if v.StorageEncrypted != nil {
@@ -6475,6 +6484,13 @@ func awsAwsquery_serializeOpDocumentModifyDBClusterInput(v *ModifyDBClusterInput
 		objectKey.String(*v.PreferredMaintenanceWindow)
 	}
 
+	if v.ServerlessV2ScalingConfiguration != nil {
+		objectKey := object.Key("ServerlessV2ScalingConfiguration")
+		if err := awsAwsquery_serializeDocumentServerlessV2ScalingConfiguration(v.ServerlessV2ScalingConfiguration, objectKey); err != nil {
+			return err
+		}
+	}
+
 	if v.VpcSecurityGroupIds != nil {
 		objectKey := object.Key("VpcSecurityGroupIds")
 		if err := awsAwsquery_serializeDocumentVpcSecurityGroupIdList(v.VpcSecurityGroupIds, objectKey); err != nil {
@@ -7072,6 +7088,13 @@ func awsAwsquery_serializeOpDocumentRestoreDBClusterFromSnapshotInput(v *Restore
 		objectKey.Integer(*v.Port)
 	}
 
+	if v.ServerlessV2ScalingConfiguration != nil {
+		objectKey := object.Key("ServerlessV2ScalingConfiguration")
+		if err := awsAwsquery_serializeDocumentServerlessV2ScalingConfiguration(v.ServerlessV2ScalingConfiguration, objectKey); err != nil {
+			return err
+		}
+	}
+
 	if v.SnapshotIdentifier != nil {
 		objectKey := object.Key("SnapshotIdentifier")
 		objectKey.String(*v.SnapshotIdentifier)
@@ -7153,6 +7176,13 @@ func awsAwsquery_serializeOpDocumentRestoreDBClusterToPointInTimeInput(v *Restor
 	if v.RestoreType != nil {
 		objectKey := object.Key("RestoreType")
 		objectKey.String(*v.RestoreType)
+	}
+
+	if v.ServerlessV2ScalingConfiguration != nil {
+		objectKey := object.Key("ServerlessV2ScalingConfiguration")
+		if err := awsAwsquery_serializeDocumentServerlessV2ScalingConfiguration(v.ServerlessV2ScalingConfiguration, objectKey); err != nil {
+			return err
+		}
 	}
 
 	if v.SourceDBClusterIdentifier != nil {

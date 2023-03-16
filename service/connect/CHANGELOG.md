@@ -1,3 +1,129 @@
+# v1.49.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.49.0 (2023-03-09)
+
+* **Feature**: This release adds a new API, GetMetricDataV2, which returns metric data for Amazon Connect.
+
+# v1.48.0 (2023-02-24)
+
+* **Feature**: StartTaskContact API now supports linked task creation with a new optional RelatedContactId parameter
+
+# v1.47.1 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.47.0 (2023-02-20)
+
+* **Feature**: Reasons for failed diff has been approved by SDK Reviewer
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.46.1 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.46.0 (2023-02-10)
+
+* **Feature**: This update provides the Wisdom session ARN for contacts enabled for Wisdom in the chat channel.
+
+# v1.45.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.45.0 (2023-01-19)
+
+* **Feature**: Amazon Connect Chat introduces Persistent Chat, allowing customers to resume previous conversations with context and transcripts carried over from previous chats, eliminating the need to repeat themselves and allowing agents to provide personalized service with access to entire conversation history.
+
+# v1.44.0 (2023-01-13)
+
+* **Feature**: This release updates the responses of UpdateContactFlowContent, UpdateContactFlowMetadata, UpdateContactFlowName and DeleteContactFlow API with empty responses.
+
+# v1.43.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+* **Feature**: Documentation update for a new Initiation Method value in DescribeContact API
+
+# v1.42.0 (2022-12-23)
+
+* **Feature**: Support for Routing Profile filter, SortCriteria, and grouping by Routing Profiles for GetCurrentMetricData API. Support for RoutingProfiles, UserHierarchyGroups, and Agents as filters, NextStatus and AgentStatusName for GetCurrentUserData. Adds ApproximateTotalCount to both APIs.
+
+# v1.41.0 (2022-12-22)
+
+* **Feature**: Amazon Connect Chat introduces the Idle Participant/Autodisconnect feature, which allows users to set timeouts relating to the activity of chat participants, using the new UpdateParticipantRoleConfig API.
+
+# v1.40.0 (2022-12-15)
+
+* **Feature**: Added support for "English - New Zealand" and "English - South African" to be used with Amazon Connect Custom Vocabulary APIs.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.39.0 (2022-12-06)
+
+* **Feature**: This release provides APIs that enable you to programmatically manage rules for Contact Lens conversational analytics and third party applications. For more information, see   https://docs.aws.amazon.com/connect/latest/APIReference/rules-api.html
+
+# v1.38.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.38.0 (2022-11-18)
+
+* **Feature**: Added AllowedAccessControlTags and TagRestrictedResource for Tag Based Access Control on Amazon Connect Webpage
+
+# v1.37.0 (2022-11-16)
+
+* **Feature**: This release adds a new MonitorContact API for initiating monitoring of ongoing Voice and Chat contacts.
+
+# v1.36.0 (2022-11-15)
+
+* **Feature**: This release updates the APIs: UpdateInstanceAttribute, DescribeInstanceAttribute, and ListInstanceAttributes. You can use it to programmatically enable/disable enhanced contact monitoring using attribute type ENHANCED_CONTACT_MONITORING on the specified Amazon Connect instance.
+
+# v1.35.0 (2022-11-09)
+
+* **Feature**: This release adds new fields SignInUrl, UserArn, and UserId to GetFederationToken response payload.
+
+# v1.34.0 (2022-10-31)
+
+* **Feature**: Amazon connect now support a new API DismissUserContact to dismiss or remove terminated contacts in Agent CCP
+
+# v1.33.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.0 (2022-10-19)
+
+* **Feature**: This release adds API support for managing phone numbers that can be used across multiple AWS regions through telephony traffic distribution.
+
+# v1.32.0 (2022-10-13)
+
+* **Feature**: This release adds support for a secondary email and a mobile number for Amazon Connect instance users.
+
+# v1.31.0 (2022-10-04)
+
+* **Feature**: Updated the CreateIntegrationAssociation API to support the CASES_DOMAIN IntegrationType.
+
+# v1.30.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.30.0 (2022-09-14)
+
+* **Feature**: Fixed a bug in the API client generation which caused some operation parameters to be incorrectly generated as value types instead of pointer types. The service API always required these affected parameters to be nilable. This fixes the SDK client to match the expectations of the the service API.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.0 (2022-09-02)
+
+* **Feature**: This release adds search APIs for Routing Profiles and Queues, which can be used to search for those resources within a Connect Instance.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.2 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.28.1 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

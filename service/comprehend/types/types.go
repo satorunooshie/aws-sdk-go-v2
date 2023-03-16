@@ -130,6 +130,18 @@ type BatchDetectSyntaxItemResult struct {
 	noSmithyDocumentSerde
 }
 
+// Analysis results for one of the documents in the batch.
+type BatchDetectTargetedSentimentItemResult struct {
+
+	// An array of targeted sentiment entities.
+	Entities []TargetedSentimentEntity
+
+	// The zero-based index of this result in the input list.
+	Index *int32
+
+	noSmithyDocumentSerde
+}
+
 // Describes an error that occurred while processing a document in a batch. The
 // operation returns on BatchItemError object for each document that contained an
 // error.
@@ -143,6 +155,100 @@ type BatchItemError struct {
 
 	// The zero-based index of the document in the input list.
 	Index *int32
+
+	noSmithyDocumentSerde
+}
+
+// Information about each word or line of text in the input document. For
+// additional information, see Block
+// (https://docs.aws.amazon.com/textract/latest/dg/API_Block.html) in the Amazon
+// Textract API reference.
+type Block struct {
+
+	// The block represents a line of text or one word of text.
+	//
+	// * WORD - A word that's
+	// detected on a document page. A word is one or more ISO basic Latin script
+	// characters that aren't separated by spaces.
+	//
+	// * LINE - A string of tab-delimited,
+	// contiguous words that are detected on a document page
+	BlockType BlockType
+
+	// Co-ordinates of the rectangle or polygon that contains the text.
+	Geometry *Geometry
+
+	// Unique identifier for the block.
+	Id *string
+
+	// Page number where the block appears.
+	Page *int32
+
+	// A list of child blocks of the current block. For example, a LINE object has
+	// child blocks for each WORD block that's part of the line of text.
+	Relationships []RelationshipsListItem
+
+	// The word or line of text extracted from the block.
+	Text *string
+
+	noSmithyDocumentSerde
+}
+
+// A reference to a block.
+type BlockReference struct {
+
+	// Offset of the start of the block within its parent block.
+	BeginOffset *int32
+
+	// Unique identifier for the block.
+	BlockId *string
+
+	// List of child blocks within this block.
+	ChildBlocks []ChildBlock
+
+	// Offset of the end of the block within its parent block.
+	EndOffset *int32
+
+	noSmithyDocumentSerde
+}
+
+// The bounding box around the detected page or around an element on a document
+// page. The left (x-coordinate) and top (y-coordinate) are coordinates that
+// represent the top and left sides of the bounding box. Note that the upper-left
+// corner of the image is the origin (0,0). For additional information, see
+// BoundingBox
+// (https://docs.aws.amazon.com/textract/latest/dg/API_BoundingBox.html) in the
+// Amazon Textract API reference.
+type BoundingBox struct {
+
+	// The height of the bounding box as a ratio of the overall document page height.
+	Height *float32
+
+	// The left coordinate of the bounding box as a ratio of overall document page
+	// width.
+	Left *float32
+
+	// The top coordinate of the bounding box as a ratio of overall document page
+	// height.
+	Top *float32
+
+	// The width of the bounding box as a ratio of the overall document page width.
+	Width *float32
+
+	noSmithyDocumentSerde
+}
+
+// Nested block contained within a block.
+type ChildBlock struct {
+
+	// Offset of the start of the child block within its parent block.
+	BeginOffset *int32
+
+	// Unique identifier for the child block.
+	ChildBlockId *string
+
+	// Offset of the end of the child block within its parent block.
+	EndOffset *int32
 
 	noSmithyDocumentSerde
 }
@@ -222,14 +328,276 @@ type ClassifierMetadata struct {
 	noSmithyDocumentSerde
 }
 
+// Data security configuration.
+type DataSecurityConfig struct {
+
+	// ID for the KMS key that Amazon Comprehend uses to encrypt the data in the data
+	// lake.
+	DataLakeKmsKeyId *string
+
+	// ID for the AWS Key Management Service (KMS) key that Amazon Comprehend uses to
+	// encrypt trained custom models. The ModelKmsKeyId can be either of the following
+	// formats:
+	//
+	// * KMS Key ID: "1234abcd-12ab-34cd-56ef-1234567890ab"
+	//
+	// * Amazon
+	// Resource Name (ARN) of a KMS Key:
+	// "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
+	ModelKmsKeyId *string
+
+	// ID for the KMS key that Amazon Comprehend uses to encrypt the volume.
+	VolumeKmsKeyId *string
+
+	// Configuration parameters for an optional private Virtual Private Cloud (VPC)
+	// containing the resources you are using for the job. For more information, see
+	// Amazon VPC
+	// (https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html).
+	VpcConfig *VpcConfig
+
+	noSmithyDocumentSerde
+}
+
+// An augmented manifest file that provides training data for your custom model. An
+// augmented manifest file is a labeled dataset that is produced by Amazon
+// SageMaker Ground Truth.
+type DatasetAugmentedManifestsListItem struct {
+
+	// The JSON attribute that contains the annotations for your training documents.
+	// The number of attribute names that you specify depends on whether your augmented
+	// manifest file is the output of a single labeling job or a chained labeling job.
+	// If your file is the output of a single labeling job, specify the
+	// LabelAttributeName key that was used when the job was created in Ground Truth.
+	// If your file is the output of a chained labeling job, specify the
+	// LabelAttributeName key for one or more jobs in the chain. Each
+	// LabelAttributeName key provides the annotations from an individual job.
+	//
+	// This member is required.
+	AttributeNames []string
+
+	// The Amazon S3 location of the augmented manifest file.
+	//
+	// This member is required.
+	S3Uri *string
+
+	// The S3 prefix to the annotation files that are referred in the augmented
+	// manifest file.
+	AnnotationDataS3Uri *string
+
+	// The type of augmented manifest. If you don't specify, the default is
+	// PlainTextDocument. PLAIN_TEXT_DOCUMENT A document type that represents any
+	// unicode text that is encoded in UTF-8.
+	DocumentType AugmentedManifestsDocumentTypeFormat
+
+	// The S3 prefix to the source files (PDFs) that are referred to in the augmented
+	// manifest file.
+	SourceDocumentsS3Uri *string
+
+	noSmithyDocumentSerde
+}
+
+// Describes the dataset input data configuration for a document classifier model.
+// For more information on how the input file is formatted, see Preparing training
+// data
+// (https://docs.aws.amazon.com/comprehend/latest/dg/prep-classifier-data.html) in
+// the Comprehend Developer Guide.
+type DatasetDocumentClassifierInputDataConfig struct {
+
+	// The Amazon S3 URI for the input data. The S3 bucket must be in the same region
+	// as the API endpoint that you are calling. The URI can point to a single input
+	// file or it can provide the prefix for a collection of input files. For example,
+	// if you use the URI S3://bucketName/prefix, if the prefix is a single file,
+	// Amazon Comprehend uses that file as input. If more than one file begins with the
+	// prefix, Amazon Comprehend uses all of them as input. This parameter is required
+	// if you set DataFormat to COMPREHEND_CSV.
+	//
+	// This member is required.
+	S3Uri *string
+
+	// Indicates the delimiter used to separate each label for training a multi-label
+	// classifier. The default delimiter between labels is a pipe (|). You can use a
+	// different character as a delimiter (if it's an allowed character) by specifying
+	// it under Delimiter for labels. If the training documents use a delimiter other
+	// than the default or the delimiter you specify, the labels on that line will be
+	// combined to make a single unique label, such as LABELLABELLABEL.
+	LabelDelimiter *string
+
+	noSmithyDocumentSerde
+}
+
+// Describes the annotations associated with a entity recognizer.
+type DatasetEntityRecognizerAnnotations struct {
+
+	// Specifies the Amazon S3 location where the training documents for an entity
+	// recognizer are located. The URI must be in the same region as the API endpoint
+	// that you are calling.
+	//
+	// This member is required.
+	S3Uri *string
+
+	noSmithyDocumentSerde
+}
+
+// Describes the documents submitted with a dataset for an entity recognizer model.
+type DatasetEntityRecognizerDocuments struct {
+
+	// Specifies the Amazon S3 location where the documents for the dataset are
+	// located.
+	//
+	// This member is required.
+	S3Uri *string
+
+	// Specifies how the text in an input file should be processed. This is optional,
+	// and the default is ONE_DOC_PER_LINE. ONE_DOC_PER_FILE - Each file is considered
+	// a separate document. Use this option when you are processing large documents,
+	// such as newspaper articles or scientific papers. ONE_DOC_PER_LINE - Each line in
+	// a file is considered a separate document. Use this option when you are
+	// processing many short documents, such as text messages.
+	InputFormat InputFormat
+
+	noSmithyDocumentSerde
+}
+
+// Describes the dataset entity list for an entity recognizer model. For more
+// information on how the input file is formatted, see Preparing training data
+// (https://docs.aws.amazon.com/comprehend/latest/dg/prep-training-data-cer.html)
+// in the Comprehend Developer Guide.
+type DatasetEntityRecognizerEntityList struct {
+
+	// Specifies the Amazon S3 location where the entity list is located.
+	//
+	// This member is required.
+	S3Uri *string
+
+	noSmithyDocumentSerde
+}
+
+// Specifies the format and location of the input data. You must provide either the
+// Annotations parameter or the EntityList parameter.
+type DatasetEntityRecognizerInputDataConfig struct {
+
+	// The format and location of the training documents for your custom entity
+	// recognizer.
+	//
+	// This member is required.
+	Documents *DatasetEntityRecognizerDocuments
+
+	// The S3 location of the annotation documents for your custom entity recognizer.
+	Annotations *DatasetEntityRecognizerAnnotations
+
+	// The S3 location of the entity list for your custom entity recognizer.
+	EntityList *DatasetEntityRecognizerEntityList
+
+	noSmithyDocumentSerde
+}
+
+// Filter the datasets based on creation time or dataset status.
+type DatasetFilter struct {
+
+	// Filter the datasets to include datasets created after the specified time.
+	CreationTimeAfter *time.Time
+
+	// Filter the datasets to include datasets created before the specified time.
+	CreationTimeBefore *time.Time
+
+	// Filter the datasets based on the dataset type.
+	DatasetType DatasetType
+
+	// Filter the datasets based on the dataset status.
+	Status DatasetStatus
+
+	noSmithyDocumentSerde
+}
+
+// Specifies the format and location of the input data for the dataset.
+type DatasetInputDataConfig struct {
+
+	// A list of augmented manifest files that provide training data for your custom
+	// model. An augmented manifest file is a labeled dataset that is produced by
+	// Amazon SageMaker Ground Truth.
+	AugmentedManifests []DatasetAugmentedManifestsListItem
+
+	// COMPREHEND_CSV: The data format is a two-column CSV file, where the first column
+	// contains labels and the second column contains documents. AUGMENTED_MANIFEST:
+	// The data format
+	DataFormat DatasetDataFormat
+
+	// The input properties for training a document classifier model. For more
+	// information on how the input file is formatted, see Preparing training data
+	// (https://docs.aws.amazon.com/comprehend/latest/dg/prep-classifier-data.html) in
+	// the Comprehend Developer Guide.
+	DocumentClassifierInputDataConfig *DatasetDocumentClassifierInputDataConfig
+
+	// The input properties for training an entity recognizer model.
+	EntityRecognizerInputDataConfig *DatasetEntityRecognizerInputDataConfig
+
+	noSmithyDocumentSerde
+}
+
+// Properties associated with the dataset.
+type DatasetProperties struct {
+
+	// Creation time of the dataset.
+	CreationTime *time.Time
+
+	// The ARN of the dataset.
+	DatasetArn *string
+
+	// The name of the dataset.
+	DatasetName *string
+
+	// The S3 URI where the dataset is stored.
+	DatasetS3Uri *string
+
+	// The dataset type (training data or test data).
+	DatasetType DatasetType
+
+	// Description of the dataset.
+	Description *string
+
+	// Time when the data from the dataset becomes available in the data lake.
+	EndTime *time.Time
+
+	// A description of the status of the dataset.
+	Message *string
+
+	// The number of documents in the dataset.
+	NumberOfDocuments *int64
+
+	// The dataset status. While the system creates the dataset, the status is
+	// CREATING. When the dataset is ready to use, the status changes to COMPLETED.
+	Status DatasetStatus
+
+	noSmithyDocumentSerde
+}
+
 // Specifies the class that categorizes the document being analyzed
 type DocumentClass struct {
 
 	// The name of the class.
 	Name *string
 
+	// Page number in the input document. This field is present in the response only if
+	// your request includes the Byte parameter.
+	Page *int32
+
 	// The confidence score that Amazon Comprehend has this class correctly attributed.
 	Score *float32
+
+	noSmithyDocumentSerde
+}
+
+// Configuration required for a custom classification model.
+type DocumentClassificationConfig struct {
+
+	// Classification mode indicates whether the documents are MULTI_CLASS or
+	// MULTI_LABEL.
+	//
+	// This member is required.
+	Mode DocumentClassifierMode
+
+	// One or more labels to associate with the custom classifier.
+	Labels []string
 
 	noSmithyDocumentSerde
 }
@@ -262,7 +630,7 @@ type DocumentClassificationJobFilter struct {
 // Provides information about a document classification job.
 type DocumentClassificationJobProperties struct {
 
-	// The Amazon Resource Name (ARN) of the AWS identity and Access Management (IAM)
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
 	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
@@ -271,6 +639,9 @@ type DocumentClassificationJobProperties struct {
 
 	// The time that the document classification job completed.
 	EndTime *time.Time
+
+	// The Amazon Resource Number (ARN) of the flywheel
+	FlywheelArn *string
 
 	// The input data configuration that you supplied when you created the document
 	// classification job.
@@ -327,7 +698,7 @@ type DocumentClassificationJobProperties struct {
 
 // Provides information for filtering a list of document classifiers. You can only
 // specify one filtering parameter in a request. For more information, see the
-// operation.
+// ListDocumentClassifiers operation.
 type DocumentClassifierFilter struct {
 
 	// The name that you assigned to the document classifier
@@ -350,7 +721,9 @@ type DocumentClassifierFilter struct {
 }
 
 // The input properties for training a document classifier. For more information on
-// how the input file is formatted, see prep-classifier-data.
+// how the input file is formatted, see Preparing training data
+// (https://docs.aws.amazon.com/comprehend/latest/dg/prep-classifier-data.html) in
+// the Comprehend Developer Guide.
 type DocumentClassifierInputDataConfig struct {
 
 	// A list of augmented manifest files that provide training data for your custom
@@ -393,9 +766,9 @@ type DocumentClassifierInputDataConfig struct {
 	// if you set DataFormat to COMPREHEND_CSV.
 	S3Uri *string
 
-	// The Amazon S3 URI for the input data. The Amazon S3 bucket must be in the same
-	// AWS Region as the API endpoint that you are calling. The URI can point to a
-	// single input file or it can provide the prefix for a collection of input files.
+	// This specifies the Amazon S3 location where the test annotations for an entity
+	// recognizer are located. The URI must be in the same AWS Region as the API
+	// endpoint that you are calling.
 	TestS3Uri *string
 
 	noSmithyDocumentSerde
@@ -403,6 +776,9 @@ type DocumentClassifierInputDataConfig struct {
 
 // Provides output results configuration parameters for custom classifier jobs.
 type DocumentClassifierOutputDataConfig struct {
+
+	// The Amazon S3 prefix for the data lake location of the flywheel statistics.
+	FlywheelStatsS3Prefix *string
 
 	// ID for the AWS Key Management Service (KMS) key that Amazon Comprehend uses to
 	// encrypt the output results from an analysis job. The KmsKeyId can be one of the
@@ -442,8 +818,8 @@ type DocumentClassifierProperties struct {
 	// classifier, and an accuracy rating.
 	ClassifierMetadata *ClassifierMetadata
 
-	// The Amazon Resource Name (ARN) of the AWS Identity and Management (IAM) role
-	// that grants Amazon Comprehend read access to your input data.
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
 	// The Amazon Resource Name (ARN) that identifies the document classifier.
@@ -451,6 +827,9 @@ type DocumentClassifierProperties struct {
 
 	// The time that training the document classifier completed.
 	EndTime *time.Time
+
+	// The Amazon Resource Number (ARN) of the flywheel
+	FlywheelArn *string
 
 	// The input data configuration that you supplied when you created the document
 	// classifier for training.
@@ -559,39 +938,95 @@ type DocumentLabel struct {
 	// The name of the label.
 	Name *string
 
+	// Page number where the label occurs. This field is present in the response only
+	// if your request includes the Byte parameter.
+	Page *int32
+
 	// The confidence score that Amazon Comprehend has this label correctly attributed.
 	Score *float32
 
 	noSmithyDocumentSerde
 }
 
-// The input properties for a topic detection job.
+// Information about the document, discovered during text extraction.
+type DocumentMetadata struct {
+
+	// List of pages in the document, with the number of characters extracted from each
+	// page.
+	ExtractedCharacters []ExtractedCharactersListItem
+
+	// Number of pages in the document.
+	Pages *int32
+
+	noSmithyDocumentSerde
+}
+
+// Provides configuration parameters to override the default actions for extracting
+// text from PDF documents and image files. By default, Amazon Comprehend performs
+// the following actions to extract text from files, based on the input file
+// type:
+//
+// * Word files - Amazon Comprehend parser extracts the text.
+//
+// * Digital PDF
+// files - Amazon Comprehend parser extracts the text.
+//
+// * Image files and scanned
+// PDF files - Amazon Comprehend uses the Amazon Textract DetectDocumentText API to
+// extract the text.
+//
+// DocumentReaderConfig does not apply to plain text files or
+// Word files. For image files and PDF documents, you can override these default
+// actions using the fields listed below. For more information, see  Setting text
+// extraction options
+// (https://docs.aws.amazon.com/comprehend/latest/dg/detecting-cer.html#detecting-cer-pdf).
 type DocumentReaderConfig struct {
 
-	// This enum field will start with two values which will apply to PDFs:
+	// This field defines the Amazon Textract API operation that Amazon Comprehend uses
+	// to extract text from PDF files and image files. Enter one of the following
+	// values:
 	//
-	// *
-	// TEXTRACT_DETECT_DOCUMENT_TEXT - The service calls DetectDocumentText for PDF
-	// documents per page.
+	// * TEXTRACT_DETECT_DOCUMENT_TEXT - The Amazon Comprehend service uses
+	// the DetectDocumentText API operation.
 	//
-	// * TEXTRACT_ANALYZE_DOCUMENT - The service calls
-	// AnalyzeDocument for PDF documents per page.
+	// * TEXTRACT_ANALYZE_DOCUMENT - The Amazon
+	// Comprehend service uses the AnalyzeDocument API operation.
 	//
 	// This member is required.
 	DocumentReadAction DocumentReadAction
 
-	// This enum field provides two values:
+	// Determines the text extraction actions for PDF files. Enter one of the following
+	// values:
 	//
-	// * SERVICE_DEFAULT - use service defaults
-	// for Document reading. For Digital PDF it would mean using an internal parser
-	// instead of Textract APIs
+	// * SERVICE_DEFAULT - use the Amazon Comprehend service defaults for PDF
+	// files.
 	//
-	// * FORCE_DOCUMENT_READ_ACTION - Always use specified
-	// action for DocumentReadAction, including Digital PDF.
+	// * FORCE_DOCUMENT_READ_ACTION - Amazon Comprehend uses the Textract API
+	// specified by DocumentReadAction for all PDF files, including digital PDF files.
 	DocumentReadMode DocumentReadMode
 
-	// Specifies how the text in an input file should be processed:
+	// Specifies the type of Amazon Textract features to apply. If you chose
+	// TEXTRACT_ANALYZE_DOCUMENT as the read action, you must specify one or both of
+	// the following values:
+	//
+	// * TABLES - Returns information about any tables that are
+	// detected in the input document.
+	//
+	// * FORMS - Returns information and the data from
+	// any forms that are detected in the input document.
 	FeatureTypes []DocumentReadFeatureTypes
+
+	noSmithyDocumentSerde
+}
+
+// Document type for each page in the document.
+type DocumentTypeListItem struct {
+
+	// Page number.
+	Page *int32
+
+	// Document type.
+	Type DocumentType
 
 	noSmithyDocumentSerde
 }
@@ -639,8 +1074,8 @@ type DominantLanguageDetectionJobFilter struct {
 // Provides information about a dominant language detection job.
 type DominantLanguageDetectionJobProperties struct {
 
-	// The Amazon Resource Name (ARN) that gives Amazon Comprehend read access to your
-	// input data.
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
 	// The time that the dominant language detection job completed.
@@ -731,7 +1166,7 @@ type EndpointProperties struct {
 	// The number of inference units currently used by the model using this endpoint.
 	CurrentInferenceUnits *int32
 
-	// The Amazon Resource Name (ARN) of the AWS identity and Access Management (IAM)
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
 	// role that grants Amazon Comprehend read access to trained custom models
 	// encrypted with a customer managed key (ModelKmsKeyId).
 	DataAccessRoleArn *string
@@ -751,6 +1186,9 @@ type EndpointProperties struct {
 
 	// The Amazon Resource Number (ARN) of the endpoint.
 	EndpointArn *string
+
+	// The Amazon Resource Number (ARN) of the flywheel
+	FlywheelArn *string
 
 	// The date and time that the endpoint was last modified.
 	LastModifiedTime *time.Time
@@ -796,8 +1234,8 @@ type EntitiesDetectionJobFilter struct {
 // Provides information about an entities detection job.
 type EntitiesDetectionJobProperties struct {
 
-	// The Amazon Resource Name (ARN) that gives Amazon Comprehend read access to your
-	// input data.
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
 	// The time that the entities detection job completed
@@ -864,17 +1302,16 @@ type EntitiesDetectionJobProperties struct {
 // Provides information about an entity.
 type Entity struct {
 
-	// A character offset in the input text that shows where the entity begins (the
-	// first character is at position 0). The offset returns the position of each UTF-8
-	// code point in the string. A code point is the abstract character from a
-	// particular graphical representation. For example, a multi-byte UTF-8 character
-	// maps to a single code point.
+	// The zero-based offset from the beginning of the source text to the first
+	// character in the entity. This field is empty for non-text input.
 	BeginOffset *int32
 
-	// A character offset in the input text that shows where the entity ends. The
-	// offset returns the position of each UTF-8 code point in the string. A code point
-	// is the abstract character from a particular graphical representation. For
-	// example, a multi-byte UTF-8 character maps to a single code point.
+	// A reference to each block for this entity. This field is empty for plain-text
+	// input.
+	BlockReferences []BlockReference
+
+	// The zero-based offset from the beginning of the source text to the last
+	// character in the entity. This field is empty for non-text input.
 	EndOffset *int32
 
 	// The level of confidence that Amazon Comprehend has in the accuracy of the
@@ -884,7 +1321,10 @@ type Entity struct {
 	// The text of the entity.
 	Text *string
 
-	// The entity's type.
+	// The entity type. For entity detection using the built-in model, this field
+	// contains one of the standard entity types listed below. For custom entity
+	// detection, this field contains one of the entity types that you specified when
+	// you trained your custom model.
 	Type EntityType
 
 	noSmithyDocumentSerde
@@ -904,6 +1344,17 @@ type EntityLabel struct {
 	noSmithyDocumentSerde
 }
 
+// Configuration required for an entity recognition model.
+type EntityRecognitionConfig struct {
+
+	// Up to 25 entity types that the model is trained to recognize.
+	//
+	// This member is required.
+	EntityTypes []EntityTypesListItem
+
+	noSmithyDocumentSerde
+}
+
 // Describes the annotations associated with a entity recognizer.
 type EntityRecognizerAnnotations struct {
 
@@ -914,9 +1365,9 @@ type EntityRecognizerAnnotations struct {
 	// This member is required.
 	S3Uri *string
 
-	// This specifies the Amazon S3 location where the test annotations for an entity
-	// recognizer are located. The URI must be in the same AWS Region as the API
-	// endpoint that you are calling.
+	// Specifies the Amazon S3 location where the test annotations for an entity
+	// recognizer are located. The URI must be in the same region as the API endpoint
+	// that you are calling.
 	TestS3Uri *string
 
 	noSmithyDocumentSerde
@@ -948,7 +1399,7 @@ type EntityRecognizerDocuments struct {
 	noSmithyDocumentSerde
 }
 
-// Describes the entity recognizer submitted with an entity recognizer.
+// Describes the entity list submitted with an entity recognizer.
 type EntityRecognizerEntityList struct {
 
 	// Specifies the Amazon S3 location where the entity list is located. The URI must
@@ -984,7 +1435,7 @@ type EntityRecognizerEvaluationMetrics struct {
 
 // Provides information for filtering a list of entity recognizers. You can only
 // specify one filtering parameter in a request. For more information, see the
-// operation./>
+// ListEntityRecognizers operation./>
 type EntityRecognizerFilter struct {
 
 	// The name that you assigned the entity recognizer.
@@ -1099,11 +1550,20 @@ type EntityRecognizerMetadataEntityTypesListItem struct {
 	noSmithyDocumentSerde
 }
 
+// Output data configuration.
+type EntityRecognizerOutputDataConfig struct {
+
+	// The Amazon S3 prefix for the data lake location of the flywheel statistics.
+	FlywheelStatsS3Prefix *string
+
+	noSmithyDocumentSerde
+}
+
 // Describes information about an entity recognizer.
 type EntityRecognizerProperties struct {
 
-	// The Amazon Resource Name (ARN) of the AWS Identity and Management (IAM) role
-	// that grants Amazon Comprehend read access to your input data.
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
 	// The time that the recognizer creation completed.
@@ -1111,6 +1571,9 @@ type EntityRecognizerProperties struct {
 
 	// The Amazon Resource Name (ARN) that identifies the entity recognizer.
 	EntityRecognizerArn *string
+
+	// The Amazon Resource Number (ARN) of the flywheel
+	FlywheelArn *string
 
 	// The input data properties of an entity recognizer.
 	InputDataConfig *EntityRecognizerInputDataConfig
@@ -1132,6 +1595,9 @@ type EntityRecognizerProperties struct {
 	// Resource Name (ARN) of a KMS Key:
 	// "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
 	ModelKmsKeyId *string
+
+	// Output data configuration.
+	OutputDataConfig *EntityRecognizerOutputDataConfig
 
 	// Provides information about an entity recognizer.
 	RecognizerMetadata *EntityRecognizerMetadata
@@ -1237,6 +1703,43 @@ type EntityTypesListItem struct {
 	noSmithyDocumentSerde
 }
 
+// Text extraction encountered one or more page-level errors in the input document.
+// The ErrorCode contains one of the following values:
+//
+// * TEXTRACT_BAD_PAGE -
+// Amazon Textract cannot read the page. For more information about page limits in
+// Amazon Textract, see  Page Quotas in Amazon Textract
+// (https://docs.aws.amazon.com/textract/latest/dg/limits-document.html).
+//
+// *
+// TEXTRACT_PROVISIONED_THROUGHPUT_EXCEEDED - The number of requests exceeded your
+// throughput limit. For more information about throughput quotas in Amazon
+// Textract, see  Default quotas in Amazon Textract
+// (https://docs.aws.amazon.com/textract/latest/dg/limits-quotas-explained.html).
+//
+// *
+// PAGE_CHARACTERS_EXCEEDED - Too many text characters on the page (10,000
+// characters maximum).
+//
+// * PAGE_SIZE_EXCEEDED - The maximum page size is 10 MB.
+//
+// *
+// INTERNAL_SERVER_ERROR - The request encountered a service issue. Try the API
+// request again.
+type ErrorsListItem struct {
+
+	// Error code for the cause of the error.
+	ErrorCode PageBasedErrorCode
+
+	// Text message explaining the reason for the error.
+	ErrorMessage *string
+
+	// Page number where the error occurred.
+	Page *int32
+
+	noSmithyDocumentSerde
+}
+
 // Provides information for filtering a list of event detection jobs.
 type EventsDetectionJobFilter struct {
 
@@ -1263,7 +1766,7 @@ type EventsDetectionJobFilter struct {
 // Provides information about an events detection job.
 type EventsDetectionJobProperties struct {
 
-	// The Amazon Resource Name (ARN) of the AWS Identify and Access Management (IAM)
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
 	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
@@ -1309,7 +1812,198 @@ type EventsDetectionJobProperties struct {
 	noSmithyDocumentSerde
 }
 
-// The input properties for an inference job.
+// Array of the number of characters extracted from each page.
+type ExtractedCharactersListItem struct {
+
+	// Number of characters extracted from each page.
+	Count *int32
+
+	// Page number.
+	Page *int32
+
+	noSmithyDocumentSerde
+}
+
+// Filter the flywheels based on creation time or flywheel status.
+type FlywheelFilter struct {
+
+	// Filter the flywheels to include flywheels created after the specified time.
+	CreationTimeAfter *time.Time
+
+	// Filter the flywheels to include flywheels created before the specified time.
+	CreationTimeBefore *time.Time
+
+	// Filter the flywheels based on the flywheel status.
+	Status FlywheelStatus
+
+	noSmithyDocumentSerde
+}
+
+// Filter the flywheel iterations based on creation time.
+type FlywheelIterationFilter struct {
+
+	// Filter the flywheel iterations to include iterations created after the specified
+	// time.
+	CreationTimeAfter *time.Time
+
+	// Filter the flywheel iterations to include iterations created before the
+	// specified time.
+	CreationTimeBefore *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// The configuration properties of a flywheel iteration.
+type FlywheelIterationProperties struct {
+
+	// The creation start time of the flywheel iteration.
+	CreationTime *time.Time
+
+	// The completion time of this flywheel iteration.
+	EndTime *time.Time
+
+	// The ARN of the evaluated model associated with this flywheel iteration.
+	EvaluatedModelArn *string
+
+	// The evaluation metrics associated with the evaluated model.
+	EvaluatedModelMetrics *FlywheelModelEvaluationMetrics
+
+	//
+	EvaluationManifestS3Prefix *string
+
+	//
+	FlywheelArn *string
+
+	//
+	FlywheelIterationId *string
+
+	// A description of the status of the flywheel iteration.
+	Message *string
+
+	// The status of the flywheel iteration.
+	Status FlywheelIterationStatus
+
+	// The ARN of the trained model associated with this flywheel iteration.
+	TrainedModelArn *string
+
+	// The metrics associated with the trained model.
+	TrainedModelMetrics *FlywheelModelEvaluationMetrics
+
+	noSmithyDocumentSerde
+}
+
+// The evaluation metrics associated with the evaluated model.
+type FlywheelModelEvaluationMetrics struct {
+
+	// Average accuracy metric for the model.
+	AverageAccuracy *float64
+
+	// The average F1 score from the evaluation metrics.
+	AverageF1Score *float64
+
+	// Average precision metric for the model.
+	AveragePrecision *float64
+
+	// Average recall metric for the model.
+	AverageRecall *float64
+
+	noSmithyDocumentSerde
+}
+
+// The flywheel properties.
+type FlywheelProperties struct {
+
+	// The Amazon Resource Number (ARN) of the active model version.
+	ActiveModelArn *string
+
+	// Creation time of the flywheel.
+	CreationTime *time.Time
+
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend permission to access the flywheel data.
+	DataAccessRoleArn *string
+
+	// Amazon S3 URI of the data lake location.
+	DataLakeS3Uri *string
+
+	// Data security configuration.
+	DataSecurityConfig *DataSecurityConfig
+
+	// The Amazon Resource Number (ARN) of the flywheel.
+	FlywheelArn *string
+
+	// Last modified time for the flywheel.
+	LastModifiedTime *time.Time
+
+	// The most recent flywheel iteration.
+	LatestFlywheelIteration *string
+
+	// A description of the status of the flywheel.
+	Message *string
+
+	// Model type of the flywheel's model.
+	ModelType ModelType
+
+	// The status of the flywheel.
+	Status FlywheelStatus
+
+	// Configuration about the custom classifier associated with the flywheel.
+	TaskConfig *TaskConfig
+
+	noSmithyDocumentSerde
+}
+
+// Flywheel summary information.
+type FlywheelSummary struct {
+
+	// ARN of the active model version for the flywheel.
+	ActiveModelArn *string
+
+	// Creation time of the flywheel.
+	CreationTime *time.Time
+
+	// Amazon S3 URI of the data lake location.
+	DataLakeS3Uri *string
+
+	// The Amazon Resource Number (ARN) of the flywheel
+	FlywheelArn *string
+
+	// Last modified time for the flywheel.
+	LastModifiedTime *time.Time
+
+	// The most recent flywheel iteration.
+	LatestFlywheelIteration *string
+
+	// A description of the status of the flywheel.
+	Message *string
+
+	// Model type of the flywheel's model.
+	ModelType ModelType
+
+	// The status of the flywheel.
+	Status FlywheelStatus
+
+	noSmithyDocumentSerde
+}
+
+// Information about the location of items on a document page. For additional
+// information, see Geometry
+// (https://docs.aws.amazon.com/textract/latest/dg/API_Geometry.html) in the Amazon
+// Textract API reference.
+type Geometry struct {
+
+	// An axis-aligned coarse representation of the location of the recognized item on
+	// the document page.
+	BoundingBox *BoundingBox
+
+	// Within the bounding box, a fine-grained polygon around the recognized item.
+	Polygon []Point
+
+	noSmithyDocumentSerde
+}
+
+// The input properties for an inference job. The document reader config field
+// applies only to non-text inputs for custom analysis.
 type InputDataConfig struct {
 
 	// The Amazon S3 URI for the input data. The URI must be in same region as the API
@@ -1322,10 +2016,8 @@ type InputDataConfig struct {
 	// This member is required.
 	S3Uri *string
 
-	// The document reader config field applies only for InputDataConfig of
-	// StartEntitiesDetectionJob. Use DocumentReaderConfig to provide specifications
-	// about how you want your inference documents read. Currently it applies for PDF
-	// documents in StartEntitiesDetectionJob custom inference.
+	// Provides configuration parameters to override the default actions for extracting
+	// text from PDF documents and image files.
 	DocumentReaderConfig *DocumentReaderConfig
 
 	// Specifies how the text in an input file should be processed:
@@ -1342,20 +2034,37 @@ type InputDataConfig struct {
 	noSmithyDocumentSerde
 }
 
+// Provides additional detail about why the request failed:
+//
+// * Document size is too
+// large - Check the size of your file and resubmit the request.
+//
+// * Document type
+// is not supported - Check the file type and resubmit the request.
+//
+// * Too many
+// pages in the document - Check the number of pages in your file and resubmit the
+// request.
+//
+// * Access denied to Amazon Textract - Verify that your account has
+// permission to use Amazon Textract API operations and resubmit the request.
+type InvalidRequestDetail struct {
+
+	// Reason code is INVALID_DOCUMENT.
+	Reason InvalidRequestDetailReason
+
+	noSmithyDocumentSerde
+}
+
 // Describes a key noun phrase.
 type KeyPhrase struct {
 
-	// A character offset in the input text that shows where the key phrase begins (the
-	// first character is at position 0). The offset returns the position of each UTF-8
-	// code point in the string. A code point is the abstract character from a
-	// particular graphical representation. For example, a multi-byte UTF-8 character
-	// maps to a single code point.
+	// The zero-based offset from the beginning of the source text to the first
+	// character in the key phrase.
 	BeginOffset *int32
 
-	// A character offset in the input text where the key phrase ends. The offset
-	// returns the position of each UTF-8 code point in the string. A code point is the
-	// abstract character from a particular graphical representation. For example, a
-	// multi-byte UTF-8 character maps to a single code point.
+	// The zero-based offset from the beginning of the source text to the last
+	// character in the key phrase.
 	EndOffset *int32
 
 	// The level of confidence that Amazon Comprehend has in the accuracy of the
@@ -1395,8 +2104,8 @@ type KeyPhrasesDetectionJobFilter struct {
 // Provides information about a key phrases detection job.
 type KeyPhrasesDetectionJobProperties struct {
 
-	// The Amazon Resource Name (ARN) that gives Amazon Comprehend read access to your
-	// input data.
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
 	// The time that the key phrases detection job completed.
@@ -1458,6 +2167,21 @@ type KeyPhrasesDetectionJobProperties struct {
 	noSmithyDocumentSerde
 }
 
+// Contains the sentiment and sentiment score for one mention of an entity. For
+// more information about targeted sentiment, see Targeted sentiment
+// (https://docs.aws.amazon.com/comprehend/latest/dg/how-targeted-sentiment.html).
+type MentionSentiment struct {
+
+	// The sentiment of the mention.
+	Sentiment SentimentType
+
+	// Describes the level of confidence that Amazon Comprehend has in the accuracy of
+	// its detection of sentiments.
+	SentimentScore *SentimentScore
+
+	noSmithyDocumentSerde
+}
+
 // Provides configuration parameters for the output of inference jobs.
 type OutputDataConfig struct {
 
@@ -1498,7 +2222,8 @@ type OutputDataConfig struct {
 // Identifies the part of speech represented by the token and gives the confidence
 // that Amazon Comprehend has that the part of speech was correctly identified. For
 // more information about the parts of speech that Amazon Comprehend can identify,
-// see how-syntax.
+// see Syntax (https://docs.aws.amazon.com/comprehend/latest/dg/how-syntax.html) in
+// the Comprehend Developer Guide.
 type PartOfSpeechTag struct {
 
 	// The confidence that Amazon Comprehend has that the part of speech was correctly
@@ -1537,8 +2262,8 @@ type PiiEntitiesDetectionJobFilter struct {
 // Provides information about a PII entities detection job.
 type PiiEntitiesDetectionJobProperties struct {
 
-	// The Amazon Resource Name (ARN) that gives Amazon Comprehend read access to your
-	// input data.
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
 	// The time that the PII entities detection job completed.
@@ -1593,17 +2318,12 @@ type PiiEntitiesDetectionJobProperties struct {
 // Provides information about a PII entity.
 type PiiEntity struct {
 
-	// A character offset in the input text that shows where the PII entity begins (the
-	// first character is at position 0). The offset returns the position of each UTF-8
-	// code point in the string. A code point is the abstract character from a
-	// particular graphical representation. For example, a multi-byte UTF-8 character
-	// maps to a single code point.
+	// The zero-based offset from the beginning of the source text to the first
+	// character in the entity.
 	BeginOffset *int32
 
-	// A character offset in the input text that shows where the PII entity ends. The
-	// offset returns the position of each UTF-8 code point in the string. A code point
-	// is the abstract character from a particular graphical representation. For
-	// example, a multi-byte UTF-8 character maps to a single code point.
+	// The zero-based offset from the beginning of the source text to the last
+	// character in the entity.
 	EndOffset *int32
 
 	// The level of confidence that Amazon Comprehend has in the accuracy of the
@@ -1635,6 +2355,21 @@ type PiiOutputDataConfig struct {
 	noSmithyDocumentSerde
 }
 
+// The X and Y coordinates of a point on a document page. For additional
+// information, see Point
+// (https://docs.aws.amazon.com/textract/latest/dg/API_Point.html) in the Amazon
+// Textract API reference.
+type Point struct {
+
+	// The value of the X coordinate for a point on a polygon
+	X *float32
+
+	// The value of the Y coordinate for a point on a polygon
+	Y *float32
+
+	noSmithyDocumentSerde
+}
+
 // Provides configuration parameters for PII entity redaction.
 type RedactionConfig struct {
 
@@ -1648,6 +2383,18 @@ type RedactionConfig struct {
 	// An array of the types of PII entities that Amazon Comprehend detects in the
 	// input text for your request.
 	PiiEntityTypes []PiiEntityType
+
+	noSmithyDocumentSerde
+}
+
+// List of child blocks for the current block.
+type RelationshipsListItem struct {
+
+	// Identifers of the child blocks.
+	Ids []string
+
+	// Only supported relationship is a child relationship.
+	Type RelationshipType
 
 	noSmithyDocumentSerde
 }
@@ -1679,8 +2426,8 @@ type SentimentDetectionJobFilter struct {
 // Provides information about a sentiment detection job.
 type SentimentDetectionJobProperties struct {
 
-	// The Amazon Resource Name (ARN) that gives Amazon Comprehend read access to your
-	// input data.
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
 	// The time that the sentiment detection job ended.
@@ -1778,7 +2525,9 @@ type SyntaxToken struct {
 
 	// Provides the part of speech label and the confidence level that Amazon
 	// Comprehend has that the part of speech was correctly identified. For more
-	// information, see how-syntax.
+	// information, see Syntax
+	// (https://docs.aws.amazon.com/comprehend/latest/dg/how-syntax.html) in the
+	// Comprehend Developer Guide.
 	PartOfSpeech *PartOfSpeechTag
 
 	// The word that was recognized in the source text.
@@ -1813,7 +2562,7 @@ type Tag struct {
 }
 
 // Provides information for filtering a list of dominant language detection jobs.
-// For more information, see the operation.
+// For more information, see the ListTargetedSentimentDetectionJobs operation.
 type TargetedSentimentDetectionJobFilter struct {
 
 	// Filters on the name of the job.
@@ -1839,14 +2588,15 @@ type TargetedSentimentDetectionJobFilter struct {
 // Provides information about a targeted sentiment detection job.
 type TargetedSentimentDetectionJobProperties struct {
 
-	// The Amazon Resource Name (ARN) that gives Amazon Comprehend read access to your
-	// input data.
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend read access to your input data.
 	DataAccessRoleArn *string
 
 	// The time that the targeted sentiment detection job ended.
 	EndTime *time.Time
 
-	// The input properties for an inference job.
+	// The input properties for an inference job. The document reader config field
+	// applies only to non-text inputs for custom analysis.
 	InputDataConfig *InputDataConfig
 
 	// The Amazon Resource Name (ARN) of the targeted sentiment detection job. It is a
@@ -1879,16 +2629,15 @@ type TargetedSentimentDetectionJobProperties struct {
 	// The time that the targeted sentiment detection job was submitted for processing.
 	SubmitTime *time.Time
 
-	// ID for the AWS Key Management Service (KMS) key that Amazon Comprehend uses to
-	// encrypt data on the storage volume attached to the ML compute instance(s) that
-	// process the targeted sentiment detection job. The VolumeKmsKeyId can be either
-	// of the following formats:
+	// ID for the KMS key that Amazon Comprehend uses to encrypt the data on the
+	// storage volume attached to the ML compute instance(s) that process the targeted
+	// sentiment detection job. The VolumeKmsKeyId can be either of the following
+	// formats:
 	//
-	// * KMS Key ID:
-	// "1234abcd-12ab-34cd-56ef-1234567890ab"
+	// * KMS Key ID: "1234abcd-12ab-34cd-56ef-1234567890ab"
 	//
-	// * Amazon Resource Name (ARN) of a KMS
-	// Key:
+	// * Amazon
+	// Resource Name (ARN) of a KMS Key:
 	// "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
 	VolumeKmsKeyId *string
 
@@ -1897,6 +2646,74 @@ type TargetedSentimentDetectionJobProperties struct {
 	// Amazon VPC
 	// (https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html).
 	VpcConfig *VpcConfig
+
+	noSmithyDocumentSerde
+}
+
+// Information about one of the entities found by targeted sentiment analysis. For
+// more information about targeted sentiment, see Targeted sentiment
+// (https://docs.aws.amazon.com/comprehend/latest/dg/how-targeted-sentiment.html).
+type TargetedSentimentEntity struct {
+
+	// One or more index into the Mentions array that provides the best name for the
+	// entity group.
+	DescriptiveMentionIndex []int32
+
+	// An array of mentions of the entity in the document. The array represents a
+	// co-reference group. See  Co-reference group
+	// (https://docs.aws.amazon.com/comprehend/latest/dg/how-targeted-sentiment.html#how-targeted-sentiment-values)
+	// for an example.
+	Mentions []TargetedSentimentMention
+
+	noSmithyDocumentSerde
+}
+
+// Information about one mention of an entity. The mention information includes the
+// location of the mention in the text and the sentiment of the mention. For more
+// information about targeted sentiment, see Targeted sentiment
+// (https://docs.aws.amazon.com/comprehend/latest/dg/how-targeted-sentiment.html).
+type TargetedSentimentMention struct {
+
+	// The offset into the document text where the mention begins.
+	BeginOffset *int32
+
+	// The offset into the document text where the mention ends.
+	EndOffset *int32
+
+	// The confidence that all the entities mentioned in the group relate to the same
+	// entity.
+	GroupScore *float32
+
+	// Contains the sentiment and sentiment score for the mention.
+	MentionSentiment *MentionSentiment
+
+	// Model confidence that the entity is relevant. Value range is zero to one, where
+	// one is highest confidence.
+	Score *float32
+
+	// The text in the document that identifies the entity.
+	Text *string
+
+	// The type of the entity. Amazon Comprehend supports a variety of entity types
+	// (https://docs.aws.amazon.com/comprehend/latest/dg/how-targeted-sentiment.html#how-targeted-sentiment-entities).
+	Type TargetedSentimentEntityType
+
+	noSmithyDocumentSerde
+}
+
+// Configuration about the custom classifier associated with the flywheel.
+type TaskConfig struct {
+
+	// Language code for the language that the model supports.
+	//
+	// This member is required.
+	LanguageCode LanguageCode
+
+	// Configuration required for a classification model.
+	DocumentClassificationConfig *DocumentClassificationConfig
+
+	// Configuration required for an entity recognition model.
+	EntityRecognitionConfig *EntityRecognitionConfig
 
 	noSmithyDocumentSerde
 }
@@ -1928,8 +2745,8 @@ type TopicsDetectionJobFilter struct {
 // Provides information about a topic detection job.
 type TopicsDetectionJobProperties struct {
 
-	// The Amazon Resource Name (ARN) of the AWS Identity and Management (IAM) role
-	// that grants Amazon Comprehend read access to your job data.
+	// The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM)
+	// role that grants Amazon Comprehend read access to your job data.
 	DataAccessRoleArn *string
 
 	// The time that the topic detection job was completed.
@@ -1983,6 +2800,32 @@ type TopicsDetectionJobProperties struct {
 	// Configuration parameters for a private Virtual Private Cloud (VPC) containing
 	// the resources you are using for your topic detection job. For more information,
 	// see Amazon VPC
+	// (https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html).
+	VpcConfig *VpcConfig
+
+	noSmithyDocumentSerde
+}
+
+// Data security configuration.
+type UpdateDataSecurityConfig struct {
+
+	// ID for the AWS Key Management Service (KMS) key that Amazon Comprehend uses to
+	// encrypt trained custom models. The ModelKmsKeyId can be either of the following
+	// formats:
+	//
+	// * KMS Key ID: "1234abcd-12ab-34cd-56ef-1234567890ab"
+	//
+	// * Amazon
+	// Resource Name (ARN) of a KMS Key:
+	// "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
+	ModelKmsKeyId *string
+
+	// ID for the KMS key that Amazon Comprehend uses to encrypt the volume.
+	VolumeKmsKeyId *string
+
+	// Configuration parameters for an optional private Virtual Private Cloud (VPC)
+	// containing the resources you are using for the job. For more information, see
+	// Amazon VPC
 	// (https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html).
 	VpcConfig *VpcConfig
 

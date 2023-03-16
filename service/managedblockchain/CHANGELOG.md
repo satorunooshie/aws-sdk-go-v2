@@ -1,3 +1,76 @@
+# v1.15.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.0 (2023-02-28)
+
+* **Feature**: This release adds support for tagging to the accessor resource in Amazon Managed Blockchain
+
+# v1.14.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.14.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.14.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.13.5 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.4 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.3 (2022-11-14)
+
+* **Documentation**: Updating the API docs data type: NetworkEthereumAttributes, and the operations DeleteNode, and CreateNode to also include the supported Goerli network.
+
+# v1.13.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.0 (2022-10-19)
+
+* **Feature**: Adding new Accessor APIs for Amazon Managed Blockchain
+
+# v1.12.18 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.17 (2022-09-15)
+
+* No change notes available for this release.
+
+# v1.12.16 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.15 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.14 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.12.13 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

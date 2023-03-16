@@ -2,6 +2,56 @@
 
 package types
 
+type DeliveryStatus string
+
+// Enum values for DeliveryStatus
+const (
+	DeliveryStatusSuccess                 DeliveryStatus = "SUCCESS"
+	DeliveryStatusFailed                  DeliveryStatus = "FAILED"
+	DeliveryStatusFailedSigningFile       DeliveryStatus = "FAILED_SIGNING_FILE"
+	DeliveryStatusPending                 DeliveryStatus = "PENDING"
+	DeliveryStatusResourceNotFound        DeliveryStatus = "RESOURCE_NOT_FOUND"
+	DeliveryStatusAccessDenied            DeliveryStatus = "ACCESS_DENIED"
+	DeliveryStatusAccessDeniedSigningFile DeliveryStatus = "ACCESS_DENIED_SIGNING_FILE"
+	DeliveryStatusCancelled               DeliveryStatus = "CANCELLED"
+	DeliveryStatusUnknown                 DeliveryStatus = "UNKNOWN"
+)
+
+// Values returns all known values for DeliveryStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (DeliveryStatus) Values() []DeliveryStatus {
+	return []DeliveryStatus{
+		"SUCCESS",
+		"FAILED",
+		"FAILED_SIGNING_FILE",
+		"PENDING",
+		"RESOURCE_NOT_FOUND",
+		"ACCESS_DENIED",
+		"ACCESS_DENIED_SIGNING_FILE",
+		"CANCELLED",
+		"UNKNOWN",
+	}
+}
+
+type DestinationType string
+
+// Enum values for DestinationType
+const (
+	DestinationTypeEventDataStore DestinationType = "EVENT_DATA_STORE"
+	DestinationTypeAwsService     DestinationType = "AWS_SERVICE"
+)
+
+// Values returns all known values for DestinationType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (DestinationType) Values() []DestinationType {
+	return []DestinationType{
+		"EVENT_DATA_STORE",
+		"AWS_SERVICE",
+	}
+}
+
 type EventCategory string
 
 // Enum values for EventCategory
@@ -35,6 +85,50 @@ func (EventDataStoreStatus) Values() []EventDataStoreStatus {
 		"CREATED",
 		"ENABLED",
 		"PENDING_DELETION",
+	}
+}
+
+type ImportFailureStatus string
+
+// Enum values for ImportFailureStatus
+const (
+	ImportFailureStatusFailed    ImportFailureStatus = "FAILED"
+	ImportFailureStatusRetry     ImportFailureStatus = "RETRY"
+	ImportFailureStatusSucceeded ImportFailureStatus = "SUCCEEDED"
+)
+
+// Values returns all known values for ImportFailureStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ImportFailureStatus) Values() []ImportFailureStatus {
+	return []ImportFailureStatus{
+		"FAILED",
+		"RETRY",
+		"SUCCEEDED",
+	}
+}
+
+type ImportStatus string
+
+// Enum values for ImportStatus
+const (
+	ImportStatusInitializing ImportStatus = "INITIALIZING"
+	ImportStatusInProgress   ImportStatus = "IN_PROGRESS"
+	ImportStatusFailed       ImportStatus = "FAILED"
+	ImportStatusStopped      ImportStatus = "STOPPED"
+	ImportStatusCompleted    ImportStatus = "COMPLETED"
+)
+
+// Values returns all known values for ImportStatus. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (ImportStatus) Values() []ImportStatus {
+	return []ImportStatus{
+		"INITIALIZING",
+		"IN_PROGRESS",
+		"FAILED",
+		"STOPPED",
+		"COMPLETED",
 	}
 }
 

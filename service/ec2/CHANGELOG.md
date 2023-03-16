@@ -1,3 +1,205 @@
+# v1.90.0 (2023-03-14)
+
+* **Feature**: This release adds a new DnsOptions key (PrivateDnsOnlyForInboundResolverEndpoint) to CreateVpcEndpoint and ModifyVpcEndpoint APIs.
+
+# v1.89.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.89.0 (2023-03-08)
+
+* **Feature**: Introducing Amazon EC2 C7g, M7g and R7g instances, powered by the latest generation AWS Graviton3 processors and deliver up to 25% better performance over Graviton2-based instances.
+
+# v1.88.0 (2023-03-03)
+
+* **Feature**: This release adds support for a new boot mode for EC2 instances called 'UEFI Preferred'.
+
+# v1.87.0 (2023-02-28)
+
+* **Feature**: This release allows IMDS support to be set to v2-only on an existing AMI, so that all future instances launched from that AMI will use IMDSv2 by default.
+
+# v1.86.1 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.86.0 (2023-02-14)
+
+* **Feature**: With this release customers can turn host maintenance on or off when allocating or modifying a supported dedicated host. Host maintenance is turned on by default for supported hosts.
+
+# v1.85.0 (2023-02-10)
+
+* **Feature**: Adds support for waiters that automatically poll for an imported snapshot until it reaches the completed state.
+
+# v1.84.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+* **Dependency Update**: Upgrade smithy to 1.27.2 and correct empty query list serialization.
+
+# v1.84.0 (2023-02-02)
+
+* **Feature**: Documentation updates for EC2.
+
+# v1.83.0 (2023-01-31)
+
+* **Feature**: This launch allows customers to associate up to 8 IP addresses to their NAT Gateways to increase the limit on concurrent connections to a single destination by eight times from 55K to 440K.
+
+# v1.82.0 (2023-01-30)
+
+* **Feature**: We add Prefix Lists as a new route destination option for LocalGatewayRoutes. This will allow customers to create routes to Prefix Lists. Prefix List routes will allow customers to group individual CIDR routes with the same target into a single route.
+
+# v1.81.0 (2023-01-25)
+
+* **Feature**: This release adds new functionality that allows customers to provision IPv6 CIDR blocks through Amazon VPC IP Address Manager (IPAM) as well as allowing customers to utilize IPAM Resource Discovery APIs.
+
+# v1.80.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.80.0 (2023-01-20)
+
+* **Feature**: C6in, M6in, M6idn, R6in and R6idn instances are powered by 3rd Generation Intel Xeon Scalable processors (code named Ice Lake) with an all-core turbo frequency of 3.5 GHz.
+
+# v1.79.0 (2023-01-19)
+
+* **Feature**: Adds SSM Parameter Resource Aliasing support to EC2 Launch Templates. Launch Templates can now store parameter aliases in place of AMI Resource IDs. CreateLaunchTemplateVersion and DescribeLaunchTemplateVersions now support a convenience flag, ResolveAlias, to return the resolved parameter value.
+
+# v1.78.0 (2023-01-13)
+
+* **Feature**: Documentation updates for EC2.
+
+# v1.77.0 (2022-12-20)
+
+* **Feature**: Adds support for pagination in the EC2 DescribeImages API.
+
+# v1.76.1 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.76.0 (2022-12-12)
+
+* **Feature**: This release updates DescribeFpgaImages to show supported instance types of AFIs in its response.
+
+# v1.75.0 (2022-12-05)
+
+* **Feature**: Documentation updates for EC2.
+
+# v1.74.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.74.0 (2022-11-29.2)
+
+* **Feature**: This release adds support for AWS Verified Access and the Hpc6id Amazon EC2 compute optimized instance type, which features 3rd generation Intel Xeon Scalable processors.
+
+# v1.73.0 (2022-11-29)
+
+* **Feature**: Introduces ENA Express, which uses AWS SRD and dynamic routing to increase throughput and minimize latency, adds support for trust relationships between Reachability Analyzer and AWS Organizations to enable cross-account analysis, and adds support for Infrastructure Performance metric subscriptions.
+
+# v1.72.1 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.72.0 (2022-11-18)
+
+* **Feature**: This release adds support for copying an Amazon Machine Image's tags when copying an AMI.
+
+# v1.71.0 (2022-11-17)
+
+* **Feature**: This release adds a new optional parameter "privateIpAddress" for the CreateNatGateway API. PrivateIPAddress will allow customers to select a custom Private IPv4 address instead of having it be auto-assigned.
+
+# v1.70.1 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.70.0 (2022-11-10)
+
+* **Feature**: This release adds a new price capacity optimized allocation strategy for Spot Instances to help customers optimize provisioning of Spot Instances via EC2 Auto Scaling, EC2 Fleet, and Spot Fleet. It allocates Spot Instances based on both spare capacity availability and Spot Instance price.
+
+# v1.69.0 (2022-11-09)
+
+* **Feature**: Amazon EC2 Trn1 instances, powered by AWS Trainium chips, are purpose built for high-performance deep learning training. u-24tb1.112xlarge and u-18tb1.112xlarge High Memory instances are purpose-built to run large in-memory databases.
+
+# v1.68.0 (2022-11-08)
+
+* **Feature**: This release enables sharing of EC2 Placement Groups across accounts and within AWS Organizations using Resource Access Manager
+
+# v1.67.0 (2022-11-07)
+
+* **Feature**: This release adds support for two new attributes for attribute-based instance type selection - NetworkBandwidthGbps and AllowedInstanceTypes.
+
+# v1.66.0 (2022-11-04)
+
+* **Feature**: This release adds API support for the recipient of an AMI account share to remove shared AMI launch permissions.
+
+# v1.65.0 (2022-10-31)
+
+* **Feature**: Elastic IP transfer is a new Amazon VPC feature that allows you to transfer your Elastic IP addresses from one AWS Account to another.
+
+# v1.64.0 (2022-10-27)
+
+* **Feature**: Feature supports the replacement of instance root volume using an updated AMI without requiring customers to stop their instance.
+
+# v1.63.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.63.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.63.1 (2022-10-06)
+
+* No change notes available for this release.
+
+# v1.63.0 (2022-10-04)
+
+* **Feature**: Added EnableNetworkAddressUsageMetrics flag for ModifyVpcAttribute, DescribeVpcAttribute APIs.
+
+# v1.62.0 (2022-10-03)
+
+* **Feature**: Adding an imdsSupport attribute to EC2 AMIs
+
+# v1.61.0 (2022-09-29)
+
+* **Feature**: u-3tb1 instances are powered by Intel Xeon Platinum 8176M (Skylake) processors and are purpose-built to run large in-memory databases.
+
+# v1.60.0 (2022-09-23)
+
+* **Feature**: Letting external AWS customers provide ImageId as a Launch Template override in FleetLaunchTemplateOverridesRequest
+
+# v1.59.0 (2022-09-22)
+
+* **Feature**: Documentation updates for Amazon EC2.
+
+# v1.58.0 (2022-09-20)
+
+* **Feature**: This release adds support for blocked paths to Amazon VPC Reachability Analyzer.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.57.0 (2022-09-19)
+
+* **Feature**: This release adds CapacityAllocations field to DescribeCapacityReservations
+
+# v1.56.0 (2022-09-15)
+
+* **Feature**: This feature allows customers to create tags for vpc-endpoint-connections and vpc-endpoint-service-permissions.
+
+# v1.55.0 (2022-09-14)
+
+* **Feature**: Documentation updates for Amazon EC2.
+* **Feature**: This release adds support to send VPC Flow Logs to kinesis-data-firehose as new destination type
+* **Feature**: This update introduces API operations to manage and create local gateway route tables, CoIP pools, and VIF group associations.
+* **Feature**: Two new features for local gateway route tables: support for static routes targeting Elastic Network Interfaces and direct VPC routing.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.54.4 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.54.3 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.54.2 (2022-08-30)
 
 * No change notes available for this release.

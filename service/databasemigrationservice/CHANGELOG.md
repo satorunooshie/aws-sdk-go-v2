@@ -1,3 +1,84 @@
+# v1.24.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.0 (2023-03-07)
+
+* **Feature**: This release adds DMS Fleet Advisor Target Recommendation APIs and exposes functionality for DMS Fleet Advisor. It adds functionality to start Target Recommendation calculation.
+
+# v1.23.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.23.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.23.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.23.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.22.3 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.2 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.1 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.22.0 (2022-11-17)
+
+* **Feature**: Adds support for Internet Protocol Version 6 (IPv6) on DMS Replication Instances
+
+# v1.21.16 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.21.15 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.21.14 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.13 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.12 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.11 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.10 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.9 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.21.8 (2022-08-30)
 
 * No change notes available for this release.

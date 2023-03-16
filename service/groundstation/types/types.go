@@ -7,6 +7,51 @@ import (
 	"time"
 )
 
+// Detailed information about the agent.
+type AgentDetails struct {
+
+	// Current agent version.
+	//
+	// This member is required.
+	AgentVersion *string
+
+	// List of versions being used by agent components.
+	//
+	// This member is required.
+	ComponentVersions []ComponentVersion
+
+	// ID of EC2 instance agent is running on.
+	//
+	// This member is required.
+	InstanceId *string
+
+	// Type of EC2 instance agent is running on.
+	//
+	// This member is required.
+	InstanceType *string
+
+	// Number of Cpu cores reserved for agent.
+	//
+	// This member is required.
+	ReservedCpuCores []int32
+
+	noSmithyDocumentSerde
+}
+
+// Aggregate status of Agent components.
+type AggregateStatus struct {
+
+	// Aggregate status.
+	//
+	// This member is required.
+	Status AgentStatus
+
+	// Sparse map of failure signatures.
+	SignatureMap map[string]bool
+
+	noSmithyDocumentSerde
+}
+
 // Details about an antenna demod decode Config used in a contact.
 type AntennaDemodDecodeDetails struct {
 
@@ -65,6 +110,85 @@ type AntennaUplinkConfig struct {
 
 	// Whether or not uplink transmit is disabled.
 	TransmitDisabled *bool
+
+	noSmithyDocumentSerde
+}
+
+// Information about AwsGroundStationAgentEndpoint.
+type AwsGroundStationAgentEndpoint struct {
+
+	// The egress address of AgentEndpoint.
+	//
+	// This member is required.
+	EgressAddress *ConnectionDetails
+
+	// The ingress address of AgentEndpoint.
+	//
+	// This member is required.
+	IngressAddress *RangedConnectionDetails
+
+	// Name string associated with AgentEndpoint. Used as a human-readable identifier
+	// for AgentEndpoint.
+	//
+	// This member is required.
+	Name *string
+
+	// The status of AgentEndpoint.
+	AgentStatus AgentStatus
+
+	// The results of the audit.
+	AuditResults AuditResults
+
+	noSmithyDocumentSerde
+}
+
+// Data on the status of agent components.
+type ComponentStatusData struct {
+
+	// Capability ARN of the component.
+	//
+	// This member is required.
+	CapabilityArn *string
+
+	// The Component type.
+	//
+	// This member is required.
+	ComponentType ComponentType
+
+	// Dataflow UUID associated with the component.
+	//
+	// This member is required.
+	DataflowId *string
+
+	// Component status.
+	//
+	// This member is required.
+	Status AgentStatus
+
+	// Bytes received by the component.
+	BytesReceived *int64
+
+	// Bytes sent by the component.
+	BytesSent *int64
+
+	// Packets dropped by component.
+	PacketsDropped *int64
+
+	noSmithyDocumentSerde
+}
+
+// Version information for agent components.
+type ComponentVersion struct {
+
+	// Component type.
+	//
+	// This member is required.
+	ComponentType ComponentType
+
+	// List of versions.
+	//
+	// This member is required.
+	Versions []string
 
 	noSmithyDocumentSerde
 }
@@ -210,6 +334,20 @@ type ConfigTypeDataMemberUplinkEchoConfig struct {
 
 func (*ConfigTypeDataMemberUplinkEchoConfig) isConfigTypeData() {}
 
+// Egress address of AgentEndpoint with an optional mtu.
+type ConnectionDetails struct {
+
+	// A socket address.
+	//
+	// This member is required.
+	SocketAddress *SocketAddress
+
+	// Maximum transmission unit (MTU) size in bytes of a dataflow endpoint.
+	Mtu *int32
+
+	noSmithyDocumentSerde
+}
+
 // Data describing a contact.
 type ContactData struct {
 
@@ -219,7 +357,7 @@ type ContactData struct {
 	// Status of a contact.
 	ContactStatus ContactStatus
 
-	// End time of a contact.
+	// End time of a contact in UTC.
 	EndTime *time.Time
 
 	// Error message of a contact.
@@ -248,7 +386,7 @@ type ContactData struct {
 	// ARN of a satellite.
 	SatelliteArn *string
 
-	// Start time of a contact.
+	// Start time of a contact in UTC.
 	StartTime *time.Time
 
 	// Tags assigned to a contact.
@@ -357,6 +495,27 @@ type Destination struct {
 	noSmithyDocumentSerde
 }
 
+// Data for agent discovery.
+type DiscoveryData struct {
+
+	// List of capabilities to associate with agent.
+	//
+	// This member is required.
+	CapabilityArns []string
+
+	// List of private IP addresses to associate with agent.
+	//
+	// This member is required.
+	PrivateIpAddresses []string
+
+	// List of public IP addresses to associate with agent.
+	//
+	// This member is required.
+	PublicIpAddresses []string
+
+	noSmithyDocumentSerde
+}
+
 // Object that represents EIRP.
 type Eirp struct {
 
@@ -392,14 +551,138 @@ type Elevation struct {
 // Information about the endpoint details.
 type EndpointDetails struct {
 
+	// An agent endpoint.
+	AwsGroundStationAgentEndpoint *AwsGroundStationAgentEndpoint
+
 	// A dataflow endpoint.
 	Endpoint *DataflowEndpoint
 
-	// Endpoint security details.
+	// Endpoint security details including a list of subnets, a list of security groups
+	// and a role to connect streams to instances.
 	SecurityDetails *SecurityDetails
 
 	noSmithyDocumentSerde
 }
+
+// Ephemeris data.
+//
+// The following types satisfy this interface:
+//
+//	EphemerisDataMemberOem
+//	EphemerisDataMemberTle
+type EphemerisData interface {
+	isEphemerisData()
+}
+
+// Ephemeris data in Orbit Ephemeris Message (OEM) format.
+type EphemerisDataMemberOem struct {
+	Value OEMEphemeris
+
+	noSmithyDocumentSerde
+}
+
+func (*EphemerisDataMemberOem) isEphemerisData() {}
+
+// Two-line element set (TLE) ephemeris.
+type EphemerisDataMemberTle struct {
+	Value TLEEphemeris
+
+	noSmithyDocumentSerde
+}
+
+func (*EphemerisDataMemberTle) isEphemerisData() {}
+
+// Description of ephemeris.
+type EphemerisDescription struct {
+
+	// Supplied ephemeris data.
+	EphemerisData *string
+
+	// Source S3 object used for the ephemeris.
+	SourceS3Object *S3Object
+
+	noSmithyDocumentSerde
+}
+
+// Ephemeris item.
+type EphemerisItem struct {
+
+	// The time the ephemeris was uploaded in UTC.
+	CreationTime *time.Time
+
+	// Whether or not the ephemeris is enabled.
+	Enabled *bool
+
+	// The AWS Ground Station ephemeris ID.
+	EphemerisId *string
+
+	// A name string associated with the ephemeris. Used as a human-readable identifier
+	// for the ephemeris.
+	Name *string
+
+	// Customer-provided priority score to establish the order in which overlapping
+	// ephemerides should be used. The default for customer-provided ephemeris priority
+	// is 1, and higher numbers take precedence. Priority must be 1 or greater
+	Priority *int32
+
+	// Source S3 object used for the ephemeris.
+	SourceS3Object *S3Object
+
+	// The status of the ephemeris.
+	Status EphemerisStatus
+
+	noSmithyDocumentSerde
+}
+
+// Metadata describing a particular ephemeris.
+type EphemerisMetaData struct {
+
+	// The EphemerisSource that generated a given ephemeris.
+	//
+	// This member is required.
+	Source EphemerisSource
+
+	// UUID of a customer-provided ephemeris. This field is not populated for default
+	// ephemerides from Space Track.
+	EphemerisId *string
+
+	// The epoch of a default, ephemeris from Space Track in UTC. This field is not
+	// populated for customer-provided ephemerides.
+	Epoch *time.Time
+
+	// A name string associated with the ephemeris. Used as a human-readable identifier
+	// for the ephemeris. A name is only returned for customer-provider ephemerides
+	// that have a name associated.
+	Name *string
+
+	noSmithyDocumentSerde
+}
+
+// The following types satisfy this interface:
+//
+//	EphemerisTypeDescriptionMemberOem
+//	EphemerisTypeDescriptionMemberTle
+type EphemerisTypeDescription interface {
+	isEphemerisTypeDescription()
+}
+
+// Description of ephemeris.
+type EphemerisTypeDescriptionMemberOem struct {
+	Value EphemerisDescription
+
+	noSmithyDocumentSerde
+}
+
+func (*EphemerisTypeDescriptionMemberOem) isEphemerisTypeDescription() {}
+
+// Description of ephemeris.
+type EphemerisTypeDescriptionMemberTle struct {
+	Value EphemerisDescription
+
+	noSmithyDocumentSerde
+}
+
+func (*EphemerisTypeDescriptionMemberTle) isEphemerisTypeDescription() {}
 
 // Object that describes the frequency.
 type Frequency struct {
@@ -459,6 +742,50 @@ type GroundStationData struct {
 	noSmithyDocumentSerde
 }
 
+// An integer range that has a minimum and maximum value.
+type IntegerRange struct {
+
+	// A maximum value.
+	//
+	// This member is required.
+	Maximum *int32
+
+	// A minimum value.
+	//
+	// This member is required.
+	Minimum *int32
+
+	noSmithyDocumentSerde
+}
+
+// AWS Key Management Service (KMS) Key.
+//
+// The following types satisfy this interface:
+//
+//	KmsKeyMemberKmsAliasArn
+//	KmsKeyMemberKmsKeyArn
+type KmsKey interface {
+	isKmsKey()
+}
+
+// KMS Alias Arn.
+type KmsKeyMemberKmsAliasArn struct {
+	Value string
+
+	noSmithyDocumentSerde
+}
+
+func (*KmsKeyMemberKmsAliasArn) isKmsKey() {}
+
+// KMS Key Arn.
+type KmsKeyMemberKmsKeyArn struct {
+	Value string
+
+	noSmithyDocumentSerde
+}
+
+func (*KmsKeyMemberKmsKeyArn) isKmsKey() {}
+
 // Item in a list of mission profiles.
 type MissionProfileListItem struct {
 
@@ -473,6 +800,64 @@ type MissionProfileListItem struct {
 
 	// Region of a mission profile.
 	Region *string
+
+	noSmithyDocumentSerde
+}
+
+// Ephemeris data in Orbit Ephemeris Message (OEM) format.
+type OEMEphemeris struct {
+
+	// The data for an OEM ephemeris, supplied directly in the request rather than
+	// through an S3 object.
+	OemData *string
+
+	// Identifies the S3 object to be used as the ephemeris.
+	S3Object *S3Object
+
+	noSmithyDocumentSerde
+}
+
+// Ingress address of AgentEndpoint with a port range and an optional mtu.
+type RangedConnectionDetails struct {
+
+	// A ranged socket address.
+	//
+	// This member is required.
+	SocketAddress *RangedSocketAddress
+
+	// Maximum transmission unit (MTU) size in bytes of a dataflow endpoint.
+	Mtu *int32
+
+	noSmithyDocumentSerde
+}
+
+// A socket address with a port range.
+type RangedSocketAddress struct {
+
+	// IPv4 socket address.
+	//
+	// This member is required.
+	Name *string
+
+	// Port range of a socket address.
+	//
+	// This member is required.
+	PortRange *IntegerRange
+
+	noSmithyDocumentSerde
+}
+
+// Object stored in S3 containing ephemeris data.
+type S3Object struct {
+
+	// An Amazon S3 Bucket name.
+	Bucket *string
+
+	// An Amazon S3 key for the ephemeris.
+	Key *string
+
+	// For versioned S3 objects, the version to use for the ephemeris.
+	Version *string
 
 	noSmithyDocumentSerde
 }
@@ -502,7 +887,7 @@ type S3RecordingDetails struct {
 	// ARN of the bucket used.
 	BucketArn *string
 
-	// Template of the S3 key used.
+	// Key template used for the S3 Recording Configuration
 	KeyTemplate *string
 
 	noSmithyDocumentSerde
@@ -510,6 +895,9 @@ type S3RecordingDetails struct {
 
 // Item in a list of satellites.
 type SatelliteListItem struct {
+
+	// The current ephemeris being used to compute the trajectory of the satellite.
+	CurrentEphemeris *EphemerisMetaData
 
 	// A list of ground stations to which the satellite is on-boarded.
 	GroundStations []string
@@ -567,8 +955,8 @@ type SocketAddress struct {
 // Dataflow details for the source side.
 type Source struct {
 
-	// Additional details for a Config, if type is dataflow endpoint or antenna demod
-	// decode.
+	// Additional details for a Config, if type is dataflow-endpoint or
+	// antenna-downlink-demod-decode
 	ConfigDetails ConfigDetails
 
 	// UUID of a Config.
@@ -610,6 +998,56 @@ type SpectrumConfig struct {
 	// Polarization of a spectral Config. Capturing both "RIGHT_HAND" and "LEFT_HAND"
 	// polarization requires two separate configs.
 	Polarization Polarization
+
+	noSmithyDocumentSerde
+}
+
+// A time range with a start and end time.
+type TimeRange struct {
+
+	// Time in UTC at which the time range ends.
+	//
+	// This member is required.
+	EndTime *time.Time
+
+	// Time in UTC at which the time range starts.
+	//
+	// This member is required.
+	StartTime *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Two-line element set (TLE) data.
+type TLEData struct {
+
+	// First line of two-line element set (TLE) data.
+	//
+	// This member is required.
+	TleLine1 *string
+
+	// Second line of two-line element set (TLE) data.
+	//
+	// This member is required.
+	TleLine2 *string
+
+	// The valid time range for the TLE. Gaps or overlap are not permitted.
+	//
+	// This member is required.
+	ValidTimeRange *TimeRange
+
+	noSmithyDocumentSerde
+}
+
+// Two-line element set (TLE) ephemeris.
+type TLEEphemeris struct {
+
+	// Identifies the S3 object to be used as the ephemeris.
+	S3Object *S3Object
+
+	// The data for a TLE ephemeris, supplied directly in the request rather than
+	// through an S3 object.
+	TleData []TLEData
 
 	noSmithyDocumentSerde
 }
@@ -671,5 +1109,8 @@ type UnknownUnionMember struct {
 	noSmithyDocumentSerde
 }
 
-func (*UnknownUnionMember) isConfigDetails()  {}
-func (*UnknownUnionMember) isConfigTypeData() {}
+func (*UnknownUnionMember) isConfigDetails()            {}
+func (*UnknownUnionMember) isConfigTypeData()           {}
+func (*UnknownUnionMember) isEphemerisData()            {}
+func (*UnknownUnionMember) isEphemerisTypeDescription() {}
+func (*UnknownUnionMember) isKmsKey()                   {}

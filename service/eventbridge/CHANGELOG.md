@@ -1,3 +1,85 @@
+# v1.18.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.18.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.18.2 (2023-02-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.0 (2023-01-26)
+
+* **Feature**: Minor comments for Redshift Serverless workgroup target support.
+
+# v1.17.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.17.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.16.22 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.21 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.20 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.16.19 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.16.18 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.16.17 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.16 (2022-10-21)
+
+* **Bug Fix**: The SDK client has been updated to utilize the `aws.IsCredentialsProvider` function for determining if `aws.AnonymousCredentials` has been configured for the `CredentialProvider`.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.15 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.14 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.13 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.12 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.16.11 (2022-08-30)
 
 * No change notes available for this release.

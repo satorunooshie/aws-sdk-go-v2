@@ -1830,6 +1830,61 @@ func (m *awsAwsjson10_serializeOpGetRepositorySyncStatus) HandleSerialize(ctx co
 	return next.HandleSerialize(ctx, in)
 }
 
+type awsAwsjson10_serializeOpGetResourcesSummary struct {
+}
+
+func (*awsAwsjson10_serializeOpGetResourcesSummary) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsjson10_serializeOpGetResourcesSummary) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*GetResourcesSummaryInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-amz-json-1.0")
+	httpBindingEncoder.SetHeader("X-Amz-Target").String("AwsProton20200720.GetResourcesSummary")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsAwsjson10_serializeOpDocumentGetResourcesSummaryInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
 type awsAwsjson10_serializeOpGetService struct {
 }
 
@@ -4210,6 +4265,36 @@ func awsAwsjson10_serializeDocumentEnvironmentTemplateFilterList(v []types.Envir
 	return nil
 }
 
+func awsAwsjson10_serializeDocumentListServiceInstancesFilter(v *types.ListServiceInstancesFilter, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if len(v.Key) > 0 {
+		ok := object.Key("key")
+		ok.String(string(v.Key))
+	}
+
+	if v.Value != nil {
+		ok := object.Key("value")
+		ok.String(*v.Value)
+	}
+
+	return nil
+}
+
+func awsAwsjson10_serializeDocumentListServiceInstancesFilterList(v []types.ListServiceInstancesFilter, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		if err := awsAwsjson10_serializeDocumentListServiceInstancesFilter(&v[i], av); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func awsAwsjson10_serializeDocumentOutput(v *types.Output, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -4477,6 +4562,11 @@ func awsAwsjson10_serializeOpDocumentCreateEnvironmentAccountConnectionInput(v *
 		ok.String(*v.ClientToken)
 	}
 
+	if v.CodebuildRoleArn != nil {
+		ok := object.Key("codebuildRoleArn")
+		ok.String(*v.CodebuildRoleArn)
+	}
+
 	if v.ComponentRoleArn != nil {
 		ok := object.Key("componentRoleArn")
 		ok.String(*v.ComponentRoleArn)
@@ -4510,6 +4600,11 @@ func awsAwsjson10_serializeOpDocumentCreateEnvironmentAccountConnectionInput(v *
 func awsAwsjson10_serializeOpDocumentCreateEnvironmentInput(v *CreateEnvironmentInput, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
+
+	if v.CodebuildRoleArn != nil {
+		ok := object.Key("codebuildRoleArn")
+		ok.String(*v.CodebuildRoleArn)
+	}
 
 	if v.ComponentRoleArn != nil {
 		ok := object.Key("componentRoleArn")
@@ -5148,6 +5243,13 @@ func awsAwsjson10_serializeOpDocumentGetRepositorySyncStatusInput(v *GetReposito
 	return nil
 }
 
+func awsAwsjson10_serializeOpDocumentGetResourcesSummaryInput(v *GetResourcesSummaryInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	return nil
+}
+
 func awsAwsjson10_serializeOpDocumentGetServiceInput(v *GetServiceInput, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -5544,6 +5646,13 @@ func awsAwsjson10_serializeOpDocumentListServiceInstancesInput(v *ListServiceIns
 	object := value.Object()
 	defer object.Close()
 
+	if v.Filters != nil {
+		ok := object.Key("filters")
+		if err := awsAwsjson10_serializeDocumentListServiceInstancesFilterList(v.Filters, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.MaxResults != nil {
 		ok := object.Key("maxResults")
 		ok.Integer(*v.MaxResults)
@@ -5557,6 +5666,16 @@ func awsAwsjson10_serializeOpDocumentListServiceInstancesInput(v *ListServiceIns
 	if v.ServiceName != nil {
 		ok := object.Key("serviceName")
 		ok.String(*v.ServiceName)
+	}
+
+	if len(v.SortBy) > 0 {
+		ok := object.Key("sortBy")
+		ok.String(string(v.SortBy))
+	}
+
+	if len(v.SortOrder) > 0 {
+		ok := object.Key("sortOrder")
+		ok.String(string(v.SortOrder))
 	}
 
 	return nil
@@ -5767,6 +5886,16 @@ func awsAwsjson10_serializeOpDocumentUpdateAccountSettingsInput(v *UpdateAccount
 	object := value.Object()
 	defer object.Close()
 
+	if v.DeletePipelineProvisioningRepository != nil {
+		ok := object.Key("deletePipelineProvisioningRepository")
+		ok.Boolean(*v.DeletePipelineProvisioningRepository)
+	}
+
+	if v.PipelineCodebuildRoleArn != nil {
+		ok := object.Key("pipelineCodebuildRoleArn")
+		ok.String(*v.PipelineCodebuildRoleArn)
+	}
+
 	if v.PipelineProvisioningRepository != nil {
 		ok := object.Key("pipelineProvisioningRepository")
 		if err := awsAwsjson10_serializeDocumentRepositoryBranchInput(v.PipelineProvisioningRepository, ok); err != nil {
@@ -5828,6 +5957,11 @@ func awsAwsjson10_serializeOpDocumentUpdateEnvironmentAccountConnectionInput(v *
 	object := value.Object()
 	defer object.Close()
 
+	if v.CodebuildRoleArn != nil {
+		ok := object.Key("codebuildRoleArn")
+		ok.String(*v.CodebuildRoleArn)
+	}
+
 	if v.ComponentRoleArn != nil {
 		ok := object.Key("componentRoleArn")
 		ok.String(*v.ComponentRoleArn)
@@ -5849,6 +5983,11 @@ func awsAwsjson10_serializeOpDocumentUpdateEnvironmentAccountConnectionInput(v *
 func awsAwsjson10_serializeOpDocumentUpdateEnvironmentInput(v *UpdateEnvironmentInput, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
+
+	if v.CodebuildRoleArn != nil {
+		ok := object.Key("codebuildRoleArn")
+		ok.String(*v.CodebuildRoleArn)
+	}
 
 	if v.ComponentRoleArn != nil {
 		ok := object.Key("componentRoleArn")

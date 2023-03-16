@@ -7,6 +7,78 @@ import (
 	"time"
 )
 
+// Options for filtering API keys.
+type ApiKeyFilter struct {
+
+	// Filter on Active or Expired API keys.
+	KeyStatus Status
+
+	noSmithyDocumentSerde
+}
+
+// API Restrictions on the allowed actions, resources, and referers for an API key
+// resource.
+type ApiKeyRestrictions struct {
+
+	// A list of allowed actions that an API key resource grants permissions to perform
+	// Currently, the only valid action is geo:GetMap* as an input to the list. For
+	// example, ["geo:GetMap*"] is valid but ["geo:GetMapTile"] is not.
+	//
+	// This member is required.
+	AllowActions []string
+
+	// A list of allowed resource ARNs that a API key bearer can perform actions on For
+	// more information about ARN format, see Amazon Resource Names (ARNs)
+	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html). In
+	// this preview, you can allow only map resources. Requirements:
+	//
+	// * Must be
+	// prefixed with arn.
+	//
+	// * partition and service must not be empty and should begin
+	// with only alphanumeric characters (A–Z, a–z, 0–9) and contain only alphanumeric
+	// numbers, hyphens (-) and periods (.).
+	//
+	// * region and account-id can be empty or
+	// should begin with only alphanumeric characters (A–Z, a–z, 0–9) and contain only
+	// alphanumeric numbers, hyphens (-) and periods (.).
+	//
+	// * resource-id can begin with
+	// any character except for forward slash (/) and contain any characters after,
+	// including forward slashes to form a path. resource-id can also include wildcard
+	// characters, denoted by an asterisk (*).
+	//
+	// * arn, partition, service, region,
+	// account-id and resource-id must be delimited by a colon (:).
+	//
+	// * No spaces
+	// allowed. For example, arn:aws:geo:region:account-id:map/ExampleMap*.
+	//
+	// This member is required.
+	AllowResources []string
+
+	// An optional list of allowed HTTP referers for which requests must originate
+	// from. Requests using this API key from other domains will not be allowed.
+	// Requirements:
+	//
+	// * Contain only alphanumeric characters (A–Z, a–z, 0–9) or any
+	// symbols in this list $\-._+!*`(),;/?:@=&
+	//
+	// * May contain a percent (%) if
+	// followed by 2 hexadecimal digits (A-F, a-f, 0-9); this is used for URL encoding
+	// purposes.
+	//
+	// * May contain wildcard characters question mark (?) and asterisk (*).
+	// Question mark (?) will replace any single character (including hexadecimal
+	// digits). Asterisk (*) will replace any multiple characters (including multiple
+	// hexadecimal digits).
+	//
+	// * No spaces allowed. For example, https://example.com.
+	AllowReferers []string
+
+	noSmithyDocumentSerde
+}
+
 // Contains the tracker resource details.
 type BatchDeleteDevicePositionHistoryError struct {
 
@@ -201,10 +273,12 @@ type CalculateRouteMatrixSummary struct {
 	//
 	// * Esri
 	//
+	// * Grab
+	//
 	// * Here
 	//
-	// For more information
-	// about data providers, see Amazon Location Service data providers
+	// For more
+	// information about data providers, see Amazon Location Service data providers
 	// (https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html).
 	//
 	// This member is required.
@@ -238,10 +312,12 @@ type CalculateRouteSummary struct {
 	//
 	// * Esri
 	//
+	// * Grab
+	//
 	// * Here
 	//
-	// For more information
-	// about data providers, see Amazon Location Service data providers
+	// For more
+	// information about data providers, see Amazon Location Service data providers
 	// (https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html).
 	//
 	// This member is required.
@@ -443,16 +519,18 @@ type GeofenceGeometry struct {
 	// A circle on the earth, as defined by a center point and a radius.
 	Circle *Circle
 
-	// An array of 1 or more linear rings. A linear ring is an array of 4 or more
-	// vertices, where the first and last vertex are the same to form a closed
-	// boundary. Each vertex is a 2-dimensional point of the form: [longitude,
-	// latitude]. The first linear ring is an outer ring, describing the polygon's
-	// boundary. Subsequent linear rings may be inner or outer rings to describe holes
-	// and islands. Outer rings must list their vertices in counter-clockwise order
-	// around the ring's center, where the left side is the polygon's exterior. Inner
-	// rings must list their vertices in clockwise order, where the left side is the
-	// polygon's interior. A geofence polygon can consist of between 4 and 1,000
-	// vertices.
+	// A polygon is a list of linear rings which are each made up of a list of
+	// vertices. Each vertex is a 2-dimensional point of the form: [longitude,
+	// latitude]. This is represented as an array of doubles of length 2 (so [double,
+	// double]). An array of 4 or more vertices, where the first and last vertex are
+	// the same (to form a closed boundary), is called a linear ring. The linear ring
+	// vertices must be listed in counter-clockwise order around the ring’s interior.
+	// The linear ring is represented as an array of vertices, or an array of arrays of
+	// doubles ([[double, double], ...]). A geofence consists of a single linear ring.
+	// To allow for future expansion, the Polygon parameter takes an array of linear
+	// rings, which is represented as an array of arrays of arrays of doubles
+	// ([[[double, double], ...], ...]). A linear ring for use in geofences can consist
+	// of between 4 and 1,000 vertices.
 	Polygon [][][]float64
 
 	noSmithyDocumentSerde
@@ -659,7 +737,49 @@ type ListGeofenceResponseEntry struct {
 	noSmithyDocumentSerde
 }
 
-// Contains details of an existing map resource in your AWS account.
+// An API key resource listed in your Amazon Web Services account.
+type ListKeysResponseEntry struct {
+
+	// The timestamp of when the API key was created, in  ISO 8601
+	// (https://www.iso.org/iso-8601-date-and-time-format.html) format:
+	// YYYY-MM-DDThh:mm:ss.sssZ.
+	//
+	// This member is required.
+	CreateTime *time.Time
+
+	// The timestamp for when the API key resource will expire, in  ISO 8601
+	// (https://www.iso.org/iso-8601-date-and-time-format.html) format:
+	// YYYY-MM-DDThh:mm:ss.sssZ.
+	//
+	// This member is required.
+	ExpireTime *time.Time
+
+	// The name of the API key resource.
+	//
+	// This member is required.
+	KeyName *string
+
+	// API Restrictions on the allowed actions, resources, and referers for an API key
+	// resource.
+	//
+	// This member is required.
+	Restrictions *ApiKeyRestrictions
+
+	// The timestamp of when the API key was last updated, in  ISO 8601
+	// (https://www.iso.org/iso-8601-date-and-time-format.html) format:
+	// YYYY-MM-DDThh:mm:ss.sssZ.
+	//
+	// This member is required.
+	UpdateTime *time.Time
+
+	// The optional description for the API key resource.
+	Description *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains details of an existing map resource in your Amazon Web Services
+// account.
 type ListMapsResponseEntry struct {
 
 	// The timestamp for when the map resource was created in ISO 8601
@@ -699,7 +819,7 @@ type ListMapsResponseEntry struct {
 	noSmithyDocumentSerde
 }
 
-// A place index resource listed in your AWS account.
+// A place index resource listed in your Amazon Web Services account.
 type ListPlaceIndexesResponseEntry struct {
 
 	// The timestamp for when the place index resource was created in ISO 8601
@@ -714,10 +834,12 @@ type ListPlaceIndexesResponseEntry struct {
 	// *
 	// Esri
 	//
+	// * Grab
+	//
 	// * Here
 	//
-	// For more information about data providers, see Amazon Location
-	// Service data providers
+	// For more information about data providers, see Amazon
+	// Location Service data providers
 	// (https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html).
 	//
 	// This member is required.
@@ -748,7 +870,7 @@ type ListPlaceIndexesResponseEntry struct {
 	noSmithyDocumentSerde
 }
 
-// A route calculator resource listed in your AWS account.
+// A route calculator resource listed in your Amazon Web Services account.
 type ListRouteCalculatorsResponseEntry struct {
 
 	// The name of the route calculator resource.
@@ -770,10 +892,12 @@ type ListRouteCalculatorsResponseEntry struct {
 	//
 	// * Esri
 	//
+	// * Grab
+	//
 	// * Here
 	//
-	// For more information about data providers,
-	// see Amazon Location Service data providers
+	// For more information about data
+	// providers, see Amazon Location Service data providers
 	// (https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html).
 	//
 	// This member is required.
@@ -882,21 +1006,72 @@ type MapConfiguration struct {
 	//
 	// *
 	// VectorHereContrast – The HERE Contrast (Berlin) map style is a high contrast
-	// detailed base map of the world that blends 3D and 2D rendering.
+	// detailed base map of the world that blends 3D and 2D rendering. The
+	// VectorHereContrast style has been renamed from VectorHereBerlin.
+	// VectorHereBerlin has been deprecated, but will continue to work in applications
+	// that use it.
+	//
+	// * VectorHereExplore – A default HERE map style containing a
+	// neutral, global map and its features including roads, buildings, landmarks, and
+	// water features. It also now includes a fully designed map of Japan.
 	//
 	// *
-	// VectorHereExplore – A default HERE map style containing a neutral, global map
-	// and its features including roads, buildings, landmarks, and water features. It
-	// also now includes a fully designed map of Japan.
+	// VectorHereExploreTruck – A global map containing truck restrictions and
+	// attributes (e.g. width / height / HAZMAT) symbolized with highlighted segments
+	// and icons on top of HERE Explore to support use cases within transport and
+	// logistics.
 	//
-	// * VectorHereExploreTruck – A
-	// global map containing truck restrictions and attributes (e.g. width / height /
-	// HAZMAT) symbolized with highlighted segments and icons on top of HERE Explore to
-	// support use cases within transport and logistics.
+	// * RasterHereExploreSatellite – A global map containing high
+	// resolution satellite imagery.
 	//
-	// The VectorHereContrast style
-	// has been renamed from VectorHereBerlin. VectorHereBerlin has been deprecated,
-	// but will continue to work in applications that use it.
+	// * HybridHereExploreSatellite – A global map
+	// displaying the road network, street names, and city labels over satellite
+	// imagery. This style will automatically retrieve both raster and vector tiles,
+	// and your charges will be based on total tiles retrieved. Hybrid styles use both
+	// vector and raster tiles when rendering the map that you see. This means that
+	// more tiles are retrieved than when using either vector or raster tiles alone.
+	// Your charges will include all tiles retrieved.
+	//
+	// Valid GrabMaps map styles
+	// (https://docs.aws.amazon.com/location/latest/developerguide/grab.html):
+	//
+	// *
+	// VectorGrabStandardLight – The Grab Standard Light map style provides a basemap
+	// with detailed land use coloring, area names, roads, landmarks, and points of
+	// interest covering Southeast Asia.
+	//
+	// * VectorGrabStandardDark – The Grab Standard
+	// Dark map style provides a dark variation of the standard basemap covering
+	// Southeast Asia.
+	//
+	// Grab provides maps only for countries in Southeast Asia, and is
+	// only available in the Asia Pacific (Singapore) Region (ap-southeast-1). For more
+	// information, see GrabMaps countries and area covered
+	// (https://docs.aws.amazon.com/location/latest/developerguide/grab.html#grab-coverage-area).
+	// Valid Open Data map styles
+	// (https://docs.aws.amazon.com/location/latest/developerguide/open-data.html):
+	//
+	// *
+	// VectorOpenDataStandardLight – The Open Data Standard Light map style provides a
+	// detailed basemap for the world suitable for website and mobile application use.
+	// The map includes highways major roads, minor roads, railways, water features,
+	// cities, parks, landmarks, building footprints, and administrative boundaries.
+	//
+	// *
+	// VectorOpenDataStandardDark – Open Data Standard Dark is a dark-themed map style
+	// that provides a detailed basemap for the world suitable for website and mobile
+	// application use. The map includes highways major roads, minor roads, railways,
+	// water features, cities, parks, landmarks, building footprints, and
+	// administrative boundaries.
+	//
+	// * VectorOpenDataVisualizationLight – The Open Data
+	// Visualization Light map style is a light-themed style with muted colors and
+	// fewer features that aids in understanding overlaid data.
+	//
+	// *
+	// VectorOpenDataVisualizationDark – The Open Data Visualization Dark map style is
+	// a dark-themed style with muted colors and fewer features that aids in
+	// understanding overlaid data.
 	//
 	// This member is required.
 	Style *string
@@ -952,13 +1127,21 @@ type Place struct {
 	// Street.
 	Street *string
 
-	// A country, or an area that's part of a larger region. For example, Metro
+	// A county, or an area that's part of a larger region. For example, Metro
 	// Vancouver.
 	SubRegion *string
 
-	// The time zone in which the Place is located. Returned only when using Here as
+	// The time zone in which the Place is located. Returned only when using HERE as
 	// the selected partner.
 	TimeZone *TimeZone
+
+	// For addresses with multiple units, the unit identifier. Can include numbers and
+	// letters, for example 3B or Unit 123. Returned only for a place index that uses
+	// Esri as a data provider. Is not returned for SearchPlaceIndexForPosition.
+	UnitNumber *string
+
+	// For addresses with a UnitNumber, the type of unit. For example, Apartment.
+	UnitType *string
 
 	noSmithyDocumentSerde
 }
@@ -1059,6 +1242,12 @@ type SearchForPositionResult struct {
 	// This member is required.
 	Place *Place
 
+	// The unique identifier of the place. You can use this with the GetPlace operation
+	// to find the place again later. For SearchPlaceIndexForPosition operations, the
+	// PlaceId is returned only by place indexes that use HERE or Grab as a data
+	// provider.
+	PlaceId *string
+
 	noSmithyDocumentSerde
 }
 
@@ -1070,6 +1259,12 @@ type SearchForSuggestionsResult struct {
 	//
 	// This member is required.
 	Text *string
+
+	// The unique identifier of the place. You can use this with the GetPlace operation
+	// to find the place again later. For SearchPlaceIndexForSuggestions operations,
+	// the PlaceId is returned by place indexes that use Esri, Grab, or HERE as data
+	// providers.
+	PlaceId *string
 
 	noSmithyDocumentSerde
 }
@@ -1089,10 +1284,16 @@ type SearchForTextResult struct {
 	// the Earth. This returns the shortest distance between two locations.
 	Distance *float64
 
+	// The unique identifier of the place. You can use this with the GetPlace operation
+	// to find the place again later. For SearchPlaceIndexForText operations, the
+	// PlaceId is returned only by place indexes that use HERE or Grab as a data
+	// provider.
+	PlaceId *string
+
 	// The relative confidence in the match for a result among the results returned.
 	// For example, if more fields for an address match (including house number,
 	// street, city, country/region, and postal code), the relevance score is closer to
-	// 1. Returned only when the partner selected is Esri.
+	// 1. Returned only when the partner selected is Esri or Grab.
 	Relevance *float64
 
 	noSmithyDocumentSerde
@@ -1106,10 +1307,13 @@ type SearchPlaceIndexForPositionSummary struct {
 	//
 	// * Esri
 	//
+	// * Grab
+	//
 	// * Here
 	//
-	// For more
-	// information about data providers, see Amazon Location Service data providers
+	// For
+	// more information about data providers, see Amazon Location Service data
+	// providers
 	// (https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html).
 	//
 	// This member is required.
@@ -1140,10 +1344,13 @@ type SearchPlaceIndexForSuggestionsSummary struct {
 	//
 	// * Esri
 	//
+	// * Grab
+	//
 	// * Here
 	//
-	// For more
-	// information about data providers, see Amazon Location Service data providers
+	// For
+	// more information about data providers, see Amazon Location Service data
+	// providers
 	// (https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html).
 	//
 	// This member is required.
@@ -1186,10 +1393,13 @@ type SearchPlaceIndexForTextSummary struct {
 	//
 	// * Esri
 	//
+	// * Grab
+	//
 	// * Here
 	//
-	// For more
-	// information about data providers, see Amazon Location Service data providers
+	// For
+	// more information about data providers, see Amazon Location Service data
+	// providers
 	// (https://docs.aws.amazon.com/location/latest/developerguide/what-is-data-provider.html).
 	//
 	// This member is required.

@@ -30,8 +30,9 @@ func (c *Client) ListSecurityProfilePermissions(ctx context.Context, params *Lis
 
 type ListSecurityProfilePermissionsInput struct {
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	//
 	// This member is required.
 	InstanceId *string
@@ -42,7 +43,7 @@ type ListSecurityProfilePermissionsInput struct {
 	SecurityProfileId *string
 
 	// The maximum number of results to return per page.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token for the next set of results. Use the value returned in the previous
 	// response in the next request to retrieve the next set of results.
@@ -56,7 +57,9 @@ type ListSecurityProfilePermissionsOutput struct {
 	// If there are additional results, this is the token for the next set of results.
 	NextToken *string
 
-	// The permissions granted to the security profile.
+	// The permissions granted to the security profile. For a complete list of valid
+	// permissions, see List of security profile permissions
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/security-profile-list.html).
 	Permissions []string
 
 	// Metadata pertaining to the operation's result.
@@ -165,8 +168,8 @@ func NewListSecurityProfilePermissionsPaginator(client ListSecurityProfilePermis
 	}
 
 	options := ListSecurityProfilePermissionsPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -196,7 +199,11 @@ func (p *ListSecurityProfilePermissionsPaginator) NextPage(ctx context.Context, 
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListSecurityProfilePermissions(ctx, &params, optFns...)
 	if err != nil {

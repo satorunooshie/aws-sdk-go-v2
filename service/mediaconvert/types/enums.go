@@ -969,6 +969,54 @@ func (AvcIntraUhdQualityTuningLevel) Values() []AvcIntraUhdQualityTuningLevel {
 	}
 }
 
+type BandwidthReductionFilterSharpening string
+
+// Enum values for BandwidthReductionFilterSharpening
+const (
+	BandwidthReductionFilterSharpeningLow    BandwidthReductionFilterSharpening = "LOW"
+	BandwidthReductionFilterSharpeningMedium BandwidthReductionFilterSharpening = "MEDIUM"
+	BandwidthReductionFilterSharpeningHigh   BandwidthReductionFilterSharpening = "HIGH"
+	BandwidthReductionFilterSharpeningOff    BandwidthReductionFilterSharpening = "OFF"
+)
+
+// Values returns all known values for BandwidthReductionFilterSharpening. Note
+// that this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (BandwidthReductionFilterSharpening) Values() []BandwidthReductionFilterSharpening {
+	return []BandwidthReductionFilterSharpening{
+		"LOW",
+		"MEDIUM",
+		"HIGH",
+		"OFF",
+	}
+}
+
+type BandwidthReductionFilterStrength string
+
+// Enum values for BandwidthReductionFilterStrength
+const (
+	BandwidthReductionFilterStrengthLow    BandwidthReductionFilterStrength = "LOW"
+	BandwidthReductionFilterStrengthMedium BandwidthReductionFilterStrength = "MEDIUM"
+	BandwidthReductionFilterStrengthHigh   BandwidthReductionFilterStrength = "HIGH"
+	BandwidthReductionFilterStrengthAuto   BandwidthReductionFilterStrength = "AUTO"
+	BandwidthReductionFilterStrengthOff    BandwidthReductionFilterStrength = "OFF"
+)
+
+// Values returns all known values for BandwidthReductionFilterStrength. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (BandwidthReductionFilterStrength) Values() []BandwidthReductionFilterStrength {
+	return []BandwidthReductionFilterStrength{
+		"LOW",
+		"MEDIUM",
+		"HIGH",
+		"AUTO",
+		"OFF",
+	}
+}
+
 type BillingTagsSource string
 
 // Enum values for BillingTagsSource
@@ -1443,6 +1491,24 @@ func (CmafManifestDurationFormat) Values() []CmafManifestDurationFormat {
 	}
 }
 
+type CmafMpdManifestBandwidthType string
+
+// Enum values for CmafMpdManifestBandwidthType
+const (
+	CmafMpdManifestBandwidthTypeAverage CmafMpdManifestBandwidthType = "AVERAGE"
+	CmafMpdManifestBandwidthTypeMax     CmafMpdManifestBandwidthType = "MAX"
+)
+
+// Values returns all known values for CmafMpdManifestBandwidthType. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (CmafMpdManifestBandwidthType) Values() []CmafMpdManifestBandwidthType {
+	return []CmafMpdManifestBandwidthType{
+		"AVERAGE",
+		"MAX",
+	}
+}
+
 type CmafMpdProfile string
 
 // Enum values for CmafMpdProfile
@@ -1550,6 +1616,24 @@ func (CmafTargetDurationCompatibilityMode) Values() []CmafTargetDurationCompatib
 	return []CmafTargetDurationCompatibilityMode{
 		"LEGACY",
 		"SPEC_COMPLIANT",
+	}
+}
+
+type CmafVideoCompositionOffsets string
+
+// Enum values for CmafVideoCompositionOffsets
+const (
+	CmafVideoCompositionOffsetsSigned   CmafVideoCompositionOffsets = "SIGNED"
+	CmafVideoCompositionOffsetsUnsigned CmafVideoCompositionOffsets = "UNSIGNED"
+)
+
+// Values returns all known values for CmafVideoCompositionOffsets. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (CmafVideoCompositionOffsets) Values() []CmafVideoCompositionOffsets {
+	return []CmafVideoCompositionOffsets{
+		"SIGNED",
+		"UNSIGNED",
 	}
 }
 
@@ -1701,6 +1785,25 @@ func (CmfcKlvMetadata) Values() []CmfcKlvMetadata {
 	}
 }
 
+type CmfcManifestMetadataSignaling string
+
+// Enum values for CmfcManifestMetadataSignaling
+const (
+	CmfcManifestMetadataSignalingEnabled  CmfcManifestMetadataSignaling = "ENABLED"
+	CmfcManifestMetadataSignalingDisabled CmfcManifestMetadataSignaling = "DISABLED"
+)
+
+// Values returns all known values for CmfcManifestMetadataSignaling. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (CmfcManifestMetadataSignaling) Values() []CmfcManifestMetadataSignaling {
+	return []CmfcManifestMetadataSignaling{
+		"ENABLED",
+		"DISABLED",
+	}
+}
+
 type CmfcScte35Esam string
 
 // Enum values for CmfcScte35Esam
@@ -1755,6 +1858,24 @@ func (CmfcTimedMetadata) Values() []CmfcTimedMetadata {
 	}
 }
 
+type CmfcTimedMetadataBoxVersion string
+
+// Enum values for CmfcTimedMetadataBoxVersion
+const (
+	CmfcTimedMetadataBoxVersionVersion0 CmfcTimedMetadataBoxVersion = "VERSION_0"
+	CmfcTimedMetadataBoxVersionVersion1 CmfcTimedMetadataBoxVersion = "VERSION_1"
+)
+
+// Values returns all known values for CmfcTimedMetadataBoxVersion. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (CmfcTimedMetadataBoxVersion) Values() []CmfcTimedMetadataBoxVersion {
+	return []CmfcTimedMetadataBoxVersion{
+		"VERSION_0",
+		"VERSION_1",
+	}
+}
+
 type ColorMetadata string
 
 // Enum values for ColorMetadata
@@ -1777,11 +1898,14 @@ type ColorSpace string
 
 // Enum values for ColorSpace
 const (
-	ColorSpaceFollow  ColorSpace = "FOLLOW"
-	ColorSpaceRec601  ColorSpace = "REC_601"
-	ColorSpaceRec709  ColorSpace = "REC_709"
-	ColorSpaceHdr10   ColorSpace = "HDR10"
-	ColorSpaceHlg2020 ColorSpace = "HLG_2020"
+	ColorSpaceFollow   ColorSpace = "FOLLOW"
+	ColorSpaceRec601   ColorSpace = "REC_601"
+	ColorSpaceRec709   ColorSpace = "REC_709"
+	ColorSpaceHdr10    ColorSpace = "HDR10"
+	ColorSpaceHlg2020  ColorSpace = "HLG_2020"
+	ColorSpaceP3dci    ColorSpace = "P3DCI"
+	ColorSpaceP3d65Sdr ColorSpace = "P3D65_SDR"
+	ColorSpaceP3d65Hdr ColorSpace = "P3D65_HDR"
 )
 
 // Values returns all known values for ColorSpace. Note that this can be expanded
@@ -1794,6 +1918,9 @@ func (ColorSpace) Values() []ColorSpace {
 		"REC_709",
 		"HDR10",
 		"HLG_2020",
+		"P3DCI",
+		"P3D65_SDR",
+		"P3D65_HDR",
 	}
 }
 
@@ -1801,11 +1928,14 @@ type ColorSpaceConversion string
 
 // Enum values for ColorSpaceConversion
 const (
-	ColorSpaceConversionNone         ColorSpaceConversion = "NONE"
-	ColorSpaceConversionForce601     ColorSpaceConversion = "FORCE_601"
-	ColorSpaceConversionForce709     ColorSpaceConversion = "FORCE_709"
-	ColorSpaceConversionForceHdr10   ColorSpaceConversion = "FORCE_HDR10"
-	ColorSpaceConversionForceHlg2020 ColorSpaceConversion = "FORCE_HLG_2020"
+	ColorSpaceConversionNone          ColorSpaceConversion = "NONE"
+	ColorSpaceConversionForce601      ColorSpaceConversion = "FORCE_601"
+	ColorSpaceConversionForce709      ColorSpaceConversion = "FORCE_709"
+	ColorSpaceConversionForceHdr10    ColorSpaceConversion = "FORCE_HDR10"
+	ColorSpaceConversionForceHlg2020  ColorSpaceConversion = "FORCE_HLG_2020"
+	ColorSpaceConversionForceP3dci    ColorSpaceConversion = "FORCE_P3DCI"
+	ColorSpaceConversionForceP3d65Sdr ColorSpaceConversion = "FORCE_P3D65_SDR"
+	ColorSpaceConversionForceP3d65Hdr ColorSpaceConversion = "FORCE_P3D65_HDR"
 )
 
 // Values returns all known values for ColorSpaceConversion. Note that this can be
@@ -1818,6 +1948,9 @@ func (ColorSpaceConversion) Values() []ColorSpaceConversion {
 		"FORCE_709",
 		"FORCE_HDR10",
 		"FORCE_HLG_2020",
+		"FORCE_P3DCI",
+		"FORCE_P3D65_SDR",
+		"FORCE_P3D65_HDR",
 	}
 }
 
@@ -1986,6 +2119,25 @@ func (DashIsoIntervalCadence) Values() []DashIsoIntervalCadence {
 	}
 }
 
+type DashIsoMpdManifestBandwidthType string
+
+// Enum values for DashIsoMpdManifestBandwidthType
+const (
+	DashIsoMpdManifestBandwidthTypeAverage DashIsoMpdManifestBandwidthType = "AVERAGE"
+	DashIsoMpdManifestBandwidthTypeMax     DashIsoMpdManifestBandwidthType = "MAX"
+)
+
+// Values returns all known values for DashIsoMpdManifestBandwidthType. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (DashIsoMpdManifestBandwidthType) Values() []DashIsoMpdManifestBandwidthType {
+	return []DashIsoMpdManifestBandwidthType{
+		"AVERAGE",
+		"MAX",
+	}
+}
+
 type DashIsoMpdProfile string
 
 // Enum values for DashIsoMpdProfile
@@ -2078,6 +2230,25 @@ func (DashIsoSegmentLengthControl) Values() []DashIsoSegmentLengthControl {
 	}
 }
 
+type DashIsoVideoCompositionOffsets string
+
+// Enum values for DashIsoVideoCompositionOffsets
+const (
+	DashIsoVideoCompositionOffsetsSigned   DashIsoVideoCompositionOffsets = "SIGNED"
+	DashIsoVideoCompositionOffsetsUnsigned DashIsoVideoCompositionOffsets = "UNSIGNED"
+)
+
+// Values returns all known values for DashIsoVideoCompositionOffsets. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (DashIsoVideoCompositionOffsets) Values() []DashIsoVideoCompositionOffsets {
+	return []DashIsoVideoCompositionOffsets{
+		"SIGNED",
+		"UNSIGNED",
+	}
+}
+
 type DashIsoWriteSegmentTimelineInRepresentation string
 
 // Enum values for DashIsoWriteSegmentTimelineInRepresentation
@@ -2094,6 +2265,26 @@ func (DashIsoWriteSegmentTimelineInRepresentation) Values() []DashIsoWriteSegmen
 	return []DashIsoWriteSegmentTimelineInRepresentation{
 		"ENABLED",
 		"DISABLED",
+	}
+}
+
+type DashManifestStyle string
+
+// Enum values for DashManifestStyle
+const (
+	DashManifestStyleBasic    DashManifestStyle = "BASIC"
+	DashManifestStyleCompact  DashManifestStyle = "COMPACT"
+	DashManifestStyleDistinct DashManifestStyle = "DISTINCT"
+)
+
+// Values returns all known values for DashManifestStyle. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (DashManifestStyle) Values() []DashManifestStyle {
+	return []DashManifestStyle{
+		"BASIC",
+		"COMPACT",
+		"DISTINCT",
 	}
 }
 
@@ -4162,6 +4353,24 @@ func (H265WriteMp4PackagingType) Values() []H265WriteMp4PackagingType {
 	}
 }
 
+type HDRToSDRToneMapper string
+
+// Enum values for HDRToSDRToneMapper
+const (
+	HDRToSDRToneMapperPreserveDetails HDRToSDRToneMapper = "PRESERVE_DETAILS"
+	HDRToSDRToneMapperVibrant         HDRToSDRToneMapper = "VIBRANT"
+)
+
+// Values returns all known values for HDRToSDRToneMapper. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (HDRToSDRToneMapper) Values() []HDRToSDRToneMapper {
+	return []HDRToSDRToneMapper{
+		"PRESERVE_DETAILS",
+		"VIBRANT",
+	}
+}
+
 type HlsAdMarkers string
 
 // Enum values for HlsAdMarkers
@@ -5956,6 +6165,24 @@ func (MpdKlvMetadata) Values() []MpdKlvMetadata {
 	}
 }
 
+type MpdManifestMetadataSignaling string
+
+// Enum values for MpdManifestMetadataSignaling
+const (
+	MpdManifestMetadataSignalingEnabled  MpdManifestMetadataSignaling = "ENABLED"
+	MpdManifestMetadataSignalingDisabled MpdManifestMetadataSignaling = "DISABLED"
+)
+
+// Values returns all known values for MpdManifestMetadataSignaling. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (MpdManifestMetadataSignaling) Values() []MpdManifestMetadataSignaling {
+	return []MpdManifestMetadataSignaling{
+		"ENABLED",
+		"DISABLED",
+	}
+}
+
 type MpdScte35Esam string
 
 // Enum values for MpdScte35Esam
@@ -6007,6 +6234,24 @@ func (MpdTimedMetadata) Values() []MpdTimedMetadata {
 	return []MpdTimedMetadata{
 		"PASSTHROUGH",
 		"NONE",
+	}
+}
+
+type MpdTimedMetadataBoxVersion string
+
+// Enum values for MpdTimedMetadataBoxVersion
+const (
+	MpdTimedMetadataBoxVersionVersion0 MpdTimedMetadataBoxVersion = "VERSION_0"
+	MpdTimedMetadataBoxVersionVersion1 MpdTimedMetadataBoxVersion = "VERSION_1"
+)
+
+// Values returns all known values for MpdTimedMetadataBoxVersion. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (MpdTimedMetadataBoxVersion) Values() []MpdTimedMetadataBoxVersion {
+	return []MpdTimedMetadataBoxVersion{
+		"VERSION_0",
+		"VERSION_1",
 	}
 }
 
@@ -7102,6 +7347,7 @@ type SampleRangeConversion string
 const (
 	SampleRangeConversionLimitedRangeSqueeze SampleRangeConversion = "LIMITED_RANGE_SQUEEZE"
 	SampleRangeConversionNone                SampleRangeConversion = "NONE"
+	SampleRangeConversionLimitedRangeClip    SampleRangeConversion = "LIMITED_RANGE_CLIP"
 )
 
 // Values returns all known values for SampleRangeConversion. Note that this can be
@@ -7111,6 +7357,7 @@ func (SampleRangeConversion) Values() []SampleRangeConversion {
 	return []SampleRangeConversion{
 		"LIMITED_RANGE_SQUEEZE",
 		"NONE",
+		"LIMITED_RANGE_CLIP",
 	}
 }
 

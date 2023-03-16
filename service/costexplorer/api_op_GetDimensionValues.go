@@ -31,7 +31,9 @@ func (c *Client) GetDimensionValues(ctx context.Context, params *GetDimensionVal
 type GetDimensionValuesInput struct {
 
 	// The name of the dimension. Each Dimension is available for a different Context.
-	// For more information, see Context.
+	// For more information, see Context. LINK_ACCOUNT_NAME and SERVICE_CODE can only
+	// be used in CostCategoryRule
+	// (https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/AAPI_CostCategoryRule.html).
 	//
 	// This member is required.
 	Dimension types.Dimension
@@ -197,37 +199,82 @@ type GetDimensionValuesInput struct {
 	// Savings Plans.
 	Context types.Context
 
-	// Use Expression to filter by cost or by usage. There are two patterns:
+	// Use Expression to filter in various Cost Explorer APIs. Not all Expression types
+	// are supported in each API. Refer to the documentation for each specific API to
+	// see what is supported. There are two patterns:
 	//
-	// * Simple
-	// dimension values - You can set the dimension name and values for the filters
-	// that you plan to use. For example, you can filter for REGION==us-east-1 OR
+	// * Simple dimension values.
+	//
+	// *
+	// There are three types of simple dimension values: CostCategories, Tags, and
+	// Dimensions.
+	//
+	// * Specify the CostCategories field to define a filter that acts on
+	// Cost Categories.
+	//
+	// * Specify the Tags field to define a filter that acts on Cost
+	// Allocation Tags.
+	//
+	// * Specify the Dimensions field to define a filter that acts on
+	// the DimensionValues
+	// (https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_DimensionValues.html).
+	//
+	// *
+	// For each filter type, you can set the dimension name and values for the filters
+	// that you plan to use.
+	//
+	// * For example, you can filter for REGION==us-east-1 OR
 	// REGION==us-west-1. For GetRightsizingRecommendation, the Region is a full name
-	// (for example, REGION==US East (N. Virginia). The Expression example is as
-	// follows: { "Dimensions": { "Key": "REGION", "Values": [ "us-east-1", “us-west-1”
-	// ] } } The list of dimension values are OR'd together to retrieve cost or usage
-	// data. You can create Expression and DimensionValues objects using either with*
-	// methods or set* methods in multiple lines.
+	// (for example, REGION==US East (N. Virginia).
 	//
-	// * Compound dimension values with
-	// logical operations - You can use multiple Expression types and the logical
-	// operators AND/OR/NOT to create a list of one or more Expression objects. By
-	// doing this, you can filter on more advanced options. For example, you can filter
-	// on ((REGION == us-east-1 OR REGION == us-west-1) OR (TAG.Type == Type1)) AND
-	// (USAGE_TYPE != DataTransfer). The Expression for that is as follows: { "And": [
-	// {"Or": [ {"Dimensions": { "Key": "REGION", "Values": [ "us-east-1", "us-west-1"
-	// ] }}, {"Tags": { "Key": "TagName", "Values": ["Value1"] } } ]}, {"Not":
-	// {"Dimensions": { "Key": "USAGE_TYPE", "Values": ["DataTransfer"] }}} ] }
-	// Because each Expression can have only one operator, the service returns an error
-	// if more than one is specified. The following example shows an Expression object
-	// that creates an error.  { "And": [ ... ], "DimensionValues": { "Dimension":
-	// "USAGE_TYPE", "Values": [ "DataTransfer" ] } }
+	// * The corresponding Expression for
+	// this example is as follows: { "Dimensions": { "Key": "REGION", "Values": [
+	// "us-east-1", “us-west-1” ] } }
 	//
-	// For the
-	// GetRightsizingRecommendation action, a combination of OR and NOT isn't
-	// supported. OR isn't supported between different dimensions, or dimensions and
-	// tags. NOT operators aren't supported. Dimensions are also limited to
-	// LINKED_ACCOUNT, REGION, or RIGHTSIZING_TYPE. For the
+	// * As shown in the previous example, lists of
+	// dimension values are combined with OR when applying the filter.
+	//
+	// * You can also
+	// set different match options to further control how the filter behaves. Not all
+	// APIs support match options. Refer to the documentation for each specific API to
+	// see what is supported.
+	//
+	// * For example, you can filter for linked account names
+	// that start with “a”.
+	//
+	// * The corresponding Expression for this example is as
+	// follows: { "Dimensions": { "Key": "LINKED_ACCOUNT_NAME", "MatchOptions": [
+	// "STARTS_WITH" ], "Values": [ "a" ] } }
+	//
+	// * Compound Expression types with logical
+	// operations.
+	//
+	// * You can use multiple Expression types and the logical operators
+	// AND/OR/NOT to create a list of one or more Expression objects. By doing this,
+	// you can filter by more advanced options.
+	//
+	// * For example, you can filter by
+	// ((REGION == us-east-1 OR REGION == us-west-1) OR (TAG.Type == Type1)) AND
+	// (USAGE_TYPE != DataTransfer).
+	//
+	// * The corresponding Expression for this example
+	// is as follows: { "And": [ {"Or": [ {"Dimensions": { "Key": "REGION", "Values": [
+	// "us-east-1", "us-west-1" ] }}, {"Tags": { "Key": "TagName", "Values": ["Value1"]
+	// } } ]}, {"Not": {"Dimensions": { "Key": "USAGE_TYPE", "Values": ["DataTransfer"]
+	// }}} ] }
+	//
+	// Because each Expression can have only one operator, the service returns
+	// an error if more than one is specified. The following example shows an
+	// Expression object that creates an error:  { "And": [ ... ], "Dimensions": {
+	// "Key": "USAGE_TYPE", "Values": [ "DataTransfer" ] } }  The following is an
+	// example of the corresponding error message: "Expression has more than one roots.
+	// Only one root operator is allowed for each expression: And, Or, Not, Dimensions,
+	// Tags, CostCategories"
+	//
+	// For the GetRightsizingRecommendation action, a
+	// combination of OR and NOT isn't supported. OR isn't supported between different
+	// dimensions, or dimensions and tags. NOT operators aren't supported. Dimensions
+	// are also limited to LINKED_ACCOUNT, REGION, or RIGHTSIZING_TYPE. For the
 	// GetReservationPurchaseRecommendation action, only NOT is supported. AND and OR
 	// aren't supported. Dimensions are limited to LINKED_ACCOUNT.
 	Filter *types.Expression
@@ -327,45 +374,46 @@ type GetDimensionValuesOutput struct {
 	//
 	// * RESOURCE_ID - The unique identifier of the resource.
 	// ResourceId is an opt-in feature only available for last 14 days for EC2-Compute
-	// Service.
+	// Service. You can opt-in by enabling Hourly and Resource Level Data in Cost
+	// Management Console preferences.
 	//
-	// If you set the context to RESERVATIONS, you can use the following
-	// dimensions for searching:
+	// If you set the context to RESERVATIONS, you can
+	// use the following dimensions for searching:
 	//
-	// * AZ - The Availability Zone. An example is
-	// us-east-1a.
+	// * AZ - The Availability Zone. An
+	// example is us-east-1a.
 	//
-	// * CACHE_ENGINE - The Amazon ElastiCache operating system. Examples
-	// are Windows or Linux.
+	// * CACHE_ENGINE - The Amazon ElastiCache operating
+	// system. Examples are Windows or Linux.
 	//
-	// * DEPLOYMENT_OPTION - The scope of Amazon Relational
-	// Database Service deployments. Valid values are SingleAZ and MultiAZ.
+	// * DEPLOYMENT_OPTION - The scope of
+	// Amazon Relational Database Service deployments. Valid values are SingleAZ and
+	// MultiAZ.
 	//
-	// *
-	// INSTANCE_TYPE - The type of Amazon EC2 instance. An example is m4.xlarge.
+	// * INSTANCE_TYPE - The type of Amazon EC2 instance. An example is
+	// m4.xlarge.
 	//
-	// *
-	// LINKED_ACCOUNT - The description in the attribute map that includes the full
-	// name of the member account. The value field contains the Amazon Web Services ID
-	// of the member account.
+	// * LINKED_ACCOUNT - The description in the attribute map that
+	// includes the full name of the member account. The value field contains the
+	// Amazon Web Services ID of the member account.
 	//
-	// * PLATFORM - The Amazon EC2 operating system. Examples
-	// are Windows or Linux.
+	// * PLATFORM - The Amazon EC2
+	// operating system. Examples are Windows or Linux.
 	//
-	// * REGION - The Amazon Web Services Region.
+	// * REGION - The Amazon Web
+	// Services Region.
 	//
-	// * SCOPE
-	// (Utilization only) - The scope of a Reserved Instance (RI). Values are regional
-	// or a single Availability Zone.
+	// * SCOPE (Utilization only) - The scope of a Reserved Instance
+	// (RI). Values are regional or a single Availability Zone.
 	//
-	// * TAG (Coverage only) - The tags that are
-	// associated with a Reserved Instance (RI).
+	// * TAG (Coverage only)
+	// - The tags that are associated with a Reserved Instance (RI).
 	//
-	// * TENANCY - The tenancy of a
-	// resource. Examples are shared or dedicated.
+	// * TENANCY - The
+	// tenancy of a resource. Examples are shared or dedicated.
 	//
-	// If you set the context to
-	// SAVINGS_PLANS, you can use the following dimensions for searching:
+	// If you set the context
+	// to SAVINGS_PLANS, you can use the following dimensions for searching:
 	//
 	// *
 	// SAVINGS_PLANS_TYPE - Type of Savings Plans (EC2 Instance or Compute)

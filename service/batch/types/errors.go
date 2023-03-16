@@ -7,11 +7,14 @@ import (
 	smithy "github.com/aws/smithy-go"
 )
 
-// These errors are usually caused by a client action, such as using an action or
-// resource on behalf of a user that doesn't have permissions to use the action or
-// resource, or specifying an identifier that's not valid.
+// These errors are usually caused by a client action. One example cause is using
+// an action or resource on behalf of a user that doesn't have permissions to use
+// the action or resource. Another cause is specifying an identifier that's not
+// valid.
 type ClientException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -25,12 +28,19 @@ func (e *ClientException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *ClientException) ErrorCode() string             { return "ClientException" }
+func (e *ClientException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "ClientException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *ClientException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // These errors are usually caused by a server issue.
 type ServerException struct {
 	Message *string
+
+	ErrorCodeOverride *string
 
 	noSmithyDocumentSerde
 }
@@ -44,5 +54,10 @@ func (e *ServerException) ErrorMessage() string {
 	}
 	return *e.Message
 }
-func (e *ServerException) ErrorCode() string             { return "ServerException" }
+func (e *ServerException) ErrorCode() string {
+	if e == nil || e.ErrorCodeOverride == nil {
+		return "ServerException"
+	}
+	return *e.ErrorCodeOverride
+}
 func (e *ServerException) ErrorFault() smithy.ErrorFault { return smithy.FaultServer }

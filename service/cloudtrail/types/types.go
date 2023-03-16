@@ -46,29 +46,48 @@ type AdvancedEventSelector struct {
 // A single selector statement in an advanced event selector.
 type AdvancedFieldSelector struct {
 
-	// A field in an event record on which to filter events to be logged. Supported
-	// fields include readOnly, eventCategory, eventSource (for management events),
-	// eventName, resources.type, and resources.ARN.
+	// A field in a CloudTrail event record on which to filter events to be logged. For
+	// event data stores for Config configuration items, Audit Manager evidence, or
+	// non-Amazon Web Services events, the field is used only for selecting events as
+	// filtering is not supported. For CloudTrail event records, supported fields
+	// include readOnly, eventCategory, eventSource (for management events), eventName,
+	// resources.type, and resources.ARN. For event data stores for Config
+	// configuration items, Audit Manager evidence, or non-Amazon Web Services events,
+	// the only supported field is eventCategory.
 	//
-	// * readOnly - Optional. Can be set
-	// to Equals a value of true or false. If you do not add this field, CloudTrail
-	// logs both both read and write events. A value of true logs only read events. A
-	// value of false logs only write events.
+	// * readOnly - Optional. Can be set to
+	// Equals a value of true or false. If you do not add this field, CloudTrail logs
+	// both read and write events. A value of true logs only read events. A value of
+	// false logs only write events.
 	//
-	// * eventSource - For filtering management
-	// events only. This can be set only to NotEqualskms.amazonaws.com.
+	// * eventSource - For filtering management events
+	// only. This can be set only to NotEqualskms.amazonaws.com.
 	//
-	// * eventName -
-	// Can use any operator. You can use it to ﬁlter in or ﬁlter out any data event
-	// logged to CloudTrail, such as PutBucket or GetSnapshotBlock. You can have
-	// multiple values for this ﬁeld, separated by commas.
+	// * eventName - Can use
+	// any operator. You can use it to ﬁlter in or ﬁlter out any data event logged to
+	// CloudTrail, such as PutBucket or GetSnapshotBlock. You can have multiple values
+	// for this ﬁeld, separated by commas.
 	//
-	// * eventCategory - This is
-	// required. It must be set to Equals, and the value must be Management or Data.
+	// * eventCategory - This is required and must
+	// be set to Equals.
+	//
+	// * For CloudTrail event records, the value must be Management
+	// or Data.
+	//
+	// * For Config configuration items, the value must be
+	// ConfigurationItem.
+	//
+	// * For Audit Manager evidence, the value must be Evidence.
 	//
 	// *
-	// resources.type - This ﬁeld is required. resources.type can only use the Equals
-	// operator, and the value can be one of the following:
+	// For non-Amazon Web Services events, the value must be ActivityAuditLog.
+	//
+	// *
+	// resources.type - This ﬁeld is required for CloudTrail data events.
+	// resources.type can only use the Equals operator, and the value can be one of the
+	// following:
+	//
+	// * AWS::CloudTrail::Channel
 	//
 	// * AWS::S3::Object
 	//
@@ -94,50 +113,64 @@ type AdvancedFieldSelector struct {
 	// *
 	// AWS::Glue::Table
 	//
-	// You can have only one resources.type ﬁeld per selector. To log
-	// data events on more than one resource type, add another selector.
+	// * AWS::FinSpace::Environment
 	//
 	// *
-	// resources.ARN - You can use any operator with resources.ARN, but if you use
-	// Equals or NotEquals, the value must exactly match the ARN of a valid resource of
-	// the type you've speciﬁed in the template as the value of resources.type. For
-	// example, if resources.type equals AWS::S3::Object, the ARN must be in one of the
-	// following formats. To log all data events for all objects in a specific S3
-	// bucket, use the StartsWith operator, and include only the bucket ARN as the
-	// matching value. The trailing slash is intentional; do not exclude it. Replace
-	// the text between less than and greater than symbols (<>) with resource-specific
-	// information.
+	// AWS::SageMaker::ExperimentTrialComponent
+	//
+	// * AWS::SageMaker::FeatureGroup
+	//
+	// You
+	// can have only one resources.type ﬁeld per selector. To log data events on more
+	// than one resource type, add another selector.
+	//
+	// * resources.ARN - You can use any
+	// operator with resources.ARN, but if you use Equals or NotEquals, the value must
+	// exactly match the ARN of a valid resource of the type you've speciﬁed in the
+	// template as the value of resources.type. For example, if resources.type equals
+	// AWS::S3::Object, the ARN must be in one of the following formats. To log all
+	// data events for all objects in a specific S3 bucket, use the StartsWith
+	// operator, and include only the bucket ARN as the matching value. The trailing
+	// slash is intentional; do not exclude it. Replace the text between less than and
+	// greater than symbols (<>) with resource-specific information.
 	//
 	// * arn::s3:::/
 	//
-	// * arn::s3::://
+	// *
+	// arn::s3::://
 	//
-	// When resources.type equals
-	// AWS::S3::AccessPoint, and the operator is set to Equals or NotEquals, the ARN
-	// must be in one of the following formats. To log events on all objects in an S3
-	// access point, we recommend that you use only the access point ARN, don’t include
-	// the object path, and use the StartsWith or NotStartsWith operators.
+	// When resources.type equals AWS::S3::AccessPoint, and the operator
+	// is set to Equals or NotEquals, the ARN must be in one of the following formats.
+	// To log events on all objects in an S3 access point, we recommend that you use
+	// only the access point ARN, don’t include the object path, and use the StartsWith
+	// or NotStartsWith operators.
+	//
+	// * arn::s3:::accesspoint/
 	//
 	// *
-	// arn::s3:::accesspoint/
+	// arn::s3:::accesspoint//object/
 	//
-	// * arn::s3:::accesspoint//object/
-	//
-	// When resources.type
-	// equals AWS::Lambda::Function, and the operator is set to Equals or NotEquals,
-	// the ARN must be in the following format:
+	// When resources.type equals
+	// AWS::Lambda::Function, and the operator is set to Equals or NotEquals, the ARN
+	// must be in the following format:
 	//
 	// * arn::lambda:::function:
 	//
+	// When resources.type
+	// equals AWS::DynamoDB::Table, and the operator is set to Equals or NotEquals, the
+	// ARN must be in the following format:
+	//
+	// * arn::dynamodb:::table/
+	//
 	// When
-	// resources.type equals AWS::DynamoDB::Table, and the operator is set to Equals or
-	// NotEquals, the ARN must be in the following format:
+	// resources.type equals AWS::CloudTrail::Channel, and the operator is set to
+	// Equals or NotEquals, the ARN must be in the following format:
 	//
 	// *
-	// arn::dynamodb:::table/
+	// arn::cloudtrail:::channel/
 	//
-	// When resources.type equals AWS::S3Outposts::Object, and
-	// the operator is set to Equals or NotEquals, the ARN must be in the following
+	// When resources.type equals AWS::S3Outposts::Object,
+	// and the operator is set to Equals or NotEquals, the ARN must be in the following
 	// format:
 	//
 	// * arn::s3-outposts:::
@@ -174,6 +207,26 @@ type AdvancedFieldSelector struct {
 	//
 	// * arn::glue:::table//
 	//
+	// When
+	// resources.type equals AWS::FinSpace::Environment, and the operator is set to
+	// Equals or NotEquals, the ARN must be in the following format:
+	//
+	// *
+	// arn::finspace:::environment/
+	//
+	// When resources.type equals
+	// AWS::SageMaker::ExperimentTrialComponent, and the operator is set to Equals or
+	// NotEquals, the ARN must be in the following format:
+	//
+	// *
+	// arn::sagemaker:::experiment-trial-component/
+	//
+	// When resources.type equals
+	// AWS::SageMaker::FeatureGroup, and the operator is set to Equals or NotEquals,
+	// the ARN must be in the following format:
+	//
+	// * arn::sagemaker:::feature-group/
+	//
 	// This member is required.
 	Field *string
 
@@ -205,15 +258,30 @@ type AdvancedFieldSelector struct {
 	noSmithyDocumentSerde
 }
 
+// Contains information about a returned CloudTrail channel.
+type Channel struct {
+
+	// The Amazon Resource Name (ARN) of a channel.
+	ChannelArn *string
+
+	// The name of the CloudTrail channel. For service-linked channels, the name is
+	// aws-service-channel/service-name/custom-suffix where service-name represents the
+	// name of the Amazon Web Services service that created the channel and
+	// custom-suffix represents the suffix created by the Amazon Web Services service.
+	Name *string
+
+	noSmithyDocumentSerde
+}
+
 // The Amazon S3 buckets, Lambda functions, or Amazon DynamoDB tables that you
 // specify in your event selectors for your trail to log data events. Data events
 // provide information about the resource operations performed on or within a
 // resource itself. These are also known as data plane operations. You can specify
 // up to 250 data resources for a trail. The total number of allowed data resources
 // is 250. This number can be distributed between 1 and 5 event selectors, but the
-// total cannot exceed 250 across all selectors. If you are using advanced event
-// selectors, the maximum total number of values for all conditions, across all
-// advanced event selectors for the trail, is 500. The following example
+// total cannot exceed 250 across all selectors for the trail. If you are using
+// advanced event selectors, the maximum total number of values for all conditions,
+// across all advanced event selectors for the trail, is 500. The following example
 // demonstrates how logging works when you configure logging of all data events for
 // an S3 bucket named bucket-1. In this example, the CloudTrail user specified an
 // empty prefix, and the option to log both Read and Write data events.
@@ -265,34 +333,44 @@ type DataResource struct {
 	// * AWS::DynamoDB::Table
 	//
 	// The following resource types are
-	// also availble through advanced event selectors. Basic event selector resource
+	// also available through advanced event selectors. Basic event selector resource
 	// types are valid in advanced event selectors, but advanced event selector
 	// resource types are not valid in basic event selectors. For more information, see
 	// AdvancedFieldSelector$Field.
 	//
-	// * AWS::S3Outposts::Object
+	// * AWS::CloudTrail::Channel
 	//
 	// *
-	// AWS::ManagedBlockchain::Node
+	// AWS::S3Outposts::Object
 	//
-	// * AWS::S3ObjectLambda::AccessPoint
+	// * AWS::ManagedBlockchain::Node
 	//
 	// *
-	// AWS::EC2::Snapshot
+	// AWS::S3ObjectLambda::AccessPoint
 	//
-	// * AWS::S3::AccessPoint
+	// * AWS::EC2::Snapshot
+	//
+	// *
+	// AWS::S3::AccessPoint
 	//
 	// * AWS::DynamoDB::Stream
 	//
+	// * AWS::Glue::Table
+	//
 	// *
-	// AWS::Glue::Table
+	// AWS::FinSpace::Environment
+	//
+	// * AWS::SageMaker::ExperimentTrialComponent
+	//
+	// *
+	// AWS::SageMaker::FeatureGroup
 	Type *string
 
 	// An array of Amazon Resource Name (ARN) strings or partial ARN strings for the
 	// specified objects.
 	//
 	// * To log data events for all objects in all S3 buckets in
-	// your Amazon Web Services account, specify the prefix as arn:aws:s3:::. This also
+	// your Amazon Web Services account, specify the prefix as arn:aws:s3. This also
 	// enables logging of data event activity performed by any user or role in your
 	// Amazon Web Services account, even if that activity is performed on a bucket that
 	// belongs to another Amazon Web Services account.
@@ -324,6 +402,26 @@ type DataResource struct {
 	// data events for all DynamoDB tables in your Amazon Web Services account, specify
 	// the prefix as arn:aws:dynamodb.
 	Values []string
+
+	noSmithyDocumentSerde
+}
+
+// Contains information about the destination receiving events.
+type Destination struct {
+
+	// For channels used for a CloudTrail Lake integration, the location is the ARN of
+	// an event data store that receives events from a channel. For service-linked
+	// channels, the location is the name of the Amazon Web Services service.
+	//
+	// This member is required.
+	Location *string
+
+	// The type of destination for events arriving from a channel. For channels used
+	// for a CloudTrail Lake integration, the value is EventDataStore. For
+	// service-linked channels, the value is AWS_SERVICE.
+	//
+	// This member is required.
+	Type DestinationType
 
 	noSmithyDocumentSerde
 }
@@ -367,19 +465,17 @@ type Event struct {
 
 // A storage lake of event data against which you can run complex SQL-based
 // queries. An event data store can include events that you have logged on your
-// account from the last 90 to 2555 days (about three months to up to seven years).
+// account from the last 90 to 2557 days (about three months to up to seven years).
 // To select events for an event data store, use advanced event selectors
 // (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html#creating-data-event-selectors-advanced).
 type EventDataStore struct {
 
-	// This field is being deprecated. The advanced event selectors that were used to
-	// select events for the data store.
+	// The advanced event selectors that were used to select events for the data store.
 	//
 	// Deprecated: AdvancedEventSelectors is no longer returned by ListEventDataStores
 	AdvancedEventSelectors []AdvancedEventSelector
 
-	// This field is being deprecated. The timestamp of the event data store's
-	// creation.
+	// The timestamp of the event data store's creation.
 	//
 	// Deprecated: CreatedTimestamp is no longer returned by ListEventDataStores
 	CreatedTimestamp *time.Time
@@ -387,8 +483,8 @@ type EventDataStore struct {
 	// The ARN of the event data store.
 	EventDataStoreArn *string
 
-	// This field is being deprecated. Indicates whether the event data store includes
-	// events from all regions, or only from the region in which it was created.
+	// Indicates whether the event data store includes events from all regions, or only
+	// from the region in which it was created.
 	//
 	// Deprecated: MultiRegionEnabled is no longer returned by ListEventDataStores
 	MultiRegionEnabled *bool
@@ -396,33 +492,31 @@ type EventDataStore struct {
 	// The name of the event data store.
 	Name *string
 
-	// This field is being deprecated. Indicates that an event data store is collecting
-	// logged events for an organization.
+	// Indicates that an event data store is collecting logged events for an
+	// organization.
 	//
 	// Deprecated: OrganizationEnabled is no longer returned by ListEventDataStores
 	OrganizationEnabled *bool
 
-	// This field is being deprecated. The retention period, in days.
+	// The retention period, in days.
 	//
 	// Deprecated: RetentionPeriod is no longer returned by ListEventDataStores
 	RetentionPeriod *int32
 
-	// This field is being deprecated. The status of an event data store. Values are
-	// ENABLED and PENDING_DELETION.
+	// The status of an event data store. Values are ENABLED and PENDING_DELETION.
 	//
 	// Deprecated: Status is no longer returned by ListEventDataStores
 	Status EventDataStoreStatus
 
-	// This field is being deprecated. Indicates whether the event data store is
-	// protected from termination.
+	// Indicates whether the event data store is protected from termination.
 	//
 	// Deprecated: TerminationProtectionEnabled is no longer returned by
 	// ListEventDataStores
 	TerminationProtectionEnabled *bool
 
-	// This field is being deprecated. The timestamp showing when an event data store
-	// was updated, if applicable. UpdatedTimestamp is always either the same or newer
-	// than the time shown in CreatedTimestamp.
+	// The timestamp showing when an event data store was updated, if applicable.
+	// UpdatedTimestamp is always either the same or newer than the time shown in
+	// CreatedTimestamp.
 	//
 	// Deprecated: UpdatedTimestamp is no longer returned by ListEventDataStores
 	UpdatedTimestamp *time.Time
@@ -447,7 +541,7 @@ type EventSelector struct {
 	// resources cannot exceed 250 across all event selectors in a trail. This limit
 	// does not apply if you configure resource logging for all data events. For more
 	// information, see Data Events
-	// (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-and-data-events-with-cloudtrail.html#logging-data-events)
+	// (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html)
 	// and Limits in CloudTrail
 	// (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/WhatIsCloudTrail-Limits.html)
 	// in the CloudTrail User Guide.
@@ -464,7 +558,7 @@ type EventSelector struct {
 
 	// Specify if you want your event selector to include management events for your
 	// trail. For more information, see Management Events
-	// (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-and-data-events-with-cloudtrail.html#logging-management-events)
+	// (https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-management-events-with-cloudtrail.html)
 	// in the CloudTrail User Guide. By default, the value is true. The first copy of
 	// management events is free. You are charged for additional copies of management
 	// events that you are logging on any subsequent trail in the same region. For more
@@ -476,6 +570,106 @@ type EventSelector struct {
 	// all. For example, the EC2 GetConsoleOutput is a read-only API operation and
 	// RunInstances is a write-only API operation. By default, the value is All.
 	ReadWriteType ReadWriteType
+
+	noSmithyDocumentSerde
+}
+
+// Provides information about an import failure.
+type ImportFailureListItem struct {
+
+	// Provides the reason the import failed.
+	ErrorMessage *string
+
+	// The type of import error.
+	ErrorType *string
+
+	// When the import was last updated.
+	LastUpdatedTime *time.Time
+
+	// The location of the failure in the S3 bucket.
+	Location *string
+
+	// The status of the import.
+	Status ImportFailureStatus
+
+	noSmithyDocumentSerde
+}
+
+// Contains information about an import that was returned by a lookup request.
+type ImportsListItem struct {
+
+	// The timestamp of the import's creation.
+	CreatedTimestamp *time.Time
+
+	// The ARN of the destination event data store.
+	Destinations []string
+
+	// The ID of the import.
+	ImportId *string
+
+	// The status of the import.
+	ImportStatus ImportStatus
+
+	// The timestamp of the import's last update.
+	UpdatedTimestamp *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// The import source.
+type ImportSource struct {
+
+	// The source S3 bucket.
+	//
+	// This member is required.
+	S3 *S3ImportSource
+
+	noSmithyDocumentSerde
+}
+
+// Provides statistics for the specified ImportID. CloudTrail does not update
+// import statistics in real-time. Returned values for parameters such as
+// EventsCompleted may be lower than the actual value, because CloudTrail updates
+// statistics incrementally over the course of the import.
+type ImportStatistics struct {
+
+	// The number of trail events imported into the event data store.
+	EventsCompleted *int64
+
+	// The number of failed entries.
+	FailedEntries *int64
+
+	// The number of log files that completed import.
+	FilesCompleted *int64
+
+	// The number of S3 prefixes that completed import.
+	PrefixesCompleted *int64
+
+	// The number of S3 prefixes found for the import.
+	PrefixesFound *int64
+
+	noSmithyDocumentSerde
+}
+
+// A table showing information about the most recent successful and failed attempts
+// to ingest events.
+type IngestionStatus struct {
+
+	// The event ID of the most recent attempt to ingest events.
+	LatestIngestionAttemptEventID *string
+
+	// The time stamp of the most recent attempt to ingest events on the channel.
+	LatestIngestionAttemptTime *time.Time
+
+	// The error code for the most recent failure to ingest events.
+	LatestIngestionErrorCode *string
+
+	// The event ID of the most recent successful ingestion of events.
+	LatestIngestionSuccessEventID *string
+
+	// The time stamp of the most recent successful ingestion of events for the
+	// channel.
+	LatestIngestionSuccessTime *time.Time
 
 	noSmithyDocumentSerde
 }
@@ -615,7 +809,41 @@ type ResourceTag struct {
 	noSmithyDocumentSerde
 }
 
-// A custom key-value pair associated with a resource such as a CloudTrail trail.
+// The settings for the source S3 bucket.
+type S3ImportSource struct {
+
+	// The IAM ARN role used to access the source S3 bucket.
+	//
+	// This member is required.
+	S3BucketAccessRoleArn *string
+
+	// The region associated with the source S3 bucket.
+	//
+	// This member is required.
+	S3BucketRegion *string
+
+	// The URI for the source S3 bucket.
+	//
+	// This member is required.
+	S3LocationUri *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains configuration information about the channel.
+type SourceConfig struct {
+
+	// The advanced event selectors that are configured for the channel.
+	AdvancedEventSelectors []AdvancedEventSelector
+
+	// Specifies whether the channel applies to a single region or to all regions.
+	ApplyToAllRegions *bool
+
+	noSmithyDocumentSerde
+}
+
+// A custom key-value pair associated with a resource such as a CloudTrail trail,
+// event data store, or channel.
 type Tag struct {
 
 	// The key in a key-value pair. The key must be must be no longer than 128 Unicode

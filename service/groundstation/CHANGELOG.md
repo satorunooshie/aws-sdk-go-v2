@@ -1,3 +1,72 @@
+# v1.17.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.17.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.17.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.0 (2023-01-31)
+
+* **Feature**: DigIF Expansion changes to the Customer APIs.
+
+# v1.16.0 (2023-01-19)
+
+* **Feature**: Add configurable prepass and postpass times for DataflowEndpointGroup. Add Waiter to allow customers to wait for a contact that was reserved through ReserveContact
+
+# v1.15.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.14.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.0 (2022-11-09)
+
+* **Feature**: This release adds the preview of customer-provided ephemeris support for AWS Ground Station, allowing space vehicle owners to provide their own position and trajectory information for a satellite.
+
+# v1.13.20 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.19 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.18 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.17 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.16 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.13.15 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.13.14 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

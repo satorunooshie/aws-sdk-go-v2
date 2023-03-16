@@ -1054,6 +1054,13 @@ func awsRestjson1_serializeOpDocumentListAnomaliesForInsightInput(v *ListAnomali
 		ok.String(*v.AccountId)
 	}
 
+	if v.Filters != nil {
+		ok := object.Key("Filters")
+		if err := awsRestjson1_serializeDocumentListAnomaliesForInsightFilters(v.Filters, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.MaxResults != nil {
 		ok := object.Key("MaxResults")
 		ok.Integer(*v.MaxResults)
@@ -2432,6 +2439,20 @@ func awsRestjson1_serializeDocumentInsightStatuses(v []types.InsightStatus, valu
 	return nil
 }
 
+func awsRestjson1_serializeDocumentListAnomaliesForInsightFilters(v *types.ListAnomaliesForInsightFilters, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.ServiceCollection != nil {
+		ok := object.Key("ServiceCollection")
+		if err := awsRestjson1_serializeDocumentServiceCollection(v.ServiceCollection, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentListEventsFilters(v *types.ListEventsFilters, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -2608,6 +2629,13 @@ func awsRestjson1_serializeDocumentNotificationChannelConfig(v *types.Notificati
 	object := value.Object()
 	defer object.Close()
 
+	if v.Filters != nil {
+		ok := object.Key("Filters")
+		if err := awsRestjson1_serializeDocumentNotificationFilterConfig(v.Filters, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.Sns != nil {
 		ok := object.Key("Sns")
 		if err := awsRestjson1_serializeDocumentSnsChannelConfig(v.Sns, ok); err != nil {
@@ -2615,6 +2643,38 @@ func awsRestjson1_serializeDocumentNotificationChannelConfig(v *types.Notificati
 		}
 	}
 
+	return nil
+}
+
+func awsRestjson1_serializeDocumentNotificationFilterConfig(v *types.NotificationFilterConfig, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.MessageTypes != nil {
+		ok := object.Key("MessageTypes")
+		if err := awsRestjson1_serializeDocumentNotificationMessageTypes(v.MessageTypes, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.Severities != nil {
+		ok := object.Key("Severities")
+		if err := awsRestjson1_serializeDocumentInsightSeverities(v.Severities, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentNotificationMessageTypes(v []types.NotificationMessageType, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		av.String(string(v[i]))
+	}
 	return nil
 }
 

@@ -12,31 +12,40 @@ import (
 )
 
 // Updates the specified WebACL. While updating a web ACL, WAF provides continuous
-// coverage to the resources that you have associated with the web ACL. When you
-// make changes to web ACLs or web ACL components, like rules and rule groups, WAF
-// propagates the changes everywhere that the web ACL and its components are stored
-// and used. Your changes are applied within seconds, but there might be a brief
-// period of inconsistency when the changes have arrived in some places and not in
-// others. So, for example, if you change a rule action setting, the action might
-// be the old action in one area and the new action in another area. Or if you add
-// an IP address to an IP set used in a blocking rule, the new address might
-// briefly be blocked in one area while still allowed in another. This temporary
-// inconsistency can occur when you first associate a web ACL with an Amazon Web
-// Services resource and when you change a web ACL that is already associated with
-// a resource. Generally, any inconsistencies of this type last only a few seconds.
-// This operation completely replaces the mutable specifications that you already
-// have for the web ACL with the ones that you provide to this call. To modify the
-// web ACL, retrieve it by calling GetWebACL, update the settings as needed, and
-// then provide the complete web ACL specification to this call. A web ACL defines
-// a collection of rules to use to inspect and control web requests. Each rule has
-// an action defined (allow, block, or count) for requests that match the statement
-// of the rule. In the web ACL, you assign a default action to take (allow, block)
-// for any request that does not match any of the rules. The rules in a web ACL can
-// be a combination of the types Rule, RuleGroup, and managed rule group. You can
-// associate a web ACL with one or more Amazon Web Services resources to protect.
-// The resources can be an Amazon CloudFront distribution, an Amazon API Gateway
-// REST API, an Application Load Balancer, an AppSync GraphQL API, or an Amazon
-// Cognito user pool.
+// coverage to the resources that you have associated with the web ACL. This
+// operation completely replaces the mutable specifications that you already have
+// for the web ACL with the ones that you provide to this call. To modify a web
+// ACL, do the following:
+//
+// * Retrieve it by calling GetWebACL
+//
+// * Update its
+// settings as needed
+//
+// * Provide the complete web ACL specification to this
+// call
+//
+// When you make changes to web ACLs or web ACL components, like rules and
+// rule groups, WAF propagates the changes everywhere that the web ACL and its
+// components are stored and used. Your changes are applied within seconds, but
+// there might be a brief period of inconsistency when the changes have arrived in
+// some places and not in others. So, for example, if you change a rule action
+// setting, the action might be the old action in one area and the new action in
+// another area. Or if you add an IP address to an IP set used in a blocking rule,
+// the new address might briefly be blocked in one area while still allowed in
+// another. This temporary inconsistency can occur when you first associate a web
+// ACL with an Amazon Web Services resource and when you change a web ACL that is
+// already associated with a resource. Generally, any inconsistencies of this type
+// last only a few seconds. A web ACL defines a collection of rules to use to
+// inspect and control web requests. Each rule has an action defined (allow, block,
+// or count) for requests that match the statement of the rule. In the web ACL, you
+// assign a default action to take (allow, block) for any request that does not
+// match any of the rules. The rules in a web ACL can be a combination of the types
+// Rule, RuleGroup, and managed rule group. You can associate a web ACL with one or
+// more Amazon Web Services resources to protect. The resources can be an Amazon
+// CloudFront distribution, an Amazon API Gateway REST API, an Application Load
+// Balancer, an AppSync GraphQL API, Amazon Cognito user pool, or an App Runner
+// service.
 func (c *Client) UpdateWebACL(ctx context.Context, params *UpdateWebACLInput, optFns ...func(*Options)) (*UpdateWebACLOutput, error) {
 	if params == nil {
 		params = &UpdateWebACLInput{}
@@ -84,15 +93,15 @@ type UpdateWebACLInput struct {
 
 	// Specifies whether this is for an Amazon CloudFront distribution or for a
 	// regional application. A regional application can be an Application Load Balancer
-	// (ALB), an Amazon API Gateway REST API, an AppSync GraphQL API, or an Amazon
-	// Cognito user pool. To work with CloudFront, you must also specify the Region US
-	// East (N. Virginia) as follows:
+	// (ALB), an Amazon API Gateway REST API, an AppSync GraphQL API, a Amazon Cognito
+	// user pool, or an App Runner service. To work with CloudFront, you must also
+	// specify the Region US East (N. Virginia) as follows:
 	//
-	// * CLI - Specify the Region when you use the
-	// CloudFront scope: --scope=CLOUDFRONT --region=us-east-1.
+	// * CLI - Specify the Region
+	// when you use the CloudFront scope: --scope=CLOUDFRONT --region=us-east-1.
 	//
-	// * API and SDKs - For
-	// all calls, use the Region endpoint us-east-1.
+	// * API
+	// and SDKs - For all calls, use the Region endpoint us-east-1.
 	//
 	// This member is required.
 	Scope types.Scope
@@ -106,6 +115,11 @@ type UpdateWebACLInput struct {
 	// their own CaptchaConfig settings. If you don't specify this, WAF uses its
 	// default settings for CaptchaConfig.
 	CaptchaConfig *types.CaptchaConfig
+
+	// Specifies how WAF should handle challenge evaluations for rules that don't have
+	// their own ChallengeConfig settings. If you don't specify this, WAF uses its
+	// default settings for ChallengeConfig.
+	ChallengeConfig *types.ChallengeConfig
 
 	// A map of custom response keys and content bodies. When you create a rule with a
 	// block action, you can send a custom response to the web request. You define
@@ -129,6 +143,17 @@ type UpdateWebACLInput struct {
 	// block, or count. Each rule includes one top-level statement that WAF uses to
 	// identify matching web requests, and parameters that govern how WAF handles them.
 	Rules []types.Rule
+
+	// Specifies the domains that WAF should accept in a web request token. This
+	// enables the use of tokens across multiple protected websites. When WAF provides
+	// a token, it uses the domain of the Amazon Web Services resource that the web ACL
+	// is protecting. If you don't specify a list of token domains, WAF accepts tokens
+	// only for the domain of the protected resource. With a token domain list, WAF
+	// accepts the resource's host domain plus all domains in the token domain list,
+	// including their prefixed subdomains. Example JSON: "TokenDomains": {
+	// "mywebsite.com", "myotherwebsite.com" } Public suffixes aren't allowed. For
+	// example, you can't use usa.gov or co.uk as token domains.
+	TokenDomains []string
 
 	noSmithyDocumentSerde
 }

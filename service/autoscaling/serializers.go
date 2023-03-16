@@ -209,6 +209,70 @@ func (m *awsAwsquery_serializeOpAttachLoadBalancerTargetGroups) HandleSerialize(
 	return next.HandleSerialize(ctx, in)
 }
 
+type awsAwsquery_serializeOpAttachTrafficSources struct {
+}
+
+func (*awsAwsquery_serializeOpAttachTrafficSources) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsquery_serializeOpAttachTrafficSources) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*AttachTrafficSourcesInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-www-form-urlencoded")
+
+	bodyWriter := bytes.NewBuffer(nil)
+	bodyEncoder := query.NewEncoder(bodyWriter)
+	body := bodyEncoder.Object()
+	body.Key("Action").String("AttachTrafficSources")
+	body.Key("Version").String("2011-01-01")
+
+	if err := awsAwsquery_serializeOpDocumentAttachTrafficSourcesInput(input, bodyEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	err = bodyEncoder.Encode()
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(bodyWriter.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
 type awsAwsquery_serializeOpBatchDeleteScheduledAction struct {
 }
 
@@ -2357,6 +2421,70 @@ func (m *awsAwsquery_serializeOpDescribeTerminationPolicyTypes) HandleSerialize(
 	return next.HandleSerialize(ctx, in)
 }
 
+type awsAwsquery_serializeOpDescribeTrafficSources struct {
+}
+
+func (*awsAwsquery_serializeOpDescribeTrafficSources) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsquery_serializeOpDescribeTrafficSources) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*DescribeTrafficSourcesInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-www-form-urlencoded")
+
+	bodyWriter := bytes.NewBuffer(nil)
+	bodyEncoder := query.NewEncoder(bodyWriter)
+	body := bodyEncoder.Object()
+	body.Key("Action").String("DescribeTrafficSources")
+	body.Key("Version").String("2011-01-01")
+
+	if err := awsAwsquery_serializeOpDocumentDescribeTrafficSourcesInput(input, bodyEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	err = bodyEncoder.Encode()
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(bodyWriter.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
 type awsAwsquery_serializeOpDescribeWarmPool struct {
 }
 
@@ -2593,6 +2721,70 @@ func (m *awsAwsquery_serializeOpDetachLoadBalancerTargetGroups) HandleSerialize(
 	body.Key("Version").String("2011-01-01")
 
 	if err := awsAwsquery_serializeOpDocumentDetachLoadBalancerTargetGroupsInput(input, bodyEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	err = bodyEncoder.Encode()
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(bodyWriter.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
+type awsAwsquery_serializeOpDetachTrafficSources struct {
+}
+
+func (*awsAwsquery_serializeOpDetachTrafficSources) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsquery_serializeOpDetachTrafficSources) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*DetachTrafficSourcesInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-www-form-urlencoded")
+
+	bodyWriter := bytes.NewBuffer(nil)
+	bodyEncoder := query.NewEncoder(bodyWriter)
+	body := bodyEncoder.Object()
+	body.Key("Action").String("DetachTrafficSources")
+	body.Key("Version").String("2011-01-01")
+
+	if err := awsAwsquery_serializeOpDocumentDetachTrafficSourcesInput(input, bodyEncoder.Value); err != nil {
 		return out, metadata, &smithy.SerializationError{Err: err}
 	}
 
@@ -3445,6 +3637,70 @@ func (m *awsAwsquery_serializeOpResumeProcesses) HandleSerialize(ctx context.Con
 	return next.HandleSerialize(ctx, in)
 }
 
+type awsAwsquery_serializeOpRollbackInstanceRefresh struct {
+}
+
+func (*awsAwsquery_serializeOpRollbackInstanceRefresh) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsquery_serializeOpRollbackInstanceRefresh) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*RollbackInstanceRefreshInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-www-form-urlencoded")
+
+	bodyWriter := bytes.NewBuffer(nil)
+	bodyEncoder := query.NewEncoder(bodyWriter)
+	body := bodyEncoder.Object()
+	body.Key("Action").String("RollbackInstanceRefresh")
+	body.Key("Version").String("2011-01-01")
+
+	if err := awsAwsquery_serializeOpDocumentRollbackInstanceRefreshInput(input, bodyEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	err = bodyEncoder.Encode()
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(bodyWriter.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
 type awsAwsquery_serializeOpSetDesiredCapacity struct {
 }
 
@@ -3910,9 +4166,6 @@ func awsAwsquery_serializeDocumentAcceleratorCountRequest(v *types.AcceleratorCo
 }
 
 func awsAwsquery_serializeDocumentAcceleratorManufacturers(v []types.AcceleratorManufacturer, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -3923,9 +4176,6 @@ func awsAwsquery_serializeDocumentAcceleratorManufacturers(v []types.Accelerator
 }
 
 func awsAwsquery_serializeDocumentAcceleratorNames(v []types.AcceleratorName, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -3953,9 +4203,6 @@ func awsAwsquery_serializeDocumentAcceleratorTotalMemoryMiBRequest(v *types.Acce
 }
 
 func awsAwsquery_serializeDocumentAcceleratorTypes(v []types.AcceleratorType, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -3966,9 +4213,16 @@ func awsAwsquery_serializeDocumentAcceleratorTypes(v []types.AcceleratorType, va
 }
 
 func awsAwsquery_serializeDocumentActivityIds(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
+	array := value.Array("member")
+
+	for i := range v {
+		av := array.Value()
+		av.String(v[i])
 	}
+	return nil
+}
+
+func awsAwsquery_serializeDocumentAllowedInstanceTypes(v []string, value query.Value) error {
 	array := value.Array("member")
 
 	for i := range v {
@@ -3979,9 +4233,6 @@ func awsAwsquery_serializeDocumentActivityIds(v []string, value query.Value) err
 }
 
 func awsAwsquery_serializeDocumentAutoScalingGroupNames(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -3992,9 +4243,6 @@ func awsAwsquery_serializeDocumentAutoScalingGroupNames(v []string, value query.
 }
 
 func awsAwsquery_serializeDocumentAutoScalingNotificationTypes(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4005,9 +4253,6 @@ func awsAwsquery_serializeDocumentAutoScalingNotificationTypes(v []string, value
 }
 
 func awsAwsquery_serializeDocumentAvailabilityZones(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4064,9 +4309,6 @@ func awsAwsquery_serializeDocumentBlockDeviceMapping(v *types.BlockDeviceMapping
 }
 
 func awsAwsquery_serializeDocumentBlockDeviceMappings(v []types.BlockDeviceMapping, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4079,9 +4321,6 @@ func awsAwsquery_serializeDocumentBlockDeviceMappings(v []types.BlockDeviceMappi
 }
 
 func awsAwsquery_serializeDocumentCheckpointPercentages(v []int32, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4092,9 +4331,6 @@ func awsAwsquery_serializeDocumentCheckpointPercentages(v []int32, value query.V
 }
 
 func awsAwsquery_serializeDocumentClassicLinkVPCSecurityGroups(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4105,9 +4341,6 @@ func awsAwsquery_serializeDocumentClassicLinkVPCSecurityGroups(v []string, value
 }
 
 func awsAwsquery_serializeDocumentCpuManufacturers(v []types.CpuManufacturer, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4131,6 +4364,13 @@ func awsAwsquery_serializeDocumentCustomizedMetricSpecification(v *types.Customi
 	if v.MetricName != nil {
 		objectKey := object.Key("MetricName")
 		objectKey.String(*v.MetricName)
+	}
+
+	if v.Metrics != nil {
+		objectKey := object.Key("Metrics")
+		if err := awsAwsquery_serializeDocumentTargetTrackingMetricDataQueries(v.Metrics, objectKey); err != nil {
+			return err
+		}
 	}
 
 	if v.Namespace != nil {
@@ -4215,9 +4455,6 @@ func awsAwsquery_serializeDocumentEbs(v *types.Ebs, value query.Value) error {
 }
 
 func awsAwsquery_serializeDocumentExcludedInstanceTypes(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4247,9 +4484,6 @@ func awsAwsquery_serializeDocumentFilter(v *types.Filter, value query.Value) err
 }
 
 func awsAwsquery_serializeDocumentFilters(v []types.Filter, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4262,9 +4496,6 @@ func awsAwsquery_serializeDocumentFilters(v []types.Filter, value query.Value) e
 }
 
 func awsAwsquery_serializeDocumentInstanceGenerations(v []types.InstanceGeneration, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4275,9 +4506,6 @@ func awsAwsquery_serializeDocumentInstanceGenerations(v []types.InstanceGenerati
 }
 
 func awsAwsquery_serializeDocumentInstanceIds(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4322,9 +4550,6 @@ func awsAwsquery_serializeDocumentInstanceMonitoring(v *types.InstanceMonitoring
 }
 
 func awsAwsquery_serializeDocumentInstanceRefreshIds(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4369,6 +4594,13 @@ func awsAwsquery_serializeDocumentInstanceRequirements(v *types.InstanceRequirem
 	if v.AcceleratorTypes != nil {
 		objectKey := object.Key("AcceleratorTypes")
 		if err := awsAwsquery_serializeDocumentAcceleratorTypes(v.AcceleratorTypes, objectKey); err != nil {
+			return err
+		}
+	}
+
+	if v.AllowedInstanceTypes != nil {
+		objectKey := object.Key("AllowedInstanceTypes")
+		if err := awsAwsquery_serializeDocumentAllowedInstanceTypes(v.AllowedInstanceTypes, objectKey); err != nil {
 			return err
 		}
 	}
@@ -4433,6 +4665,13 @@ func awsAwsquery_serializeDocumentInstanceRequirements(v *types.InstanceRequirem
 	if v.MemoryMiB != nil {
 		objectKey := object.Key("MemoryMiB")
 		if err := awsAwsquery_serializeDocumentMemoryMiBRequest(v.MemoryMiB, objectKey); err != nil {
+			return err
+		}
+	}
+
+	if v.NetworkBandwidthGbps != nil {
+		objectKey := object.Key("NetworkBandwidthGbps")
+		if err := awsAwsquery_serializeDocumentNetworkBandwidthGbpsRequest(v.NetworkBandwidthGbps, objectKey); err != nil {
 			return err
 		}
 	}
@@ -4526,9 +4765,6 @@ func awsAwsquery_serializeDocumentInstancesDistribution(v *types.InstancesDistri
 }
 
 func awsAwsquery_serializeDocumentLaunchConfigurationNames(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4613,9 +4849,6 @@ func awsAwsquery_serializeDocumentLaunchTemplateSpecification(v *types.LaunchTem
 }
 
 func awsAwsquery_serializeDocumentLifecycleHookNames(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4668,9 +4901,6 @@ func awsAwsquery_serializeDocumentLifecycleHookSpecification(v *types.LifecycleH
 }
 
 func awsAwsquery_serializeDocumentLifecycleHookSpecifications(v []types.LifecycleHookSpecification, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4683,9 +4913,6 @@ func awsAwsquery_serializeDocumentLifecycleHookSpecifications(v []types.Lifecycl
 }
 
 func awsAwsquery_serializeDocumentLoadBalancerNames(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4696,9 +4923,6 @@ func awsAwsquery_serializeDocumentLoadBalancerNames(v []string, value query.Valu
 }
 
 func awsAwsquery_serializeDocumentLocalStorageTypes(v []types.LocalStorageType, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4793,9 +5017,6 @@ func awsAwsquery_serializeDocumentMetric(v *types.Metric, value query.Value) err
 }
 
 func awsAwsquery_serializeDocumentMetricDataQueries(v []types.MetricDataQuery, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4859,9 +5080,6 @@ func awsAwsquery_serializeDocumentMetricDimension(v *types.MetricDimension, valu
 }
 
 func awsAwsquery_serializeDocumentMetricDimensions(v []types.MetricDimension, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4874,9 +5092,6 @@ func awsAwsquery_serializeDocumentMetricDimensions(v []types.MetricDimension, va
 }
 
 func awsAwsquery_serializeDocumentMetrics(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4931,6 +5146,49 @@ func awsAwsquery_serializeDocumentMixedInstancesPolicy(v *types.MixedInstancesPo
 	return nil
 }
 
+func awsAwsquery_serializeDocumentNetworkBandwidthGbpsRequest(v *types.NetworkBandwidthGbpsRequest, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.Max != nil {
+		objectKey := object.Key("Max")
+		switch {
+		case math.IsNaN(*v.Max):
+			objectKey.String("NaN")
+
+		case math.IsInf(*v.Max, 1):
+			objectKey.String("Infinity")
+
+		case math.IsInf(*v.Max, -1):
+			objectKey.String("-Infinity")
+
+		default:
+			objectKey.Double(*v.Max)
+
+		}
+	}
+
+	if v.Min != nil {
+		objectKey := object.Key("Min")
+		switch {
+		case math.IsNaN(*v.Min):
+			objectKey.String("NaN")
+
+		case math.IsInf(*v.Min, 1):
+			objectKey.String("Infinity")
+
+		case math.IsInf(*v.Min, -1):
+			objectKey.String("-Infinity")
+
+		default:
+			objectKey.Double(*v.Min)
+
+		}
+	}
+
+	return nil
+}
+
 func awsAwsquery_serializeDocumentNetworkInterfaceCountRequest(v *types.NetworkInterfaceCountRequest, value query.Value) error {
 	object := value.Object()
 	_ = object
@@ -4949,9 +5207,6 @@ func awsAwsquery_serializeDocumentNetworkInterfaceCountRequest(v *types.NetworkI
 }
 
 func awsAwsquery_serializeDocumentOverrides(v []types.LaunchTemplateOverrides, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4964,9 +5219,6 @@ func awsAwsquery_serializeDocumentOverrides(v []types.LaunchTemplateOverrides, v
 }
 
 func awsAwsquery_serializeDocumentPolicyNames(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -4977,9 +5229,6 @@ func awsAwsquery_serializeDocumentPolicyNames(v []string, value query.Value) err
 }
 
 func awsAwsquery_serializeDocumentPolicyTypes(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5150,9 +5399,6 @@ func awsAwsquery_serializeDocumentPredictiveScalingMetricSpecification(v *types.
 }
 
 func awsAwsquery_serializeDocumentPredictiveScalingMetricSpecifications(v []types.PredictiveScalingMetricSpecification, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5216,9 +5462,6 @@ func awsAwsquery_serializeDocumentPredictiveScalingPredefinedScalingMetric(v *ty
 }
 
 func awsAwsquery_serializeDocumentProcessNames(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5231,6 +5474,11 @@ func awsAwsquery_serializeDocumentProcessNames(v []string, value query.Value) er
 func awsAwsquery_serializeDocumentRefreshPreferences(v *types.RefreshPreferences, value query.Value) error {
 	object := value.Object()
 	_ = object
+
+	if v.AutoRollback != nil {
+		objectKey := object.Key("AutoRollback")
+		objectKey.Boolean(*v.AutoRollback)
+	}
 
 	if v.CheckpointDelay != nil {
 		objectKey := object.Key("CheckpointDelay")
@@ -5254,18 +5502,25 @@ func awsAwsquery_serializeDocumentRefreshPreferences(v *types.RefreshPreferences
 		objectKey.Integer(*v.MinHealthyPercentage)
 	}
 
+	if len(v.ScaleInProtectedInstances) > 0 {
+		objectKey := object.Key("ScaleInProtectedInstances")
+		objectKey.String(string(v.ScaleInProtectedInstances))
+	}
+
 	if v.SkipMatching != nil {
 		objectKey := object.Key("SkipMatching")
 		objectKey.Boolean(*v.SkipMatching)
+	}
+
+	if len(v.StandbyInstances) > 0 {
+		objectKey := object.Key("StandbyInstances")
+		objectKey.String(string(v.StandbyInstances))
 	}
 
 	return nil
 }
 
 func awsAwsquery_serializeDocumentScheduledActionNames(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5323,9 +5578,6 @@ func awsAwsquery_serializeDocumentScheduledUpdateGroupActionRequest(v *types.Sch
 }
 
 func awsAwsquery_serializeDocumentScheduledUpdateGroupActionRequests(v []types.ScheduledUpdateGroupActionRequest, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5338,9 +5590,6 @@ func awsAwsquery_serializeDocumentScheduledUpdateGroupActionRequests(v []types.S
 }
 
 func awsAwsquery_serializeDocumentSecurityGroups(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5399,9 +5648,6 @@ func awsAwsquery_serializeDocumentStepAdjustment(v *types.StepAdjustment, value 
 }
 
 func awsAwsquery_serializeDocumentStepAdjustments(v []types.StepAdjustment, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5446,9 +5692,6 @@ func awsAwsquery_serializeDocumentTag(v *types.Tag, value query.Value) error {
 }
 
 func awsAwsquery_serializeDocumentTags(v []types.Tag, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5461,9 +5704,6 @@ func awsAwsquery_serializeDocumentTags(v []types.Tag, value query.Value) error {
 }
 
 func awsAwsquery_serializeDocumentTargetGroupARNs(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
-	}
 	array := value.Array("member")
 
 	for i := range v {
@@ -5517,10 +5757,77 @@ func awsAwsquery_serializeDocumentTargetTrackingConfiguration(v *types.TargetTra
 	return nil
 }
 
-func awsAwsquery_serializeDocumentTerminationPolicies(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
+func awsAwsquery_serializeDocumentTargetTrackingMetricDataQueries(v []types.TargetTrackingMetricDataQuery, value query.Value) error {
+	array := value.Array("member")
+
+	for i := range v {
+		av := array.Value()
+		if err := awsAwsquery_serializeDocumentTargetTrackingMetricDataQuery(&v[i], av); err != nil {
+			return err
+		}
 	}
+	return nil
+}
+
+func awsAwsquery_serializeDocumentTargetTrackingMetricDataQuery(v *types.TargetTrackingMetricDataQuery, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.Expression != nil {
+		objectKey := object.Key("Expression")
+		objectKey.String(*v.Expression)
+	}
+
+	if v.Id != nil {
+		objectKey := object.Key("Id")
+		objectKey.String(*v.Id)
+	}
+
+	if v.Label != nil {
+		objectKey := object.Key("Label")
+		objectKey.String(*v.Label)
+	}
+
+	if v.MetricStat != nil {
+		objectKey := object.Key("MetricStat")
+		if err := awsAwsquery_serializeDocumentTargetTrackingMetricStat(v.MetricStat, objectKey); err != nil {
+			return err
+		}
+	}
+
+	if v.ReturnData != nil {
+		objectKey := object.Key("ReturnData")
+		objectKey.Boolean(*v.ReturnData)
+	}
+
+	return nil
+}
+
+func awsAwsquery_serializeDocumentTargetTrackingMetricStat(v *types.TargetTrackingMetricStat, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.Metric != nil {
+		objectKey := object.Key("Metric")
+		if err := awsAwsquery_serializeDocumentMetric(v.Metric, objectKey); err != nil {
+			return err
+		}
+	}
+
+	if v.Stat != nil {
+		objectKey := object.Key("Stat")
+		objectKey.String(*v.Stat)
+	}
+
+	if v.Unit != nil {
+		objectKey := object.Key("Unit")
+		objectKey.String(*v.Unit)
+	}
+
+	return nil
+}
+
+func awsAwsquery_serializeDocumentTerminationPolicies(v []string, value query.Value) error {
 	array := value.Array("member")
 
 	for i := range v {
@@ -5573,10 +5880,31 @@ func awsAwsquery_serializeDocumentTotalLocalStorageGBRequest(v *types.TotalLocal
 	return nil
 }
 
-func awsAwsquery_serializeDocumentValues(v []string, value query.Value) error {
-	if len(v) == 0 {
-		return nil
+func awsAwsquery_serializeDocumentTrafficSourceIdentifier(v *types.TrafficSourceIdentifier, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.Identifier != nil {
+		objectKey := object.Key("Identifier")
+		objectKey.String(*v.Identifier)
 	}
+
+	return nil
+}
+
+func awsAwsquery_serializeDocumentTrafficSources(v []types.TrafficSourceIdentifier, value query.Value) error {
+	array := value.Array("member")
+
+	for i := range v {
+		av := array.Value()
+		if err := awsAwsquery_serializeDocumentTrafficSourceIdentifier(&v[i], av); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func awsAwsquery_serializeDocumentValues(v []string, value query.Value) error {
 	array := value.Array("member")
 
 	for i := range v {
@@ -5653,6 +5981,25 @@ func awsAwsquery_serializeOpDocumentAttachLoadBalancerTargetGroupsInput(v *Attac
 	if v.TargetGroupARNs != nil {
 		objectKey := object.Key("TargetGroupARNs")
 		if err := awsAwsquery_serializeDocumentTargetGroupARNs(v.TargetGroupARNs, objectKey); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsAwsquery_serializeOpDocumentAttachTrafficSourcesInput(v *AttachTrafficSourcesInput, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.AutoScalingGroupName != nil {
+		objectKey := object.Key("AutoScalingGroupName")
+		objectKey.String(*v.AutoScalingGroupName)
+	}
+
+	if v.TrafficSources != nil {
+		objectKey := object.Key("TrafficSources")
+		if err := awsAwsquery_serializeDocumentTrafficSources(v.TrafficSources, objectKey); err != nil {
 			return err
 		}
 	}
@@ -5883,6 +6230,13 @@ func awsAwsquery_serializeOpDocumentCreateAutoScalingGroupInput(v *CreateAutoSca
 	if v.TerminationPolicies != nil {
 		objectKey := object.Key("TerminationPolicies")
 		if err := awsAwsquery_serializeDocumentTerminationPolicies(v.TerminationPolicies, objectKey); err != nil {
+			return err
+		}
+	}
+
+	if v.TrafficSources != nil {
+		objectKey := object.Key("TrafficSources")
+		if err := awsAwsquery_serializeDocumentTrafficSources(v.TrafficSources, objectKey); err != nil {
 			return err
 		}
 	}
@@ -6477,6 +6831,33 @@ func awsAwsquery_serializeOpDocumentDescribeTagsInput(v *DescribeTagsInput, valu
 	return nil
 }
 
+func awsAwsquery_serializeOpDocumentDescribeTrafficSourcesInput(v *DescribeTrafficSourcesInput, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.AutoScalingGroupName != nil {
+		objectKey := object.Key("AutoScalingGroupName")
+		objectKey.String(*v.AutoScalingGroupName)
+	}
+
+	if v.MaxRecords != nil {
+		objectKey := object.Key("MaxRecords")
+		objectKey.Integer(*v.MaxRecords)
+	}
+
+	if v.NextToken != nil {
+		objectKey := object.Key("NextToken")
+		objectKey.String(*v.NextToken)
+	}
+
+	if v.TrafficSourceType != nil {
+		objectKey := object.Key("TrafficSourceType")
+		objectKey.String(*v.TrafficSourceType)
+	}
+
+	return nil
+}
+
 func awsAwsquery_serializeOpDocumentDescribeWarmPoolInput(v *DescribeWarmPoolInput, value query.Value) error {
 	object := value.Object()
 	_ = object
@@ -6554,6 +6935,25 @@ func awsAwsquery_serializeOpDocumentDetachLoadBalancerTargetGroupsInput(v *Detac
 	if v.TargetGroupARNs != nil {
 		objectKey := object.Key("TargetGroupARNs")
 		if err := awsAwsquery_serializeDocumentTargetGroupARNs(v.TargetGroupARNs, objectKey); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsAwsquery_serializeOpDocumentDetachTrafficSourcesInput(v *DetachTrafficSourcesInput, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.AutoScalingGroupName != nil {
+		objectKey := object.Key("AutoScalingGroupName")
+		objectKey.String(*v.AutoScalingGroupName)
+	}
+
+	if v.TrafficSources != nil {
+		objectKey := object.Key("TrafficSources")
+		if err := awsAwsquery_serializeDocumentTrafficSources(v.TrafficSources, objectKey); err != nil {
 			return err
 		}
 	}
@@ -7018,6 +7418,18 @@ func awsAwsquery_serializeOpDocumentResumeProcessesInput(v *ResumeProcessesInput
 		if err := awsAwsquery_serializeDocumentProcessNames(v.ScalingProcesses, objectKey); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func awsAwsquery_serializeOpDocumentRollbackInstanceRefreshInput(v *RollbackInstanceRefreshInput, value query.Value) error {
+	object := value.Object()
+	_ = object
+
+	if v.AutoScalingGroupName != nil {
+		objectKey := object.Key("AutoScalingGroupName")
+		objectKey.String(*v.AutoScalingGroupName)
 	}
 
 	return nil

@@ -41,6 +41,87 @@ type AccountDetails struct {
 	noSmithyDocumentSerde
 }
 
+// Represents a single metric data query to include in a batch.
+type BatchGetMetricDataQuery struct {
+
+	// Represents the end date for the query interval.
+	//
+	// This member is required.
+	EndDate *time.Time
+
+	// The query identifier.
+	//
+	// This member is required.
+	Id *string
+
+	// The queried metric. This can be one of the following:
+	//
+	// * SEND – Emails sent
+	// eligible for tracking in the VDM dashboard. This excludes emails sent to the
+	// mailbox simulator and emails addressed to more than one recipient.
+	//
+	// * COMPLAINT
+	// – Complaints received for your account. This excludes complaints from the
+	// mailbox simulator, those originating from your account-level suppression list
+	// (if enabled), and those for emails addressed to more than one recipient
+	//
+	// *
+	// PERMANENT_BOUNCE – Permanent bounces - i.e. feedback received for emails sent to
+	// non-existent mailboxes. Excludes bounces from the mailbox simulator, those
+	// originating from your account-level suppression list (if enabled), and those for
+	// emails addressed to more than one recipient.
+	//
+	// * TRANSIENT_BOUNCE – Transient
+	// bounces - i.e. feedback received for delivery failures excluding issues with
+	// non-existent mailboxes. Excludes bounces from the mailbox simulator, and those
+	// for emails addressed to more than one recipient.
+	//
+	// * OPEN – Unique open events
+	// for emails including open trackers. Excludes opens for emails addressed to more
+	// than one recipient.
+	//
+	// * CLICK – Unique click events for emails including wrapped
+	// links. Excludes clicks for emails addressed to more than one recipient.
+	//
+	// *
+	// DELIVERY – Successful deliveries for email sending attempts. Excludes deliveries
+	// to the mailbox simulator and for emails addressed to more than one recipient.
+	//
+	// *
+	// DELIVERY_OPEN – Successful deliveries for email sending attempts. Excludes
+	// deliveries to the mailbox simulator, for emails addressed to more than one
+	// recipient, and emails without open trackers.
+	//
+	// * DELIVERY_CLICK – Successful
+	// deliveries for email sending attempts. Excludes deliveries to the mailbox
+	// simulator, for emails addressed to more than one recipient, and emails without
+	// click trackers.
+	//
+	// * DELIVERY_COMPLAINT – Successful deliveries for email sending
+	// attempts. Excludes deliveries to the mailbox simulator, for emails addressed to
+	// more than one recipient, and emails addressed to recipients hosted by ISPs with
+	// which Amazon SES does not have a feedback loop agreement.
+	//
+	// This member is required.
+	Metric Metric
+
+	// The query namespace - e.g. VDM
+	//
+	// This member is required.
+	Namespace MetricNamespace
+
+	// Represents the start date for the query interval.
+	//
+	// This member is required.
+	StartDate *time.Time
+
+	// An object that contains mapping between MetricDimensionName and
+	// MetricDimensionValue to filter metrics by.
+	Dimensions map[string]string
+
+	noSmithyDocumentSerde
+}
+
 // An object that contains information about a blacklisting event that impacts one
 // of the dedicated IP addresses that is associated with your account.
 type BlacklistEntry struct {
@@ -49,7 +130,7 @@ type BlacklistEntry struct {
 	// blacklist maintainer.
 	Description *string
 
-	// The time when the blacklisting event occurred, shown in Unix time format.
+	// The time when the blacklisting event occurred.
 	ListingTime *time.Time
 
 	// The name of the blacklist that the IP address appears on.
@@ -202,11 +283,11 @@ type CloudWatchDimensionConfiguration struct {
 	// don't provide the value of the dimension when you send an email. This value has
 	// to meet the following criteria:
 	//
-	// * It can only contain ASCII letters (a–z, A–Z),
-	// numbers (0–9), underscores (_), or dashes (-).
+	// * Can only contain ASCII letters (a–z, A–Z),
+	// numbers (0–9), underscores (_), or dashes (-), at signs (@), and periods (.).
 	//
-	// * It can contain no more than
-	// 256 characters.
+	// *
+	// It can contain no more than 256 characters.
 	//
 	// This member is required.
 	DefaultDimensionValue *string
@@ -352,6 +433,39 @@ type DailyVolume struct {
 	noSmithyDocumentSerde
 }
 
+// An object containing additional settings for your VDM configuration as
+// applicable to the Dashboard.
+type DashboardAttributes struct {
+
+	// Specifies the status of your VDM engagement metrics collection. Can be one of
+	// the following:
+	//
+	// * ENABLED – Amazon SES enables engagement metrics for your
+	// account.
+	//
+	// * DISABLED – Amazon SES disables engagement metrics for your account.
+	EngagementMetrics FeatureStatus
+
+	noSmithyDocumentSerde
+}
+
+// An object containing additional settings for your VDM configuration as
+// applicable to the Dashboard.
+type DashboardOptions struct {
+
+	// Specifies the status of your VDM engagement metrics collection. Can be one of
+	// the following:
+	//
+	// * ENABLED – Amazon SES enables engagement metrics for the
+	// configuration set.
+	//
+	// * DISABLED – Amazon SES disables engagement metrics for the
+	// configuration set.
+	EngagementMetrics FeatureStatus
+
+	noSmithyDocumentSerde
+}
+
 // Contains information about a dedicated IP address that is associated with your
 // Amazon SES account. To learn more about requesting dedicated IP addresses, see
 // Requesting and Relinquishing Dedicated IP Addresses
@@ -388,11 +502,33 @@ type DedicatedIp struct {
 	noSmithyDocumentSerde
 }
 
+// Contains information about a dedicated IP pool.
+type DedicatedIpPool struct {
+
+	// The name of the dedicated IP pool.
+	//
+	// This member is required.
+	PoolName *string
+
+	// The type of the dedicated IP pool.
+	//
+	// * STANDARD – A dedicated IP pool where the
+	// customer can control which IPs are part of the pool.
+	//
+	// * MANAGED – A dedicated IP
+	// pool where the reputation and number of IPs is automatically managed by Amazon
+	// SES.
+	//
+	// This member is required.
+	ScalingMode ScalingMode
+
+	noSmithyDocumentSerde
+}
+
 // An object that contains metadata related to a predictive inbox placement test.
 type DeliverabilityTestReport struct {
 
-	// The date and time when the predictive inbox placement test was created, in Unix
-	// time format.
+	// The date and time when the predictive inbox placement test was created.
 	CreateDate *time.Time
 
 	// The status of the predictive inbox placement test. If the status is IN_PROGRESS,
@@ -574,9 +710,9 @@ type DomainDeliverabilityCampaign struct {
 	// The major email providers who handled the email message.
 	Esps []string
 
-	// The first time, in Unix time format, when the email message was delivered to any
-	// recipient's inbox. This value can help you determine how long it took for a
-	// campaign to deliver an email message.
+	// The first time when the email message was delivered to any recipient's inbox.
+	// This value can help you determine how long it took for a campaign to deliver an
+	// email message.
 	FirstSeenDateTime *time.Time
 
 	// The verified email address that the email message was sent from.
@@ -588,9 +724,9 @@ type DomainDeliverabilityCampaign struct {
 	// The number of email messages that were delivered to recipients’ inboxes.
 	InboxCount *int64
 
-	// The last time, in Unix time format, when the email message was delivered to any
-	// recipient's inbox. This value can help you determine how long it took for a
-	// campaign to deliver an email message.
+	// The last time when the email message was delivered to any recipient's inbox.
+	// This value can help you determine how long it took for a campaign to deliver an
+	// email message.
 	LastSeenDateTime *time.Time
 
 	// The projected number of recipients that the email message was sent to.
@@ -634,8 +770,7 @@ type DomainDeliverabilityTrackingOption struct {
 	// the domain.
 	InboxPlacementTrackingOption *InboxPlacementTrackingOption
 
-	// The date, in Unix time format, when you enabled the Deliverability dashboard for
-	// the domain.
+	// The date when you enabled the Deliverability dashboard for the domain.
 	SubscriptionStartDate *time.Time
 
 	noSmithyDocumentSerde
@@ -747,7 +882,53 @@ type EmailTemplateMetadata struct {
 // S3 for long-term storage.
 type EventDestination struct {
 
-	// The types of events that Amazon SES sends to the specified event destinations.
+	// The types of events that Amazon SES sends to the specified event
+	// destinations.
+	//
+	// * SEND - The send request was successful and SES will attempt to
+	// deliver the message to the recipient’s mail server. (If account-level or global
+	// suppression is being used, SES will still count it as a send, but delivery is
+	// suppressed.)
+	//
+	// * REJECT - SES accepted the email, but determined that it
+	// contained a virus and didn’t attempt to deliver it to the recipient’s mail
+	// server.
+	//
+	// * BOUNCE - (Hard bounce) The recipient's mail server permanently
+	// rejected the email. (Soft bounces are only included when SES fails to deliver
+	// the email after retrying for a period of time.)
+	//
+	// * COMPLAINT - The email was
+	// successfully delivered to the recipient’s mail server, but the recipient marked
+	// it as spam.
+	//
+	// * DELIVERY - SES successfully delivered the email to the
+	// recipient's mail server.
+	//
+	// * OPEN - The recipient received the message and opened
+	// it in their email client.
+	//
+	// * CLICK - The recipient clicked one or more links in
+	// the email.
+	//
+	// * RENDERING_FAILURE - The email wasn't sent because of a template
+	// rendering issue. This event type can occur when template data is missing, or
+	// when there is a mismatch between template parameters and data. (This event type
+	// only occurs when you send email using the SendTemplatedEmail
+	// (https://docs.aws.amazon.com/ses/latest/APIReference/API_SendTemplatedEmail.html)
+	// or SendBulkTemplatedEmail
+	// (https://docs.aws.amazon.com/ses/latest/APIReference/API_SendBulkTemplatedEmail.html)
+	// API operations.)
+	//
+	// * DELIVERY_DELAY - The email couldn't be delivered to the
+	// recipient’s mail server because a temporary issue occurred. Delivery delays can
+	// occur, for example, when the recipient's inbox is full, or when the receiving
+	// email server experiences a transient issue.
+	//
+	// * SUBSCRIPTION - The email was
+	// successfully delivered, but the recipient updated their subscription preferences
+	// by clicking on an unsubscribe link as part of your subscription management
+	// (https://docs.aws.amazon.com/ses/latest/dg/sending-email-subscription-management.html).
 	//
 	// This member is required.
 	MatchingEventTypes []EventType
@@ -844,6 +1025,40 @@ type FailureInfo struct {
 	noSmithyDocumentSerde
 }
 
+// An object containing additional settings for your VDM configuration as
+// applicable to the Guardian.
+type GuardianAttributes struct {
+
+	// Specifies the status of your VDM optimized shared delivery. Can be one of the
+	// following:
+	//
+	// * ENABLED – Amazon SES enables optimized shared delivery for your
+	// account.
+	//
+	// * DISABLED – Amazon SES disables optimized shared delivery for your
+	// account.
+	OptimizedSharedDelivery FeatureStatus
+
+	noSmithyDocumentSerde
+}
+
+// An object containing additional settings for your VDM configuration as
+// applicable to the Guardian.
+type GuardianOptions struct {
+
+	// Specifies the status of your VDM optimized shared delivery. Can be one of the
+	// following:
+	//
+	// * ENABLED – Amazon SES enables optimized shared delivery for the
+	// configuration set.
+	//
+	// * DISABLED – Amazon SES disables optimized shared delivery
+	// for the configuration set.
+	OptimizedSharedDelivery FeatureStatus
+
+	noSmithyDocumentSerde
+}
+
 // Information about an email identity.
 type IdentityInfo struct {
 
@@ -859,6 +1074,25 @@ type IdentityInfo struct {
 	// an identity, you have to demostrate that you own the identity, and that you
 	// authorize Amazon SES to send email from that identity.
 	SendingEnabled bool
+
+	// The verification status of the identity. The status can be one of the
+	// following:
+	//
+	// * PENDING – The verification process was initiated, but Amazon SES
+	// hasn't yet been able to verify the identity.
+	//
+	// * SUCCESS – The verification
+	// process completed successfully.
+	//
+	// * FAILED – The verification process failed.
+	//
+	// *
+	// TEMPORARY_FAILURE – A temporary issue is preventing Amazon SES from determining
+	// the verification status of the identity.
+	//
+	// * NOT_STARTED – The verification
+	// process hasn't been initiated for the identity.
+	VerificationStatus VerificationStatus
 
 	noSmithyDocumentSerde
 }
@@ -898,6 +1132,10 @@ type ImportJobSummary struct {
 	// The date and time when the import job was created.
 	CreatedTimestamp *time.Time
 
+	// The number of records that failed processing because of invalid input or other
+	// reasons.
+	FailedRecordsCount *int32
+
 	// An object that contains details about the resource destination the import job is
 	// going to target.
 	ImportDestination *ImportDestination
@@ -907,6 +1145,9 @@ type ImportJobSummary struct {
 
 	// The status of the import job.
 	JobStatus JobStatus
+
+	// The current number of records processed.
+	ProcessedRecordsCount *int32
 
 	noSmithyDocumentSerde
 }
@@ -991,12 +1232,12 @@ type ListManagementOptions struct {
 type MailFromAttributes struct {
 
 	// The action to take if the required MX record can't be found when you send an
-	// email. When you set this value to UseDefaultValue, the mail is sent using
-	// amazonses.com as the MAIL FROM domain. When you set this value to RejectMessage,
-	// the Amazon SES API v2 returns a MailFromDomainNotVerified error, and doesn't
-	// attempt to deliver the email. These behaviors are taken when the custom MAIL
-	// FROM domain configuration is in the Pending, Failed, and TemporaryFailure
-	// states.
+	// email. When you set this value to USE_DEFAULT_VALUE, the mail is sent using
+	// amazonses.com as the MAIL FROM domain. When you set this value to
+	// REJECT_MESSAGE, the Amazon SES API v2 returns a MailFromDomainNotVerified error,
+	// and doesn't attempt to deliver the email. These behaviors are taken when the
+	// custom MAIL FROM domain configuration is in the Pending, Failed, and
+	// TemporaryFailure states.
 	//
 	// This member is required.
 	BehaviorOnMxFailure BehaviorOnMxFailure
@@ -1073,6 +1314,43 @@ type MessageTag struct {
 	//
 	// This member is required.
 	Value *string
+
+	noSmithyDocumentSerde
+}
+
+// An error corresponding to the unsuccessful processing of a single metric data
+// query.
+type MetricDataError struct {
+
+	// The query error code. Can be one of:
+	//
+	// * INTERNAL_FAILURE – Amazon SES has failed
+	// to process one of the queries.
+	//
+	// * ACCESS_DENIED – You have insufficient access
+	// to retrieve metrics based on the given query.
+	Code QueryErrorCode
+
+	// The query identifier.
+	Id *string
+
+	// The error message associated with the current query error.
+	Message *string
+
+	noSmithyDocumentSerde
+}
+
+// The result of a single metric data query.
+type MetricDataResult struct {
+
+	// The query identifier.
+	Id *string
+
+	// A list of timestamps for the metric data results.
+	Timestamps []time.Time
+
+	// A list of values (cumulative / sum) for the metric data results.
+	Values []int64
 
 	noSmithyDocumentSerde
 }
@@ -1171,6 +1449,35 @@ type RawMessage struct {
 	noSmithyDocumentSerde
 }
 
+// A recommendation generated for your account.
+type Recommendation struct {
+
+	// The first time this issue was encountered and the recommendation was generated.
+	CreatedTimestamp *time.Time
+
+	// The recommendation description / disambiguator - e.g. DKIM1 and DKIM2 are
+	// different recommendations about your DKIM setup.
+	Description *string
+
+	// The recommendation impact, with values like HIGH or LOW.
+	Impact RecommendationImpact
+
+	// The last time the recommendation was updated.
+	LastUpdatedTimestamp *time.Time
+
+	// The resource affected by the recommendation, with values like
+	// arn:aws:ses:us-east-1:123456789012:identity/example.com.
+	ResourceArn *string
+
+	// The recommendation status, with values like OPEN or FIXED.
+	Status RecommendationStatus
+
+	// The recommendation type, with values like DKIM, SPF, DMARC or BIMI.
+	Type RecommendationType
+
+	noSmithyDocumentSerde
+}
+
 // The ReplaceEmailContent object to be used for a specific BulkEmailEntry. The
 // ReplacementTemplate can be specified within this object.
 type ReplacementEmailContent struct {
@@ -1250,8 +1557,8 @@ type SendingOptions struct {
 type SendQuota struct {
 
 	// The maximum number of emails that you can send in the current Amazon Web
-	// Services Region over a 24-hour period. This value is also called your sending
-	// quota.
+	// Services Region over a 24-hour period. A value of -1 signifies an unlimited
+	// quota. (This value is also referred to as your sending quota.)
 	Max24HourSend float64
 
 	// The maximum number of emails that you can send per second in the current Amazon
@@ -1539,6 +1846,46 @@ type TrackingOptions struct {
 	//
 	// This member is required.
 	CustomRedirectDomain *string
+
+	noSmithyDocumentSerde
+}
+
+// The VDM attributes that apply to your Amazon SES account.
+type VdmAttributes struct {
+
+	// Specifies the status of your VDM configuration. Can be one of the following:
+	//
+	// *
+	// ENABLED – Amazon SES enables VDM for your account.
+	//
+	// * DISABLED – Amazon SES
+	// disables VDM for your account.
+	//
+	// This member is required.
+	VdmEnabled FeatureStatus
+
+	// Specifies additional settings for your VDM configuration as applicable to the
+	// Dashboard.
+	DashboardAttributes *DashboardAttributes
+
+	// Specifies additional settings for your VDM configuration as applicable to the
+	// Guardian.
+	GuardianAttributes *GuardianAttributes
+
+	noSmithyDocumentSerde
+}
+
+// An object that defines the VDM settings that apply to emails that you send using
+// the configuration set.
+type VdmOptions struct {
+
+	// Specifies additional settings for your VDM configuration as applicable to the
+	// Dashboard.
+	DashboardOptions *DashboardOptions
+
+	// Specifies additional settings for your VDM configuration as applicable to the
+	// Guardian.
+	GuardianOptions *GuardianOptions
 
 	noSmithyDocumentSerde
 }

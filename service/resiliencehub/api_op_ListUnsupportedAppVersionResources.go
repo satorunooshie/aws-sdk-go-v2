@@ -14,7 +14,7 @@ import (
 
 // Lists the resources that are not currently supported in AWS Resilience Hub. An
 // unsupported resource is a resource that exists in the object that was used to
-// create an app, but is not supported by Resilience Hub.
+// create an app, but is not supported by AWS Resilience Hub.
 func (c *Client) ListUnsupportedAppVersionResources(ctx context.Context, params *ListUnsupportedAppVersionResourcesInput, optFns ...func(*Options)) (*ListUnsupportedAppVersionResourcesOutput, error) {
 	if params == nil {
 		params = &ListUnsupportedAppVersionResourcesInput{}
@@ -32,11 +32,11 @@ func (c *Client) ListUnsupportedAppVersionResources(ctx context.Context, params 
 
 type ListUnsupportedAppVersionResourcesInput struct {
 
-	// The Amazon Resource Name (ARN) of the application. The format for this ARN is:
-	// arn:partition:resiliencehub:region:account:app/app-id. For more information
-	// about ARNs, see  Amazon Resource Names (ARNs)
+	// The Amazon Resource Name (ARN) of the AWS Resilience Hub application. The format
+	// for this ARN is: arn:partition:resiliencehub:region:account:app/app-id. For more
+	// information about ARNs, see  Amazon Resource Names (ARNs)
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html) in
-	// the AWS General Reference.
+	// the AWS General Reference guide.
 	//
 	// This member is required.
 	AppArn *string
@@ -155,6 +155,11 @@ var _ ListUnsupportedAppVersionResourcesAPIClient = (*Client)(nil)
 // ListUnsupportedAppVersionResourcesPaginatorOptions is the paginator options for
 // ListUnsupportedAppVersionResources
 type ListUnsupportedAppVersionResourcesPaginatorOptions struct {
+	// The maximum number of results to include in the response. If more results exist
+	// than the specified MaxResults value, a token is included in the response so that
+	// the remaining results can be retrieved.
+	Limit int32
+
 	// Set to true if pagination should stop if the service returns a pagination token
 	// that matches the most recent token provided to the service.
 	StopOnDuplicateToken bool
@@ -178,6 +183,9 @@ func NewListUnsupportedAppVersionResourcesPaginator(client ListUnsupportedAppVer
 	}
 
 	options := ListUnsupportedAppVersionResourcesPaginatorOptions{}
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
+	}
 
 	for _, fn := range optFns {
 		fn(&options)
@@ -205,6 +213,12 @@ func (p *ListUnsupportedAppVersionResourcesPaginator) NextPage(ctx context.Conte
 
 	params := *p.params
 	params.NextToken = p.nextToken
+
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListUnsupportedAppVersionResources(ctx, &params, optFns...)
 	if err != nil {

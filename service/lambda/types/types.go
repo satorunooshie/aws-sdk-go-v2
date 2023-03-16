@@ -47,7 +47,7 @@ type AccountUsage struct {
 }
 
 // Provides configuration information about a Lambda function alias
-// (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+// (https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html).
 type AliasConfiguration struct {
 
 	// The Amazon Resource Name (ARN) of the alias.
@@ -103,7 +103,8 @@ type AmazonManagedKafkaEventSourceConfig struct {
 	// The identifier for the Kafka consumer group to join. The consumer group ID must
 	// be unique among all your Kafka event sources. After creating a Kafka event
 	// source mapping with the consumer group ID specified, you cannot update this
-	// value. For more information, see services-msk-consumer-group-id.
+	// value. For more information, see Customizable consumer group ID
+	// (https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-consumer-group-id).
 	ConsumerGroupId *string
 
 	noSmithyDocumentSerde
@@ -163,7 +164,7 @@ type CodeSigningPolicies struct {
 type Concurrency struct {
 
 	// The number of concurrent executions that are reserved for this function. For
-	// more information, see Managing Concurrency
+	// more information, see Managing Lambda reserved concurrency
 	// (https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html).
 	ReservedConcurrentExecutions *int32
 
@@ -231,6 +232,25 @@ type DestinationConfig struct {
 	noSmithyDocumentSerde
 }
 
+// Specific configuration settings for a DocumentDB event source.
+type DocumentDBEventSourceConfig struct {
+
+	// The name of the collection to consume within the database. If you do not specify
+	// a collection, Lambda consumes all collections.
+	CollectionName *string
+
+	// The name of the database to consume within the DocumentDB cluster.
+	DatabaseName *string
+
+	// Determines what DocumentDB sends to your event stream during document update
+	// operations. If set to UpdateLookup, DocumentDB sends a delta describing the
+	// changes, along with a copy of the entire document. Otherwise, DocumentDB sends
+	// only a partial document that contains the changes.
+	FullDocument FullDocument
+
+	noSmithyDocumentSerde
+}
+
 // A function's environment variable settings. You can use environment variables to
 // adjust your function's behavior without updating code. An environment variable
 // is a pair of strings that are stored in a function's version-specific
@@ -258,24 +278,24 @@ type EnvironmentError struct {
 }
 
 // The results of an operation to update or read environment variables. If the
-// operation is successful, the response contains the environment variables. If it
-// failed, the response contains details about the error.
+// operation succeeds, the response contains the environment variables. If it
+// fails, the response contains details about the error.
 type EnvironmentResponse struct {
 
 	// Error messages for environment variables that couldn't be applied.
 	Error *EnvironmentError
 
-	// Environment variable key-value pairs.
+	// Environment variable key-value pairs. Omitted from CloudTrail logs.
 	Variables map[string]string
 
 	noSmithyDocumentSerde
 }
 
-// The size of the function’s /tmp directory in MB. The default value is 512, but
-// can be any whole number between 512 and 10240 MB.
+// The size of the function's /tmp directory in MB. The default value is 512, but
+// it can be any whole number between 512 and 10,240 MB.
 type EphemeralStorage struct {
 
-	// The size of the function’s /tmp directory.
+	// The size of the function's /tmp directory.
 	//
 	// This member is required.
 	Size *int32
@@ -308,12 +328,14 @@ type EventSourceMappingConfiguration struct {
 	// records.
 	DestinationConfig *DestinationConfig
 
+	// Specific configuration settings for a DocumentDB event source.
+	DocumentDBEventSourceConfig *DocumentDBEventSourceConfig
+
 	// The Amazon Resource Name (ARN) of the event source.
 	EventSourceArn *string
 
-	// (Streams and Amazon SQS) An object that defines the filter criteria that
-	// determine whether Lambda should process an event. For more information, see
-	// Lambda event filtering
+	// An object that defines the filter criteria that determine whether Lambda should
+	// process an event. For more information, see Lambda event filtering
 	// (https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html).
 	FilterCriteria *FilterCriteria
 
@@ -331,10 +353,18 @@ type EventSourceMappingConfiguration struct {
 	// The result of the last Lambda invocation of your function.
 	LastProcessingResult *string
 
-	// (Streams and Amazon SQS standard queues) The maximum amount of time, in seconds,
-	// that Lambda spends gathering records before invoking the function. Default: 0
-	// Related setting: When you set BatchSize to a value greater than 10, you must set
-	// MaximumBatchingWindowInSeconds to at least 1.
+	// The maximum amount of time, in seconds, that Lambda spends gathering records
+	// before invoking the function. You can configure MaximumBatchingWindowInSeconds
+	// to any value from 0 seconds to 300 seconds in increments of seconds. For streams
+	// and Amazon SQS event sources, the default batching window is 0 seconds. For
+	// Amazon MSK, Self-managed Apache Kafka, and Amazon MQ event sources, the default
+	// batching window is 500 ms. Note that because you can only change
+	// MaximumBatchingWindowInSeconds in increments of seconds, you cannot revert back
+	// to the 500 ms default batching window after you have changed it. To restore the
+	// default batching window, you must create a new event source mapping. Related
+	// setting: For streams and Amazon SQS event sources, when you set BatchSize to a
+	// value greater than 10, you must set MaximumBatchingWindowInSeconds to at least
+	// 1.
 	MaximumBatchingWindowInSeconds *int32
 
 	// (Streams only) Discard records older than the specified age. The default value
@@ -354,6 +384,11 @@ type EventSourceMappingConfiguration struct {
 
 	// (Amazon MQ) The name of the Amazon MQ broker destination queue to consume.
 	Queues []string
+
+	// (Amazon SQS only) The scaling configuration for the event source. For more
+	// information, see Configuring maximum concurrency for Amazon SQS event sources
+	// (https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-max-concurrency).
+	ScalingConfig *ScalingConfig
 
 	// The self-managed Apache Kafka cluster for your event source.
 	SelfManagedEventSource *SelfManagedEventSource
@@ -434,7 +469,7 @@ type FilterCriteria struct {
 	noSmithyDocumentSerde
 }
 
-// The code for the Lambda function. You can specify either an object in Amazon S3,
+// The code for the Lambda function. You can either specify an object in Amazon S3,
 // upload a .zip file archive deployment package directly, or specify the URI of a
 // container image.
 type FunctionCode struct {
@@ -455,7 +490,7 @@ type FunctionCode struct {
 	S3ObjectVersion *string
 
 	// The base64-encoded contents of the deployment package. Amazon Web Services SDK
-	// and Amazon Web Services CLI clients handle the encoding for you.
+	// and CLI clients handle the encoding for you.
 	ZipFile []byte
 
 	noSmithyDocumentSerde
@@ -501,10 +536,11 @@ type FunctionConfiguration struct {
 
 	// The function's environment variables
 	// (https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html).
+	// Omitted from CloudTrail logs.
 	Environment *EnvironmentResponse
 
 	// The size of the function’s /tmp directory in MB. The default value is 512, but
-	// can be any whole number between 512 and 10240 MB.
+	// it can be any whole number between 512 and 10,240 MB.
 	EphemeralStorage *EphemeralStorage
 
 	// Connection settings for an Amazon EFS file system
@@ -517,14 +553,18 @@ type FunctionConfiguration struct {
 	// The name of the function.
 	FunctionName *string
 
-	// The function that Lambda calls to begin executing your function.
+	// The function that Lambda calls to begin running your function.
 	Handler *string
 
 	// The function's image configuration values.
 	ImageConfigResponse *ImageConfigResponse
 
-	// The KMS key that's used to encrypt the function's environment variables. This
-	// key is only returned if you've configured a customer managed key.
+	// The KMS key that's used to encrypt the function's environment variables
+	// (https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-encryption).
+	// When Lambda SnapStart
+	// (https://docs.aws.amazon.com/lambda/latest/dg/snapstart-security.html) is
+	// activated, this key is also used to encrypt the function's snapshot. This key is
+	// returned only if you've configured a customer managed key.
 	KMSKeyArn *string
 
 	// The date and time that the function was last updated, in ISO-8601 format
@@ -541,7 +581,7 @@ type FunctionConfiguration struct {
 	// The reason code for the last update that was performed on the function.
 	LastUpdateStatusReasonCode LastUpdateStatusReasonCode
 
-	// The function's  layers
+	// The function's layers
 	// (https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html).
 	Layers []Layer
 
@@ -564,11 +604,20 @@ type FunctionConfiguration struct {
 	// The runtime environment for the Lambda function.
 	Runtime Runtime
 
+	// The ARN of the runtime and any errors that occured.
+	RuntimeVersionConfig *RuntimeVersionConfig
+
 	// The ARN of the signing job.
 	SigningJobArn *string
 
 	// The ARN of the signing profile version.
 	SigningProfileVersionArn *string
+
+	// Set ApplyOn to PublishedVersions to create a snapshot of the initialized
+	// execution environment when you publish a function version. For more information,
+	// see Improving startup performance with Lambda SnapStart
+	// (https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html).
+	SnapStart *SnapStartResponse
 
 	// The current state of the function. When the state is Inactive, you can
 	// reactivate the function by invoking it.
@@ -632,9 +681,9 @@ type FunctionEventInvokeConfig struct {
 type FunctionUrlConfig struct {
 
 	// The type of authentication that your function URL uses. Set to AWS_IAM if you
-	// want to restrict access to authenticated IAM users only. Set to NONE if you want
-	// to bypass IAM authentication to create a public endpoint. For more information,
-	// see  Security and auth model for Lambda function URLs
+	// want to restrict access to authenticated users only. Set to NONE if you want to
+	// bypass IAM authentication to create a public endpoint. For more information, see
+	// Security and auth model for Lambda function URLs
 	// (https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
 	//
 	// This member is required.
@@ -670,8 +719,8 @@ type FunctionUrlConfig struct {
 	noSmithyDocumentSerde
 }
 
-// Configuration values that override the container image Dockerfile settings. See
-// Container settings
+// Configuration values that override the container image Dockerfile settings. For
+// more information, see Container image settings
 // (https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-parms).
 type ImageConfig struct {
 
@@ -700,7 +749,7 @@ type ImageConfigError struct {
 	noSmithyDocumentSerde
 }
 
-// Response to GetFunctionConfiguration request.
+// Response to a GetFunctionConfiguration request.
 type ImageConfigResponse struct {
 
 	// Error response to GetFunctionConfiguration.
@@ -842,7 +891,9 @@ type OnSuccess struct {
 // version.
 type ProvisionedConcurrencyConfigListItem struct {
 
-	// The amount of provisioned concurrency allocated.
+	// The amount of provisioned concurrency allocated. When a weighted alias is used
+	// during linear and canary deployments, this value fluctuates depending on the
+	// amount of concurrency that is provisioned for the function versions.
 	AllocatedProvisionedConcurrentExecutions *int32
 
 	// The amount of provisioned concurrency available.
@@ -868,6 +919,43 @@ type ProvisionedConcurrencyConfigListItem struct {
 	noSmithyDocumentSerde
 }
 
+// The ARN of the runtime and any errors that occured.
+type RuntimeVersionConfig struct {
+
+	// Error response when Lambda is unable to retrieve the runtime version for a
+	// function.
+	Error *RuntimeVersionError
+
+	// The ARN of the runtime version you want the function to use.
+	RuntimeVersionArn *string
+
+	noSmithyDocumentSerde
+}
+
+// Any error returned when the runtime version information for the function could
+// not be retrieved.
+type RuntimeVersionError struct {
+
+	// The error code.
+	ErrorCode *string
+
+	// The error message.
+	Message *string
+
+	noSmithyDocumentSerde
+}
+
+// (Amazon SQS only) The scaling configuration for the event source. To remove the
+// configuration, pass an empty value.
+type ScalingConfig struct {
+
+	// Limits the number of concurrent instances that the Amazon SQS event source can
+	// invoke.
+	MaximumConcurrency *int32
+
+	noSmithyDocumentSerde
+}
+
 // The self-managed Apache Kafka cluster for your event source.
 type SelfManagedEventSource struct {
 
@@ -884,8 +972,40 @@ type SelfManagedKafkaEventSourceConfig struct {
 	// The identifier for the Kafka consumer group to join. The consumer group ID must
 	// be unique among all your Kafka event sources. After creating a Kafka event
 	// source mapping with the consumer group ID specified, you cannot update this
-	// value. For more information, see services-msk-consumer-group-id.
+	// value. For more information, see Customizable consumer group ID
+	// (https://docs.aws.amazon.com/lambda/latest/dg/with-msk.html#services-msk-consumer-group-id).
 	ConsumerGroupId *string
+
+	noSmithyDocumentSerde
+}
+
+// The function's Lambda SnapStart setting. Set ApplyOn to PublishedVersions to
+// create a snapshot of the initialized execution environment when you publish a
+// function version. SnapStart is supported with the java11 runtime. For more
+// information, see Improving startup performance with Lambda SnapStart
+// (https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html).
+type SnapStart struct {
+
+	// Set to PublishedVersions to create a snapshot of the initialized execution
+	// environment when you publish a function version.
+	ApplyOn SnapStartApplyOn
+
+	noSmithyDocumentSerde
+}
+
+// The function's SnapStart
+// (https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html) setting.
+type SnapStartResponse struct {
+
+	// When set to PublishedVersions, Lambda creates a snapshot of the execution
+	// environment when you publish a function version.
+	ApplyOn SnapStartApplyOn
+
+	// When you provide a qualified Amazon Resource Name (ARN)
+	// (https://docs.aws.amazon.com/lambda/latest/dg/configuration-versions.html#versioning-versions-using),
+	// this response element indicates whether SnapStart is activated for the specified
+	// function version.
+	OptimizationStatus SnapStartOptimizationStatus
 
 	noSmithyDocumentSerde
 }
@@ -897,41 +1017,43 @@ type SourceAccessConfiguration struct {
 	// The type of authentication protocol, VPC components, or virtual host for your
 	// event source. For example: "Type":"SASL_SCRAM_512_AUTH".
 	//
-	// * BASIC_AUTH - (Amazon
+	// * BASIC_AUTH – (Amazon
 	// MQ) The Secrets Manager secret that stores your broker credentials.
 	//
 	// *
-	// BASIC_AUTH - (Self-managed Apache Kafka) The Secrets Manager ARN of your secret
+	// BASIC_AUTH – (Self-managed Apache Kafka) The Secrets Manager ARN of your secret
 	// key used for SASL/PLAIN authentication of your Apache Kafka brokers.
 	//
 	// *
-	// VPC_SUBNET - The subnets associated with your VPC. Lambda connects to these
-	// subnets to fetch data from your self-managed Apache Kafka cluster.
+	// VPC_SUBNET – (Self-managed Apache Kafka) The subnets associated with your VPC.
+	// Lambda connects to these subnets to fetch data from your self-managed Apache
+	// Kafka cluster.
+	//
+	// * VPC_SECURITY_GROUP – (Self-managed Apache Kafka) The VPC
+	// security group used to manage access to your self-managed Apache Kafka
+	// brokers.
+	//
+	// * SASL_SCRAM_256_AUTH – (Self-managed Apache Kafka) The Secrets
+	// Manager ARN of your secret key used for SASL SCRAM-256 authentication of your
+	// self-managed Apache Kafka brokers.
+	//
+	// * SASL_SCRAM_512_AUTH – (Amazon MSK,
+	// Self-managed Apache Kafka) The Secrets Manager ARN of your secret key used for
+	// SASL SCRAM-512 authentication of your self-managed Apache Kafka brokers.
 	//
 	// *
-	// VPC_SECURITY_GROUP - The VPC security group used to manage access to your
-	// self-managed Apache Kafka brokers.
-	//
-	// * SASL_SCRAM_256_AUTH - The Secrets Manager
-	// ARN of your secret key used for SASL SCRAM-256 authentication of your
-	// self-managed Apache Kafka brokers.
-	//
-	// * SASL_SCRAM_512_AUTH - The Secrets Manager
-	// ARN of your secret key used for SASL SCRAM-512 authentication of your
-	// self-managed Apache Kafka brokers.
-	//
-	// * VIRTUAL_HOST - (Amazon MQ) The name of the
-	// virtual host in your RabbitMQ broker. Lambda uses this RabbitMQ host as the
-	// event source. This property cannot be specified in an UpdateEventSourceMapping
-	// API call.
-	//
-	// * CLIENT_CERTIFICATE_TLS_AUTH - (Amazon MSK, self-managed Apache
-	// Kafka) The Secrets Manager ARN of your secret key containing the certificate
-	// chain (X.509 PEM), private key (PKCS#8 PEM), and private key password (optional)
-	// used for mutual TLS authentication of your MSK/Apache Kafka brokers.
+	// VIRTUAL_HOST –- (RabbitMQ) The name of the virtual host in your RabbitMQ broker.
+	// Lambda uses this RabbitMQ host as the event source. This property cannot be
+	// specified in an UpdateEventSourceMapping API call.
 	//
 	// *
-	// SERVER_ROOT_CA_CERTIFICATE - (Self-managed Apache Kafka) The Secrets Manager ARN
+	// CLIENT_CERTIFICATE_TLS_AUTH – (Amazon MSK, self-managed Apache Kafka) The
+	// Secrets Manager ARN of your secret key containing the certificate chain (X.509
+	// PEM), private key (PKCS#8 PEM), and private key password (optional) used for
+	// mutual TLS authentication of your MSK/Apache Kafka brokers.
+	//
+	// *
+	// SERVER_ROOT_CA_CERTIFICATE – (Self-managed Apache Kafka) The Secrets Manager ARN
 	// of your secret key containing the root CA certificate (X.509 PEM) used for TLS
 	// encryption of your Apache Kafka brokers.
 	Type SourceAccessType
@@ -964,11 +1086,11 @@ type TracingConfigResponse struct {
 }
 
 // The VPC security groups and subnets that are attached to a Lambda function. For
-// more information, see VPC Settings
+// more information, see Configuring a Lambda function to access resources in a VPC
 // (https://docs.aws.amazon.com/lambda/latest/dg/configuration-vpc.html).
 type VpcConfig struct {
 
-	// A list of VPC security groups IDs.
+	// A list of VPC security group IDs.
 	SecurityGroupIds []string
 
 	// A list of VPC subnet IDs.
@@ -980,7 +1102,7 @@ type VpcConfig struct {
 // The VPC security groups and subnets that are attached to a Lambda function.
 type VpcConfigResponse struct {
 
-	// A list of VPC security groups IDs.
+	// A list of VPC security group IDs.
 	SecurityGroupIds []string
 
 	// A list of VPC subnet IDs.

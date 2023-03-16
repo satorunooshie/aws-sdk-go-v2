@@ -7,6 +7,29 @@ import (
 	"time"
 )
 
+// A data type pair that consists of a KeyName and Values list that is used in
+// conjunction with the KeyName
+// (https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_SearchProfiles.html#customerprofiles-SearchProfiles-request-KeyName)
+// and Values
+// (https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_SearchProfiles.html#customerprofiles-SearchProfiles-request-Values)
+// parameters to search for profiles using the SearchProfiles
+// (https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_SearchProfiles.html)
+// API.
+type AdditionalSearchKey struct {
+
+	// A searchable identifier of a customer profile.
+	//
+	// This member is required.
+	KeyName *string
+
+	// A list of key values.
+	//
+	// This member is required.
+	Values []string
+
+	noSmithyDocumentSerde
+}
+
 // A generic address associated with the customer that is not mailing, shipping, or
 // billing.
 type Address struct {
@@ -407,6 +430,21 @@ type FlowDefinition struct {
 	noSmithyDocumentSerde
 }
 
+// A data type pair that consists of a KeyName and Values list that were used to
+// find a profile returned in response to a SearchProfiles
+// (https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_SearchProfiles.html)
+// request.
+type FoundByKeyValue struct {
+
+	// A searchable identifier of a customer profile.
+	KeyName *string
+
+	// A list of key values.
+	Values []string
+
+	noSmithyDocumentSerde
+}
+
 // Information about the Identity Resolution Job.
 type IdentityResolutionJob struct {
 
@@ -560,6 +598,11 @@ type ListIntegrationItem struct {
 	//
 	// This member is required.
 	Uri *string
+
+	// Boolean that shows if the Flow that's associated with the Integration is created
+	// in Amazon Appflow, or with ObjectTypeName equals _unstructured via API/CLI in
+	// flowDefinition.
+	IsUnstructured *bool
 
 	// The name of the profile object type.
 	ObjectTypeName *string
@@ -846,8 +889,38 @@ type Profile struct {
 	// The customer’s first name.
 	FirstName *string
 
+	// A list of items used to find a profile returned in a SearchProfiles
+	// (https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_SearchProfiles.html)
+	// response. An item is a key-value(s) pair that matches an attribute in the
+	// profile. If the optional AdditionalSearchKeys parameter was included in the
+	// SearchProfiles
+	// (https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_SearchProfiles.html)
+	// request, the FoundByItems list should be interpreted based on the
+	// LogicalOperator used in the request:
+	//
+	// * AND - The profile included in the
+	// response matched all of the search keys specified in the request. The
+	// FoundByItems will include all of the key-value(s) pairs that were specified in
+	// the request (as this is a requirement of AND search logic).
+	//
+	// * OR - The profile
+	// included in the response matched at least one of the search keys specified in
+	// the request. The FoundByItems will include each of the key-value(s) pairs that
+	// the profile was found by.
+	//
+	// The OR relationship is the default behavior if the
+	// LogicalOperator parameter is not included in the SearchProfiles
+	// (https://docs.aws.amazon.com/customerprofiles/latest/APIReference/API_SearchProfiles.html)
+	// request.
+	FoundByItems []FoundByKeyValue
+
 	// The gender with which the customer identifies.
+	//
+	// Deprecated: This member has been deprecated.
 	Gender Gender
+
+	// An alternative to Gender which accepts any string as input.
+	GenderString *string
 
 	// The customer’s home phone number.
 	HomePhoneNumber *string
@@ -865,7 +938,12 @@ type Profile struct {
 	MobilePhoneNumber *string
 
 	// The type of profile used to describe the customer.
+	//
+	// Deprecated: This member has been deprecated.
 	PartyType PartyType
+
+	// An alternative to PartyType which accepts any string as input.
+	PartyTypeString *string
 
 	// The customer’s personal email address.
 	PersonalEmailAddress *string
@@ -968,7 +1046,7 @@ type ScheduledTriggerProperties struct {
 
 	// Specifies the optional offset that is added to the time interval for a
 	// schedule-triggered flow.
-	ScheduleOffset int64
+	ScheduleOffset *int64
 
 	// Specifies the scheduled start time for a scheduled-trigger flow.
 	ScheduleStartTime *time.Time

@@ -190,6 +190,15 @@ var defaultPartitions = endpoints.Partitions{
 				Hostname: "lambda.ap-south-1.api.aws",
 			},
 			endpoints.EndpointKey{
+				Region: "ap-south-2",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region:  "ap-south-2",
+				Variant: endpoints.DualStackVariant,
+			}: {
+				Hostname: "lambda.ap-south-2.api.aws",
+			},
+			endpoints.EndpointKey{
 				Region: "ap-southeast-1",
 			}: endpoints.Endpoint{},
 			endpoints.EndpointKey{
@@ -217,6 +226,15 @@ var defaultPartitions = endpoints.Partitions{
 				Hostname: "lambda.ap-southeast-3.api.aws",
 			},
 			endpoints.EndpointKey{
+				Region: "ap-southeast-4",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region:  "ap-southeast-4",
+				Variant: endpoints.DualStackVariant,
+			}: {
+				Hostname: "lambda.ap-southeast-4.api.aws",
+			},
+			endpoints.EndpointKey{
 				Region: "ca-central-1",
 			}: endpoints.Endpoint{},
 			endpoints.EndpointKey{
@@ -235,6 +253,15 @@ var defaultPartitions = endpoints.Partitions{
 				Hostname: "lambda.eu-central-1.api.aws",
 			},
 			endpoints.EndpointKey{
+				Region: "eu-central-2",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region:  "eu-central-2",
+				Variant: endpoints.DualStackVariant,
+			}: {
+				Hostname: "lambda.eu-central-2.api.aws",
+			},
+			endpoints.EndpointKey{
 				Region: "eu-north-1",
 			}: endpoints.Endpoint{},
 			endpoints.EndpointKey{
@@ -251,6 +278,15 @@ var defaultPartitions = endpoints.Partitions{
 				Variant: endpoints.DualStackVariant,
 			}: {
 				Hostname: "lambda.eu-south-1.api.aws",
+			},
+			endpoints.EndpointKey{
+				Region: "eu-south-2",
+			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region:  "eu-south-2",
+				Variant: endpoints.DualStackVariant,
+			}: {
+				Hostname: "lambda.eu-south-2.api.aws",
 			},
 			endpoints.EndpointKey{
 				Region: "eu-west-1",
@@ -318,6 +354,12 @@ var defaultPartitions = endpoints.Partitions{
 			endpoints.EndpointKey{
 				Region: "me-central-1",
 			}: endpoints.Endpoint{},
+			endpoints.EndpointKey{
+				Region:  "me-central-1",
+				Variant: endpoints.DualStackVariant,
+			}: {
+				Hostname: "lambda.me-central-1.api.aws",
+			},
 			endpoints.EndpointKey{
 				Region: "me-south-1",
 			}: endpoints.Endpoint{},

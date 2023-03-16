@@ -1,3 +1,104 @@
+# v1.31.0 (2023-03-15)
+
+* **Feature**: Added support for S3 Object Lambda aliases.
+
+# v1.30.0 (2023-03-13)
+
+* **Feature**: Added support for cross-account Multi-Region Access Points. Added support for S3 Replication for S3 on Outposts.
+
+# v1.29.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.29.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.29.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.28.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.0 (2022-11-30)
+
+* **Feature**: Amazon S3 now supports cross-account access points. S3 bucket owners can now allow trusted AWS accounts to create access points associated with their bucket.
+
+# v1.27.0 (2022-11-29)
+
+* **Feature**: Added two new APIs to support Amazon S3 Multi-Region Access Point failover controls: GetMultiRegionAccessPointRoutes and SubmitMultiRegionAccessPointRoutes. The failover control APIs are supported in the following Regions: us-east-1, us-west-2, eu-west-1, ap-southeast-2, and ap-northeast-1.
+
+# v1.26.1 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.26.0 (2022-11-17)
+
+* **Feature**: Added 34 new S3 Storage Lens metrics to support additional customer use cases.
+
+# v1.25.2 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.25.1 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.25.0 (2022-11-02)
+
+* **Feature**: S3 on Outposts launches support for Lifecycle configuration for Outposts buckets. With S3 Lifecycle configuration, you can mange objects so they are stored cost effectively. You can manage objects using size-based rules and specify how many noncurrent versions bucket will retain.
+
+# v1.24.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.0 (2022-10-04)
+
+* **Feature**: S3 Object Lambda adds support to allow customers to intercept HeadObject and ListObjects requests and introduce their own compute. These requests were previously proxied to S3.
+
+# v1.23.0 (2022-09-21)
+
+* **Feature**: S3 on Outposts launches support for object versioning for Outposts buckets. With S3 Versioning, you can preserve, retrieve, and restore every version of every object stored in your buckets. You can recover from both unintended user actions and application failures.
+
+# v1.22.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.0 (2022-09-14)
+
+* **Feature**: Fixed a bug in the API client generation which caused some operation parameters to be incorrectly generated as value types instead of pointer types. The service API always required these affected parameters to be nilable. This fixes the SDK client to match the expectations of the the service API.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.17 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.16 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.21.15 (2022-08-30)
 
 * No change notes available for this release.

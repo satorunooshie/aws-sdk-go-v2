@@ -13,6 +13,7 @@ import (
 )
 
 // Searches users in an Amazon Connect instance, with optional filtering.
+// AfterContactWorkTimeLimit is returned in milliseconds.
 func (c *Client) SearchUsers(ctx context.Context, params *SearchUsersInput, optFns ...func(*Options)) (*SearchUsersOutput, error) {
 	if params == nil {
 		params = &SearchUsersInput{}
@@ -30,18 +31,22 @@ func (c *Client) SearchUsers(ctx context.Context, params *SearchUsersInput, optF
 
 type SearchUsersInput struct {
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	InstanceId *string
 
 	// The maximum number of results to return per page.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token for the next set of results. Use the value returned in the previous
 	// response in the next request to retrieve the next set of results.
 	NextToken *string
 
-	// The search criteria to be used to return users.
+	// The search criteria to be used to return users. The name and description fields
+	// support "contains" queries with a minimum of 2 characters and a maximum of 25
+	// characters. Any queries with character lengths outside of this range will throw
+	// invalid results.
 	SearchCriteria *types.UserSearchCriteria
 
 	// Filters to be applied to search results.
@@ -160,8 +165,8 @@ func NewSearchUsersPaginator(client SearchUsersAPIClient, params *SearchUsersInp
 	}
 
 	options := SearchUsersPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -191,7 +196,11 @@ func (p *SearchUsersPaginator) NextPage(ctx context.Context, optFns ...func(*Opt
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.SearchUsers(ctx, &params, optFns...)
 	if err != nil {

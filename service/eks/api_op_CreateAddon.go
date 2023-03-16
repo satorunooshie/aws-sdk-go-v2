@@ -14,10 +14,7 @@ import (
 
 // Creates an Amazon EKS add-on. Amazon EKS add-ons help to automate the
 // provisioning and lifecycle management of common operational software for Amazon
-// EKS clusters. Amazon EKS add-ons require clusters running version 1.18 or later
-// because Amazon EKS add-ons rely on the Server-side Apply Kubernetes feature,
-// which is only available in Kubernetes 1.18 and later. For more information, see
-// Amazon EKS add-ons
+// EKS clusters. For more information, see Amazon EKS add-ons
 // (https://docs.aws.amazon.com/eks/latest/userguide/eks-add-ons.html) in the
 // Amazon EKS User Guide.
 func (c *Client) CreateAddon(ctx context.Context, params *CreateAddonInput, optFns ...func(*Options)) (*CreateAddonOutput, error) {
@@ -37,9 +34,10 @@ func (c *Client) CreateAddon(ctx context.Context, params *CreateAddonInput, optF
 
 type CreateAddonInput struct {
 
-	// The name of the add-on. The name must match one of the names returned by
+	// The name of the add-on. The name must match one of the names that
 	// DescribeAddonVersions
-	// (https://docs.aws.amazon.com/eks/latest/APIReference/API_DescribeAddonVersions.html).
+	// (https://docs.aws.amazon.com/eks/latest/APIReference/API_DescribeAddonVersions.html)
+	// returns.
 	//
 	// This member is required.
 	AddonName *string
@@ -58,8 +56,31 @@ type CreateAddonInput struct {
 	// of the request.
 	ClientRequestToken *string
 
-	// How to resolve parameter value conflicts when migrating an existing add-on to an
-	// Amazon EKS add-on.
+	// The set of configuration values for the add-on that's created. The values that
+	// you provide are validated against the schema in DescribeAddonConfiguration
+	// (https://docs.aws.amazon.com/eks/latest/APIReference/API_DescribeAddonConfiguration.html).
+	ConfigurationValues *string
+
+	// How to resolve field value conflicts for an Amazon EKS add-on. Conflicts are
+	// handled based on the value you choose:
+	//
+	// * None – If the self-managed version of
+	// the add-on is installed on your cluster, Amazon EKS doesn't change the value.
+	// Creation of the add-on might fail.
+	//
+	// * Overwrite – If the self-managed version of
+	// the add-on is installed on your cluster and the Amazon EKS default value is
+	// different than the existing value, Amazon EKS changes the value to the Amazon
+	// EKS default value.
+	//
+	// * Preserve – Not supported. You can set this value when
+	// updating an add-on though. For more information, see UpdateAddon
+	// (https://docs.aws.amazon.com/eks/latest/APIReference/API_UpdateAddon.html).
+	//
+	// If
+	// you don't currently have the self-managed version of the add-on installed on
+	// your cluster, the Amazon EKS add-on is installed. Amazon EKS sets all values to
+	// default values, regardless of the option that you specify.
 	ResolveConflicts types.ResolveConflicts
 
 	// The Amazon Resource Name (ARN) of an existing IAM role to bind to the add-on's

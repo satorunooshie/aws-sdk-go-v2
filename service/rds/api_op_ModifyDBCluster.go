@@ -17,7 +17,7 @@ import (
 // What is Amazon Aurora?
 // (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html)
 // in the Amazon Aurora User Guide. For more information on Multi-AZ DB clusters,
-// see  Multi-AZ deployments with two readable standby DB instances
+// see  Multi-AZ DB cluster deployments
 // (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html)
 // in the Amazon RDS User Guide.
 func (c *Client) ModifyDBCluster(ctx context.Context, params *ModifyDBClusterInput, optFns ...func(*Options)) (*ModifyDBClusterOutput, error) {
@@ -113,7 +113,7 @@ type ModifyDBClusterInput struct {
 	CopyTagsToSnapshot *bool
 
 	// The compute and memory capacity of each DB instance in the Multi-AZ DB cluster,
-	// for example db.m6g.xlarge. Not all DB instance classes are available in all
+	// for example db.m6gd.xlarge. Not all DB instance classes are available in all
 	// Amazon Web Services Regions, or for all database engines. For the full list of
 	// DB instance classes and availability for your engine, see  DB Instance Class
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html)
@@ -216,17 +216,67 @@ type ModifyDBClusterInput struct {
 
 	// The amount of Provisioned IOPS (input/output operations per second) to be
 	// initially allocated for each DB instance in the Multi-AZ DB cluster. For
-	// information about valid Iops values, see Amazon RDS Provisioned IOPS Storage to
-	// Improve Performance
+	// information about valid IOPS values, see Amazon RDS Provisioned IOPS storage
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html#USER_PIOPS)
 	// in the Amazon RDS User Guide. Constraints: Must be a multiple between .5 and 50
 	// of the storage amount for the DB cluster. Valid for: Multi-AZ DB clusters only
 	Iops *int32
 
+	// A value that indicates whether to manage the master user password with Amazon
+	// Web Services Secrets Manager. If the DB cluster doesn't manage the master user
+	// password with Amazon Web Services Secrets Manager, you can turn on this
+	// management. In this case, you can't specify MasterUserPassword. If the DB
+	// cluster already manages the master user password with Amazon Web Services
+	// Secrets Manager, and you specify that the master user password is not managed
+	// with Amazon Web Services Secrets Manager, then you must specify
+	// MasterUserPassword. In this case, RDS deletes the secret and uses the new
+	// password for the master user specified by MasterUserPassword. For more
+	// information, see Password management with Amazon Web Services Secrets Manager
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html)
+	// in the Amazon RDS User Guide and Password management with Amazon Web Services
+	// Secrets Manager
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/rds-secrets-manager.html)
+	// in the Amazon Aurora User Guide. Valid for: Aurora DB clusters and Multi-AZ DB
+	// clusters
+	ManageMasterUserPassword *bool
+
 	// The new password for the master database user. This password can contain any
-	// printable ASCII character except "/", """, or "@". Constraints: Must contain
-	// from 8 to 41 characters. Valid for: Aurora DB clusters and Multi-AZ DB clusters
+	// printable ASCII character except "/", """, or "@". Constraints:
+	//
+	// * Must contain
+	// from 8 to 41 characters.
+	//
+	// * Can't be specified if ManageMasterUserPassword is
+	// turned on.
+	//
+	// Valid for: Aurora DB clusters and Multi-AZ DB clusters
 	MasterUserPassword *string
+
+	// The Amazon Web Services KMS key identifier to encrypt a secret that is
+	// automatically generated and managed in Amazon Web Services Secrets Manager. This
+	// setting is valid only if both of the following conditions are met:
+	//
+	// * The DB
+	// cluster doesn't manage the master user password in Amazon Web Services Secrets
+	// Manager. If the DB cluster already manages the master user password in Amazon
+	// Web Services Secrets Manager, you can't change the KMS key that is used to
+	// encrypt the secret.
+	//
+	// * You are turning on ManageMasterUserPassword to manage the
+	// master user password in Amazon Web Services Secrets Manager. If you are turning
+	// on ManageMasterUserPassword and don't specify MasterUserSecretKmsKeyId, then the
+	// aws/secretsmanager KMS key is used to encrypt the secret. If the secret is in a
+	// different Amazon Web Services account, then you can't use the aws/secretsmanager
+	// KMS key to encrypt the secret, and you must use a customer managed KMS key.
+	//
+	// The
+	// Amazon Web Services KMS key identifier is the key ARN, key ID, alias ARN, or
+	// alias name for the KMS key. To use a KMS key in a different Amazon Web Services
+	// account, specify the key ARN or alias ARN. There is a default KMS key for your
+	// Amazon Web Services account. Your Amazon Web Services account has a different
+	// default KMS key for each Amazon Web Services Region. Valid for: Aurora DB
+	// clusters and Multi-AZ DB clusters
+	MasterUserSecretKmsKeyId *string
 
 	// The interval, in seconds, between points when Enhanced Monitoring metrics are
 	// collected for the DB cluster. To turn off collecting Enhanced Monitoring
@@ -270,7 +320,7 @@ type ModifyDBClusterInput struct {
 	// Can't end with a hyphen or contain two consecutive hyphens
 	//
 	// Example: my-cluster2
-	// Valid for: Aurora DB clusters only
+	// Valid for: Aurora DB clusters and Multi-AZ DB clusters
 	NewDBClusterIdentifier *string
 
 	// A value that indicates that the DB cluster should be associated with the
@@ -349,6 +399,25 @@ type ModifyDBClusterInput struct {
 	// Constraints: Minimum 30-minute window. Valid for: Aurora DB clusters and
 	// Multi-AZ DB clusters
 	PreferredMaintenanceWindow *string
+
+	// A value that indicates whether to rotate the secret managed by Amazon Web
+	// Services Secrets Manager for the master user password. This setting is valid
+	// only if the master user password is managed by RDS in Amazon Web Services
+	// Secrets Manager for the DB cluster. The secret value contains the updated
+	// password. For more information, see Password management with Amazon Web Services
+	// Secrets Manager
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html)
+	// in the Amazon RDS User Guide and Password management with Amazon Web Services
+	// Secrets Manager
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/rds-secrets-manager.html)
+	// in the Amazon Aurora User Guide. Constraints:
+	//
+	// * You must apply the change
+	// immediately when rotating the master user password.
+	//
+	// Valid for: Aurora DB
+	// clusters and Multi-AZ DB clusters
+	RotateMasterUserPassword *bool
 
 	// The scaling properties of the DB cluster. You can only modify scaling properties
 	// for DB clusters in serverless DB engine mode. Valid for: Aurora DB clusters only

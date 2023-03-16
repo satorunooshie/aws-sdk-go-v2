@@ -170,8 +170,8 @@ type AllowedMethods struct {
 // known as limit) on the number of cache behaviors that you can add to a
 // distribution, see Quotas
 // (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
-// in the Amazon CloudFront Developer Guide. If you don’t want to specify any cache
-// behaviors, include only an empty CacheBehaviors element. Don’t include an empty
+// in the Amazon CloudFront Developer Guide. If you don't want to specify any cache
+// behaviors, include only an empty CacheBehaviors element. Don't include an empty
 // CacheBehavior element because this is invalid. To delete all cache behaviors in
 // an existing distribution, update the distribution configuration and include only
 // an empty CacheBehaviors element. To add, change, or remove one or more cache
@@ -224,7 +224,7 @@ type CacheBehavior struct {
 	// in the Amazon CloudFront Developer Guide. The only way to guarantee that viewers
 	// retrieve an object that was fetched from the origin using HTTPS is never to use
 	// any other protocol to fetch the object. If you have recently changed from HTTP
-	// to HTTPS, we recommend that you clear your objects’ cache because cached objects
+	// to HTTPS, we recommend that you clear your objects' cache because cached objects
 	// are protocol agnostic. That means that an edge location will return an object
 	// from the cache regardless of whether the current request protocol matches the
 	// protocol used previously. For more information, see Managing Cache Expiration
@@ -400,7 +400,7 @@ type CacheBehavior struct {
 	// URLs or signed cookies. When a cache behavior contains trusted signers,
 	// CloudFront requires signed URLs or signed cookies for all requests that match
 	// the cache behavior. The URLs or cookies must be signed with the private key of a
-	// CloudFront key pair in the trusted signer’s Amazon Web Services account. The
+	// CloudFront key pair in the trusted signer's Amazon Web Services account. The
 	// signed URL or cookie contains information about which public key CloudFront
 	// should use to verify the signature. For more information, see Serving private
 	// content
@@ -457,7 +457,7 @@ type CachedMethods struct {
 	noSmithyDocumentSerde
 }
 
-// A cache policy. When it’s attached to a cache behavior, the cache policy
+// A cache policy. When it's attached to a cache behavior, the cache policy
 // determines the following:
 //
 // * The values that CloudFront includes in the cache
@@ -469,11 +469,11 @@ type CachedMethods struct {
 // that you want objects to stay in the CloudFront cache.
 //
 // The headers, cookies,
-// and query strings that are included in the cache key are automatically included
-// in requests that CloudFront sends to the origin. CloudFront sends a request when
-// it can’t find a valid object in its cache that matches the request’s cache key.
-// If you want to send values to the origin but not include them in the cache key,
-// use OriginRequestPolicy.
+// and query strings that are included in the cache key are also included in
+// requests that CloudFront sends to the origin. CloudFront sends a request when it
+// can't find a valid object in its cache that matches the request's cache key. If
+// you want to send values to the origin but not include them in the cache key, use
+// OriginRequestPolicy.
 type CachePolicy struct {
 
 	// The cache policy configuration.
@@ -506,9 +506,9 @@ type CachePolicy struct {
 // the CloudFront cache.
 //
 // The headers, cookies, and query strings that are included
-// in the cache key are automatically included in requests that CloudFront sends to
-// the origin. CloudFront sends a request when it can’t find a valid object in its
-// cache that matches the request’s cache key. If you want to send values to the
+// in the cache key are also included in requests that CloudFront sends to the
+// origin. CloudFront sends a request when it can't find a valid object in its
+// cache that matches the request's cache key. If you want to send values to the
 // origin but not include them in the cache key, use OriginRequestPolicy.
 type CachePolicyConfig struct {
 
@@ -533,7 +533,7 @@ type CachePolicyConfig struct {
 
 	// The default amount of time, in seconds, that you want objects to stay in the
 	// CloudFront cache before CloudFront sends another request to the origin to see if
-	// the object has been updated. CloudFront uses this value as the object’s time to
+	// the object has been updated. CloudFront uses this value as the object's time to
 	// live (TTL) only when the origin does not send Cache-Control or Expires headers
 	// with the object. For more information, see Managing How Long Content Stays in an
 	// Edge Cache (Expiration)
@@ -556,7 +556,7 @@ type CachePolicyConfig struct {
 	MaxTTL *int64
 
 	// The HTTP headers, cookies, and URL query strings to include in the cache key.
-	// The values included in the cache key are automatically included in requests that
+	// The values included in the cache key are also included in requests that
 	// CloudFront sends to the origin.
 	ParametersInCacheKeyAndForwardedToOrigin *ParametersInCacheKeyAndForwardedToOrigin
 
@@ -564,31 +564,30 @@ type CachePolicyConfig struct {
 }
 
 // An object that determines whether any cookies in viewer requests (and if so,
-// which cookies) are included in the cache key and automatically included in
-// requests that CloudFront sends to the origin.
+// which cookies) are included in the cache key and in requests that CloudFront
+// sends to the origin.
 type CachePolicyCookiesConfig struct {
 
 	// Determines whether any cookies in viewer requests are included in the cache key
-	// and automatically included in requests that CloudFront sends to the origin.
-	// Valid values are:
+	// and in requests that CloudFront sends to the origin. Valid values are:
 	//
-	// * none – Cookies in viewer requests are not included in the
-	// cache key and are not automatically included in requests that CloudFront sends
-	// to the origin. Even when this field is set to none, any cookies that are listed
-	// in an OriginRequestPolicy are included in origin requests.
+	// * none –
+	// No cookies in viewer requests are included in the cache key or in requests that
+	// CloudFront sends to the origin. Even when this field is set to none, any cookies
+	// that are listed in an OriginRequestPolicy are included in origin requests.
 	//
-	// * whitelist – The
-	// cookies in viewer requests that are listed in the CookieNames type are included
-	// in the cache key and automatically included in requests that CloudFront sends to
-	// the origin.
+	// *
+	// whitelist – Only the cookies in viewer requests that are listed in the
+	// CookieNames type are included in the cache key and in requests that CloudFront
+	// sends to the origin.
 	//
-	// * allExcept – All cookies in viewer requests that are not listed in
-	// the CookieNames type are included in the cache key and automatically included in
-	// requests that CloudFront sends to the origin.
+	// * allExcept – All cookies in viewer requests are included
+	// in the cache key and in requests that CloudFront sends to the origin, except for
+	// those that are listed in the CookieNames type, which are not included.
 	//
-	// * all – All cookies in viewer
-	// requests are included in the cache key and are automatically included in
-	// requests that CloudFront sends to the origin.
+	// * all –
+	// All cookies in viewer requests are included in the cache key and in requests
+	// that CloudFront sends to the origin.
 	//
 	// This member is required.
 	CookieBehavior CachePolicyCookieBehavior
@@ -600,22 +599,21 @@ type CachePolicyCookiesConfig struct {
 }
 
 // An object that determines whether any HTTP headers (and if so, which headers)
-// are included in the cache key and automatically included in requests that
-// CloudFront sends to the origin.
+// are included in the cache key and in requests that CloudFront sends to the
+// origin.
 type CachePolicyHeadersConfig struct {
 
-	// Determines whether any HTTP headers are included in the cache key and
-	// automatically included in requests that CloudFront sends to the origin. Valid
-	// values are:
+	// Determines whether any HTTP headers are included in the cache key and in
+	// requests that CloudFront sends to the origin. Valid values are:
 	//
-	// * none – HTTP headers are not included in the cache key and are not
-	// automatically included in requests that CloudFront sends to the origin. Even
-	// when this field is set to none, any headers that are listed in an
-	// OriginRequestPolicy are included in origin requests.
+	// * none – No
+	// HTTP headers are included in the cache key or in requests that CloudFront sends
+	// to the origin. Even when this field is set to none, any headers that are listed
+	// in an OriginRequestPolicy are included in origin requests.
 	//
-	// * whitelist – The HTTP
-	// headers that are listed in the Headers type are included in the cache key and
-	// are automatically included in requests that CloudFront sends to the origin.
+	// * whitelist – Only
+	// the HTTP headers that are listed in the Headers type are included in the cache
+	// key and in requests that CloudFront sends to the origin.
 	//
 	// This member is required.
 	HeaderBehavior CachePolicyHeaderBehavior
@@ -651,42 +649,41 @@ type CachePolicyList struct {
 }
 
 // An object that determines whether any URL query strings in viewer requests (and
-// if so, which query strings) are included in the cache key and automatically
-// included in requests that CloudFront sends to the origin.
+// if so, which query strings) are included in the cache key and in requests that
+// CloudFront sends to the origin.
 type CachePolicyQueryStringsConfig struct {
 
 	// Determines whether any URL query strings in viewer requests are included in the
-	// cache key and automatically included in requests that CloudFront sends to the
-	// origin. Valid values are:
+	// cache key and in requests that CloudFront sends to the origin. Valid values
+	// are:
 	//
-	// * none – Query strings in viewer requests are not
-	// included in the cache key and are not automatically included in requests that
-	// CloudFront sends to the origin. Even when this field is set to none, any query
-	// strings that are listed in an OriginRequestPolicy are included in origin
-	// requests.
+	// * none – No query strings in viewer requests are included in the cache key
+	// or in requests that CloudFront sends to the origin. Even when this field is set
+	// to none, any query strings that are listed in an OriginRequestPolicy are
+	// included in origin requests.
 	//
-	// * whitelist – The query strings in viewer requests that are listed in
-	// the QueryStringNames type are included in the cache key and automatically
-	// included in requests that CloudFront sends to the origin.
+	// * whitelist – Only the query strings in viewer
+	// requests that are listed in the QueryStringNames type are included in the cache
+	// key and in requests that CloudFront sends to the origin.
 	//
 	// * allExcept – All
-	// query strings in viewer requests that are not listed in the QueryStringNames
-	// type are included in the cache key and automatically included in requests that
-	// CloudFront sends to the origin.
+	// query strings in viewer requests are included in the cache key and in requests
+	// that CloudFront sends to the origin, except those that are listed in the
+	// QueryStringNames type, which are not included.
 	//
-	// * all – All query strings in viewer requests
-	// are included in the cache key and are automatically included in requests that
-	// CloudFront sends to the origin.
+	// * all – All query strings in
+	// viewer requests are included in the cache key and in requests that CloudFront
+	// sends to the origin.
 	//
 	// This member is required.
 	QueryStringBehavior CachePolicyQueryStringBehavior
 
 	// Contains the specific query strings in viewer requests that either are or are
-	// not included in the cache key and automatically included in requests that
-	// CloudFront sends to the origin. The behavior depends on whether the
-	// QueryStringBehavior field in the CachePolicyQueryStringsConfig type is set to
-	// whitelist (the listed query strings are included) or allExcept (the listed query
-	// strings are not included, but all other query strings are).
+	// not included in the cache key and in requests that CloudFront sends to the
+	// origin. The behavior depends on whether the QueryStringBehavior field in the
+	// CachePolicyQueryStringsConfig type is set to whitelist (the listed query strings
+	// are included) or allExcept (the listed query strings are not included, but all
+	// other query strings are).
 	QueryStrings *QueryStringNames
 
 	noSmithyDocumentSerde
@@ -830,14 +827,14 @@ type CloudFrontOriginAccessIdentitySummary struct {
 }
 
 // An alias (also called a CNAME) and the CloudFront distribution and Amazon Web
-// Services account ID that it’s associated with. The distribution and account IDs
+// Services account ID that it's associated with. The distribution and account IDs
 // are partially hidden, which allows you to identify the distributions and
 // accounts that you own, but helps to protect the information of ones that you
-// don’t own.
+// don't own.
 type ConflictingAlias struct {
 
 	// The (partially hidden) ID of the Amazon Web Services account that owns the
-	// distribution that’s associated with the alias.
+	// distribution that's associated with the alias.
 	AccountId *string
 
 	// An alias (also called a CNAME).
@@ -854,7 +851,7 @@ type ConflictingAlias struct {
 // Amazon Web Services accounts that they are associated with. In the list, the
 // distribution and account IDs are partially hidden, which allows you to identify
 // the distributions and accounts that you own, but helps to protect the
-// information of ones that you don’t own.
+// information of ones that you don't own.
 type ConflictingAliasesList struct {
 
 	// Contains the conflicting aliases in the list.
@@ -921,6 +918,125 @@ type ContentTypeProfiles struct {
 
 	// Items in a field-level encryption content type-profile mapping.
 	Items []ContentTypeProfile
+
+	noSmithyDocumentSerde
+}
+
+// A continuous deployment policy.
+type ContinuousDeploymentPolicy struct {
+
+	// Contains the configuration for a continuous deployment policy.
+	//
+	// This member is required.
+	ContinuousDeploymentPolicyConfig *ContinuousDeploymentPolicyConfig
+
+	// The identifier of the continuous deployment policy.
+	//
+	// This member is required.
+	Id *string
+
+	// The date and time the continuous deployment policy was last modified.
+	//
+	// This member is required.
+	LastModifiedTime *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Contains the configuration for a continuous deployment policy.
+type ContinuousDeploymentPolicyConfig struct {
+
+	// A Boolean that indicates whether this continuous deployment policy is enabled
+	// (in effect). When this value is true, this policy is enabled and in effect. When
+	// this value is false, this policy is not enabled and has no effect.
+	//
+	// This member is required.
+	Enabled *bool
+
+	// The CloudFront domain name of the staging distribution. For example:
+	// d111111abcdef8.cloudfront.net.
+	//
+	// This member is required.
+	StagingDistributionDnsNames *StagingDistributionDnsNames
+
+	// Contains the parameters for routing production traffic from your primary to
+	// staging distributions.
+	TrafficConfig *TrafficConfig
+
+	noSmithyDocumentSerde
+}
+
+// Contains a list of continuous deployment policies.
+type ContinuousDeploymentPolicyList struct {
+
+	// The maximum number of continuous deployment policies that were specified in your
+	// request.
+	//
+	// This member is required.
+	MaxItems *int32
+
+	// The total number of continuous deployment policies in your Amazon Web Services
+	// account, regardless of the MaxItems value.
+	//
+	// This member is required.
+	Quantity *int32
+
+	// A list of continuous deployment policy items.
+	Items []ContinuousDeploymentPolicySummary
+
+	// Indicates the next page of continuous deployment policies. To get the next page
+	// of the list, use this value in the Marker field of your request.
+	NextMarker *string
+
+	noSmithyDocumentSerde
+}
+
+// A summary of the information about your continuous deployment policies.
+type ContinuousDeploymentPolicySummary struct {
+
+	// The continuous deployment policy.
+	//
+	// This member is required.
+	ContinuousDeploymentPolicy *ContinuousDeploymentPolicy
+
+	noSmithyDocumentSerde
+}
+
+// This configuration determines which HTTP requests are sent to the staging
+// distribution. If the HTTP request contains a header and value that matches what
+// you specify here, the request is sent to the staging distribution. Otherwise the
+// request is sent to the primary distribution.
+type ContinuousDeploymentSingleHeaderConfig struct {
+
+	// The request header name that you want CloudFront to send to your staging
+	// distribution. The header must contain the prefix aws-cf-cd-.
+	//
+	// This member is required.
+	Header *string
+
+	// The request header value.
+	//
+	// This member is required.
+	Value *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains the percentage of traffic to send to a staging distribution.
+type ContinuousDeploymentSingleWeightConfig struct {
+
+	// The percentage of traffic to send to a staging distribution, expressed as a
+	// decimal number between 0 and .15.
+	//
+	// This member is required.
+	Weight *float32
+
+	// Session stickiness provides the ability to define multiple requests from a
+	// single viewer as a single session. This prevents the potentially inconsistent
+	// experience of sending some of a given user's requests to your staging
+	// distribution, while others are sent to your primary distribution. Define the
+	// session duration using TTL values.
+	SessionStickinessConfig *SessionStickinessConfig
 
 	noSmithyDocumentSerde
 }
@@ -1151,7 +1267,7 @@ type CustomOriginConfig struct {
 
 	// Specifies how long, in seconds, CloudFront persists its connection to the
 	// origin. The minimum timeout is 1 second, the maximum is 60 seconds, and the
-	// default (if you don’t specify otherwise) is 5 seconds. For more information, see
+	// default (if you don't specify otherwise) is 5 seconds. For more information, see
 	// Origin Keep-alive Timeout
 	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginKeepaliveTimeout)
 	// in the Amazon CloudFront Developer Guide.
@@ -1159,7 +1275,7 @@ type CustomOriginConfig struct {
 
 	// Specifies how long, in seconds, CloudFront waits for a response from the origin.
 	// This is also known as the origin response timeout. The minimum timeout is 1
-	// second, the maximum is 60 seconds, and the default (if you don’t specify
+	// second, the maximum is 60 seconds, and the default (if you don't specify
 	// otherwise) is 30 seconds. For more information, see Origin Response Timeout
 	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginResponseTimeout)
 	// in the Amazon CloudFront Developer Guide.
@@ -1175,8 +1291,8 @@ type CustomOriginConfig struct {
 	noSmithyDocumentSerde
 }
 
-// A complex type that describes the default cache behavior if you don’t specify a
-// CacheBehavior element or if request URLs don’t match any of the values of
+// A complex type that describes the default cache behavior if you don't specify a
+// CacheBehavior element or if request URLs don't match any of the values of
 // PathPattern in CacheBehavior elements. You must create exactly one default cache
 // behavior.
 type DefaultCacheBehavior struct {
@@ -1208,7 +1324,7 @@ type DefaultCacheBehavior struct {
 	// in the Amazon CloudFront Developer Guide. The only way to guarantee that viewers
 	// retrieve an object that was fetched from the origin using HTTPS is never to use
 	// any other protocol to fetch the object. If you have recently changed from HTTP
-	// to HTTPS, we recommend that you clear your objects’ cache because cached objects
+	// to HTTPS, we recommend that you clear your objects' cache because cached objects
 	// are protocol agnostic. That means that an edge location will return an object
 	// from the cache regardless of whether the current request protocol matches the
 	// protocol used previously. For more information, see Managing Cache Expiration
@@ -1386,7 +1502,7 @@ type DefaultCacheBehavior struct {
 	// URLs or signed cookies. When a cache behavior contains trusted signers,
 	// CloudFront requires signed URLs or signed cookies for all requests that match
 	// the cache behavior. The URLs or cookies must be signed with the private key of a
-	// CloudFront key pair in a trusted signer’s Amazon Web Services account. The
+	// CloudFront key pair in a trusted signer's Amazon Web Services account. The
 	// signed URL or cookie contains information about which public key CloudFront
 	// should use to verify the signature. For more information, see Serving private
 	// content
@@ -1401,26 +1517,23 @@ type DefaultCacheBehavior struct {
 // the details about how to track and manage content delivery.
 type Distribution struct {
 
-	// The ARN (Amazon Resource Name) for the distribution. For example:
-	// arn:aws:cloudfront::123456789012:distribution/EDFDVBD632BHDS5, where
-	// 123456789012 is your Amazon Web Services account ID.
+	// The distribution's Amazon Resource Name (ARN).
 	//
 	// This member is required.
 	ARN *string
 
-	// The current configuration information for the distribution. Send a GET request
-	// to the /CloudFront API version/distribution ID/config resource.
+	// The distribution's configuration.
 	//
 	// This member is required.
 	DistributionConfig *DistributionConfig
 
-	// The domain name corresponding to the distribution, for example,
+	// The distribution's CloudFront domain name. For example:
 	// d111111abcdef8.cloudfront.net.
 	//
 	// This member is required.
 	DomainName *string
 
-	// The identifier for the distribution. For example: EDFDVBD632BHDS5.
+	// The distribution's identifier. For example: E1U5RQF7T870K0.
 	//
 	// This member is required.
 	Id *string
@@ -1430,31 +1543,26 @@ type Distribution struct {
 	// This member is required.
 	InProgressInvalidationBatches *int32
 
-	// The date and time the distribution was last modified.
+	// The date and time when the distribution was last modified.
 	//
 	// This member is required.
 	LastModifiedTime *time.Time
 
-	// This response element indicates the current status of the distribution. When the
-	// status is Deployed, the distribution's information is fully propagated to all
-	// CloudFront edge locations.
+	// The distribution's status. When the status is Deployed, the distribution's
+	// information is fully propagated to all CloudFront edge locations.
 	//
 	// This member is required.
 	Status *string
 
-	// CloudFront automatically adds this field to the response if you’ve configured a
-	// cache behavior in this distribution to serve private content using key groups.
 	// This field contains a list of key groups and the public keys in each key group
 	// that CloudFront can use to verify the signatures of signed URLs or signed
 	// cookies.
 	ActiveTrustedKeyGroups *ActiveTrustedKeyGroups
 
-	// We recommend using TrustedKeyGroups instead of TrustedSigners. CloudFront
-	// automatically adds this field to the response if you’ve configured a cache
-	// behavior in this distribution to serve private content using trusted signers.
-	// This field contains a list of Amazon Web Services account IDs and the active
-	// CloudFront key pairs in each account that CloudFront can use to verify the
-	// signatures of signed URLs or signed cookies.
+	// We recommend using TrustedKeyGroups instead of TrustedSigners. This field
+	// contains a list of Amazon Web Services account IDs and the active CloudFront key
+	// pairs in each account that CloudFront can use to verify the signatures of signed
+	// URLs or signed cookies.
 	ActiveTrustedSigners *ActiveTrustedSigners
 
 	// Amazon Web Services services in China customers must file for an Internet
@@ -1483,8 +1591,8 @@ type DistributionConfig struct {
 	// This member is required.
 	CallerReference *string
 
-	// An optional comment to describe the distribution. The comment cannot be longer
-	// than 128 characters.
+	// A comment to describe the distribution. The comment cannot be longer than 128
+	// characters.
 	//
 	// This member is required.
 	Comment *string
@@ -1513,6 +1621,10 @@ type DistributionConfig struct {
 	// A complex type that contains zero or more CacheBehavior elements.
 	CacheBehaviors *CacheBehaviors
 
+	// The identifier of a continuous deployment policy. For more information, see
+	// CreateContinuousDeploymentPolicy.
+	ContinuousDeploymentPolicyId *string
+
 	// A complex type that controls the following:
 	//
 	// * Whether CloudFront replaces HTTP
@@ -1530,8 +1642,8 @@ type DistributionConfig struct {
 
 	// The object that you want CloudFront to request from your origin (for example,
 	// index.html) when a viewer requests the root URL for your distribution
-	// (http://www.example.com) instead of an object in your distribution
-	// (http://www.example.com/product-description.html). Specifying a default root
+	// (https://www.example.com) instead of an object in your distribution
+	// (https://www.example.com/product-description.html). Specifying a default root
 	// object avoids exposing the contents of your distribution. Specify only the
 	// object name, for example, index.html. Don't add a / before the object name. If
 	// you don't want to specify a default root object when you create a distribution,
@@ -1622,7 +1734,12 @@ type DistributionConfig struct {
 	// of your content.
 	Restrictions *Restrictions
 
-	// A complex type that determines the distribution’s SSL/TLS configuration for
+	// A Boolean that indicates whether this is a staging distribution. When this value
+	// is true, this is a staging distribution. When this value is false, this is not a
+	// staging distribution.
+	Staging *bool
+
+	// A complex type that determines the distribution's SSL/TLS configuration for
 	// communicating with viewers.
 	ViewerCertificate *ViewerCertificate
 
@@ -1824,13 +1941,18 @@ type DistributionSummary struct {
 	// This member is required.
 	Restrictions *Restrictions
 
+	// Whether the primary distribution has a staging distribution enabled.
+	//
+	// This member is required.
+	Staging *bool
+
 	// The current status of the distribution. When the status is Deployed, the
 	// distribution's information is propagated to all CloudFront edge locations.
 	//
 	// This member is required.
 	Status *string
 
-	// A complex type that determines the distribution’s SSL/TLS configuration for
+	// A complex type that determines the distribution's SSL/TLS configuration for
 	// communicating with viewers.
 	//
 	// This member is required.
@@ -2285,7 +2407,7 @@ type FunctionConfig struct {
 	// This member is required.
 	Comment *string
 
-	// The function’s runtime environment. The only valid value is cloudfront-js-1.0.
+	// The function's runtime environment. The only valid value is cloudfront-js-1.0.
 	//
 	// This member is required.
 	Runtime FunctionRuntime
@@ -2337,7 +2459,7 @@ type FunctionMetadata struct {
 	// The stage that the function is in, either DEVELOPMENT or LIVE. When a function
 	// is in the DEVELOPMENT stage, you can test the function with TestFunction, and
 	// update it with UpdateFunction. When a function is in the LIVE stage, you can
-	// attach the function to a distribution’s cache behavior, using the function’s
+	// attach the function to a distribution's cache behavior, using the function's
 	// ARN.
 	Stage FunctionStage
 
@@ -2837,8 +2959,8 @@ type Origin struct {
 	Id *string
 
 	// The number of times that CloudFront attempts to connect to the origin. The
-	// minimum number is 1, the maximum is 3, and the default (if you don’t specify
-	// otherwise) is 3. For a custom origin (including an Amazon S3 bucket that’s
+	// minimum number is 1, the maximum is 3, and the default (if you don't specify
+	// otherwise) is 3. For a custom origin (including an Amazon S3 bucket that's
 	// configured with static website hosting), this value also specifies the number of
 	// times that CloudFront attempts to get a response from the origin, in the case of
 	// an Origin Response Timeout
@@ -2850,7 +2972,7 @@ type Origin struct {
 
 	// The number of seconds that CloudFront waits when trying to establish a
 	// connection to the origin. The minimum timeout is 1 second, the maximum is 10
-	// seconds, and the default (if you don’t specify otherwise) is 10 seconds. For
+	// seconds, and the default (if you don't specify otherwise) is 10 seconds. For
 	// more information, see Origin Connection Timeout
 	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#origin-connection-timeout)
 	// in the Amazon CloudFront Developer Guide.
@@ -2897,7 +3019,7 @@ type Origin struct {
 	noSmithyDocumentSerde
 }
 
-// A CloudFront origin access control.
+// A CloudFront origin access control, including its unique identifier.
 type OriginAccessControl struct {
 
 	// The unique identifier of the origin access control.
@@ -2911,21 +3033,15 @@ type OriginAccessControl struct {
 	noSmithyDocumentSerde
 }
 
-// A CloudFront origin access control.
+// A CloudFront origin access control configuration.
 type OriginAccessControlConfig struct {
-
-	// A description of the origin access control.
-	//
-	// This member is required.
-	Description *string
 
 	// A name to identify the origin access control.
 	//
 	// This member is required.
 	Name *string
 
-	// The type of origin that this origin access control is for. The only valid value
-	// is s3.
+	// The type of origin that this origin access control is for.
 	//
 	// This member is required.
 	OriginAccessControlOriginType OriginAccessControlOriginTypes
@@ -2950,8 +3066,8 @@ type OriginAccessControlConfig struct {
 	// request contains the Authorization header, then CloudFront doesn't sign the
 	// origin request and instead passes along the Authorization header from the viewer
 	// request. WARNING: To pass along the Authorization header from the viewer
-	// request, you must add the Authorization header to an origin request policy
-	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-origin-requests.html)
+	// request, you must add the Authorization header to a cache policy
+	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html)
 	// for all cache behaviors that use origins associated with this origin access
 	// control.
 	//
@@ -2963,6 +3079,9 @@ type OriginAccessControlConfig struct {
 	//
 	// This member is required.
 	SigningProtocol OriginAccessControlSigningProtocols
+
+	// A description of the origin access control.
+	Description *string
 
 	noSmithyDocumentSerde
 }
@@ -3020,8 +3139,7 @@ type OriginAccessControlSummary struct {
 	// This member is required.
 	Name *string
 
-	// The type of origin that this origin access control is for. The only valid value
-	// is s3.
+	// The type of origin that this origin access control is for.
 	//
 	// This member is required.
 	OriginAccessControlOriginType OriginAccessControlOriginTypes
@@ -3157,7 +3275,7 @@ type OriginGroups struct {
 	noSmithyDocumentSerde
 }
 
-// An origin request policy. When it’s attached to a cache behavior, the origin
+// An origin request policy. When it's attached to a cache behavior, the origin
 // request policy determines the values that CloudFront includes in requests that
 // it sends to the origin. Each request that CloudFront sends to the origin
 // includes the following:
@@ -3174,7 +3292,7 @@ type OriginGroups struct {
 // items from the viewer request and, in the case of headers, additional ones that
 // are added by CloudFront.
 //
-// CloudFront sends a request when it can’t find an
+// CloudFront sends a request when it can't find an
 // object in its cache that matches the request. If you want to send values to the
 // origin and also include them in the cache key, use CachePolicy.
 type OriginRequestPolicy struct {
@@ -3214,7 +3332,7 @@ type OriginRequestPolicy struct {
 // headers, additional ones that are added by CloudFront.
 //
 // CloudFront sends a
-// request when it can’t find an object in its cache that matches the request. If
+// request when it can't find an object in its cache that matches the request. If
 // you want to send values to the origin and also include them in the cache key,
 // use CachePolicy.
 type OriginRequestPolicyConfig struct {
@@ -3254,17 +3372,21 @@ type OriginRequestPolicyCookiesConfig struct {
 	// Determines whether cookies in viewer requests are included in requests that
 	// CloudFront sends to the origin. Valid values are:
 	//
-	// * none – Cookies in viewer
-	// requests are not included in requests that CloudFront sends to the origin. Even
-	// when this field is set to none, any cookies that are listed in a CachePolicy are
+	// * none – No cookies in viewer
+	// requests are included in requests that CloudFront sends to the origin. Even when
+	// this field is set to none, any cookies that are listed in a CachePolicy are
 	// included in origin requests.
 	//
-	// * whitelist – The cookies in viewer requests that
-	// are listed in the CookieNames type are included in requests that CloudFront
+	// * whitelist – Only the cookies in viewer requests
+	// that are listed in the CookieNames type are included in requests that CloudFront
 	// sends to the origin.
 	//
 	// * all – All cookies in viewer requests are included in
 	// requests that CloudFront sends to the origin.
+	//
+	// * allExcept – All cookies in
+	// viewer requests are included in requests that CloudFront sends to the origin,
+	// except for those listed in the CookieNames type, which are not included.
 	//
 	// This member is required.
 	CookieBehavior OriginRequestPolicyCookieBehavior
@@ -3282,22 +3404,27 @@ type OriginRequestPolicyHeadersConfig struct {
 	// Determines whether any HTTP headers are included in requests that CloudFront
 	// sends to the origin. Valid values are:
 	//
-	// * none – HTTP headers are not included
-	// in requests that CloudFront sends to the origin. Even when this field is set to
-	// none, any headers that are listed in a CachePolicy are included in origin
-	// requests.
+	// * none – No HTTP headers in viewer
+	// requests are included in requests that CloudFront sends to the origin. Even when
+	// this field is set to none, any headers that are listed in a CachePolicy are
+	// included in origin requests.
 	//
-	// * whitelist – The HTTP headers that are listed in the Headers type
-	// are included in requests that CloudFront sends to the origin.
+	// * whitelist – Only the HTTP headers that are
+	// listed in the Headers type are included in requests that CloudFront sends to the
+	// origin.
 	//
-	// * allViewer – All
+	// * allViewer – All HTTP headers in viewer requests are included in
+	// requests that CloudFront sends to the origin.
+	//
+	// * allViewerAndWhitelistCloudFront
+	// – All HTTP headers in viewer requests and the additional CloudFront headers that
+	// are listed in the Headers type are included in requests that CloudFront sends to
+	// the origin. The additional headers are added by CloudFront.
+	//
+	// * allExcept – All
 	// HTTP headers in viewer requests are included in requests that CloudFront sends
-	// to the origin.
-	//
-	// * allViewerAndWhitelistCloudFront – All HTTP headers in viewer
-	// requests and the additional CloudFront headers that are listed in the Headers
-	// type are included in requests that CloudFront sends to the origin. The
-	// additional headers are added by CloudFront.
+	// to the origin, except for those listed in the Headers type, which are not
+	// included.
 	//
 	// This member is required.
 	HeaderBehavior OriginRequestPolicyHeaderBehavior
@@ -3341,12 +3468,12 @@ type OriginRequestPolicyQueryStringsConfig struct {
 	// Determines whether any URL query strings in viewer requests are included in
 	// requests that CloudFront sends to the origin. Valid values are:
 	//
-	// * none – Query
-	// strings in viewer requests are not included in requests that CloudFront sends to
-	// the origin. Even when this field is set to none, any query strings that are
+	// * none – No
+	// query strings in viewer requests are included in requests that CloudFront sends
+	// to the origin. Even when this field is set to none, any query strings that are
 	// listed in a CachePolicy are included in origin requests.
 	//
-	// * whitelist – The
+	// * whitelist – Only the
 	// query strings in viewer requests that are listed in the QueryStringNames type
 	// are included in requests that CloudFront sends to the origin.
 	//
@@ -3354,11 +3481,19 @@ type OriginRequestPolicyQueryStringsConfig struct {
 	// strings in viewer requests are included in requests that CloudFront sends to the
 	// origin.
 	//
+	// * allExcept – All query strings in viewer requests are included in
+	// requests that CloudFront sends to the origin, except for those listed in the
+	// QueryStringNames type, which are not included.
+	//
 	// This member is required.
 	QueryStringBehavior OriginRequestPolicyQueryStringBehavior
 
-	// Contains a list of the query strings in viewer requests that are included in
-	// requests that CloudFront sends to the origin.
+	// Contains the specific query strings in viewer requests that either are or are
+	// not included in requests that CloudFront sends to the origin. The behavior
+	// depends on whether the QueryStringBehavior field in the
+	// OriginRequestPolicyQueryStringsConfig type is set to whitelist (the listed query
+	// strings are included) or allExcept (the listed query strings are not included,
+	// but all other query strings are).
 	QueryStrings *QueryStringNames
 
 	noSmithyDocumentSerde
@@ -3403,9 +3538,9 @@ type Origins struct {
 // in the Amazon CloudFront Developer Guide.
 type OriginShield struct {
 
-	// A flag that specifies whether Origin Shield is enabled. When it’s enabled,
+	// A flag that specifies whether Origin Shield is enabled. When it's enabled,
 	// CloudFront routes all requests through Origin Shield, which can help protect
-	// your origin. When it’s disabled, CloudFront might send requests directly to your
+	// your origin. When it's disabled, CloudFront might send requests directly to your
 	// origin from multiple edge locations or regional edge caches.
 	//
 	// This member is required.
@@ -3447,15 +3582,15 @@ type OriginSslProtocols struct {
 // These values can include HTTP headers, cookies, and URL query strings.
 // CloudFront uses the cache key to find an object in its cache that it can return
 // to the viewer. The headers, cookies, and query strings that are included in the
-// cache key are automatically included in requests that CloudFront sends to the
-// origin. CloudFront sends a request when it can’t find an object in its cache
-// that matches the request’s cache key. If you want to send values to the origin
-// but not include them in the cache key, use OriginRequestPolicy.
+// cache key are also included in requests that CloudFront sends to the origin.
+// CloudFront sends a request when it can't find an object in its cache that
+// matches the request's cache key. If you want to send values to the origin but
+// not include them in the cache key, use OriginRequestPolicy.
 type ParametersInCacheKeyAndForwardedToOrigin struct {
 
 	// An object that determines whether any cookies in viewer requests (and if so,
-	// which cookies) are included in the cache key and automatically included in
-	// requests that CloudFront sends to the origin.
+	// which cookies) are included in the cache key and in requests that CloudFront
+	// sends to the origin.
 	//
 	// This member is required.
 	CookiesConfig *CachePolicyCookiesConfig
@@ -3466,7 +3601,7 @@ type ParametersInCacheKeyAndForwardedToOrigin struct {
 	// these fields is true and the viewer request includes the Accept-Encoding header,
 	// then CloudFront does the following:
 	//
-	// * Normalizes the value of the viewer’s
+	// * Normalizes the value of the viewer's
 	// Accept-Encoding header
 	//
 	// * Includes the normalized header in the cache key
@@ -3484,7 +3619,7 @@ type ParametersInCacheKeyAndForwardedToOrigin struct {
 	// field is true, so including this header in an origin request policy has no
 	// effect. If both of these fields are false, then CloudFront treats the
 	// Accept-Encoding header the same as any other HTTP header in the viewer request.
-	// By default, it’s not included in the cache key and it’s not included in origin
+	// By default, it's not included in the cache key and it's not included in origin
 	// requests. In this case, you can manually add Accept-Encoding to the headers
 	// whitelist like any other HTTP header.
 	//
@@ -3492,15 +3627,15 @@ type ParametersInCacheKeyAndForwardedToOrigin struct {
 	EnableAcceptEncodingGzip *bool
 
 	// An object that determines whether any HTTP headers (and if so, which headers)
-	// are included in the cache key and automatically included in requests that
-	// CloudFront sends to the origin.
+	// are included in the cache key and in requests that CloudFront sends to the
+	// origin.
 	//
 	// This member is required.
 	HeadersConfig *CachePolicyHeadersConfig
 
 	// An object that determines whether any URL query strings in viewer requests (and
-	// if so, which query strings) are included in the cache key and automatically
-	// included in requests that CloudFront sends to the origin.
+	// if so, which query strings) are included in the cache key and in requests that
+	// CloudFront sends to the origin.
 	//
 	// This member is required.
 	QueryStringsConfig *CachePolicyQueryStringsConfig
@@ -3511,7 +3646,7 @@ type ParametersInCacheKeyAndForwardedToOrigin struct {
 	// fields is true and the viewer request includes the Accept-Encoding header, then
 	// CloudFront does the following:
 	//
-	// * Normalizes the value of the viewer’s
+	// * Normalizes the value of the viewer's
 	// Accept-Encoding header
 	//
 	// * Includes the normalized header in the cache key
@@ -3529,7 +3664,7 @@ type ParametersInCacheKeyAndForwardedToOrigin struct {
 	// field is true, so including this header in an origin request policy has no
 	// effect. If both of these fields are false, then CloudFront treats the
 	// Accept-Encoding header the same as any other HTTP header in the viewer request.
-	// By default, it’s not included in the cache key and it’s not included in origin
+	// By default, it's not included in the cache key and it's not included in origin
 	// requests. In this case, you can manually add Accept-Encoding to the headers
 	// whitelist like any other HTTP header.
 	EnableAcceptEncodingBrotli *bool
@@ -3590,7 +3725,7 @@ type PublicKey struct {
 // (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).
 type PublicKeyConfig struct {
 
-	// A string included in the request to help make sure that the request can’t be
+	// A string included in the request to help make sure that the request can't be
 	// replayed.
 	//
 	// This member is required.
@@ -3842,13 +3977,14 @@ type RealtimeMetricsSubscriptionConfig struct {
 }
 
 // A response headers policy. A response headers policy contains information about
-// a set of HTTP response headers and their values. After you create a response
-// headers policy, you can use its ID to attach it to one or more cache behaviors
-// in a CloudFront distribution. When it’s attached to a cache behavior, CloudFront
-// adds the headers in the policy to HTTP responses that it sends for requests that
-// match the cache behavior. For more information, see Adding HTTP headers to
-// CloudFront responses
-// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/adding-response-headers.html)
+// a set of HTTP response headers. After you create a response headers policy, you
+// can use its ID to attach it to one or more cache behaviors in a CloudFront
+// distribution. When it's attached to a cache behavior, the response headers
+// policy affects the HTTP headers that CloudFront includes in HTTP responses to
+// requests that match the cache behavior. CloudFront adds or removes response
+// headers according to the configuration of the response headers policy. For more
+// information, see Adding or removing HTTP headers in CloudFront responses
+// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/modifying-response-headers.html)
 // in the Amazon CloudFront Developer Guide.
 type ResponseHeadersPolicy struct {
 
@@ -3862,10 +3998,7 @@ type ResponseHeadersPolicy struct {
 	// This member is required.
 	LastModifiedTime *time.Time
 
-	// A response headers policy configuration. A response headers policy contains
-	// information about a set of HTTP response headers and their values. CloudFront
-	// adds the headers in the policy to HTTP responses that it sends for requests that
-	// match a cache behavior that’s associated with the policy.
+	// A response headers policy configuration.
 	//
 	// This member is required.
 	ResponseHeadersPolicyConfig *ResponseHeadersPolicyConfig
@@ -3977,9 +4110,7 @@ type ResponseHeadersPolicyAccessControlExposeHeaders struct {
 
 // A response headers policy configuration. A response headers policy configuration
 // contains metadata about the response headers policy, and configurations for sets
-// of HTTP response headers and their values. CloudFront adds the headers in the
-// policy to HTTP responses that it sends for requests that match a cache behavior
-// associated with the policy.
+// of HTTP response headers.
 type ResponseHeadersPolicyConfig struct {
 
 	// A name to identify the response headers policy. The name must be unique for
@@ -3998,6 +4129,9 @@ type ResponseHeadersPolicyConfig struct {
 
 	// A configuration for a set of custom HTTP response headers.
 	CustomHeadersConfig *ResponseHeadersPolicyCustomHeadersConfig
+
+	// A configuration for a set of HTTP headers to remove from the HTTP response.
+	RemoveHeadersConfig *ResponseHeadersPolicyRemoveHeadersConfig
 
 	// A configuration for a set of security-related HTTP response headers.
 	SecurityHeadersConfig *ResponseHeadersPolicySecurityHeadersConfig
@@ -4123,7 +4257,7 @@ type ResponseHeadersPolicyCorsConfig struct {
 }
 
 // An HTTP response header name and its value. CloudFront includes this header in
-// HTTP responses that it sends for requests that match a cache behavior that’s
+// HTTP responses that it sends for requests that match a cache behavior that's
 // associated with this response headers policy.
 type ResponseHeadersPolicyCustomHeader struct {
 
@@ -4148,7 +4282,7 @@ type ResponseHeadersPolicyCustomHeader struct {
 
 // A list of HTTP response header names and their values. CloudFront includes these
 // headers in HTTP responses that it sends for requests that match a cache behavior
-// that’s associated with this response headers policy.
+// that's associated with this response headers policy.
 type ResponseHeadersPolicyCustomHeadersConfig struct {
 
 	// The number of HTTP response headers in the list.
@@ -4163,7 +4297,7 @@ type ResponseHeadersPolicyCustomHeadersConfig struct {
 }
 
 // Determines whether CloudFront includes the X-Frame-Options HTTP response header
-// and the header’s value. For more information about the X-Frame-Options HTTP
+// and the header's value. For more information about the X-Frame-Options HTTP
 // response header, see X-Frame-Options
 // (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options) in
 // the MDN Web Docs.
@@ -4213,7 +4347,7 @@ type ResponseHeadersPolicyList struct {
 }
 
 // Determines whether CloudFront includes the Referrer-Policy HTTP response header
-// and the header’s value. For more information about the Referrer-Policy HTTP
+// and the header's value. For more information about the Referrer-Policy HTTP
 // response header, see Referrer-Policy
 // (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy) in
 // the MDN Web Docs.
@@ -4258,6 +4392,35 @@ type ResponseHeadersPolicyReferrerPolicy struct {
 	noSmithyDocumentSerde
 }
 
+// The name of an HTTP header that CloudFront removes from HTTP responses to
+// requests that match the cache behavior that this response headers policy is
+// attached to.
+type ResponseHeadersPolicyRemoveHeader struct {
+
+	// The HTTP header name.
+	//
+	// This member is required.
+	Header *string
+
+	noSmithyDocumentSerde
+}
+
+// A list of HTTP header names that CloudFront removes from HTTP responses to
+// requests that match the cache behavior that this response headers policy is
+// attached to.
+type ResponseHeadersPolicyRemoveHeadersConfig struct {
+
+	// The number of HTTP header names in the list.
+	//
+	// This member is required.
+	Quantity *int32
+
+	// The list of HTTP header names.
+	Items []ResponseHeadersPolicyRemoveHeader
+
+	noSmithyDocumentSerde
+}
+
 // A configuration for a set of security-related HTTP response headers. CloudFront
 // adds these headers to HTTP responses that it sends for requests that match a
 // cache behavior associated with this response headers policy.
@@ -4278,28 +4441,28 @@ type ResponseHeadersPolicySecurityHeadersConfig struct {
 	ContentTypeOptions *ResponseHeadersPolicyContentTypeOptions
 
 	// Determines whether CloudFront includes the X-Frame-Options HTTP response header
-	// and the header’s value. For more information about the X-Frame-Options HTTP
+	// and the header's value. For more information about the X-Frame-Options HTTP
 	// response header, see X-Frame-Options
 	// (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options) in
 	// the MDN Web Docs.
 	FrameOptions *ResponseHeadersPolicyFrameOptions
 
 	// Determines whether CloudFront includes the Referrer-Policy HTTP response header
-	// and the header’s value. For more information about the Referrer-Policy HTTP
+	// and the header's value. For more information about the Referrer-Policy HTTP
 	// response header, see Referrer-Policy
 	// (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy) in
 	// the MDN Web Docs.
 	ReferrerPolicy *ResponseHeadersPolicyReferrerPolicy
 
 	// Determines whether CloudFront includes the Strict-Transport-Security HTTP
-	// response header and the header’s value. For more information about the
+	// response header and the header's value. For more information about the
 	// Strict-Transport-Security HTTP response header, see Strict-Transport-Security
 	// (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
 	// in the MDN Web Docs.
 	StrictTransportSecurity *ResponseHeadersPolicyStrictTransportSecurity
 
 	// Determines whether CloudFront includes the X-XSS-Protection HTTP response header
-	// and the header’s value. For more information about the X-XSS-Protection HTTP
+	// and the header's value. For more information about the X-XSS-Protection HTTP
 	// response header, see X-XSS-Protection
 	// (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection) in
 	// the MDN Web Docs.
@@ -4342,7 +4505,7 @@ type ResponseHeadersPolicyServerTimingHeadersConfig struct {
 }
 
 // Determines whether CloudFront includes the Strict-Transport-Security HTTP
-// response header and the header’s value. For more information about the
+// response header and the header's value. For more information about the
 // Strict-Transport-Security HTTP response header, see Strict-Transport-Security
 // (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
 // in the MDN Web Docs.
@@ -4390,7 +4553,7 @@ type ResponseHeadersPolicySummary struct {
 }
 
 // Determines whether CloudFront includes the X-XSS-Protection HTTP response header
-// and the header’s value. For more information about the X-XSS-Protection HTTP
+// and the header's value. For more information about the X-XSS-Protection HTTP
 // response header, see X-XSS-Protection
 // (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection) in
 // the MDN Web Docs.
@@ -4498,6 +4661,30 @@ type S3OriginConfig struct {
 	noSmithyDocumentSerde
 }
 
+// Session stickiness provides the ability to define multiple requests from a
+// single viewer as a single session. This prevents the potentially inconsistent
+// experience of sending some of a given user's requests to your staging
+// distribution, while others are sent to your primary distribution. Define the
+// session duration using TTL values.
+type SessionStickinessConfig struct {
+
+	// The amount of time after which you want sessions to cease if no requests are
+	// received. Allowed values are 300–3600 seconds (5–60 minutes). The value must be
+	// less than or equal to MaximumTTL.
+	//
+	// This member is required.
+	IdleTTL *int32
+
+	// The maximum amount of time to consider requests from the viewer as being part of
+	// the same session. Allowed values are 300–3600 seconds (5–60 minutes). The value
+	// must be less than or equal to IdleTTL.
+	//
+	// This member is required.
+	MaximumTTL *int32
+
+	noSmithyDocumentSerde
+}
+
 // A list of Amazon Web Services accounts and the active CloudFront key pairs in
 // each account that CloudFront can use to verify the signatures of signed URLs and
 // signed cookies.
@@ -4511,6 +4698,20 @@ type Signer struct {
 
 	// A list of CloudFront key pair identifiers.
 	KeyPairIds *KeyPairIds
+
+	noSmithyDocumentSerde
+}
+
+// The CloudFront domain name of the staging distribution.
+type StagingDistributionDnsNames struct {
+
+	// The number of CloudFront domain names in your staging distribution.
+	//
+	// This member is required.
+	Quantity *int32
+
+	// The CloudFront domain name of the staging distribution.
+	Items []string
 
 	noSmithyDocumentSerde
 }
@@ -4874,6 +5075,23 @@ type TestResult struct {
 	noSmithyDocumentSerde
 }
 
+// The traffic configuration of your continuous deployment.
+type TrafficConfig struct {
+
+	// The type of traffic configuration.
+	//
+	// This member is required.
+	Type ContinuousDeploymentPolicyType
+
+	// Determines which HTTP requests are sent to the staging distribution.
+	SingleHeaderConfig *ContinuousDeploymentSingleHeaderConfig
+
+	// Contains the percentage of traffic to send to the staging distribution.
+	SingleWeightConfig *ContinuousDeploymentSingleWeightConfig
+
+	noSmithyDocumentSerde
+}
+
 // A list of key groups whose public keys CloudFront can use to verify the
 // signatures of signed URLs and signed cookies.
 type TrustedKeyGroups struct {
@@ -4918,8 +5136,8 @@ type TrustedSigners struct {
 	noSmithyDocumentSerde
 }
 
-// A complex type that determines the distribution’s SSL/TLS configuration for
-// communicating with viewers. If the distribution doesn’t use Aliases (also known
+// A complex type that determines the distribution's SSL/TLS configuration for
+// communicating with viewers. If the distribution doesn't use Aliases (also known
 // as alternate domain names or CNAMEs)—that is, if the distribution uses the
 // CloudFront domain name such as d111111abcdef8.cloudfront.net—set
 // CloudFrontDefaultCertificate to true and leave all other fields empty. If the
@@ -4929,14 +5147,14 @@ type TrustedSigners struct {
 // * Which viewers the distribution
 // accepts HTTPS connections from: only viewers that support server name indication
 // (SNI) (https://en.wikipedia.org/wiki/Server_Name_Indication) (recommended), or
-// all viewers including those that don’t support SNI.
+// all viewers including those that don't support SNI.
 //
 // * To accept HTTPS
 // connections from only viewers that support SNI, set SSLSupportMethod to
 // sni-only. This is recommended. Most browsers and clients support SNI.
 //
 // * To
-// accept HTTPS connections from all viewers, including those that don’t support
+// accept HTTPS connections from all viewers, including those that don't support
 // SNI, set SSLSupportMethod to vip. This is not recommended, and results in
 // additional monthly charges from CloudFront.
 //
@@ -5041,7 +5259,7 @@ type ViewerCertificate struct {
 	// and Supported Protocols and Ciphers Between Viewers and CloudFront
 	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html#secure-connections-supported-ciphers)
 	// in the Amazon CloudFront Developer Guide. On the CloudFront console, this
-	// setting is called Security Policy. When you’re using SNI only (you set
+	// setting is called Security Policy. When you're using SNI only (you set
 	// SSLSupportMethod to sni-only), you must specify TLSv1 or higher. If the
 	// distribution uses the CloudFront domain name such as
 	// d111111abcdef8.cloudfront.net (you set CloudFrontDefaultCertificate to true),
@@ -5059,7 +5277,7 @@ type ViewerCertificate struct {
 	//
 	// * vip – The
 	// distribution accepts HTTPS connections from all viewers including those that
-	// don’t support SNI. This is not recommended, and results in additional monthly
+	// don't support SNI. This is not recommended, and results in additional monthly
 	// charges from CloudFront.
 	//
 	// * static-ip - Do not specify this value unless your
@@ -5069,7 +5287,7 @@ type ViewerCertificate struct {
 	// (https://console.aws.amazon.com/support/home).
 	//
 	// If the distribution uses the
-	// CloudFront domain name such as d111111abcdef8.cloudfront.net, don’t set a value
+	// CloudFront domain name such as d111111abcdef8.cloudfront.net, don't set a value
 	// for this field.
 	SSLSupportMethod SSLSupportMethod
 

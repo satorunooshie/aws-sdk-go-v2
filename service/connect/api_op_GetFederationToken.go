@@ -32,8 +32,9 @@ func (c *Client) GetFederationToken(ctx context.Context, params *GetFederationTo
 
 type GetFederationTokenInput struct {
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	//
 	// This member is required.
 	InstanceId *string
@@ -45,6 +46,15 @@ type GetFederationTokenOutput struct {
 
 	// The credentials to use for federation.
 	Credentials *types.Credentials
+
+	// The URL to sign into the user's instance.
+	SignInUrl *string
+
+	// The Amazon Resource Name (ARN) of the user.
+	UserArn *string
+
+	// The identifier for the user.
+	UserId *string
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata

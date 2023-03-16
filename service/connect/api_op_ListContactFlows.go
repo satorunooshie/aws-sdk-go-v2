@@ -14,8 +14,8 @@ import (
 
 // Provides information about the flows for the specified Amazon Connect instance.
 // You can also create and update flows using the Amazon Connect Flow language
-// (https://docs.aws.amazon.com/connect/latest/adminguide/flow-language.html). For
-// more information about flows, see Flows
+// (https://docs.aws.amazon.com/connect/latest/APIReference/flow-language.html).
+// For more information about flows, see Flows
 // (https://docs.aws.amazon.com/connect/latest/adminguide/concepts-contact-flows.html)
 // in the Amazon Connect Administrator Guide.
 func (c *Client) ListContactFlows(ctx context.Context, params *ListContactFlowsInput, optFns ...func(*Options)) (*ListContactFlowsOutput, error) {
@@ -35,8 +35,9 @@ func (c *Client) ListContactFlows(ctx context.Context, params *ListContactFlowsI
 
 type ListContactFlowsInput struct {
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	//
 	// This member is required.
 	InstanceId *string

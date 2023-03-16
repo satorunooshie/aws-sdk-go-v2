@@ -1,3 +1,102 @@
+# v1.24.3 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.2 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.24.1 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.0 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Feature**: This release adds an InsufficientEncryptionPolicyException type to the StartImport endpoint
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.23.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.0 (2023-01-31)
+
+* **Feature**: Add new "Channel" APIs to enable users to manage channels used for CloudTrail Lake integrations, and "Resource Policy" APIs to enable users to manage the resource-based permissions policy attached to a channel.
+
+# v1.22.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.22.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.21.1 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.0 (2022-12-13)
+
+* **Feature**: Merging mainline branch for service model into mainline release branch. There are no new APIs.
+
+# v1.20.4 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.3 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.20.2 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.20.1 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.20.0 (2022-11-07)
+
+* **Feature**: This release includes support for configuring a delegated administrator to manage an AWS Organizations organization CloudTrail trails and event data stores, and AWS Key Management Service encryption of CloudTrail Lake event data stores.
+
+# v1.19.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.0 (2022-10-19)
+
+* **Feature**: This release includes support for exporting CloudTrail Lake query results to an Amazon S3 bucket.
+
+# v1.18.2 (2022-10-07)
+
+* No change notes available for this release.
+
+# v1.18.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.0 (2022-09-19)
+
+* **Feature**: This release includes support for importing existing trails into CloudTrail Lake.
+
+# v1.17.0 (2022-09-14)
+
+* **Feature**: This release adds CloudTrail getChannel and listChannels APIs to allow customer to view the ServiceLinkedChannel configurations.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.12 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.16.11 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.16.10 (2022-08-30)
 
 * No change notes available for this release.

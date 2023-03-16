@@ -1,3 +1,96 @@
+# v1.30.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.30.0 (2023-02-27)
+
+* **Feature**: This release adds the ability to create ESMs with Document DB change streams as event source. For more information see  https://docs.aws.amazon.com/lambda/latest/dg/with-documentdb.html.
+
+# v1.29.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.29.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.29.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.29.0 (2023-01-23)
+
+* **Feature**: Release Lambda RuntimeManagementConfig, enabling customers to better manage runtime updates to their Lambda functions. This release adds two new APIs, GetRuntimeManagementConfig and PutRuntimeManagementConfig, as well as support on existing Create/Get/Update function APIs.
+
+# v1.28.0 (2023-01-12)
+
+* **Feature**: Add support for MaximumConcurrency parameter for SQS event source. Customers can now limit the maximum concurrent invocations for their SQS Event Source Mapping.
+
+# v1.27.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.26.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.0 (2022-11-29)
+
+* **Feature**: Adds support for Lambda SnapStart, which helps improve the startup performance of functions. Customers can now manage SnapStart based functions via CreateFunction and UpdateFunctionConfiguration APIs
+
+# v1.25.1 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.25.0 (2022-11-17)
+
+* **Feature**: Add Node 18 (nodejs18.x) support to AWS Lambda.
+
+# v1.24.11 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.24.10 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.24.9 (2022-11-02)
+
+* No change notes available for this release.
+
+# v1.24.8 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.7 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.6 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.5 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.4 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.3 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.24.2 (2022-08-30)
 
 * No change notes available for this release.

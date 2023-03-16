@@ -1,3 +1,48 @@
+# v1.2.8 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.2.7 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.2.6 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.2.5 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.2.4 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.2.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.2.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.2.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.2.0 (2022-09-14)
+
+* **Feature**: Updated `BuildAuthToken` to validate the provided endpoint contains a port.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.1.31 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.1.30 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.1.29 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

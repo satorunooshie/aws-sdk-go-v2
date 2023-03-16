@@ -13,8 +13,9 @@ import (
 )
 
 // This API is in preview release for Amazon Connect and is subject to change.
-// Returns a paginated list of all the Amazon Lex bots currently associated with
-// the instance.
+// Returns a paginated list of all the Amazon Lex V1 bots currently associated with
+// the instance. To return both Amazon Lex V1 and V2 bots, use the ListBots
+// (https://docs.aws.amazon.com/connect/latest/APIReference/API_ListBots.html) API.
 func (c *Client) ListLexBots(ctx context.Context, params *ListLexBotsInput, optFns ...func(*Options)) (*ListLexBotsOutput, error) {
 	if params == nil {
 		params = &ListLexBotsInput{}
@@ -32,15 +33,16 @@ func (c *Client) ListLexBots(ctx context.Context, params *ListLexBotsInput, optF
 
 type ListLexBotsInput struct {
 
-	// The identifier of the Amazon Connect instance. You can find the instanceId in
-	// the ARN of the instance.
+	// The identifier of the Amazon Connect instance. You can find the instance ID
+	// (https://docs.aws.amazon.com/connect/latest/adminguide/find-instance-arn.html)
+	// in the Amazon Resource Name (ARN) of the instance.
 	//
 	// This member is required.
 	InstanceId *string
 
 	// The maximum number of results to return per page. If no value is specified, the
 	// default is 10.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token for the next set of results. Use the value returned in the previous
 	// response in the next request to retrieve the next set of results.
@@ -51,8 +53,8 @@ type ListLexBotsInput struct {
 
 type ListLexBotsOutput struct {
 
-	// The names and Regions of the Amazon Lex bots associated with the specified
-	// instance.
+	// The names and Amazon Web Services Regions of the Amazon Lex bots associated with
+	// the specified instance.
 	LexBots []types.LexBot
 
 	// If there are additional results, this is the token for the next set of results.
@@ -161,8 +163,8 @@ func NewListLexBotsPaginator(client ListLexBotsAPIClient, params *ListLexBotsInp
 	}
 
 	options := ListLexBotsPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -192,7 +194,11 @@ func (p *ListLexBotsPaginator) NextPage(ctx context.Context, optFns ...func(*Opt
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListLexBots(ctx, &params, optFns...)
 	if err != nil {

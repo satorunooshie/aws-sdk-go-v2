@@ -25,8 +25,8 @@ type Alarm struct {
 
 // Represents a CloudWatch metric of your choosing for a target tracking scaling
 // policy to use with Application Auto Scaling. For information about the available
-// metrics for a service, see Amazon Web Services Services That Publish CloudWatch
-// Metrics
+// metrics for a service, see Amazon Web Services services that publish CloudWatch
+// metrics
 // (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
 // in the Amazon CloudWatch User Guide. To create your customized metric
 // specification:
@@ -34,7 +34,7 @@ type Alarm struct {
 // * Add values for each required parameter from CloudWatch. You
 // can use an existing metric, or a new metric that you create. To use your own
 // metric, you must first publish the metric to CloudWatch. For more information,
-// see Publish Custom Metrics
+// see Publish custom metrics
 // (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html)
 // in the Amazon CloudWatch User Guide.
 //
@@ -44,31 +44,37 @@ type Alarm struct {
 // value of the metric should decrease when capacity increases, and increase when
 // capacity decreases.
 //
-// For more information about CloudWatch, see Amazon
-// CloudWatch Concepts
-// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html).
+// For more information about the CloudWatch terminology
+// below, see Amazon CloudWatch concepts
+// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html)
+// in the Amazon CloudWatch User Guide.
 type CustomizedMetricSpecification struct {
-
-	// The name of the metric.
-	//
-	// This member is required.
-	MetricName *string
-
-	// The namespace of the metric.
-	//
-	// This member is required.
-	Namespace *string
-
-	// The statistic of the metric.
-	//
-	// This member is required.
-	Statistic MetricStatistic
 
 	// The dimensions of the metric. Conditional: If you published your metric with
 	// dimensions, you must specify the same dimensions in your scaling policy.
 	Dimensions []MetricDimension
 
-	// The unit of the metric.
+	// The name of the metric. To get the exact metric name, namespace, and dimensions,
+	// inspect the Metric
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_Metric.html)
+	// object that is returned by a call to ListMetrics
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html).
+	MetricName *string
+
+	// The metrics to include in the target tracking scaling policy, as a metric data
+	// query. This can include both raw metric and metric math expressions.
+	Metrics []TargetTrackingMetricDataQuery
+
+	// The namespace of the metric.
+	Namespace *string
+
+	// The statistic of the metric.
+	Statistic MetricStatistic
+
+	// The unit of the metric. For a complete list of the units that CloudWatch
+	// supports, see the MetricDatum
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html)
+	// data type in the Amazon CloudWatch API Reference.
 	Unit *string
 
 	noSmithyDocumentSerde
@@ -90,6 +96,41 @@ type MetricDimension struct {
 	noSmithyDocumentSerde
 }
 
+// Describes the reason for an activity that isn't scaled (not scaled activity), in
+// machine-readable format. For help interpreting the not scaled reason details,
+// see Scaling activities for Application Auto Scaling
+// (https://docs.aws.amazon.com/autoscaling/application/userguide/application-auto-scaling-scaling-activities.html).
+type NotScaledReason struct {
+
+	// A code that represents the reason for not scaling. Valid values:
+	//
+	// *
+	// AutoScalingAnticipatedFlapping
+	//
+	// * TargetServicePutResourceAsUnscalable
+	//
+	// *
+	// AlreadyAtMaxCapacity
+	//
+	// * AlreadyAtMinCapacity
+	//
+	// * AlreadyAtDesiredCapacity
+	//
+	// This member is required.
+	Code *string
+
+	// The current capacity.
+	CurrentCapacity *int32
+
+	// The maximum capacity.
+	MaxCapacity *int32
+
+	// The minimum capacity.
+	MinCapacity *int32
+
+	noSmithyDocumentSerde
+}
+
 // Represents a predefined metric for a target tracking scaling policy to use with
 // Application Auto Scaling. Only the Amazon Web Services that you're using send
 // metrics to Amazon CloudWatch. To determine whether a desired metric already
@@ -101,17 +142,17 @@ type MetricDimension struct {
 type PredefinedMetricSpecification struct {
 
 	// The metric type. The ALBRequestCountPerTarget metric type applies only to Spot
-	// Fleet requests and ECS services.
+	// Fleets and ECS services.
 	//
 	// This member is required.
 	PredefinedMetricType MetricType
 
 	// Identifies the resource associated with the metric type. You can't specify a
 	// resource label unless the metric type is ALBRequestCountPerTarget and there is a
-	// target group attached to the Spot Fleet request or ECS service. You create the
-	// resource label by appending the final portion of the load balancer ARN and the
-	// final portion of the target group ARN into a single value, separated by a
-	// forward slash (/). The format of the resource label is:
+	// target group attached to the Spot Fleet or ECS service. You create the resource
+	// label by appending the final portion of the load balancer ARN and the final
+	// portion of the target group ARN into a single value, separated by a forward
+	// slash (/). The format of the resource label is:
 	// app/my-alb/778d41231b141a0f/targetgroup/my-alb-target-group/943f017f100becff.
 	// Where:
 	//
@@ -269,7 +310,7 @@ type ScalableTarget struct {
 	// PostgreSQL-compatible edition.
 	//
 	// * sagemaker:variant:DesiredInstanceCount - The
-	// number of EC2 instances for an SageMaker model endpoint variant.
+	// number of EC2 instances for a SageMaker model endpoint variant.
 	//
 	// *
 	// custom-resource:ResourceType:Property - The scalable dimension for a custom
@@ -331,15 +372,14 @@ type ScalableTargetAction struct {
 	// quotas for the maximum capacity of the resource. If you want to specify a higher
 	// limit, you can request an increase. For more information, consult the
 	// documentation for that service. For information about the default quotas for
-	// each service, see Service Endpoints and Quotas
+	// each service, see Service endpoints and quotas
 	// (https://docs.aws.amazon.com/general/latest/gr/aws-service-information.html) in
 	// the Amazon Web Services General Reference.
 	MaxCapacity *int32
 
-	// The minimum capacity. For certain resources, the minimum value allowed is 0.
-	// This includes Lambda provisioned concurrency, Spot Fleet, ECS services, Aurora
-	// DB clusters, EMR clusters, and custom resources. For all other resources, the
-	// minimum value allowed is 1.
+	// The minimum capacity. When the scheduled action runs, the resource will have at
+	// least this much capacity, but it might have more depending on other settings,
+	// such as the target utilization level of a target tracking scaling policy.
 	MinCapacity *int32
 
 	noSmithyDocumentSerde
@@ -475,7 +515,7 @@ type ScalingActivity struct {
 	// edition and Aurora PostgreSQL-compatible edition.
 	//
 	// *
-	// sagemaker:variant:DesiredInstanceCount - The number of EC2 instances for an
+	// sagemaker:variant:DesiredInstanceCount - The number of EC2 instances for a
 	// SageMaker model endpoint variant.
 	//
 	// * custom-resource:ResourceType:Property - The
@@ -539,6 +579,12 @@ type ScalingActivity struct {
 	// The Unix timestamp for when the scaling activity ended.
 	EndTime *time.Time
 
+	// Machine-readable data that describes the reason for a not scaled activity. Only
+	// available when DescribeScalingActivities
+	// (https://docs.aws.amazon.com/autoscaling/application/APIReference/API_DescribeScalingActivities.html)
+	// includes not scaled activities.
+	NotScaledReasons []NotScaledReason
+
 	// A simple message about the current status of the scaling activity.
 	StatusMessage *string
 
@@ -547,8 +593,8 @@ type ScalingActivity struct {
 
 // Represents a scaling policy to use with Application Auto Scaling. For more
 // information about configuring scaling policies for a specific service, see
-// Getting started with Application Auto Scaling
-// (https://docs.aws.amazon.com/autoscaling/application/userguide/getting-started.html)
+// Amazon Web Services services that you can use with Application Auto Scaling
+// (https://docs.aws.amazon.com/autoscaling/application/userguide/integrated-services-list.html)
 // in the Application Auto Scaling User Guide.
 type ScalingPolicy struct {
 
@@ -567,7 +613,10 @@ type ScalingPolicy struct {
 	// This member is required.
 	PolicyName *string
 
-	// The scaling policy type.
+	// The scaling policy type. The following policy types are supported:
+	// TargetTrackingScaling—Not supported for Amazon EMR StepScaling—Not supported for
+	// DynamoDB, Amazon Comprehend, Lambda, Amazon Keyspaces, Amazon MSK, Amazon
+	// ElastiCache, or Neptune.
 	//
 	// This member is required.
 	PolicyType PolicyType
@@ -684,7 +733,7 @@ type ScalingPolicy struct {
 	// edition and Aurora PostgreSQL-compatible edition.
 	//
 	// *
-	// sagemaker:variant:DesiredInstanceCount - The number of EC2 instances for an
+	// sagemaker:variant:DesiredInstanceCount - The number of EC2 instances for a
 	// SageMaker model endpoint variant.
 	//
 	// * custom-resource:ResourceType:Property - The
@@ -908,7 +957,7 @@ type ScheduledAction struct {
 	// edition and Aurora PostgreSQL-compatible edition.
 	//
 	// *
-	// sagemaker:variant:DesiredInstanceCount - The number of EC2 instances for an
+	// sagemaker:variant:DesiredInstanceCount - The number of EC2 instances for a
 	// SageMaker model endpoint variant.
 	//
 	// * custom-resource:ResourceType:Property - The
@@ -1136,6 +1185,130 @@ type SuspendedState struct {
 	noSmithyDocumentSerde
 }
 
+// Represents a specific metric. Metric is a property of the
+// TargetTrackingMetricStat object.
+type TargetTrackingMetric struct {
+
+	// The dimensions for the metric. For the list of available dimensions, see the
+	// Amazon Web Services documentation available from the table in Amazon Web
+	// Services services that publish CloudWatch metrics
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
+	// in the Amazon CloudWatch User Guide. Conditional: If you published your metric
+	// with dimensions, you must specify the same dimensions in your scaling policy.
+	Dimensions []TargetTrackingMetricDimension
+
+	// The name of the metric.
+	MetricName *string
+
+	// The namespace of the metric. For more information, see the table in Amazon Web
+	// Services services that publish CloudWatch metrics
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/aws-services-cloudwatch-metrics.html)
+	// in the Amazon CloudWatch User Guide.
+	Namespace *string
+
+	noSmithyDocumentSerde
+}
+
+// The metric data to return. Also defines whether this call is returning data for
+// one metric only, or whether it is performing a math expression on the values of
+// returned metric statistics to create a new time series. A time series is a
+// series of data points, each of which is associated with a timestamp. For more
+// information and examples, see Create a target tracking scaling policy for
+// Application Auto Scaling using metric math
+// (https://docs.aws.amazon.com/autoscaling/application/userguide/application-auto-scaling-target-tracking-metric-math.html)
+// in the Application Auto Scaling User Guide.
+type TargetTrackingMetricDataQuery struct {
+
+	// A short name that identifies the object's results in the response. This name
+	// must be unique among all MetricDataQuery objects specified for a single scaling
+	// policy. If you are performing math expressions on this set of data, this name
+	// represents that data and can serve as a variable in the mathematical expression.
+	// The valid characters are letters, numbers, and underscores. The first character
+	// must be a lowercase letter.
+	//
+	// This member is required.
+	Id *string
+
+	// The math expression to perform on the returned data, if this object is
+	// performing a math expression. This expression can use the Id of the other
+	// metrics to refer to those metrics, and can also use the Id of other expressions
+	// to use the result of those expressions. Conditional: Within each
+	// TargetTrackingMetricDataQuery object, you must specify either Expression or
+	// MetricStat, but not both.
+	Expression *string
+
+	// A human-readable label for this metric or expression. This is especially useful
+	// if this is a math expression, so that you know what the value represents.
+	Label *string
+
+	// Information about the metric data to return. Conditional: Within each
+	// MetricDataQuery object, you must specify either Expression or MetricStat, but
+	// not both.
+	MetricStat *TargetTrackingMetricStat
+
+	// Indicates whether to return the timestamps and raw data values of this metric.
+	// If you use any math expressions, specify true for this value for only the final
+	// math expression that the metric specification is based on. You must specify
+	// false for ReturnData for all the other metrics and expressions used in the
+	// metric specification. If you are only retrieving metrics and not performing any
+	// math expressions, do not specify anything for ReturnData. This sets it to its
+	// default (true).
+	ReturnData *bool
+
+	noSmithyDocumentSerde
+}
+
+// Describes the dimension of a metric.
+type TargetTrackingMetricDimension struct {
+
+	// The name of the dimension.
+	//
+	// This member is required.
+	Name *string
+
+	// The value of the dimension.
+	//
+	// This member is required.
+	Value *string
+
+	noSmithyDocumentSerde
+}
+
+// This structure defines the CloudWatch metric to return, along with the
+// statistic, period, and unit. For more information about the CloudWatch
+// terminology below, see Amazon CloudWatch concepts
+// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html)
+// in the Amazon CloudWatch User Guide.
+type TargetTrackingMetricStat struct {
+
+	// The CloudWatch metric to return, including the metric name, namespace, and
+	// dimensions. To get the exact metric name, namespace, and dimensions, inspect the
+	// Metric
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_Metric.html)
+	// object that is returned by a call to ListMetrics
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_ListMetrics.html).
+	//
+	// This member is required.
+	Metric *TargetTrackingMetric
+
+	// The statistic to return. It can include any CloudWatch statistic or extended
+	// statistic. For a list of valid values, see the table in Statistics
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html#Statistic)
+	// in the Amazon CloudWatch User Guide. The most commonly used metrics for scaling
+	// is Average
+	//
+	// This member is required.
+	Stat *string
+
+	// The unit to use for the returned data points. For a complete list of the units
+	// that CloudWatch supports, see the MetricDatum
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/API_MetricDatum.html)
+	// data type in the Amazon CloudWatch API Reference.
+	Unit *string
+
+	noSmithyDocumentSerde
+}
+
 // Represents a target tracking scaling policy configuration to use with
 // Application Auto Scaling.
 type TargetTrackingScalingPolicyConfiguration struct {
@@ -1145,7 +1318,9 @@ type TargetTrackingScalingPolicyConfiguration struct {
 	// must be in the range of -2^360 to 2^360. The value must be a valid number based
 	// on the choice of metric. For example, if the metric is CPU utilization, then the
 	// target value is a percent value that represents how much of the CPU can be used
-	// before scaling out.
+	// before scaling out. If the scaling policy specifies the ALBRequestCountPerTarget
+	// predefined metric, specify the target utilization as the optimal average request
+	// count per target during any one-minute interval.
 	//
 	// This member is required.
 	TargetValue *float64

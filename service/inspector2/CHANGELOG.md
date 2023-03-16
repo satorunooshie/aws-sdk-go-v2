@@ -1,3 +1,73 @@
+# v1.11.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.11.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.11.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.11.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.11.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.11.1 (2023-02-02)
+
+* No change notes available for this release.
+
+# v1.11.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.10.0 (2022-12-23)
+
+* **Feature**: Amazon Inspector adds support for scanning NodeJS 18.x and Go 1.x AWS Lambda function runtimes.
+
+# v1.9.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.0 (2022-11-29)
+
+* **Feature**: This release adds support for Inspector to scan AWS Lambda.
+
+# v1.8.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.8.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.8.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.8.0 (2022-09-14)
+
+* **Feature**: This release adds new fields like fixAvailable, fixedInVersion and remediation to the finding model. The requirement to have vulnerablePackages in the finding model has also been removed. The documentation has been updated to reflect these changes.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.7 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.7.6 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.7.5 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

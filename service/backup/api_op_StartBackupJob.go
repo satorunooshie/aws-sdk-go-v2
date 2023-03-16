@@ -87,7 +87,8 @@ type StartBackupJobInput struct {
 
 	// A value in minutes after a backup is scheduled before a job will be canceled if
 	// it doesn't start successfully. This value is optional, and the default is 8
-	// hours.
+	// hours. If this value is included, it must be at least 60 minutes to avoid
+	// errors.
 	StartWindowMinutes *int64
 
 	noSmithyDocumentSerde
@@ -104,7 +105,12 @@ type StartBackupJobOutput struct {
 	// 12:11:30.087 AM.
 	CreationDate *time.Time
 
-	// An ARN that uniquely identifies a recovery point; for example,
+	// This is a returned boolean value indicating this is a parent (composite) backup
+	// job.
+	IsParent bool
+
+	// Note: This field is only returned for Amazon EFS and Advanced DynamoDB
+	// resources. An ARN that uniquely identifies a recovery point; for example,
 	// arn:aws:backup:us-east-1:123456789012:recovery-point:1EB3B5E7-9EB0-435A-A80B-108B488B0D45.
 	RecoveryPointArn *string
 

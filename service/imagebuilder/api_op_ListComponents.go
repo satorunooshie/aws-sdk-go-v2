@@ -12,13 +12,14 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Returns the list of component build versions for the specified semantic version.
-// The semantic version has four nodes: ../. You can assign values for the first
-// three, and can filter on all of them. Filtering: With semantic versioning, you
-// have the flexibility to use wildcards (x) to specify the most recent versions or
-// nodes when selecting the base image or components for your recipe. When you use
-// a wildcard in any node, all nodes to the right of the first wildcard must also
-// be wildcards.
+// Returns the list of components that can be filtered by name, or by using the
+// listed filters to streamline results. Newly created components can take up to
+// two minutes to appear in the ListComponents API Results. The semantic version
+// has four nodes: ../. You can assign values for the first three, and can filter
+// on all of them. Filtering: With semantic versioning, you have the flexibility to
+// use wildcards (x) to specify the most recent versions or nodes when selecting
+// the base image or components for your recipe. When you use a wildcard in any
+// node, all nodes to the right of the first wildcard must also be wildcards.
 func (c *Client) ListComponents(ctx context.Context, params *ListComponentsInput, optFns ...func(*Options)) (*ListComponentsOutput, error) {
 	if params == nil {
 		params = &ListComponentsInput{}
@@ -36,7 +37,7 @@ func (c *Client) ListComponents(ctx context.Context, params *ListComponentsInput
 
 type ListComponentsInput struct {
 
-	// Returns the list of component build versions for the specified name.
+	// Returns the list of components for the specified name.
 	ByName bool
 
 	// Use the following filters to streamline results:
@@ -56,16 +57,16 @@ type ListComponentsInput struct {
 	Filters []types.Filter
 
 	// The maximum items to return in a request.
-	MaxResults int32
+	MaxResults *int32
 
 	// A token to specify where to start paginating. This is the NextToken from a
 	// previously truncated response.
 	NextToken *string
 
-	// The owner defines which components you want to list. By default, this request
-	// will only show components owned by your account. You can use this field to
-	// specify if you want to view components owned by yourself, by Amazon, or those
-	// components that have been shared with you by other customers.
+	// Filters results based on the type of owner for the component. By default, this
+	// request returns a list of components that your account owns. To see results for
+	// other types of owners, you can specify components that Amazon manages, third
+	// party components, or components that other accounts have shared with you.
 	Owner types.Ownership
 
 	noSmithyDocumentSerde
@@ -185,8 +186,8 @@ func NewListComponentsPaginator(client ListComponentsAPIClient, params *ListComp
 	}
 
 	options := ListComponentsPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -216,7 +217,11 @@ func (p *ListComponentsPaginator) NextPage(ctx context.Context, optFns ...func(*
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.ListComponents(ctx, &params, optFns...)
 	if err != nil {

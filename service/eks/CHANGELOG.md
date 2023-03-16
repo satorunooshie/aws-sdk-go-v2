@@ -1,3 +1,87 @@
+# v1.27.7 (2023-03-14)
+
+* No change notes available for this release.
+
+# v1.27.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.27.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.27.2 (2023-02-08)
+
+* No change notes available for this release.
+
+# v1.27.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.26.0 (2022-12-15)
+
+* **Feature**: Add support for Windows managed nodes groups.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2022-12-07)
+
+* **Feature**: Adds support for EKS add-ons configurationValues fields and DescribeAddonConfiguration function
+
+# v1.24.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.0 (2022-11-29)
+
+* **Feature**: Adds support for additional EKS add-ons metadata and filtering fields
+
+# v1.23.0 (2022-11-16)
+
+* **Feature**: Adds support for customer-provided placement groups for Kubernetes control plane instances when creating local EKS clusters on Outposts
+
+# v1.22.4 (2022-11-07)
+
+* No change notes available for this release.
+
+# v1.22.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.0 (2022-09-14)
+
+* **Feature**: Adding support for local Amazon EKS clusters on Outposts
+* **Feature**: Adds support for EKS Addons ResolveConflicts "preserve" flag. Also adds new update failed status for EKS Addons.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.11 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.10 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.21.9 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

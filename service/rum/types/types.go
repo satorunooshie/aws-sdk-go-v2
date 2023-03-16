@@ -18,6 +18,11 @@ type AppMonitor struct {
 	// The date and time that this app monitor was created.
 	Created *string
 
+	// Specifies whether this app monitor allows the web client to define and send
+	// custom events. For more information about custom events, see Send custom events
+	// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-custom-events.html).
+	CustomEvents *CustomEvents
+
 	// A structure that contains information about whether this app monitor stores a
 	// copy of the telemetry data that RUM collects using CloudWatch Logs.
 	DataStorage *DataStorage
@@ -68,8 +73,8 @@ type AppMonitorConfiguration struct {
 	// operation.
 	ExcludedPages []string
 
-	// A list of pages in the CloudWatch RUM console that are to be displayed with a
-	// "favorite" icon.
+	// A list of pages in your application that are to be displayed with a "favorite"
+	// icon in the CloudWatch RUM console.
 	FavoritePages []string
 
 	// The ARN of the guest IAM role that is attached to the Amazon Cognito identity
@@ -85,10 +90,12 @@ type AppMonitorConfiguration struct {
 	// ExcludedPages and IncludedPages in the same operation.
 	IncludedPages []string
 
-	// Specifies the percentage of user sessions to use for RUM data collection.
-	// Choosing a higher percentage gives you more data but also incurs more costs. The
-	// number you specify is the percentage of user sessions that will be used. If you
-	// omit this parameter, the default of 10 is used.
+	// Specifies the portion of user sessions to use for RUM data collection. Choosing
+	// a higher portion gives you more data but also incurs more costs. The range for
+	// this value is 0 to 1 inclusive. Setting this to 1 means that 100% of user
+	// sessions are sampled, and setting it to 0.1 means that 10% of user sessions are
+	// sampled. If you omit this parameter, the default of 0.1 is used, and 10% of
+	// sessions will be sampled.
 	SessionSampleRate float64
 
 	// An array that lists the types of telemetry data that this app monitor is to
@@ -145,6 +152,62 @@ type AppMonitorSummary struct {
 	noSmithyDocumentSerde
 }
 
+// A structure that defines one error caused by a BatchCreateRumMetricsDefinitions
+// (https://docs.aws.amazon.com/cloudwatchrum/latest/APIReference/API_BatchCreateRumMetricsDefinitions.html)
+// operation.
+type BatchCreateRumMetricDefinitionsError struct {
+
+	// The error code.
+	//
+	// This member is required.
+	ErrorCode *string
+
+	// The error message for this metric definition.
+	//
+	// This member is required.
+	ErrorMessage *string
+
+	// The metric definition that caused this error.
+	//
+	// This member is required.
+	MetricDefinition *MetricDefinitionRequest
+
+	noSmithyDocumentSerde
+}
+
+// A structure that defines one error caused by a BatchCreateRumMetricsDefinitions
+// (https://docs.aws.amazon.com/cloudwatchrum/latest/APIReference/API_BatchDeleteRumMetricsDefinitions.html)
+// operation.
+type BatchDeleteRumMetricDefinitionsError struct {
+
+	// The error code.
+	//
+	// This member is required.
+	ErrorCode *string
+
+	// The error message for this metric definition.
+	//
+	// This member is required.
+	ErrorMessage *string
+
+	// The ID of the metric definition that caused this error.
+	//
+	// This member is required.
+	MetricDefinitionId *string
+
+	noSmithyDocumentSerde
+}
+
+// A structure that contains information about custom events for this app monitor.
+type CustomEvents struct {
+
+	// Specifies whether this app monitor allows the web client to define and send
+	// custom events. The default is for custom events to be DISABLED.
+	Status CustomEventsStatus
+
+	noSmithyDocumentSerde
+}
+
 // A structure that contains the information about whether the app monitor stores
 // copies of the data that RUM collects in CloudWatch Logs. If it does, this
 // structure also contains the name of the log group.
@@ -168,6 +231,308 @@ type DataStorage struct {
 	// copies of the data that RUM collects in CloudWatch Logs. If it does, this
 	// structure also contains the name of the log group.
 	CwLog *CwLog
+
+	noSmithyDocumentSerde
+}
+
+// A structure that displays the definition of one extended metric that RUM sends
+// to CloudWatch or CloudWatch Evidently. For more information, see  Additional
+// metrics that you can send to CloudWatch and CloudWatch Evidently
+// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-vended-metrics.html).
+type MetricDefinition struct {
+
+	// The ID of this metric definition.
+	//
+	// This member is required.
+	MetricDefinitionId *string
+
+	// The name of the metric that is defined in this structure.
+	//
+	// This member is required.
+	Name *string
+
+	// This field is a map of field paths to dimension names. It defines the dimensions
+	// to associate with this metric in CloudWatch The value of this field is used only
+	// if the metric destination is CloudWatch. If the metric destination is Evidently,
+	// the value of DimensionKeys is ignored.
+	DimensionKeys map[string]string
+
+	// The pattern that defines the metric. RUM checks events that happen in a user's
+	// session against the pattern, and events that match the pattern are sent to the
+	// metric destination. If the metrics destination is CloudWatch and the event also
+	// matches a value in DimensionKeys, then the metric is published with the
+	// specified dimensions.
+	EventPattern *string
+
+	// If this metric definition is for a custom metric instead of an extended metric,
+	// this field displays the metric namespace that the custom metric is published to.
+	Namespace *string
+
+	// Use this field only if you are sending this metric to CloudWatch. It defines the
+	// CloudWatch metric unit that this metric is measured in.
+	UnitLabel *string
+
+	// The field within the event object that the metric value is sourced from.
+	ValueKey *string
+
+	noSmithyDocumentSerde
+}
+
+// Use this structure to define one extended metric or custom metric that RUM will
+// send to CloudWatch or CloudWatch Evidently. For more information, see
+// Additional metrics that you can send to CloudWatch and CloudWatch Evidently
+// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-vended-metrics.html).
+// This structure is validated differently for extended metrics and custom metrics.
+// For extended metrics that are sent to the AWS/RUM namespace, the following
+// validations apply:
+//
+// * The Namespace parameter must be omitted or set to
+// AWS/RUM.
+//
+// * Only certain combinations of values for Name, ValueKey, and
+// EventPattern are valid. In addition to what is displayed in the list below, the
+// EventPattern can also include information used by the DimensionKeys field.
+//
+// * If
+// Name is PerformanceNavigationDuration, then ValueKeymust be
+// event_details.duration and the EventPattern must include
+// {"event_type":["com.amazon.rum.performance_navigation_event"]}
+//
+// * If Name is
+// PerformanceResourceDuration, then ValueKeymust be event_details.duration and the
+// EventPattern must include
+// {"event_type":["com.amazon.rum.performance_resource_event"]}
+//
+// * If Name is
+// NavigationSatisfiedTransaction, then ValueKeymust be null and the EventPattern
+// must include { "event_type": ["com.amazon.rum.performance_navigation_event"],
+// "event_details": { "duration": [{ "numeric": [">",2000] }] } }
+//
+// * If Name is
+// NavigationToleratedTransaction, then ValueKeymust be null and the EventPattern
+// must include { "event_type": ["com.amazon.rum.performance_navigation_event"],
+// "event_details": { "duration": [{ "numeric": [">=",2000,"<"8000] }] } }
+//
+// * If
+// Name is NavigationFrustratedTransaction, then ValueKeymust be null and the
+// EventPattern must include { "event_type":
+// ["com.amazon.rum.performance_navigation_event"], "event_details": { "duration":
+// [{ "numeric": [">=",8000] }] } }
+//
+// * If Name is WebVitalsCumulativeLayoutShift,
+// then ValueKeymust be event_details.value and the EventPattern must include
+// {"event_type":["com.amazon.rum.cumulative_layout_shift_event"]}
+//
+// * If Name is
+// WebVitalsFirstInputDelay, then ValueKeymust be event_details.value and the
+// EventPattern must include
+// {"event_type":["com.amazon.rum.first_input_delay_event"]}
+//
+// * If Name is
+// WebVitalsLargestContentfulPaint, then ValueKeymust be event_details.value and
+// the EventPattern must include
+// {"event_type":["com.amazon.rum.largest_contentful_paint_event"]}
+//
+// * If Name is
+// JsErrorCount, then ValueKeymust be null and the EventPattern must include
+// {"event_type":["com.amazon.rum.js_error_event"]}
+//
+// * If Name is HttpErrorCount,
+// then ValueKeymust be null and the EventPattern must include
+// {"event_type":["com.amazon.rum.http_event"]}
+//
+// * If Name is SessionCount, then
+// ValueKeymust be null and the EventPattern must include
+// {"event_type":["com.amazon.rum.session_start_event"]}
+//
+// For custom metrics, the
+// following validation rules apply:
+//
+// * The namespace can't be omitted and can't be
+// AWS/RUM. You can use the AWS/RUM namespace only for extended metrics.
+//
+// * All
+// dimensions listed in the DimensionKeys field must be present in the value of
+// EventPattern.
+//
+// * The values that you specify for ValueKey, EventPattern, and
+// DimensionKeys must be fields in RUM events, so all first-level keys in these
+// fields must be one of the keys in the list later in this section.
+//
+// * If you set
+// a value for EventPattern, it must be a JSON object.
+//
+// * For every non-empty
+// event_details, there must be a non-empty event_type.
+//
+// * If EventPattern contains
+// an event_details field, it must also contain an event_type. For every built-in
+// event_type that you use, you must use a value for event_details that corresponds
+// to that event_type. For information about event details that correspond to event
+// types, see  RUM event details
+// (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-RUM-datacollected.html#CloudWatch-RUM-datacollected-eventDetails).
+//
+// *
+// In EventPattern, any JSON array must contain only one value.
+//
+// Valid key values
+// for first-level keys in the ValueKey, EventPattern, and DimensionKeys fields:
+//
+// *
+// account_id
+//
+// * application_Id
+//
+// * application_version
+//
+// * application_name
+//
+// *
+// batch_id
+//
+// * event_details
+//
+// * event_id
+//
+// * event_interaction
+//
+// * event_timestamp
+//
+// *
+// event_type
+//
+// * event_version
+//
+// * log_stream
+//
+// * metadata
+//
+// * sessionId
+//
+// *
+// user_details
+//
+// * userId
+type MetricDefinitionRequest struct {
+
+	// The name for the metric that is defined in this structure. For custom metrics,
+	// you can specify any name that you like. For extended metrics, valid values are
+	// the following:
+	//
+	// * PerformanceNavigationDuration
+	//
+	// *
+	// PerformanceResourceDuration
+	//
+	// * NavigationSatisfiedTransaction
+	//
+	// *
+	// NavigationToleratedTransaction
+	//
+	// * NavigationFrustratedTransaction
+	//
+	// *
+	// WebVitalsCumulativeLayoutShift
+	//
+	// * WebVitalsFirstInputDelay
+	//
+	// *
+	// WebVitalsLargestContentfulPaint
+	//
+	// * JsErrorCount
+	//
+	// * HttpErrorCount
+	//
+	// *
+	// SessionCount
+	//
+	// This member is required.
+	Name *string
+
+	// Use this field only if you are sending the metric to CloudWatch. This field is a
+	// map of field paths to dimension names. It defines the dimensions to associate
+	// with this metric in CloudWatch. For extended metrics, valid values for the
+	// entries in this field are the following:
+	//
+	// * "metadata.pageId": "PageId"
+	//
+	// *
+	// "metadata.browserName": "BrowserName"
+	//
+	// * "metadata.deviceType": "DeviceType"
+	//
+	// *
+	// "metadata.osName": "OSName"
+	//
+	// * "metadata.countryCode": "CountryCode"
+	//
+	// *
+	// "event_details.fileType": "FileType"
+	//
+	// For both extended metrics and custom
+	// metrics, all dimensions listed in this field must also be included in
+	// EventPattern.
+	DimensionKeys map[string]string
+
+	// The pattern that defines the metric, specified as a JSON object. RUM checks
+	// events that happen in a user's session against the pattern, and events that
+	// match the pattern are sent to the metric destination. When you define extended
+	// metrics, the metric definition is not valid if EventPattern is omitted. Example
+	// event patterns:
+	//
+	// * '{ "event_type": ["com.amazon.rum.js_error_event"],
+	// "metadata": { "browserName": [ "Chrome", "Safari" ], } }'
+	//
+	// * '{ "event_type":
+	// ["com.amazon.rum.performance_navigation_event"], "metadata": { "browserName": [
+	// "Chrome", "Firefox" ] }, "event_details": { "duration": [{ "numeric": [ "<",
+	// 2000 ] }] } }'
+	//
+	// * '{ "event_type":
+	// ["com.amazon.rum.performance_navigation_event"], "metadata": { "browserName": [
+	// "Chrome", "Safari" ], "countryCode": [ "US" ] }, "event_details": { "duration":
+	// [{ "numeric": [ ">=", 2000, "<", 8000 ] }] } }'
+	//
+	// If the metrics destination' is
+	// CloudWatch and the event also matches a value in DimensionKeys, then the metric
+	// is published with the specified dimensions.
+	EventPattern *string
+
+	// If this structure is for a custom metric instead of an extended metrics, use
+	// this parameter to define the metric namespace for that custom metric. Do not
+	// specify this parameter if this structure is for an extended metric. You cannot
+	// use any string that starts with AWS/ for your namespace.
+	Namespace *string
+
+	// The CloudWatch metric unit to use for this metric. If you omit this field, the
+	// metric is recorded with no unit.
+	UnitLabel *string
+
+	// The field within the event object that the metric value is sourced from. If you
+	// omit this field, a hardcoded value of 1 is pushed as the metric value. This is
+	// useful if you just want to count the number of events that the filter catches.
+	// If this metric is sent to CloudWatch Evidently, this field will be passed to
+	// Evidently raw and Evidently will handle data extraction from the event.
+	ValueKey *string
+
+	noSmithyDocumentSerde
+}
+
+// A structure that displays information about one destination that CloudWatch RUM
+// sends extended metrics to.
+type MetricDestinationSummary struct {
+
+	// Specifies whether the destination is CloudWatch or Evidently.
+	Destination MetricDestination
+
+	// If the destination is Evidently, this specifies the ARN of the Evidently
+	// experiment that receives the metrics.
+	DestinationArn *string
+
+	// This field appears only when the destination is Evidently. It specifies the ARN
+	// of the IAM role that is used to write to the Evidently experiment that receives
+	// the metrics.
+	IamRoleArn *string
 
 	noSmithyDocumentSerde
 }

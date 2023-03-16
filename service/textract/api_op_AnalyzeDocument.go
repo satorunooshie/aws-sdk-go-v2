@@ -29,9 +29,17 @@ import (
 // document are returned (including text that doesn't have a relationship with the
 // value of FeatureTypes).
 //
-// * Queries.A QUERIES_RESULT Block object contains the
-// answer to the query, the alias associated and an ID that connect it to the query
-// asked. This Block also contains a location and attached confidence
+// * Signatures. A SIGNATURE Block object contains the
+// location information of a signature in a document. If used in conjunction with
+// forms or tables, a signature can be given a Key-Value pairing or be detected in
+// the cell of a table.
+//
+// * Query. A QUERY Block object contains the query text,
+// alias and link to the associated Query results block object.
+//
+// * Query Result. A
+// QUERY_RESULT Block object contains the answer to the query and an ID that
+// connects it to the query asked. This Block also contains a confidence
 // score.
 //
 // Selection elements such as check boxes and option buttons (radio
@@ -70,10 +78,12 @@ type AnalyzeDocumentInput struct {
 
 	// A list of the types of analysis to perform. Add TABLES to the list to return
 	// information about the tables that are detected in the input document. Add FORMS
-	// to return detected form data. To perform both types of analysis, add TABLES and
-	// FORMS to FeatureTypes. All lines and words detected in the document are included
-	// in the response (including text that isn't related to the value of
-	// FeatureTypes).
+	// to return detected form data. Add SIGNATURES to return the locations of detected
+	// signatures. To perform both forms and table analysis, add TABLES and FORMS to
+	// FeatureTypes. To detect signatures within form data and table data, add
+	// SIGNATURES to either TABLES or FORMS. All lines and words detected in the
+	// document are included in the response (including text that isn't related to the
+	// value of FeatureTypes).
 	//
 	// This member is required.
 	FeatureTypes []types.FeatureType

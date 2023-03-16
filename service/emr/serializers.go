@@ -1117,6 +1117,61 @@ func (m *awsAwsjson11_serializeOpGetBlockPublicAccessConfiguration) HandleSerial
 	return next.HandleSerialize(ctx, in)
 }
 
+type awsAwsjson11_serializeOpGetClusterSessionCredentials struct {
+}
+
+func (*awsAwsjson11_serializeOpGetClusterSessionCredentials) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsAwsjson11_serializeOpGetClusterSessionCredentials) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*GetClusterSessionCredentialsInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	operationPath := "/"
+	if len(request.Request.URL.Path) == 0 {
+		request.Request.URL.Path = operationPath
+	} else {
+		request.Request.URL.Path = path.Join(request.Request.URL.Path, operationPath)
+		if request.Request.URL.Path != "/" && operationPath[len(operationPath)-1] == '/' {
+			request.Request.URL.Path += "/"
+		}
+	}
+	request.Request.Method = "POST"
+	httpBindingEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	httpBindingEncoder.SetHeader("Content-Type").String("application/x-amz-json-1.1")
+	httpBindingEncoder.SetHeader("X-Amz-Target").String("ElasticMapReduce.GetClusterSessionCredentials")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsAwsjson11_serializeOpDocumentGetClusterSessionCredentialsInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = httpBindingEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+
 type awsAwsjson11_serializeOpGetManagedScalingPolicy struct {
 }
 
@@ -3326,6 +3381,13 @@ func awsAwsjson11_serializeDocumentInstanceFleetConfig(v *types.InstanceFleetCon
 		ok.String(*v.Name)
 	}
 
+	if v.ResizeSpecifications != nil {
+		ok := object.Key("ResizeSpecifications")
+		if err := awsAwsjson11_serializeDocumentInstanceFleetResizingSpecifications(v.ResizeSpecifications, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.TargetOnDemandCapacity != nil {
 		ok := object.Key("TargetOnDemandCapacity")
 		ok.Integer(*v.TargetOnDemandCapacity)
@@ -3361,6 +3423,13 @@ func awsAwsjson11_serializeDocumentInstanceFleetModifyConfig(v *types.InstanceFl
 		ok.String(*v.InstanceFleetId)
 	}
 
+	if v.ResizeSpecifications != nil {
+		ok := object.Key("ResizeSpecifications")
+		if err := awsAwsjson11_serializeDocumentInstanceFleetResizingSpecifications(v.ResizeSpecifications, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.TargetOnDemandCapacity != nil {
 		ok := object.Key("TargetOnDemandCapacity")
 		ok.Integer(*v.TargetOnDemandCapacity)
@@ -3388,6 +3457,27 @@ func awsAwsjson11_serializeDocumentInstanceFleetProvisioningSpecifications(v *ty
 	if v.SpotSpecification != nil {
 		ok := object.Key("SpotSpecification")
 		if err := awsAwsjson11_serializeDocumentSpotProvisioningSpecification(v.SpotSpecification, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsAwsjson11_serializeDocumentInstanceFleetResizingSpecifications(v *types.InstanceFleetResizingSpecifications, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.OnDemandResizeSpecification != nil {
+		ok := object.Key("OnDemandResizeSpecification")
+		if err := awsAwsjson11_serializeDocumentOnDemandResizingSpecification(v.OnDemandResizeSpecification, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.SpotResizeSpecification != nil {
+		ok := object.Key("SpotResizeSpecification")
+		if err := awsAwsjson11_serializeDocumentSpotResizingSpecification(v.SpotResizeSpecification, ok); err != nil {
 			return err
 		}
 	}
@@ -3922,6 +4012,18 @@ func awsAwsjson11_serializeDocumentOnDemandProvisioningSpecification(v *types.On
 	return nil
 }
 
+func awsAwsjson11_serializeDocumentOnDemandResizingSpecification(v *types.OnDemandResizingSpecification, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.TimeoutDurationMinutes != nil {
+		ok := object.Key("TimeoutDurationMinutes")
+		ok.Integer(*v.TimeoutDurationMinutes)
+	}
+
+	return nil
+}
+
 func awsAwsjson11_serializeDocumentPlacementGroupConfig(v *types.PlacementGroupConfig, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -4201,6 +4303,18 @@ func awsAwsjson11_serializeDocumentSpotProvisioningSpecification(v *types.SpotPr
 		ok := object.Key("TimeoutAction")
 		ok.String(string(v.TimeoutAction))
 	}
+
+	if v.TimeoutDurationMinutes != nil {
+		ok := object.Key("TimeoutDurationMinutes")
+		ok.Integer(*v.TimeoutDurationMinutes)
+	}
+
+	return nil
+}
+
+func awsAwsjson11_serializeDocumentSpotResizingSpecification(v *types.SpotResizingSpecification, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
 
 	if v.TimeoutDurationMinutes != nil {
 		ok := object.Key("TimeoutDurationMinutes")
@@ -4825,6 +4939,23 @@ func awsAwsjson11_serializeOpDocumentGetAutoTerminationPolicyInput(v *GetAutoTer
 func awsAwsjson11_serializeOpDocumentGetBlockPublicAccessConfigurationInput(v *GetBlockPublicAccessConfigurationInput, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
+
+	return nil
+}
+
+func awsAwsjson11_serializeOpDocumentGetClusterSessionCredentialsInput(v *GetClusterSessionCredentialsInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.ClusterId != nil {
+		ok := object.Key("ClusterId")
+		ok.String(*v.ClusterId)
+	}
+
+	if v.ExecutionRoleArn != nil {
+		ok := object.Key("ExecutionRoleArn")
+		ok.String(*v.ExecutionRoleArn)
+	}
 
 	return nil
 }

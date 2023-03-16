@@ -6,10 +6,11 @@ type AssociateResourceErrorReason string
 
 // Enum values for AssociateResourceErrorReason
 const (
-	AssociateResourceErrorReasonInvalidArn              AssociateResourceErrorReason = "INVALID_ARN"
-	AssociateResourceErrorReasonServiceLimitExceeded    AssociateResourceErrorReason = "SERVICE_LIMIT_EXCEEDED"
-	AssociateResourceErrorReasonIllegalCustomlineitem   AssociateResourceErrorReason = "ILLEGAL_CUSTOMLINEITEM"
-	AssociateResourceErrorReasonInternalServerException AssociateResourceErrorReason = "INTERNAL_SERVER_EXCEPTION"
+	AssociateResourceErrorReasonInvalidArn                AssociateResourceErrorReason = "INVALID_ARN"
+	AssociateResourceErrorReasonServiceLimitExceeded      AssociateResourceErrorReason = "SERVICE_LIMIT_EXCEEDED"
+	AssociateResourceErrorReasonIllegalCustomlineitem     AssociateResourceErrorReason = "ILLEGAL_CUSTOMLINEITEM"
+	AssociateResourceErrorReasonInternalServerException   AssociateResourceErrorReason = "INTERNAL_SERVER_EXCEPTION"
+	AssociateResourceErrorReasonInvalidBillingPeriodRange AssociateResourceErrorReason = "INVALID_BILLING_PERIOD_RANGE"
 )
 
 // Values returns all known values for AssociateResourceErrorReason. Note that this
@@ -21,6 +22,7 @@ func (AssociateResourceErrorReason) Values() []AssociateResourceErrorReason {
 		"SERVICE_LIMIT_EXCEEDED",
 		"ILLEGAL_CUSTOMLINEITEM",
 		"INTERNAL_SERVER_EXCEPTION",
+		"INVALID_BILLING_PERIOD_RANGE",
 	}
 }
 
@@ -39,6 +41,30 @@ func (BillingGroupStatus) Values() []BillingGroupStatus {
 	return []BillingGroupStatus{
 		"ACTIVE",
 		"PRIMARY_ACCOUNT_MISSING",
+	}
+}
+
+type ConflictExceptionReason string
+
+// Enum values for ConflictExceptionReason
+const (
+	ConflictExceptionReasonResourceNameConflict                            ConflictExceptionReason = "RESOURCE_NAME_CONFLICT"
+	ConflictExceptionReasonPricingRuleInPricingPlanConflict                ConflictExceptionReason = "PRICING_RULE_IN_PRICING_PLAN_CONFLICT"
+	ConflictExceptionReasonPricingPlanAttachedToBillingGroupDeleteConflict ConflictExceptionReason = "PRICING_PLAN_ATTACHED_TO_BILLING_GROUP_DELETE_CONFLICT"
+	ConflictExceptionReasonPricingRuleAttachedToPricingPlanDeleteConflict  ConflictExceptionReason = "PRICING_RULE_ATTACHED_TO_PRICING_PLAN_DELETE_CONFLICT"
+	ConflictExceptionReasonWriteConflictRetry                              ConflictExceptionReason = "WRITE_CONFLICT_RETRY"
+)
+
+// Values returns all known values for ConflictExceptionReason. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ConflictExceptionReason) Values() []ConflictExceptionReason {
+	return []ConflictExceptionReason{
+		"RESOURCE_NAME_CONFLICT",
+		"PRICING_RULE_IN_PRICING_PLAN_CONFLICT",
+		"PRICING_PLAN_ATTACHED_TO_BILLING_GROUP_DELETE_CONFLICT",
+		"PRICING_RULE_ATTACHED_TO_PRICING_PLAN_DELETE_CONFLICT",
+		"WRITE_CONFLICT_RETRY",
 	}
 }
 
@@ -100,8 +126,9 @@ type PricingRuleScope string
 
 // Enum values for PricingRuleScope
 const (
-	PricingRuleScopeGlobal  PricingRuleScope = "GLOBAL"
-	PricingRuleScopeService PricingRuleScope = "SERVICE"
+	PricingRuleScopeGlobal        PricingRuleScope = "GLOBAL"
+	PricingRuleScopeService       PricingRuleScope = "SERVICE"
+	PricingRuleScopeBillingEntity PricingRuleScope = "BILLING_ENTITY"
 )
 
 // Values returns all known values for PricingRuleScope. Note that this can be
@@ -111,6 +138,7 @@ func (PricingRuleScope) Values() []PricingRuleScope {
 	return []PricingRuleScope{
 		"GLOBAL",
 		"SERVICE",
+		"BILLING_ENTITY",
 	}
 }
 
@@ -120,6 +148,7 @@ type PricingRuleType string
 const (
 	PricingRuleTypeMarkup   PricingRuleType = "MARKUP"
 	PricingRuleTypeDiscount PricingRuleType = "DISCOUNT"
+	PricingRuleTypeTiering  PricingRuleType = "TIERING"
 )
 
 // Values returns all known values for PricingRuleType. Note that this can be
@@ -129,6 +158,7 @@ func (PricingRuleType) Values() []PricingRuleType {
 	return []PricingRuleType{
 		"MARKUP",
 		"DISCOUNT",
+		"TIERING",
 	}
 }
 
@@ -180,6 +210,15 @@ const (
 	ValidationExceptionReasonMultipleLinkedAccountIds          ValidationExceptionReason = "MULTIPLE_LINKED_ACCOUNT_IDS"
 	ValidationExceptionReasonMissingPricingPlanArn             ValidationExceptionReason = "MISSING_PRICING_PLAN_ARN"
 	ValidationExceptionReasonMultiplePricingPlanArn            ValidationExceptionReason = "MULTIPLE_PRICING_PLAN_ARN"
+	ValidationExceptionReasonIllegalChildAssociateResource     ValidationExceptionReason = "ILLEGAL_CHILD_ASSOCIATE_RESOURCE"
+	ValidationExceptionReasonCustomLineItemAssociationExists   ValidationExceptionReason = "CUSTOM_LINE_ITEM_ASSOCIATION_EXISTS"
+	ValidationExceptionReasonInvalidBillingGroup               ValidationExceptionReason = "INVALID_BILLING_GROUP"
+	ValidationExceptionReasonInvalidBillingPeriodForOperation  ValidationExceptionReason = "INVALID_BILLING_PERIOD_FOR_OPERATION"
+	ValidationExceptionReasonIllegalBillingEntity              ValidationExceptionReason = "ILLEGAL_BILLING_ENTITY"
+	ValidationExceptionReasonIllegalModifierPercentage         ValidationExceptionReason = "ILLEGAL_MODIFIER_PERCENTAGE"
+	ValidationExceptionReasonIllegalType                       ValidationExceptionReason = "ILLEGAL_TYPE"
+	ValidationExceptionReasonIllegalEndedBillinggroup          ValidationExceptionReason = "ILLEGAL_ENDED_BILLINGGROUP"
+	ValidationExceptionReasonIllegalTieringInput               ValidationExceptionReason = "ILLEGAL_TIERING_INPUT"
 )
 
 // Values returns all known values for ValidationExceptionReason. Note that this
@@ -231,5 +270,14 @@ func (ValidationExceptionReason) Values() []ValidationExceptionReason {
 		"MULTIPLE_LINKED_ACCOUNT_IDS",
 		"MISSING_PRICING_PLAN_ARN",
 		"MULTIPLE_PRICING_PLAN_ARN",
+		"ILLEGAL_CHILD_ASSOCIATE_RESOURCE",
+		"CUSTOM_LINE_ITEM_ASSOCIATION_EXISTS",
+		"INVALID_BILLING_GROUP",
+		"INVALID_BILLING_PERIOD_FOR_OPERATION",
+		"ILLEGAL_BILLING_ENTITY",
+		"ILLEGAL_MODIFIER_PERCENTAGE",
+		"ILLEGAL_TYPE",
+		"ILLEGAL_ENDED_BILLINGGROUP",
+		"ILLEGAL_TIERING_INPUT",
 	}
 }

@@ -30,14 +30,15 @@ func (c *Client) AcceptEulas(ctx context.Context, params *AcceptEulasInput, optF
 
 type AcceptEulasInput struct {
 
-	// A collection of EULA IDs.
+	// The studio ID.
 	//
 	// This member is required.
 	StudioId *string
 
 	// Unique, case-sensitive identifier that you provide to ensure the idempotency of
-	// the request. If you don’t specify a client token, the AWS SDK automatically
-	// generates a client token and uses it for the request to ensure idempotency.
+	// the request. If you don’t specify a client token, the Amazon Web Services SDK
+	// automatically generates a client token and uses it for the request to ensure
+	// idempotency.
 	ClientToken *string
 
 	// The EULA ID.

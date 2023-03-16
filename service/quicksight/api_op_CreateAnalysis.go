@@ -11,7 +11,8 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Creates an analysis in Amazon QuickSight.
+// Creates an analysis in Amazon QuickSight. Analyses can be created either from a
+// template or from an AnalysisDefinition.
 func (c *Client) CreateAnalysis(ctx context.Context, params *CreateAnalysisInput, optFns ...func(*Options)) (*CreateAnalysisOutput, error) {
 	if params == nil {
 		params = &CreateAnalysisInput{}
@@ -46,12 +47,10 @@ type CreateAnalysisInput struct {
 	// This member is required.
 	Name *string
 
-	// A source entity to use for the analysis that you're creating. This metadata
-	// structure contains details that describe a source template and one or more
-	// datasets.
-	//
-	// This member is required.
-	SourceEntity *types.AnalysisSourceEntity
+	// The definition of an analysis. A definition is the data model of all features in
+	// a Dashboard, Template, or Analysis. Either a SourceEntity or a Definition must
+	// be provided in order for the request to be valid.
+	Definition *types.AnalysisDefinition
 
 	// The parameter names and override values that you want to use. An analysis can
 	// have any parameter type, and some parameters might accept multiple values.
@@ -63,6 +62,12 @@ type CreateAnalysisInput struct {
 	// each principal listed by Amazon Resource Name (ARN). To specify no permissions,
 	// omit Permissions.
 	Permissions []types.ResourcePermission
+
+	// A source entity to use for the analysis that you're creating. This metadata
+	// structure contains details that describe a source template and one or more
+	// datasets. Either a SourceEntity or a Definition must be provided in order for
+	// the request to be valid.
+	SourceEntity *types.AnalysisSourceEntity
 
 	// Contains a map of the key-value pairs for the resource tag or tags assigned to
 	// the analysis.

@@ -1,3 +1,82 @@
+# v1.27.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.5 (2023-02-24)
+
+* **Documentation**: Documentation updates for Redshift API bringing it in line with IAM best practices.
+
+# v1.27.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.27.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.2 (2023-02-03)
+
+* **Documentation**: Corrects descriptions of the parameters for the API operations RestoreFromClusterSnapshot, RestoreTableFromClusterSnapshot, and CreateCluster.
+* **Dependency Update**: Updated to the latest SDK module versions
+* **Dependency Update**: Upgrade smithy to 1.27.2 and correct empty query list serialization.
+
+# v1.27.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.27.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.26.18 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.17 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.16 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.26.15 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.26.14 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.26.13 (2022-10-27)
+
+* **Documentation**: This release clarifies use for the ElasticIp parameter of the CreateCluster and RestoreFromClusterSnapshot APIs.
+
+# v1.26.12 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.11 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.10 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.9 (2022-09-14)
+
+* **Documentation**: This release updates documentation for AQUA features and other description updates.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.8 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.26.7 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.26.6 (2022-08-30)
 
 * No change notes available for this release.

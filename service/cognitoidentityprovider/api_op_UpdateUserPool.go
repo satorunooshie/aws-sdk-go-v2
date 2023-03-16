@@ -70,6 +70,14 @@ type UpdateUserPoolInput struct {
 	// update user pools.
 	AutoVerifiedAttributes []types.VerifiedAttributeType
 
+	// When active, DeletionProtection prevents accidental deletion of your user pool.
+	// Before you can delete a user pool that you have protected against deletion, you
+	// must deactivate this feature. When you try to delete a protected user pool in a
+	// DeleteUserPool API request, Amazon Cognito returns an InvalidParameterException
+	// error. To delete a protected user pool, send a new DeleteUserPool request after
+	// you deactivate deletion protection in an UpdateUserPool API request.
+	DeletionProtection types.DeletionProtectionType
+
 	// The device-remembering configuration for a user pool. A null value indicates
 	// that you have deactivated device remembering in your user pool. When you provide
 	// a value for any DeviceConfiguration field, you activate the Amazon Cognito
@@ -81,10 +89,12 @@ type UpdateUserPoolInput struct {
 	// invitation and verification messages from your user pool.
 	EmailConfiguration *types.EmailConfigurationType
 
-	// The contents of the email verification message.
+	// This parameter is no longer used. See VerificationMessageTemplateType
+	// (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_VerificationMessageTemplateType.html).
 	EmailVerificationMessage *string
 
-	// The subject of the email verification message.
+	// This parameter is no longer used. See VerificationMessageTemplateType
+	// (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_VerificationMessageTemplateType.html).
 	EmailVerificationSubject *string
 
 	// The Lambda configuration information from the request to update the user pool.
@@ -118,7 +128,8 @@ type UpdateUserPoolInput struct {
 	// and Access Management (IAM) role in your Amazon Web Services account.
 	SmsConfiguration *types.SmsConfigurationType
 
-	// A container with information about the SMS verification message.
+	// This parameter is no longer used. See VerificationMessageTemplateType
+	// (https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_VerificationMessageTemplateType.html).
 	SmsVerificationMessage *string
 
 	// The settings for updates to user attributes. These settings include the property

@@ -39,11 +39,14 @@ type AacSettings struct {
 	// AAC Profile.
 	CodecProfile AacCodecProfile
 
-	// Mono (Audio Description), Mono, Stereo, or 5.1 channel layout. Valid values
-	// depend on rate control mode and profile. "1.0 - Audio Description (Receiver
-	// Mix)" setting receives a stereo description plus control track and emits a mono
-	// AAC encode of the description track, with control data emitted in the PES header
-	// as per ETSI TS 101 154 Annex E.
+	// The Coding mode that you specify determines the number of audio channels and the
+	// audio channel layout metadata in your AAC output. Valid coding modes depend on
+	// the Rate control mode and Profile that you select. The following list shows the
+	// number of audio channels and channel layout for each coding mode. * 1.0 Audio
+	// Description (Receiver Mix): One channel, C. Includes audio description data from
+	// your stereo input. For more information see ETSI TS 101 154 Annex E. * 1.0 Mono:
+	// One channel, C. * 2.0 Stereo: Two channels, L, R. * 5.1 Surround: Five channels,
+	// C, L, R, Ls, Rs, LFE.
 	CodingMode AacCodingMode
 
 	// Rate Control Mode.
@@ -53,7 +56,14 @@ type AacSettings struct {
 	// you must choose "No container" for the output container.
 	RawFormat AacRawFormat
 
-	// Sample rate in Hz. Valid values depend on rate control mode and profile.
+	// Specify the Sample rate in Hz. Valid sample rates depend on the Profile and
+	// Coding mode that you select. The following list shows valid sample rates for
+	// each Profile and Coding mode. * LC Profile, Coding mode 1.0, 2.0, and Receiver
+	// Mix: 8000, 12000, 16000, 22050, 24000, 32000, 44100, 48000, 88200, 96000. * LC
+	// Profile, Coding mode 5.1: 32000, 44100, 48000, 96000. * HEV1 Profile, Coding
+	// mode 1.0 and Receiver Mix: 22050, 24000, 32000, 44100, 48000. * HEV1 Profile,
+	// Coding mode 2.0 and 5.1: 32000, 44100, 48000, 96000. * HEV2 Profile, Coding mode
+	// 2.0: 22050, 24000, 32000, 44100, 48000.
 	SampleRate int32
 
 	// Use MPEG-2 AAC instead of MPEG-4 AAC audio for raw or MPEG-2 Transport Stream
@@ -70,8 +80,14 @@ type AacSettings struct {
 // value AC3.
 type Ac3Settings struct {
 
-	// Specify the average bitrate in bits per second. Valid bitrates depend on the
-	// coding mode.
+	// Specify the average bitrate in bits per second. The bitrate that you specify
+	// must be a multiple of 8000 within the allowed minimum and maximum values. Leave
+	// blank to use the default bitrate for the coding mode you select according ETSI
+	// TS 102 366. Valid bitrates for coding mode 1/0: Default: 96000. Minimum: 64000.
+	// Maximum: 128000. Valid bitrates for coding mode 1/1: Default: 192000. Minimum:
+	// 128000. Maximum: 384000. Valid bitrates for coding mode 2/0: Default: 192000.
+	// Minimum: 128000. Maximum: 384000. Valid bitrates for coding mode 3/2 with FLE:
+	// Default: 384000. Minimum: 384000. Maximum: 640000.
 	Bitrate int32
 
 	// Specify the bitstream mode for the AC-3 stream that the encoder emits. For more
@@ -415,6 +431,12 @@ type AudioNormalizationSettings struct {
 	// Algorithm (algorithm). If you choose algorithm 1770-1, the encoder will choose
 	// -24 LKFS; otherwise, the encoder will choose -23 LKFS.
 	TargetLkfs float64
+
+	// Specify the True-peak limiter threshold in decibels relative to full scale
+	// (dBFS). The peak inter-audio sample loudness in your output will be limited to
+	// the value that you specify, without affecting the overall target LKFS. Enter a
+	// value from 0 to -20. Leave blank to use the default value 0.
+	TruePeakLimiterThreshold float64
 
 	noSmithyDocumentSerde
 }
@@ -899,6 +921,34 @@ type AvcIntraUhdSettings struct {
 	noSmithyDocumentSerde
 }
 
+// The Bandwidth reduction filter increases the video quality of your output
+// relative to its bitrate. Use to lower the bitrate of your constant quality QVBR
+// output, with little or no perceptual decrease in quality. Or, use to increase
+// the video quality of outputs with other rate control modes relative to the
+// bitrate that you specify. Bandwidth reduction increases further when your input
+// is low quality or noisy. Outputs that use this feature incur pro-tier pricing.
+// When you include Bandwidth reduction filter, you cannot include the Noise
+// reducer preprocessor.
+type BandwidthReductionFilter struct {
+
+	// Optionally specify the level of sharpening to apply when you use the Bandwidth
+	// reduction filter. Sharpening adds contrast to the edges of your video content
+	// and can reduce softness. Keep the default value Off to apply no sharpening. Set
+	// Sharpening strength to Low to apply a minimal amount of sharpening, or High to
+	// apply a maximum amount of sharpening.
+	Sharpening BandwidthReductionFilterSharpening
+
+	// Specify the strength of the Bandwidth reduction filter. For most workflows, we
+	// recommend that you choose Auto to reduce the bandwidth of your output with
+	// little to no perceptual decrease in video quality. For high quality and high
+	// bitrate outputs, choose Low. For the most bandwidth reduction, choose High. We
+	// recommend that you choose High for low bitrate outputs. Note that High may incur
+	// a slight increase in the softness of your output.
+	Strength BandwidthReductionFilterStrength
+
+	noSmithyDocumentSerde
+}
+
 // Burn-in is a captions delivery method, rather than a captions format. Burn-in
 // writes the captions directly on your video frames, replacing pixels of video
 // content with the captions. Set up burn-in captions in the same output as your
@@ -1342,6 +1392,45 @@ type ChannelMapping struct {
 	noSmithyDocumentSerde
 }
 
+// Specify YUV limits and RGB tolerances when you set Sample range conversion to
+// Limited range clip.
+type ClipLimits struct {
+
+	// Specify the Maximum RGB color sample range tolerance for your output.
+	// MediaConvert corrects any YUV values that, when converted to RGB, would be
+	// outside the upper tolerance that you specify. Enter an integer from 90 to 105 as
+	// an offset percentage to the maximum possible value. Leave blank to use the
+	// default value 100. When you specify a value for Maximum RGB tolerance, you must
+	// set Sample range conversion to Limited range clip.
+	MaximumRGBTolerance int32
+
+	// Specify the Maximum YUV color sample limit. MediaConvert conforms any pixels in
+	// your input above the value that you specify to typical limited range bounds.
+	// Enter an integer from 920 to 1023. Leave blank to use the default value 940. The
+	// value that you enter applies to 10-bit ranges. For 8-bit ranges, MediaConvert
+	// automatically scales this value down. When you specify a value for Maximum YUV,
+	// you must set Sample range conversion to Limited range clip.
+	MaximumYUV int32
+
+	// Specify the Minimum RGB color sample range tolerance for your output.
+	// MediaConvert corrects any YUV values that, when converted to RGB, would be
+	// outside the lower tolerance that you specify. Enter an integer from -5 to 10 as
+	// an offset percentage to the minimum possible value. Leave blank to use the
+	// default value 0. When you specify a value for Minimum RGB tolerance, you must
+	// set Sample range conversion to Limited range clip.
+	MinimumRGBTolerance int32
+
+	// Specify the Minimum YUV color sample limit. MediaConvert conforms any pixels in
+	// your input below the value that you specify to typical limited range bounds.
+	// Enter an integer from 0 to 128. Leave blank to use the default value 64. The
+	// value that you enter applies to 10-bit ranges. For 8-bit ranges, MediaConvert
+	// automatically scales this value down. When you specify a value for Minumum YUV,
+	// you must set Sample range conversion to Limited range clip.
+	MinimumYUV int32
+
+	noSmithyDocumentSerde
+}
+
 // Specify the details for each pair of HLS and DASH additional manifests that you
 // want the service to generate for this CMAF output group. Each pair of manifests
 // can reference a different subset of outputs in the group.
@@ -1425,6 +1514,15 @@ type CmafGroupSettings struct {
 	// generation.
 	CodecSpecification CmafCodecSpecification
 
+	// Specify how MediaConvert writes SegmentTimeline in your output DASH manifest. To
+	// write a SegmentTimeline in each video Representation: Keep the default value,
+	// Basic. To write a common SegmentTimeline in the video AdaptationSet: Choose
+	// Compact. Note that MediaConvert will still write a SegmentTimeline in any
+	// Representation that does not share a common timeline. To write a video
+	// AdaptationSet for each different output framerate, and a common SegmentTimeline
+	// in each AdaptationSet: Choose Distinct.
+	DashManifestStyle DashManifestStyle
+
 	// Use Destination (Destination) to specify the S3 output location and the output
 	// filename base. Destination accepts format identifiers. If you do not specify the
 	// base filename in the URI, the service will use the filename of the input file.
@@ -1487,6 +1585,14 @@ type CmafGroupSettings struct {
 	// is 3.5 seconds.
 	MinFinalSegmentLength float64
 
+	// Specify how the value for bandwidth is determined for each video Representation
+	// in your output MPD manifest. We recommend that you choose a MPD manifest
+	// bandwidth type that is compatible with your downstream player configuration.
+	// Max: Use the same value that you specify for Max bitrate in the video output, in
+	// bits per second. Average: Use the calculated average bitrate of the encoded
+	// video output, in bits per second.
+	MpdManifestBandwidthType CmafMpdManifestBandwidthType
+
 	// Specify whether your DASH profile is on-demand or main. When you choose Main
 	// profile (MAIN_PROFILE), the service signals
 	// urn:mpeg:dash:profile:isoff-main:2011 in your .mpd DASH manifest. When you
@@ -1541,6 +1647,15 @@ type CmafGroupSettings struct {
 	// when the actual duration of a track in a segment is longer than the target
 	// duration.
 	TargetDurationCompatibilityMode CmafTargetDurationCompatibilityMode
+
+	// Specify the video sample composition time offset mode in the output fMP4 TRUN
+	// box. For wider player compatibility, set Video composition offsets to Unsigned
+	// or leave blank. The earliest presentation time may be greater than zero, and
+	// sample composition time offsets will increment using unsigned integers. For
+	// strict fMP4 video and audio timing, set Video composition offsets to Signed. The
+	// earliest presentation time will be equal to zero, and sample composition time
+	// offsets will increment using signed integers.
+	VideoCompositionOffsets CmafVideoCompositionOffsets
 
 	// When set to ENABLED, a DASH MPD manifest will be generated for this output.
 	WriteDashManifest CmafWriteDASHManifest
@@ -1687,6 +1802,17 @@ type CmfcSettings struct {
 	// leave blank.
 	KlvMetadata CmfcKlvMetadata
 
+	// To add an InbandEventStream element in your output MPD manifest for each type of
+	// event message, set Manifest metadata signaling to Enabled. For ID3 event
+	// messages, the InbandEventStream element schemeIdUri will be same value that you
+	// specify for ID3 metadata scheme ID URI. For SCTE35 event messages, the
+	// InbandEventStream element schemeIdUri will be "urn:scte:scte35:2013:bin". To
+	// leave these elements out of your output MPD manifest, set Manifest metadata
+	// signaling to Disabled. To enable Manifest metadata signaling, you must also set
+	// SCTE-35 source to Passthrough, ESAM SCTE-35 to insert, or ID3 metadata
+	// (TimedMetadata) to Passthrough.
+	ManifestMetadataSignaling CmfcManifestMetadataSignaling
+
 	// Use this setting only when you specify SCTE-35 markers from ESAM. Choose INSERT
 	// to put SCTE-35 markers in this output at the insertion points that you specify
 	// in an ESAM XML document. Provide the document in the setting SCC XML (sccXml).
@@ -1705,6 +1831,25 @@ type CmfcSettings struct {
 	// Set ID3 metadata to None (NONE) or leave blank.
 	TimedMetadata CmfcTimedMetadata
 
+	// Specify the event message box (eMSG) version for ID3 timed metadata in your
+	// output. For more information, see ISO/IEC 23009-1:2022 section 5.10.3.3.3
+	// Syntax. Leave blank to use the default value Version 0. When you specify Version
+	// 1, you must also set ID3 metadata (timedMetadata) to Passthrough.
+	TimedMetadataBoxVersion CmfcTimedMetadataBoxVersion
+
+	// Specify the event message box (eMSG) scheme ID URI (scheme_id_uri) for ID3 timed
+	// metadata in your output. For more information, see ISO/IEC 23009-1:2022 section
+	// 5.10.3.3.4 Semantics. Leave blank to use the default value:
+	// https://aomedia.org/emsg/ID3 When you specify a value for ID3 metadata scheme ID
+	// URI, you must also set ID3 metadata (timedMetadata) to Passthrough.
+	TimedMetadataSchemeIdUri *string
+
+	// Specify the event message box (eMSG) value for ID3 timed metadata in your
+	// output. For more information, see ISO/IEC 23009-1:2022 section 5.10.3.3.4
+	// Semantics. When you specify a value for ID3 Metadata Value, you must also set
+	// ID3 metadata (timedMetadata) to Passthrough.
+	TimedMetadataValue *string
+
 	noSmithyDocumentSerde
 }
 
@@ -1714,12 +1859,31 @@ type ColorCorrector struct {
 	// Brightness level.
 	Brightness int32
 
+	// Specify YUV limits and RGB tolerances when you set Sample range conversion to
+	// Limited range clip.
+	ClipLimits *ClipLimits
+
 	// Specify the color space you want for this output. The service supports
 	// conversion between HDR formats, between SDR formats, from SDR to HDR, and from
 	// HDR to SDR. SDR to HDR conversion doesn't upgrade the dynamic range. The
 	// converted video has an HDR format, but visually appears the same as an
-	// unconverted output. HDR to SDR conversion uses Elemental tone mapping technology
-	// to approximate the outcome of manually regrading from HDR to SDR.
+	// unconverted output. HDR to SDR conversion uses tone mapping to approximate the
+	// outcome of manually regrading from HDR to SDR. When you specify an output color
+	// space, MediaConvert uses the following color space metadata, which includes
+	// color primaries, transfer characteristics, and matrix coefficients:
+	//
+	// * HDR 10:
+	// BT.2020, PQ, BT.2020 non-constant
+	//
+	// * HLG 2020: BT.2020, HLG, BT.2020
+	// non-constant
+	//
+	// * P3DCI (Theater): DCIP3, SMPTE 428M, BT.709
+	//
+	// * P3D65 (SDR):
+	// Display P3, sRGB, BT.709
+	//
+	// * P3D65 (HDR): Display P3, PQ, BT.709
 	ColorSpaceConversion ColorSpaceConversion
 
 	// Contrast level.
@@ -1739,23 +1903,50 @@ type ColorCorrector struct {
 	// https://docs.aws.amazon.com/console/mediaconvert/hdr.
 	Hdr10Metadata *Hdr10Metadata
 
+	// Specify how MediaConvert maps brightness and colors from your HDR input to your
+	// SDR output. The mode that you select represents a creative choice, with
+	// different tradeoffs in the details and tones of your output. To maintain details
+	// in bright or saturated areas of your output: Choose Preserve details. For some
+	// sources, your SDR output may look less bright and less saturated when compared
+	// to your HDR source. MediaConvert automatically applies this mode for HLG
+	// sources, regardless of your choice. For a bright and saturated output: Choose
+	// Vibrant. We recommend that you choose this mode when any of your source content
+	// is HDR10, and for the best results when it is mastered for 1000 nits. You may
+	// notice loss of details in bright or saturated areas of your output. HDR to SDR
+	// tone mapping has no effect when your input is SDR.
+	HdrToSdrToneMapper HDRToSDRToneMapper
+
 	// Hue in degrees.
 	Hue int32
 
-	// Specify the video color sample range for this output. To create a full range
-	// output, you must start with a full range YUV input and keep the default value,
-	// None (NONE). To create a limited range output from a full range input, choose
-	// Limited range (LIMITED_RANGE_SQUEEZE). With RGB inputs, your output is always
-	// limited range, regardless of your choice here. When you create a limited range
-	// output from a full range input, MediaConvert limits the active pixel values in a
-	// way that depends on the output's bit depth: 8-bit outputs contain only values
-	// from 16 through 235 and 10-bit outputs contain only values from 64 through 940.
-	// With this conversion, MediaConvert also changes the output metadata to note the
-	// limited range.
+	// Specify how MediaConvert limits the color sample range for this output. To
+	// create a limited range output from a full range input: Choose Limited range
+	// squeeze. For full range inputs, MediaConvert performs a linear offset to color
+	// samples equally across all pixels and frames. Color samples in 10-bit outputs
+	// are limited to 64 through 940, and 8-bit outputs are limited to 16 through 235.
+	// Note: For limited range inputs, values for color samples are passed through to
+	// your output unchanged. MediaConvert does not limit the sample range. To correct
+	// pixels in your input that are out of range or out of gamut: Choose Limited range
+	// clip. Use for broadcast applications. MediaConvert conforms any pixels outside
+	// of the values that you specify under Minimum YUV and Maximum YUV to limited
+	// range bounds. MediaConvert also corrects any YUV values that, when converted to
+	// RGB, would be outside the bounds you specify under Minimum RGB tolerance and
+	// Maximum RGB tolerance. With either limited range conversion, MediaConvert writes
+	// the sample range metadata in the output.
 	SampleRangeConversion SampleRangeConversion
 
 	// Saturation level.
 	Saturation int32
+
+	// Specify the reference white level, in nits, for all of your SDR inputs. Use to
+	// correct brightness levels within HDR10 outputs. The following color metadata
+	// must be present in your SDR input: color primaries, transfer characteristics,
+	// and matrix coefficients. If your SDR input has missing color metadata, or if you
+	// want to correct input color metadata, manually specify a color space in the
+	// input video selector. For 1,000 nit peak brightness displays, we recommend that
+	// you set SDR reference white level to 203 (according to ITU-R BT.2408). Leave
+	// blank to use the default value of 100, or specify an integer from 100 to 1000.
+	SdrReferenceWhiteLevel int32
 
 	noSmithyDocumentSerde
 }
@@ -1875,6 +2066,15 @@ type DashIsoGroupSettings struct {
 	// than the manifest file.
 	BaseUrl *string
 
+	// Specify how MediaConvert writes SegmentTimeline in your output DASH manifest. To
+	// write a SegmentTimeline in each video Representation: Keep the default value,
+	// Basic. To write a common SegmentTimeline in the video AdaptationSet: Choose
+	// Compact. Note that MediaConvert will still write a SegmentTimeline in any
+	// Representation that does not share a common timeline. To write a video
+	// AdaptationSet for each different output framerate, and a common SegmentTimeline
+	// in each AdaptationSet: Choose Distinct.
+	DashManifestStyle DashManifestStyle
+
 	// Use Destination (Destination) to specify the S3 output location and the output
 	// filename base. Destination accepts format identifiers. If you do not specify the
 	// base filename in the URI, the service will use the filename of the input file.
@@ -1931,6 +2131,14 @@ type DashIsoGroupSettings struct {
 	// is 3.5 seconds.
 	MinFinalSegmentLength float64
 
+	// Specify how the value for bandwidth is determined for each video Representation
+	// in your output MPD manifest. We recommend that you choose a MPD manifest
+	// bandwidth type that is compatible with your downstream player configuration.
+	// Max: Use the same value that you specify for Max bitrate in the video output, in
+	// bits per second. Average: Use the calculated average bitrate of the encoded
+	// video output, in bits per second.
+	MpdManifestBandwidthType DashIsoMpdManifestBandwidthType
+
 	// Specify whether your DASH profile is on-demand or main. When you choose Main
 	// profile (MAIN_PROFILE), the service signals
 	// urn:mpeg:dash:profile:isoff-main:2011 in your .mpd DASH manifest. When you
@@ -1970,6 +2178,15 @@ type DashIsoGroupSettings struct {
 	// Choose Multiple of GOP (GOP_MULTIPLE) to have the encoder round up the segment
 	// lengths to match the next GOP boundary.
 	SegmentLengthControl DashIsoSegmentLengthControl
+
+	// Specify the video sample composition time offset mode in the output fMP4 TRUN
+	// box. For wider player compatibility, set Video composition offsets to Unsigned
+	// or leave blank. The earliest presentation time may be greater than zero, and
+	// sample composition time offsets will increment using unsigned integers. For
+	// strict fMP4 video and audio timing, set Video composition offsets to Signed. The
+	// earliest presentation time will be equal to zero, and sample composition time
+	// offsets will increment using signed integers.
+	VideoCompositionOffsets DashIsoVideoCompositionOffsets
 
 	// If you get an HTTP error in the 400 range when you play back your DASH output,
 	// enable this setting and run your transcoding job again. When you enable this
@@ -2536,8 +2753,13 @@ type Eac3Settings struct {
 	// Only used for 3/2 coding mode.
 	AttenuationControl Eac3AttenuationControl
 
-	// Specify the average bitrate in bits per second. Valid bitrates depend on the
-	// coding mode.
+	// Specify the average bitrate in bits per second. The bitrate that you specify
+	// must be a multiple of 8000 within the allowed minimum and maximum values. Leave
+	// blank to use the default bitrate for the coding mode you select according ETSI
+	// TS 102 366. Valid bitrates for coding mode 1/0: Default: 96000. Minimum: 32000.
+	// Maximum: 3024000. Valid bitrates for coding mode 2/0: Default: 192000. Minimum:
+	// 96000. Maximum: 3024000. Valid bitrates for coding mode 3/2: Default: 384000.
+	// Minimum: 192000. Maximum: 3024000.
 	Bitrate int32
 
 	// Specify the bitstream mode for the E-AC-3 stream that the encoder emits. For
@@ -2977,6 +3199,16 @@ type H264Settings struct {
 	// H264TemporalAdaptiveQuantization.
 	AdaptiveQuantization H264AdaptiveQuantization
 
+	// The Bandwidth reduction filter increases the video quality of your output
+	// relative to its bitrate. Use to lower the bitrate of your constant quality QVBR
+	// output, with little or no perceptual decrease in quality. Or, use to increase
+	// the video quality of outputs with other rate control modes relative to the
+	// bitrate that you specify. Bandwidth reduction increases further when your input
+	// is low quality or noisy. Outputs that use this feature incur pro-tier pricing.
+	// When you include Bandwidth reduction filter, you cannot include the Noise
+	// reducer preprocessor.
+	BandwidthReductionFilter *BandwidthReductionFilter
+
 	// Specify the average bitrate in bits per second. Required for VBR and CBR. For MS
 	// Smooth outputs, bitrates must be unique when rounded down to the nearest
 	// multiple of 1000.
@@ -3098,6 +3330,12 @@ type H264Settings struct {
 	// Specified, seconds (SECONDS) and then provide the GOP length in the related
 	// setting GOP size (GopSize).
 	GopSizeUnits H264GopSizeUnits
+
+	// If your downstream systems have strict buffer requirements: Specify the minimum
+	// percentage of the HRD buffer that's available at the end of each encoded video
+	// segment. For the best video quality: Set to 0 or leave blank to automatically
+	// determine the final buffer fill percentage.
+	HrdBufferFinalFillPercentage int32
 
 	// Percentage of the buffer that should initially be filled (HRD buffer model).
 	HrdBufferInitialFillPercentage int32
@@ -3473,6 +3711,12 @@ type H265Settings struct {
 	// Specified, seconds (SECONDS) and then provide the GOP length in the related
 	// setting GOP size (GopSize).
 	GopSizeUnits H265GopSizeUnits
+
+	// If your downstream systems have strict buffer requirements: Specify the minimum
+	// percentage of the HRD buffer that's available at the end of each encoded video
+	// segment. For the best video quality: Set to 0 or leave blank to automatically
+	// determine the final buffer fill percentage.
+	HrdBufferFinalFillPercentage int32
 
 	// Percentage of the buffer that should initially be filled (HRD buffer model).
 	HrdBufferInitialFillPercentage int32
@@ -4190,6 +4434,13 @@ type ImageInserter struct {
 	// PNG or TGA files.
 	InsertableImages []InsertableImage
 
+	// Specify the reference white level, in nits, for all of your image inserter
+	// images. Use to correct brightness levels within HDR10 outputs. For 1,000 nit
+	// peak brightness displays, we recommend that you set SDR reference white level to
+	// 203 (according to ITU-R BT.2408). Leave blank to use the default value of 100,
+	// or specify an integer from 100 to 1000.
+	SdrReferenceWhiteLevel int32
+
 	noSmithyDocumentSerde
 }
 
@@ -4294,7 +4545,7 @@ type Input struct {
 	FilterEnable InputFilterEnable
 
 	// Use Filter strength (FilterStrength) to adjust the magnitude the input filter
-	// settings (Deblock and Denoise). The range is -5 to 5. Default is 0.
+	// settings (Deblock and Denoise). The range is 0 to 5. Default is 0.
 	FilterStrength int32
 
 	// Enable the image inserter feature to include a graphic overlay on your video.
@@ -4497,7 +4748,7 @@ type InputTemplate struct {
 	FilterEnable InputFilterEnable
 
 	// Use Filter strength (FilterStrength) to adjust the magnitude the input filter
-	// settings (Deblock and Denoise). The range is -5 to 5. Default is 0.
+	// settings (Deblock and Denoise). The range is 0 to 5. Default is 0.
 	FilterStrength int32
 
 	// Enable the image inserter feature to include a graphic overlay on your video.
@@ -5714,6 +5965,17 @@ type MpdSettings struct {
 	// leave blank.
 	KlvMetadata MpdKlvMetadata
 
+	// To add an InbandEventStream element in your output MPD manifest for each type of
+	// event message, set Manifest metadata signaling to Enabled. For ID3 event
+	// messages, the InbandEventStream element schemeIdUri will be same value that you
+	// specify for ID3 metadata scheme ID URI. For SCTE35 event messages, the
+	// InbandEventStream element schemeIdUri will be "urn:scte:scte35:2013:bin". To
+	// leave these elements out of your output MPD manifest, set Manifest metadata
+	// signaling to Disabled. To enable Manifest metadata signaling, you must also set
+	// SCTE-35 source to Passthrough, ESAM SCTE-35 to insert, or ID3 metadata
+	// (TimedMetadata) to Passthrough.
+	ManifestMetadataSignaling MpdManifestMetadataSignaling
+
 	// Use this setting only when you specify SCTE-35 markers from ESAM. Choose INSERT
 	// to put SCTE-35 markers in this output at the insertion points that you specify
 	// in an ESAM XML document. Provide the document in the setting SCC XML (sccXml).
@@ -5731,6 +5993,25 @@ type MpdSettings struct {
 	// metadata in a separate Event Message (eMSG) box. To exclude this ID3 metadata:
 	// Set ID3 metadata to None (NONE) or leave blank.
 	TimedMetadata MpdTimedMetadata
+
+	// Specify the event message box (eMSG) version for ID3 timed metadata in your
+	// output. For more information, see ISO/IEC 23009-1:2022 section 5.10.3.3.3
+	// Syntax. Leave blank to use the default value Version 0. When you specify Version
+	// 1, you must also set ID3 metadata (timedMetadata) to Passthrough.
+	TimedMetadataBoxVersion MpdTimedMetadataBoxVersion
+
+	// Specify the event message box (eMSG) scheme ID URI (scheme_id_uri) for ID3 timed
+	// metadata in your output. For more information, see ISO/IEC 23009-1:2022 section
+	// 5.10.3.3.4 Semantics. Leave blank to use the default value:
+	// https://aomedia.org/emsg/ID3 When you specify a value for ID3 metadata scheme ID
+	// URI, you must also set ID3 metadata (timedMetadata) to Passthrough.
+	TimedMetadataSchemeIdUri *string
+
+	// Specify the event message box (eMSG) value for ID3 timed metadata in your
+	// output. For more information, see ISO/IEC 23009-1:2022 section 5.10.3.3.4
+	// Semantics. When you specify a value for ID3 Metadata Value, you must also set
+	// ID3 metadata (timedMetadata) to Passthrough.
+	TimedMetadataValue *string
 
 	noSmithyDocumentSerde
 }
@@ -5822,6 +6103,12 @@ type Mpeg2Settings struct {
 	// Specify the units for GOP size (GopSize). If you don't specify a value here, by
 	// default the encoder measures GOP size in frames.
 	GopSizeUnits Mpeg2GopSizeUnits
+
+	// If your downstream systems have strict buffer requirements: Specify the minimum
+	// percentage of the HRD buffer that's available at the end of each encoded video
+	// segment. For the best video quality: Set to 0 or leave blank to automatically
+	// determine the final buffer fill percentage.
+	HrdBufferFinalFillPercentage int32
 
 	// Percentage of the buffer that should initially be filled (HRD buffer model).
 	HrdBufferInitialFillPercentage int32
@@ -5963,7 +6250,7 @@ type Mpeg2Settings struct {
 
 	// Specify whether this output's video uses the D10 syntax. Keep the default value
 	// to not use the syntax. Related settings: When you choose D10 (D_10) for your MXF
-	// profile (profile), you must also set this value to to D10 (D_10).
+	// profile (profile), you must also set this value to D10 (D_10).
 	Syntax Mpeg2Syntax
 
 	// When you do frame rate conversion from 23.976 frames per second (fps) to 29.97
@@ -6269,11 +6556,11 @@ type NielsenNonLinearWatermarkSettings struct {
 	noSmithyDocumentSerde
 }
 
-// Enable the Noise reducer (NoiseReducer) feature to remove noise from your video
-// output if necessary. Enable or disable this feature for each output
-// individually. This setting is disabled by default. When you enable Noise reducer
-// (NoiseReducer), you must also select a value for Noise reducer filter
-// (NoiseReducerFilter).
+// Enable the Noise reducer feature to remove noise from your video output if
+// necessary. Enable or disable this feature for each output individually. This
+// setting is disabled by default. When you enable Noise reducer, you must also
+// select a value for Noise reducer filter. For AVC outputs, when you include Noise
+// reducer, you cannot include the Bandwidth reduction filter.
 type NoiseReducer struct {
 
 	// Use Noise reducer filter (NoiseReducerFilter) to select one of the following
@@ -7634,9 +7921,11 @@ type VideoPreprocessor struct {
 	// setting is disabled by default.
 	ImageInserter *ImageInserter
 
-	// Enable the Noise reducer (NoiseReducer) feature to remove noise from your video
-	// output if necessary. Enable or disable this feature for each output
-	// individually. This setting is disabled by default.
+	// Enable the Noise reducer feature to remove noise from your video output if
+	// necessary. Enable or disable this feature for each output individually. This
+	// setting is disabled by default. When you enable Noise reducer, you must also
+	// select a value for Noise reducer filter. For AVC outputs, when you include Noise
+	// reducer, you cannot include the Bandwidth reduction filter.
 	NoiseReducer *NoiseReducer
 
 	// If you work with a third party video watermarking partner, use the group of
@@ -7663,15 +7952,29 @@ type VideoSelector struct {
 	AlphaBehavior AlphaBehavior
 
 	// If your input video has accurate color space metadata, or if you don't know
-	// about color space, leave this set to the default value Follow (FOLLOW). The
-	// service will automatically detect your input color space. If your input video
-	// has metadata indicating the wrong color space, specify the accurate color space
-	// here. If your input video is HDR 10 and the SMPTE ST 2086 Mastering Display
-	// Color Volume static metadata isn't present in your video stream, or if that
-	// metadata is present but not accurate, choose Force HDR 10 (FORCE_HDR10) here and
-	// specify correct values in the input HDR 10 metadata (Hdr10Metadata) settings.
-	// For more information about MediaConvert HDR jobs, see
-	// https://docs.aws.amazon.com/console/mediaconvert/hdr.
+	// about color space: Keep the default value, Follow. MediaConvert will
+	// automatically detect your input color space. If your input video has metadata
+	// indicating the wrong color space, or has missing metadata: Specify the accurate
+	// color space here. If your input video is HDR 10 and the SMPTE ST 2086 Mastering
+	// Display Color Volume static metadata isn't present in your video stream, or if
+	// that metadata is present but not accurate: Choose Force HDR 10. Specify correct
+	// values in the input HDR 10 metadata settings. For more information about HDR
+	// jobs, see https://docs.aws.amazon.com/console/mediaconvert/hdr. When you specify
+	// an input color space, MediaConvert uses the following color space metadata,
+	// which includes color primaries, transfer characteristics, and matrix
+	// coefficients:
+	//
+	// * HDR 10: BT.2020, PQ, BT.2020 non-constant
+	//
+	// * HLG 2020: BT.2020,
+	// HLG, BT.2020 non-constant
+	//
+	// * P3DCI (Theater): DCIP3, SMPTE 428M, BT.709
+	//
+	// * P3D65
+	// (SDR): Display P3, sRGB, BT.709
+	//
+	// * P3D65 (HDR): Display P3, PQ, BT.709
 	ColorSpace ColorSpace
 
 	// There are two sources for color metadata, the input file and the job input

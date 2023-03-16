@@ -89,6 +89,12 @@ type CreateDBInstanceReadReplicaInput struct {
 	// This member is required.
 	SourceDBInstanceIdentifier *string
 
+	// The amount of storage (in gibibytes) to allocate initially for the read replica.
+	// Follow the allocation rules specified in CreateDBInstance. Be sure to allocate
+	// enough storage for your read replica so that the create operation can succeed.
+	// You can also allocate additional storage for future growth.
+	AllocatedStorage *int32
+
 	// A value that indicates whether minor engine upgrades are applied automatically
 	// to the read replica during the maintenance window. This setting doesn't apply to
 	// RDS Custom. Default: Inherits from the source DB instance
@@ -200,6 +206,20 @@ type CreateDBInstanceReadReplicaInput struct {
 	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_LogAccess.html#USER_LogAccess.Procedural.UploadtoCloudWatch)
 	// in the Amazon RDS User Guide. This setting doesn't apply to RDS Custom.
 	EnableCloudwatchLogsExports []string
+
+	// A value that indicates whether to enable a customer-owned IP address (CoIP) for
+	// an RDS on Outposts read replica. A CoIP provides local or external connectivity
+	// to resources in your Outpost subnets through your on-premises network. For some
+	// use cases, a CoIP can provide lower latency for connections to the read replica
+	// from outside of its virtual private cloud (VPC) on your local network. For more
+	// information about RDS on Outposts, see Working with Amazon RDS on Amazon Web
+	// Services Outposts
+	// (https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-on-outposts.html) in
+	// the Amazon RDS User Guide. For more information about CoIPs, see Customer-owned
+	// IP addresses
+	// (https://docs.aws.amazon.com/outposts/latest/userguide/routing.html#ip-addressing)
+	// in the Amazon Web Services Outposts User Guide.
+	EnableCustomerOwnedIp *bool
 
 	// A value that indicates whether to enable mapping of Amazon Web Services Identity
 	// and Access Management (IAM) accounts to database accounts. By default, mapping
@@ -417,9 +437,14 @@ type CreateDBInstanceReadReplicaInput struct {
 	// region, if the PresignURL member is empty set.
 	SourceRegion *string
 
+	// Specifies the storage throughput value for the read replica. This setting
+	// doesn't apply to RDS Custom or Amazon Aurora.
+	StorageThroughput *int32
+
 	// Specifies the storage type to be associated with the read replica. Valid values:
-	// standard | gp2 | io1 If you specify io1, you must also include a value for the
-	// Iops parameter. Default: io1 if the Iops parameter is specified, otherwise gp2
+	// gp2 | gp3 | io1 | standard If you specify io1 or gp3, you must also include a
+	// value for the Iops parameter. Default: io1 if the Iops parameter is specified,
+	// otherwise gp2
 	StorageType *string
 
 	// A list of tags. For more information, see Tagging Amazon RDS Resources

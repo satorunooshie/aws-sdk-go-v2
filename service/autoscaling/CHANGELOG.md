@@ -1,3 +1,84 @@
+# v1.27.3 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.2 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.27.1 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.0 (2023-02-10)
+
+* **Feature**: You can now either terminate/replace, ignore, or wait for EC2 Auto Scaling instances on standby or protected from scale in. Also, you can also roll back changes from a failed instance refresh.
+
+# v1.26.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+* **Dependency Update**: Upgrade smithy to 1.27.2 and correct empty query list serialization.
+
+# v1.26.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.26.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.25.1 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2022-12-08)
+
+* **Feature**: Adds support for metric math for target tracking scaling policies, saving you the cost and effort of publishing a custom metric to CloudWatch. Also adds support for VPC Lattice by adding the Attach/Detach/DescribeTrafficSources APIs and a new health check type to the CreateAutoScalingGroup API.
+
+# v1.24.4 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.3 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.24.2 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.24.1 (2022-11-10)
+
+* **Documentation**: This release adds a new price capacity optimized allocation strategy for Spot Instances to help customers optimize provisioning of Spot Instances via EC2 Auto Scaling, EC2 Fleet, and Spot Fleet. It allocates Spot Instances based on both spare capacity availability and Spot Instance price.
+
+# v1.24.0 (2022-11-07)
+
+* **Feature**: This release adds support for two new attributes for attribute-based instance type selection - NetworkBandwidthGbps and AllowedInstanceTypes.
+
+# v1.23.18 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.17 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.16 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.15 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.14 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.13 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.23.12 (2022-08-30)
 
 * No change notes available for this release.

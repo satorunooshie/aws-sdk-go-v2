@@ -20,13 +20,13 @@ import (
 // and an import token. Use the public key to encrypt the symmetric key material.
 // Store the import token to send with a subsequent ImportKeyMaterial request. You
 // must specify the key ID of the symmetric encryption KMS key into which you will
-// import key material. This KMS key's Origin must be EXTERNAL. You must also
-// specify the wrapping algorithm and type of wrapping key (public key) that you
-// will use to encrypt the key material. You cannot perform this operation on an
-// asymmetric KMS key, an HMAC KMS key, or on any KMS key in a different Amazon Web
-// Services account. To import key material, you must use the public key and import
-// token from the same response. These items are valid for 24 hours. The expiration
-// date and time appear in the GetParametersForImport response. You cannot use an
+// import key material. The KMS key Origin must be EXTERNAL. You must also specify
+// the wrapping algorithm and type of wrapping key (public key) that you will use
+// to encrypt the key material. You cannot perform this operation on an asymmetric
+// KMS key, an HMAC KMS key, or on any KMS key in a different Amazon Web Services
+// account. To import key material, you must use the public key and import token
+// from the same response. These items are valid for 24 hours. The expiration date
+// and time appear in the GetParametersForImport response. You cannot use an
 // expired token in an ImportKeyMaterial request. If your key and token expire,
 // send another GetParametersForImport request. The KMS key that you use for this
 // operation must be in a compatible key state. For details, see Key states of KMS
@@ -74,10 +74,16 @@ type GetParametersForImportInput struct {
 	// This member is required.
 	KeyId *string
 
-	// The algorithm you will use to encrypt the key material before importing it with
-	// ImportKeyMaterial. For more information, see Encrypt the Key Material
+	// The algorithm you will use to encrypt the key material before using the
+	// ImportKeyMaterial operation to import it. For more information, see Encrypt the
+	// key material
 	// (https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-encrypt-key-material.html)
-	// in the Key Management Service Developer Guide.
+	// in the Key Management Service Developer Guide. The RSAES_PKCS1_V1_5 wrapping
+	// algorithm is deprecated. We recommend that you begin using a different wrapping
+	// algorithm immediately. KMS will end support for RSAES_PKCS1_V1_5 by October 1,
+	// 2023 pursuant to cryptographic key management guidance
+	// (https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf)
+	// from the National Institute of Standards and Technology (NIST).
 	//
 	// This member is required.
 	WrappingAlgorithm types.AlgorithmSpec

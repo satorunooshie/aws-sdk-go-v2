@@ -31,10 +31,11 @@ func (c *Client) CreateNetwork(ctx context.Context, params *CreateNetworkInput, 
 
 type CreateNetworkInput struct {
 
-	// A unique, case-sensitive identifier that you provide to ensure the idempotency
-	// of the operation. An idempotent operation completes no more than one time. This
-	// identifier is required only if you make a service request directly using an HTTP
-	// client. It is generated automatically if you use an AWS SDK or the AWS CLI.
+	// This is a unique, case-sensitive identifier that you provide to ensure the
+	// idempotency of the operation. An idempotent operation completes no more than
+	// once. This identifier is required only if you make a service request directly
+	// using an HTTP client. It is generated automatically if you use an Amazon Web
+	// Services SDK or the Amazon Web Services CLI.
 	//
 	// This member is required.
 	ClientRequestToken *string
@@ -71,10 +72,10 @@ type CreateNetworkInput struct {
 	// configuration.
 	FrameworkConfiguration *types.NetworkFrameworkConfiguration
 
-	// Tags to assign to the network. Each tag consists of a key and optional value.
-	// When specifying tags during creation, you can specify multiple key-value pairs
-	// in a single request, with an overall maximum of 50 tags added to each resource.
-	// For more information about tags, see Tagging Resources
+	// Tags to assign to the network. Each tag consists of a key and an optional value.
+	// You can specify multiple key-value pairs in a single request with an overall
+	// maximum of 50 tags allowed per resource. For more information about tags, see
+	// Tagging Resources
 	// (https://docs.aws.amazon.com/managed-blockchain/latest/ethereum-dev/tagging-resources.html)
 	// in the Amazon Managed Blockchain Ethereum Developer Guide, or Tagging Resources
 	// (https://docs.aws.amazon.com/managed-blockchain/latest/hyperledger-fabric-dev/tagging-resources.html)

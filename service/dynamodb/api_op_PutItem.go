@@ -20,16 +20,16 @@ import (
 // exist), or replace an existing item if it has certain attribute values. You can
 // return the item's attribute values in the same operation, using the ReturnValues
 // parameter. When you add an item, the primary key attributes are the only
-// required attributes. Attribute values cannot be null. Empty String and Binary
-// attribute values are allowed. Attribute values of type String and Binary must
-// have a length greater than zero if the attribute is used as a key attribute for
-// a table or index. Set type attributes cannot be empty. Invalid Requests with
-// empty values will be rejected with a ValidationException exception. To prevent a
-// new item from replacing an existing item, use a conditional expression that
-// contains the attribute_not_exists function with the name of the attribute being
-// used as the partition key for the table. Since every record must contain that
-// attribute, the attribute_not_exists function will only succeed if no matching
-// item exists. For more information about PutItem, see Working with Items
+// required attributes. Empty String and Binary attribute values are allowed.
+// Attribute values of type String and Binary must have a length greater than zero
+// if the attribute is used as a key attribute for a table or index. Set type
+// attributes cannot be empty. Invalid Requests with empty values will be rejected
+// with a ValidationException exception. To prevent a new item from replacing an
+// existing item, use a conditional expression that contains the
+// attribute_not_exists function with the name of the attribute being used as the
+// partition key for the table. Since every record must contain that attribute, the
+// attribute_not_exists function will only succeed if no matching item exists. For
+// more information about PutItem, see Working with Items
 // (https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithItems.html)
 // in the Amazon DynamoDB Developer Guide.
 func (c *Client) PutItem(ctx context.Context, params *PutItemInput, optFns ...func(*Options)) (*PutItemOutput, error) {
@@ -216,7 +216,7 @@ type PutItemOutput struct {
 	// the total provisioned throughput consumed, along with statistics for the table
 	// and any indexes involved in the operation. ConsumedCapacity is only returned if
 	// the ReturnConsumedCapacity parameter was specified. For more information, see
-	// Read/Write Capacity Mode
+	// Provisioned Throughput
 	// (https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughputIntro.html)
 	// in the Amazon DynamoDB Developer Guide.
 	ConsumedCapacity *types.ConsumedCapacity

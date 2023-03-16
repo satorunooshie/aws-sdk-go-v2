@@ -1,3 +1,68 @@
+# v1.23.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.23.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.23.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.22.1 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.0 (2022-12-12)
+
+* **Feature**: Adds support for "aliases" and "categories", inclusion and exclusion filters for labels and label categories, and aggregating labels by video segment timestamps for Stored Video Label Detection APIs.
+
+# v1.21.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.0 (2022-11-11)
+
+* **Feature**: Adding support for ImageProperties feature to detect dominant colors and image brightness, sharpness, and contrast, inclusion and exclusion filters for labels and label categories, new fields to the API response, "aliases" and "categories"
+
+# v1.20.7 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.6 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.5 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.4 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.3 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.2 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.20.1 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

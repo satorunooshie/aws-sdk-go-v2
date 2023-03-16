@@ -158,6 +158,18 @@ func awsRestjson1_serializeOpDocumentCreateWorkspaceInput(v *CreateWorkspaceInpu
 		ok.String(*v.ClientToken)
 	}
 
+	if v.Configuration != nil {
+		ok := object.Key("configuration")
+		ok.String(*v.Configuration)
+	}
+
+	if v.NetworkAccessControl != nil {
+		ok := object.Key("networkAccessControl")
+		if err := awsRestjson1_serializeDocumentNetworkAccessConfiguration(v.NetworkAccessControl, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.OrganizationRoleName != nil {
 		ok := object.Key("organizationRoleName")
 		ok.String(*v.OrganizationRoleName)
@@ -176,6 +188,13 @@ func awsRestjson1_serializeOpDocumentCreateWorkspaceInput(v *CreateWorkspaceInpu
 	if v.Tags != nil {
 		ok := object.Key("tags")
 		if err := awsRestjson1_serializeDocumentTagMap(v.Tags, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.VpcConfiguration != nil {
+		ok := object.Key("vpcConfiguration")
+		if err := awsRestjson1_serializeDocumentVpcConfiguration(v.VpcConfiguration, ok); err != nil {
 			return err
 		}
 	}
@@ -535,6 +554,64 @@ func (m *awsRestjson1_serializeOpDescribeWorkspaceAuthentication) HandleSerializ
 	return next.HandleSerialize(ctx, in)
 }
 func awsRestjson1_serializeOpHttpBindingsDescribeWorkspaceAuthenticationInput(v *DescribeWorkspaceAuthenticationInput, encoder *httpbinding.Encoder) error {
+	if v == nil {
+		return fmt.Errorf("unsupported serialization of nil %T", v)
+	}
+
+	if v.WorkspaceId == nil || len(*v.WorkspaceId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member workspaceId must not be empty")}
+	}
+	if v.WorkspaceId != nil {
+		if err := encoder.SetURI("workspaceId").String(*v.WorkspaceId); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+type awsRestjson1_serializeOpDescribeWorkspaceConfiguration struct {
+}
+
+func (*awsRestjson1_serializeOpDescribeWorkspaceConfiguration) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsRestjson1_serializeOpDescribeWorkspaceConfiguration) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*DescribeWorkspaceConfigurationInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	opPath, opQuery := httpbinding.SplitURI("/workspaces/{workspaceId}/configuration")
+	request.URL.Path = smithyhttp.JoinPath(request.URL.Path, opPath)
+	request.URL.RawQuery = smithyhttp.JoinRawQuery(request.URL.RawQuery, opQuery)
+	request.Method = "GET"
+	restEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if err := awsRestjson1_serializeOpHttpBindingsDescribeWorkspaceConfigurationInput(input, restEncoder); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = restEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+func awsRestjson1_serializeOpHttpBindingsDescribeWorkspaceConfigurationInput(v *DescribeWorkspaceConfigurationInput, encoder *httpbinding.Encoder) error {
 	if v == nil {
 		return fmt.Errorf("unsupported serialization of nil %T", v)
 	}
@@ -1119,6 +1196,13 @@ func awsRestjson1_serializeOpDocumentUpdateWorkspaceInput(v *UpdateWorkspaceInpu
 		ok.String(string(v.AccountAccessType))
 	}
 
+	if v.NetworkAccessControl != nil {
+		ok := object.Key("networkAccessControl")
+		if err := awsRestjson1_serializeDocumentNetworkAccessConfiguration(v.NetworkAccessControl, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.OrganizationRoleName != nil {
 		ok := object.Key("organizationRoleName")
 		ok.String(*v.OrganizationRoleName)
@@ -1129,9 +1213,26 @@ func awsRestjson1_serializeOpDocumentUpdateWorkspaceInput(v *UpdateWorkspaceInpu
 		ok.String(string(v.PermissionType))
 	}
 
+	if v.RemoveNetworkAccessConfiguration != nil {
+		ok := object.Key("removeNetworkAccessConfiguration")
+		ok.Boolean(*v.RemoveNetworkAccessConfiguration)
+	}
+
+	if v.RemoveVpcConfiguration != nil {
+		ok := object.Key("removeVpcConfiguration")
+		ok.Boolean(*v.RemoveVpcConfiguration)
+	}
+
 	if v.StackSetName != nil {
 		ok := object.Key("stackSetName")
 		ok.String(*v.StackSetName)
+	}
+
+	if v.VpcConfiguration != nil {
+		ok := object.Key("vpcConfiguration")
+		if err := awsRestjson1_serializeDocumentVpcConfiguration(v.VpcConfiguration, ok); err != nil {
+			return err
+		}
 	}
 
 	if v.WorkspaceDataSources != nil {
@@ -1263,6 +1364,87 @@ func awsRestjson1_serializeOpDocumentUpdateWorkspaceAuthenticationInput(v *Updat
 	return nil
 }
 
+type awsRestjson1_serializeOpUpdateWorkspaceConfiguration struct {
+}
+
+func (*awsRestjson1_serializeOpUpdateWorkspaceConfiguration) ID() string {
+	return "OperationSerializer"
+}
+
+func (m *awsRestjson1_serializeOpUpdateWorkspaceConfiguration) HandleSerialize(ctx context.Context, in middleware.SerializeInput, next middleware.SerializeHandler) (
+	out middleware.SerializeOutput, metadata middleware.Metadata, err error,
+) {
+	request, ok := in.Request.(*smithyhttp.Request)
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown transport type %T", in.Request)}
+	}
+
+	input, ok := in.Parameters.(*UpdateWorkspaceConfigurationInput)
+	_ = input
+	if !ok {
+		return out, metadata, &smithy.SerializationError{Err: fmt.Errorf("unknown input parameters type %T", in.Parameters)}
+	}
+
+	opPath, opQuery := httpbinding.SplitURI("/workspaces/{workspaceId}/configuration")
+	request.URL.Path = smithyhttp.JoinPath(request.URL.Path, opPath)
+	request.URL.RawQuery = smithyhttp.JoinRawQuery(request.URL.RawQuery, opQuery)
+	request.Method = "PUT"
+	restEncoder, err := httpbinding.NewEncoder(request.URL.Path, request.URL.RawQuery, request.Header)
+	if err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if err := awsRestjson1_serializeOpHttpBindingsUpdateWorkspaceConfigurationInput(input, restEncoder); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	restEncoder.SetHeader("Content-Type").String("application/json")
+
+	jsonEncoder := smithyjson.NewEncoder()
+	if err := awsRestjson1_serializeOpDocumentUpdateWorkspaceConfigurationInput(input, jsonEncoder.Value); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request, err = request.SetStream(bytes.NewReader(jsonEncoder.Bytes())); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+
+	if request.Request, err = restEncoder.Encode(request.Request); err != nil {
+		return out, metadata, &smithy.SerializationError{Err: err}
+	}
+	in.Request = request
+
+	return next.HandleSerialize(ctx, in)
+}
+func awsRestjson1_serializeOpHttpBindingsUpdateWorkspaceConfigurationInput(v *UpdateWorkspaceConfigurationInput, encoder *httpbinding.Encoder) error {
+	if v == nil {
+		return fmt.Errorf("unsupported serialization of nil %T", v)
+	}
+
+	if v.WorkspaceId == nil || len(*v.WorkspaceId) == 0 {
+		return &smithy.SerializationError{Err: fmt.Errorf("input member workspaceId must not be empty")}
+	}
+	if v.WorkspaceId != nil {
+		if err := encoder.SetURI("workspaceId").String(*v.WorkspaceId); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeOpDocumentUpdateWorkspaceConfigurationInput(v *UpdateWorkspaceConfigurationInput, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.Configuration != nil {
+		ok := object.Key("configuration")
+		ok.String(*v.Configuration)
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentAllowedOrganizations(v []string, value smithyjson.Value) error {
 	array := value.Array()
 	defer array.Close()
@@ -1353,6 +1535,27 @@ func awsRestjson1_serializeDocumentIdpMetadata(v types.IdpMetadata, value smithy
 	return nil
 }
 
+func awsRestjson1_serializeDocumentNetworkAccessConfiguration(v *types.NetworkAccessConfiguration, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.PrefixListIds != nil {
+		ok := object.Key("prefixListIds")
+		if err := awsRestjson1_serializeDocumentPrefixListIds(v.PrefixListIds, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.VpceIds != nil {
+		ok := object.Key("vpceIds")
+		if err := awsRestjson1_serializeDocumentVpceIds(v.VpceIds, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentNotificationDestinationsList(v []types.NotificationDestinationType, value smithyjson.Value) error {
 	array := value.Array()
 	defer array.Close()
@@ -1365,6 +1568,17 @@ func awsRestjson1_serializeDocumentNotificationDestinationsList(v []types.Notifi
 }
 
 func awsRestjson1_serializeDocumentOrganizationalUnitList(v []string, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		av.String(v[i])
+	}
+	return nil
+}
+
+func awsRestjson1_serializeDocumentPrefixListIds(v []string, value smithyjson.Value) error {
 	array := value.Array()
 	defer array.Close()
 
@@ -1447,6 +1661,28 @@ func awsRestjson1_serializeDocumentSamlConfiguration(v *types.SamlConfiguration,
 	return nil
 }
 
+func awsRestjson1_serializeDocumentSecurityGroupIds(v []string, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		av.String(v[i])
+	}
+	return nil
+}
+
+func awsRestjson1_serializeDocumentSubnetIds(v []string, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		av.String(v[i])
+	}
+	return nil
+}
+
 func awsRestjson1_serializeDocumentTagMap(v map[string]string, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -1521,6 +1757,38 @@ func awsRestjson1_serializeDocumentUserList(v []types.User, value smithyjson.Val
 		if err := awsRestjson1_serializeDocumentUser(&v[i], av); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func awsRestjson1_serializeDocumentVpcConfiguration(v *types.VpcConfiguration, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.SecurityGroupIds != nil {
+		ok := object.Key("securityGroupIds")
+		if err := awsRestjson1_serializeDocumentSecurityGroupIds(v.SecurityGroupIds, ok); err != nil {
+			return err
+		}
+	}
+
+	if v.SubnetIds != nil {
+		ok := object.Key("subnetIds")
+		if err := awsRestjson1_serializeDocumentSubnetIds(v.SubnetIds, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentVpceIds(v []string, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		av.String(v[i])
 	}
 	return nil
 }

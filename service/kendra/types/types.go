@@ -170,45 +170,46 @@ type AlfrescoConfiguration struct {
 	noSmithyDocumentSerde
 }
 
-// Provides filtering the query results based on document attributes. When you use
-// the AndAllFilters or OrAllFilters, filters you can use 2 layers under the first
-// attribute filter. For example, you can use:
+// Provides filtering the query results based on document attributes or metadata
+// fields. When you use the AndAllFilters or OrAllFilters, filters you can use 2
+// layers under the first attribute filter. For example, you can use:
 //
-// If you use more than 2 layers, you
-// receive a ValidationException exception with the message "AttributeFilter cannot
-// have a depth of more than 2." If you use more than 10 attribute filters in a
-// given list for AndAllFilters or OrAllFilters, you receive a ValidationException
-// with the message "AttributeFilter cannot have a length of more than 10".
+// If you use
+// more than 2 layers, you receive a ValidationException exception with the message
+// "AttributeFilter cannot have a depth of more than 2." If you use more than 10
+// attribute filters in a given list for AndAllFilters or OrAllFilters, you receive
+// a ValidationException with the message "AttributeFilter cannot have a length of
+// more than 10".
 type AttributeFilter struct {
 
 	// Performs a logical AND operation on all supplied filters.
 	AndAllFilters []AttributeFilter
 
-	// Returns true when a document contains all of the specified document attributes.
-	// This filter is only applicable to StringListValue metadata.
+	// Returns true when a document contains all of the specified document attributes
+	// or metadata fields. This filter is only applicable to StringListValue metadata.
 	ContainsAll *DocumentAttribute
 
-	// Returns true when a document contains any of the specified document attributes.
-	// This filter is only applicable to StringListValue metadata.
+	// Returns true when a document contains any of the specified document attributes
+	// or metadata fields. This filter is only applicable to StringListValue metadata.
 	ContainsAny *DocumentAttribute
 
-	// Performs an equals operation on two document attributes.
+	// Performs an equals operation on two document attributes or metadata fields.
 	EqualsTo *DocumentAttribute
 
-	// Performs a greater than operation on two document attributes. Use with a
-	// document attribute of type Date or Long.
+	// Performs a greater than operation on two document attributes or metadata fields.
+	// Use with a document attribute of type Date or Long.
 	GreaterThan *DocumentAttribute
 
-	// Performs a greater or equals than operation on two document attributes. Use with
-	// a document attribute of type Date or Long.
+	// Performs a greater or equals than operation on two document attributes or
+	// metadata fields. Use with a document attribute of type Date or Long.
 	GreaterThanOrEquals *DocumentAttribute
 
-	// Performs a less than operation on two document attributes. Use with a document
-	// attribute of type Date or Long.
+	// Performs a less than operation on two document attributes or metadata fields.
+	// Use with a document attribute of type Date or Long.
 	LessThan *DocumentAttribute
 
-	// Performs a less than or equals operation on two document attributes. Use with a
-	// document attribute of type Date or Long.
+	// Performs a less than or equals operation on two document attributes or metadata
+	// fields. Use with a document attribute of type Date or Long.
 	LessThanOrEquals *DocumentAttribute
 
 	// Performs a logical NOT operation on all supplied filters.
@@ -280,7 +281,7 @@ type BatchDeleteDocumentResponseFailedDocument struct {
 // Provides a response when the status of a document could not be retrieved.
 type BatchGetDocumentStatusResponseError struct {
 
-	// The unique identifier of the document whose status could not be retrieved.
+	// The identifier of the document whose status could not be retrieved.
 	DocumentId *string
 
 	// Indicates the source of the error.
@@ -302,7 +303,7 @@ type BatchPutDocumentResponseFailedDocument struct {
 	// A description of the reason why the document could not be indexed.
 	ErrorMessage *string
 
-	// The unique identifier of the document.
+	// The identifier of the document.
 	Id *string
 
 	noSmithyDocumentSerde
@@ -339,9 +340,8 @@ type BoxConfiguration struct {
 	// password.
 	//
 	// You create an application in Box to generate the keys or credentials
-	// required for the secret. For more information, see Authentication for a Box data
-	// source
-	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-box.html#box-authentication).
+	// required for the secret. For more information, see Using a Box data source
+	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-box.html).
 	//
 	// This member is required.
 	SecretArn *string
@@ -454,7 +454,7 @@ type ClickFeedback struct {
 	// This member is required.
 	ClickTime *time.Time
 
-	// The unique identifier of the search result that was clicked.
+	// The identifier of the search result that was clicked.
 	//
 	// This member is required.
 	ResultId *string
@@ -476,7 +476,7 @@ type ColumnConfiguration struct {
 	// This member is required.
 	DocumentDataColumnName *string
 
-	// The column that provides the document's unique identifier.
+	// The column that provides the document's identifier.
 	//
 	// This member is required.
 	DocumentIdColumnName *string
@@ -581,12 +581,10 @@ type ConfluenceConfiguration struct {
 
 	// The Amazon Resource Name (ARN) of an Secrets Manager secret that contains the
 	// user name and password required to connect to the Confluence instance. If you
-	// use Confluence Cloud, you use a generated API token as the password. For more
-	// information, see Using a Confluence data source
-	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-confluence.html). You
-	// can also provide authentication credentials in the form of a personal access
-	// token. For more information, see Authentication for a Confluence data source
-	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-confluence.html#confluence-authentication).
+	// use Confluence Cloud, you use a generated API token as the password. You can
+	// also provide authentication credentials in the form of a personal access token.
+	// For more information, see Using a Confluence data source
+	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-confluence.html).
 	//
 	// This member is required.
 	SecretArn *string
@@ -673,7 +671,7 @@ type ConfluencePageConfiguration struct {
 	noSmithyDocumentSerde
 }
 
-// >Maps attributes or field names of Confluence pages to Amazon Kendra index field
+// Maps attributes or field names of Confluence pages to Amazon Kendra index field
 // names. To create custom fields, use the UpdateIndex API before you map to
 // Confluence fields. For more information, see Mapping data source fields
 // (https://docs.aws.amazon.com/kendra/latest/dg/field-mapping.html). The
@@ -733,8 +731,8 @@ type ConfluenceSpaceConfiguration struct {
 	noSmithyDocumentSerde
 }
 
-// >Maps attributes or field names of Confluence spaces to Amazon Kendra index
-// field names. To create custom fields, use the UpdateIndex API before you map to
+// Maps attributes or field names of Confluence spaces to Amazon Kendra index field
+// names. To create custom fields, use the UpdateIndex API before you map to
 // Confluence fields. For more information, see Mapping data source fields
 // (https://docs.aws.amazon.com/kendra/latest/dg/field-mapping.html). The
 // Confluence data source field names must exist in your Confluence custom
@@ -993,14 +991,13 @@ type DataSourceGroup struct {
 	noSmithyDocumentSerde
 }
 
-// Summary information for an Amazon Kendra data source. Returned in a call to the
-// DescribeDataSource API.
+// Summary information for a Amazon Kendra data source.
 type DataSourceSummary struct {
 
 	// The UNIX datetime that the data source was created.
 	CreatedAt *time.Time
 
-	// The unique identifier for the data source.
+	// The identifier for the data source.
 	Id *string
 
 	// The code for a language. This shows a supported language for all documents in
@@ -1044,7 +1041,7 @@ type DataSourceSyncJob struct {
 	// description of the error that caused the synchronization to fail.
 	ErrorMessage *string
 
-	// A unique identifier for the synchronization job.
+	// A identifier for the synchronization job.
 	ExecutionId *string
 
 	// Maps a batch delete document request to a specific data source sync job. This is
@@ -1152,11 +1149,11 @@ type DataSourceVpcConfiguration struct {
 // A document in an index.
 type Document struct {
 
-	// A unique identifier of the document in the index. Note, each document ID must be
-	// unique per index. You cannot create a data source to index your documents with
-	// their unique IDs and then use the BatchPutDocument API to index the same
-	// documents, or vice versa. You can delete a data source and then use the
-	// BatchPutDocument API to index the same documents, or vice versa.
+	// A identifier of the document in the index. Note, each document ID must be unique
+	// per index. You cannot create a data source to index your documents with their
+	// unique IDs and then use the BatchPutDocument API to index the same documents, or
+	// vice versa. You can delete a data source and then use the BatchPutDocument API
+	// to index the same documents, or vice versa.
 	//
 	// This member is required.
 	Id *string
@@ -1302,7 +1299,7 @@ type DocumentAttributeValue struct {
 	// A long integer value.
 	LongValue *int64
 
-	// A list of strings.
+	// A list of strings. The default maximum length or number of strings is 10.
 	StringListValue []string
 
 	// A string, such as "department".
@@ -1339,7 +1336,7 @@ type DocumentAttributeValueCountPair struct {
 // Identifies a document for which to retrieve status information
 type DocumentInfo struct {
 
-	// The unique identifier of the document.
+	// The identifier of the document.
 	//
 	// This member is required.
 	DocumentId *string
@@ -1424,12 +1421,12 @@ type DocumentsMetadataConfiguration struct {
 	noSmithyDocumentSerde
 }
 
-// Provides the configuration information for users or groups in your Amazon Web
-// Services SSO identity source to grant access your Amazon Kendra experience.
+// Provides the configuration information for users or groups in your IAM Identity
+// Center identity source to grant access your Amazon Kendra experience.
 type EntityConfiguration struct {
 
-	// The identifier of a user or group in your Amazon Web Services SSO identity
-	// source. For example, a user ID could be an email.
+	// The identifier of a user or group in your IAM Identity Center identity source.
+	// For example, a user ID could be an email.
 	//
 	// This member is required.
 	EntityId *string
@@ -1463,22 +1460,22 @@ type EntityDisplayData struct {
 	noSmithyDocumentSerde
 }
 
-// Provides the configuration information for users or groups in your Amazon Web
-// Services SSO identity source for access to your Amazon Kendra experience.
-// Specific permissions are defined for each user or group once they are granted
-// access to your Amazon Kendra experience.
+// Provides the configuration information for users or groups in your IAM Identity
+// Center identity source for access to your Amazon Kendra experience. Specific
+// permissions are defined for each user or group once they are granted access to
+// your Amazon Kendra experience.
 type EntityPersonaConfiguration struct {
 
-	// The identifier of a user or group in your Amazon Web Services SSO identity
-	// source. For example, a user ID could be an email.
+	// The identifier of a user or group in your IAM Identity Center identity source.
+	// For example, a user ID could be an email.
 	//
 	// This member is required.
 	EntityId *string
 
 	// The persona that defines the specific permissions of the user or group in your
-	// Amazon Web Services SSO identity source. The available personas or access roles
-	// are Owner and Viewer. For more information on these personas, see Providing
-	// access to your search page
+	// IAM Identity Center identity source. The available personas or access roles are
+	// Owner and Viewer. For more information on these personas, see Providing access
+	// to your search page
 	// (https://docs.aws.amazon.com/kendra/latest/dg/deploying-search-experience-no-code.html#access-search-experience).
 	//
 	// This member is required.
@@ -1497,8 +1494,8 @@ type ExperienceConfiguration struct {
 	// want to use for your Amazon Kendra experience.
 	ContentSourceConfiguration *ContentSourceConfiguration
 
-	// The Amazon Web Services SSO field name that contains the identifiers of your
-	// users, such as their emails.
+	// The IAM Identity Center field name that contains the identifiers of your users,
+	// such as their emails.
 	UserIdentityConfiguration *UserIdentityConfiguration
 
 	noSmithyDocumentSerde
@@ -1519,7 +1516,7 @@ type ExperienceEndpoint struct {
 	noSmithyDocumentSerde
 }
 
-// Summary information for users or groups in your Amazon Web Services SSO identity
+// Summary information for users or groups in your IAM Identity Center identity
 // source with granted access to your Amazon Kendra experience. You can create an
 // Amazon Kendra experience such as a search application. For more information on
 // creating a search application experience, see Building a search experience with
@@ -1530,8 +1527,8 @@ type ExperienceEntitiesSummary struct {
 	// Information about the user entity.
 	DisplayData *EntityDisplayData
 
-	// The identifier of a user or group in your Amazon Web Services SSO identity
-	// source. For example, a user ID could be an email.
+	// The identifier of a user or group in your IAM Identity Center identity source.
+	// For example, a user ID could be an email.
 	EntityId *string
 
 	// Shows the type as User or Group.
@@ -1613,16 +1610,16 @@ type FacetResult struct {
 	noSmithyDocumentSerde
 }
 
-// Information on the users or groups in your Amazon Web Services SSO identity
-// source that failed to properly configure with your Amazon Kendra experience.
+// Information on the users or groups in your IAM Identity Center identity source
+// that failed to properly configure with your Amazon Kendra experience.
 type FailedEntity struct {
 
-	// The identifier of the user or group in your Amazon Web Services SSO identity
-	// source. For example, a user ID could be an email.
+	// The identifier of the user or group in your IAM Identity Center identity source.
+	// For example, a user ID could be an email.
 	EntityId *string
 
-	// The reason the user or group in your Amazon Web Services SSO identity source
-	// failed to properly configure with your Amazon Kendra experience.
+	// The reason the user or group in your IAM Identity Center identity source failed
+	// to properly configure with your Amazon Kendra experience.
 	ErrorMessage *string
 
 	noSmithyDocumentSerde
@@ -1650,7 +1647,7 @@ type FaqSummary struct {
 	// The file type used to create the FAQ.
 	FileFormat FaqFileFormat
 
-	// The unique identifier of the FAQ.
+	// The identifier of the FAQ.
 	Id *string
 
 	// The code for a language. This shows a supported language for the FAQ document as
@@ -1744,10 +1741,10 @@ type GitHubConfiguration struct {
 	// key-value pairs required to connect to your GitHub. The secret must contain a
 	// JSON structure with the following keys:
 	//
-	// * githubToken—The access token created
-	// in GitHub. For more information on creating a token in GitHub, see
-	// Authentication for a GitHub data source
-	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-github.html#github-authentication).
+	// * personalToken—The access token
+	// created in GitHub. For more information on creating a token in GitHub, see Using
+	// a GitHub data source
+	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-github.html).
 	//
 	// This member is required.
 	SecretArn *string
@@ -2137,15 +2134,15 @@ type IndexConfigurationSummary struct {
 	// This member is required.
 	UpdatedAt *time.Time
 
-	// Indicates whether the index is a enterprise edition index or a developer edition
+	// Indicates whether the index is a Enterprise Edition index or a Developer Edition
 	// index.
 	Edition IndexEdition
 
-	// A unique identifier for the index. Use this to identify the index when you are
-	// using APIs such as Query, DescribeIndex, UpdateIndex, and DeleteIndex.
+	// A identifier for the index. Use this to identify the index when you are using
+	// APIs such as Query, DescribeIndex, UpdateIndex, and DeleteIndex.
 	Id *string
 
-	// The identifier of the index.
+	// The name of the index.
 	Name *string
 
 	noSmithyDocumentSerde
@@ -2194,9 +2191,7 @@ type InlineCustomDocumentEnrichmentConfiguration struct {
 // Provides the configuration information to connect to Jira as your data source.
 type JiraConfiguration struct {
 
-	// The URL of the Jira account. For example, company.atlassian.net or
-	// https://jira.company.com. You can find your Jira account URL in the URL of your
-	// profile page for Jira desktop.
+	// The URL of the Jira account. For example, company.atlassian.net.
 	//
 	// This member is required.
 	JiraAccountUrl *string
@@ -2205,12 +2200,12 @@ type JiraConfiguration struct {
 	// key-value pairs required to connect to your Jira data source. The secret must
 	// contain a JSON structure with the following keys:
 	//
-	// * jiraId—The Jira
-	// username.
+	// * jiraId—The Jira user name
+	// or email.
 	//
-	// * jiraCredentials—The Jira API token. For more information on
-	// creating an API token in Jira, see  Authentication for a Jira data source
-	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-jira.html#jira-authentication).
+	// * jiraCredentials—The Jira API token. For more information, see Using
+	// a Jira data source
+	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-jira.html).
 	//
 	// This member is required.
 	SecretArn *string
@@ -2283,7 +2278,8 @@ type JiraConfiguration struct {
 	UseChangeLog bool
 
 	// Configuration information for an Amazon Virtual Private Cloud to connect to your
-	// Jira. Your Jira account must reside inside your VPC.
+	// Jira. For more information, see Configuring a VPC
+	// (https://docs.aws.amazon.com/kendra/latest/dg/vpc-configuration.html).
 	VpcConfiguration *DataSourceVpcConfiguration
 
 	// A list of DataSourceToIndexFieldMapping objects that map attributes or field
@@ -2377,7 +2373,7 @@ type OneDriveConfiguration struct {
 	OneDriveUsers *OneDriveUsers
 
 	// The Amazon Resource Name (ARN) of an Secrets Managersecret that contains the
-	// user name and password to connect to OneDrive. The user namd should be the
+	// user name and password to connect to OneDrive. The user name should be the
 	// application ID for the OneDrive application, and the password is the application
 	// key for the OneDrive application.
 	//
@@ -2466,7 +2462,7 @@ type OnPremiseConfiguration struct {
 	noSmithyDocumentSerde
 }
 
-// Summary information for users or groups in your Amazon Web Services SSO identity
+// Summary information for users or groups in your IAM Identity Center identity
 // source. This applies to users and groups with specific permissions that define
 // their level of access to your Amazon Kendra experience. You can create an Amazon
 // Kendra experience such as a search application. For more information on creating
@@ -2477,14 +2473,14 @@ type PersonasSummary struct {
 	// The date-time the summary information was created.
 	CreatedAt *time.Time
 
-	// The identifier of a user or group in your Amazon Web Services SSO identity
-	// source. For example, a user ID could be an email.
+	// The identifier of a user or group in your IAM Identity Center identity source.
+	// For example, a user ID could be an email.
 	EntityId *string
 
 	// The persona that defines the specific permissions of the user or group in your
-	// Amazon Web Services SSO identity source. The available personas or access roles
-	// are Owner and Viewer. For more information on these personas, see Providing
-	// access to your search page
+	// IAM Identity Center identity source. The available personas or access roles are
+	// Owner and Viewer. For more information on these personas, see Providing access
+	// to your search page
 	// (https://docs.aws.amazon.com/kendra/latest/dg/deploying-search-experience-no-code.html#access-search-experience).
 	Persona Persona
 
@@ -2565,7 +2561,7 @@ type QueryResultItem struct {
 	// the relevant terms in the excerpt.
 	DocumentExcerpt *TextWithHighlights
 
-	// The unique identifier for the document.
+	// The identifier for the document.
 	DocumentId *string
 
 	// The title of the document. Contains the text of the title and information for
@@ -2577,11 +2573,17 @@ type QueryResultItem struct {
 
 	// A token that identifies a particular result from a particular query. Use this
 	// token to provide click-through feedback for the result. For more information,
-	// see  Submitting feedback
+	// see Submitting feedback
 	// (https://docs.aws.amazon.com/kendra/latest/dg/submitting-feedback.html).
 	FeedbackToken *string
 
-	// The unique identifier for the query result.
+	// If the Type of document within the response is ANSWER, then it is either a TABLE
+	// answer or TEXT answer. If it's a table answer, a table excerpt is returned in
+	// TableExcerpt. If it's a text answer, a text excerpt is returned in
+	// DocumentExcerpt.
+	Format QueryResultFormat
+
+	// The identifier for the query result.
 	Id *string
 
 	// Indicates the confidence that Amazon Kendra has that a result matches the query
@@ -2592,7 +2594,11 @@ type QueryResultItem struct {
 	// confident that the result matches the query.
 	ScoreAttributes *ScoreAttributes
 
-	// The type of document.
+	// An excerpt from a table within a document.
+	TableExcerpt *TableExcerpt
+
+	// The type of document within the response. For example, a response could include
+	// a question-answer that's relevant to the query.
 	Type QueryResultType
 
 	noSmithyDocumentSerde
@@ -2641,8 +2647,8 @@ type QuipConfiguration struct {
 	// contain a JSON structure with the following keys:
 	//
 	// * accessToken—The token
-	// created in Quip. For more information, see Authentication for a Quip data source
-	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-slack.html#quip-authentication).
+	// created in Quip. For more information, see Using a Quip data source
+	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-slack.html).
 	//
 	// This member is required.
 	SecretArn *string
@@ -2762,8 +2768,8 @@ type RelevanceFeedback struct {
 	// This member is required.
 	RelevanceValue RelevanceType
 
-	// The unique identifier of the search result that the user provided relevance
-	// feedback for.
+	// The identifier of the search result that the user provided relevance feedback
+	// for.
 	//
 	// This member is required.
 	ResultId *string
@@ -3169,9 +3175,8 @@ type ServiceNowConfiguration struct {
 	// The Amazon Resource Name (ARN) of the Secrets Manager secret that contains the
 	// user name and password required to connect to the ServiceNow instance. You can
 	// also provide OAuth authentication credentials of user name, password, client ID,
-	// and client secret. For more information, see Authentication for a ServiceNow
-	// data source
-	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-servicenow.html#servicenow-authentication).
+	// and client secret. For more information, see Using a ServiceNow data source
+	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-servicenow.html).
 	//
 	// This member is required.
 	SecretArn *string
@@ -3308,9 +3313,8 @@ type SharePointConfiguration struct {
 	// Source
 	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-sharepoint.html). You
 	// can also provide OAuth authentication credentials of user name, password, client
-	// ID, and client secret. For more information, see Authentication for a SharePoint
-	// data source
-	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-sharepoint.html#sharepoint-authentication).
+	// ID, and client secret. For more information, see Using a SharePoint data source
+	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-sharepoint.html).
 	//
 	// This member is required.
 	SecretArn *string
@@ -3606,7 +3610,7 @@ type SqlConfiguration struct {
 // Provides information about the status of documents submitted for indexing.
 type Status struct {
 
-	// The unique identifier of the document.
+	// The identifier of the document.
 	DocumentId *string
 
 	// The current status of a document. If the document was submitted for deletion,
@@ -3627,10 +3631,10 @@ type Status struct {
 // A single query suggestion.
 type Suggestion struct {
 
-	// The unique UUID (universally unique identifier) of a single query suggestion.
+	// The UUID (universally unique identifier) of a single query suggestion.
 	Id *string
 
-	// The value for the unique UUID (universally unique identifier) of a single query
+	// The value for the UUID (universally unique identifier) of a single query
 	// suggestion. The value is the text string of a suggestion.
 	Value *SuggestionValue
 
@@ -3672,6 +3676,53 @@ type SuggestionValue struct {
 	noSmithyDocumentSerde
 }
 
+// Provides information about a table cell in a table excerpt.
+type TableCell struct {
+
+	// TRUE means that the table cell should be treated as a header.
+	Header bool
+
+	// TRUE means that the table cell has a high enough confidence and is relevant to
+	// the query, so the value or content should be highlighted.
+	Highlighted bool
+
+	// TRUE if the response of the table cell is the top answer. This is the cell value
+	// or content with the highest confidence score or is the most relevant to the
+	// query.
+	TopAnswer bool
+
+	// The actual value or content within a table cell. A table cell could contain a
+	// date value of a year, or a string value of text, for example.
+	Value *string
+
+	noSmithyDocumentSerde
+}
+
+// An excerpt from a table within a document. The table excerpt displays up to five
+// columns and three rows, depending on how many table cells are relevant to the
+// query and how many columns are available in the original table. The top most
+// relevant cell is displayed in the table excerpt, along with the next most
+// relevant cells.
+type TableExcerpt struct {
+
+	// A list of rows in the table excerpt.
+	Rows []TableRow
+
+	// A count of the number of rows in the original table within the document.
+	TotalNumberOfRows *int32
+
+	noSmithyDocumentSerde
+}
+
+// Information about a row in a table excerpt.
+type TableRow struct {
+
+	// A list of table cells in a row.
+	Cells []TableCell
+
+	noSmithyDocumentSerde
+}
+
 // A list of key/value pairs that identify an index, FAQ, or data source. Tag keys
 // and values can consist of Unicode letters, digits, white space, and any of the
 // following symbols: _ . : / = + - @.
@@ -3696,12 +3747,9 @@ type Tag struct {
 // source.
 type TemplateConfiguration struct {
 
-	// The template schema used for the data source. The following links to the
-	// template schema for data sources where templates are supported:
-	//
-	// * Zendesk
-	// template schema
-	// (https://docs.aws.amazon.com/kendra/latest/dg/data-source-zendesk.html#zendesk-template-schema)
+	// The template schema used for the data source, where templates schemas are
+	// supported. See Data source template schemas
+	// (https://docs.aws.amazon.com/kendra/latest/dg/ds-schemas.html).
 	Template document.Interface
 
 	noSmithyDocumentSerde
@@ -3829,28 +3877,29 @@ type UserContext struct {
 }
 
 // Provides the configuration information to fetch access levels of groups and
-// users from an Amazon Web Services Single Sign On identity source. This is useful
-// for user context filtering, where search results are filtered based on the user
-// or their group access to documents. You can also use the PutPrincipalMapping
+// users from an IAM Identity Center (successor to Single Sign-On) identity source.
+// This is useful for user context filtering, where search results are filtered
+// based on the user or their group access to documents. You can also use the
+// PutPrincipalMapping
 // (https://docs.aws.amazon.com/kendra/latest/dg/API_PutPrincipalMapping.html) API
 // to map users to their groups so that you only need to provide the user ID when
-// you issue the query. To set up an Amazon Web Services SSO identity source in the
-// console to use with Amazon Kendra, see Getting started with an Amazon Web
-// Services SSO identity source
+// you issue the query. To set up an IAM Identity Center identity source in the
+// console to use with Amazon Kendra, see Getting started with an IAM Identity
+// Center identity source
 // (https://docs.aws.amazon.com/kendra/latest/dg/getting-started-aws-sso.html). You
-// must also grant the required permissions to use Amazon Web Services SSO with
-// Amazon Kendra. For more information, see IAM roles for Amazon Web Services SSO
+// must also grant the required permissions to use IAM Identity Center with Amazon
+// Kendra. For more information, see IAM roles for IAM Identity Center
 // (https://docs.aws.amazon.com/kendra/latest/dg/iam-roles.html#iam-roles-aws-sso).
 // Amazon Kendra currently does not support using UserGroupResolutionConfiguration
-// with an Amazon Web Services organization member account for your Amazon Web
-// Services SSO identify source. You must create your index in the management
-// account for the organization in order to use UserGroupResolutionConfiguration.
+// with an Amazon Web Services organization member account for your IAM Identity
+// Center identify source. You must create your index in the management account for
+// the organization in order to use UserGroupResolutionConfiguration.
 type UserGroupResolutionConfiguration struct {
 
 	// The identity store provider (mode) you want to use to fetch access levels of
-	// groups and users. Amazon Web Services Single Sign On is currently the only
-	// available mode. Your users and groups must exist in an Amazon Web Services SSO
-	// identity source in order to use this mode.
+	// groups and users. IAM Identity Center (successor to Single Sign-On) is currently
+	// the only available mode. Your users and groups must exist in an IAM Identity
+	// Center identity source in order to use this mode.
 	//
 	// This member is required.
 	UserGroupResolutionMode UserGroupResolutionMode
@@ -3861,13 +3910,13 @@ type UserGroupResolutionConfiguration struct {
 // Provides the configuration information for the identifiers of your users.
 type UserIdentityConfiguration struct {
 
-	// The Amazon Web Services SSO field name that contains the identifiers of your
-	// users, such as their emails. This is used for user context filtering
+	// The IAM Identity Center field name that contains the identifiers of your users,
+	// such as their emails. This is used for user context filtering
 	// (https://docs.aws.amazon.com/kendra/latest/dg/user-context-filter.html) and for
-	// granting access to your Amazon Kendra experience. You must set up Amazon Web
-	// Services SSO with Amazon Kendra. You must include your users and groups in your
-	// Access Control List when you ingest documents into your index. For more
-	// information, see Getting started with an Amazon Web Services SSO identity source
+	// granting access to your Amazon Kendra experience. You must set up IAM Identity
+	// Center with Amazon Kendra. You must include your users and groups in your Access
+	// Control List when you ingest documents into your index. For more information,
+	// see Getting started with an IAM Identity Center identity source
 	// (https://docs.aws.amazon.com/kendra/latest/dg/getting-started-aws-sso.html).
 	IdentityAttributeName *string
 

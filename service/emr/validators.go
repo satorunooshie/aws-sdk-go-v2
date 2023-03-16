@@ -350,6 +350,26 @@ func (m *validateOpGetAutoTerminationPolicy) HandleInitialize(ctx context.Contex
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpGetClusterSessionCredentials struct {
+}
+
+func (*validateOpGetClusterSessionCredentials) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpGetClusterSessionCredentials) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*GetClusterSessionCredentialsInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpGetClusterSessionCredentialsInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpGetManagedScalingPolicy struct {
 }
 
@@ -938,6 +958,10 @@ func addOpGetAutoTerminationPolicyValidationMiddleware(stack *middleware.Stack) 
 	return stack.Initialize.Add(&validateOpGetAutoTerminationPolicy{}, middleware.After)
 }
 
+func addOpGetClusterSessionCredentialsValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpGetClusterSessionCredentials{}, middleware.After)
+}
+
 func addOpGetManagedScalingPolicyValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpGetManagedScalingPolicy{}, middleware.After)
 }
@@ -1270,6 +1294,11 @@ func validateInstanceFleetConfig(v *types.InstanceFleetConfig) error {
 			invalidParams.AddNested("LaunchSpecifications", err.(smithy.InvalidParamsError))
 		}
 	}
+	if v.ResizeSpecifications != nil {
+		if err := validateInstanceFleetResizingSpecifications(v.ResizeSpecifications); err != nil {
+			invalidParams.AddNested("ResizeSpecifications", err.(smithy.InvalidParamsError))
+		}
+	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	} else {
@@ -1302,6 +1331,11 @@ func validateInstanceFleetModifyConfig(v *types.InstanceFleetModifyConfig) error
 	if v.InstanceFleetId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("InstanceFleetId"))
 	}
+	if v.ResizeSpecifications != nil {
+		if err := validateInstanceFleetResizingSpecifications(v.ResizeSpecifications); err != nil {
+			invalidParams.AddNested("ResizeSpecifications", err.(smithy.InvalidParamsError))
+		}
+	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	} else {
@@ -1322,6 +1356,28 @@ func validateInstanceFleetProvisioningSpecifications(v *types.InstanceFleetProvi
 	if v.OnDemandSpecification != nil {
 		if err := validateOnDemandProvisioningSpecification(v.OnDemandSpecification); err != nil {
 			invalidParams.AddNested("OnDemandSpecification", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateInstanceFleetResizingSpecifications(v *types.InstanceFleetResizingSpecifications) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "InstanceFleetResizingSpecifications"}
+	if v.SpotResizeSpecification != nil {
+		if err := validateSpotResizingSpecification(v.SpotResizeSpecification); err != nil {
+			invalidParams.AddNested("SpotResizeSpecification", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.OnDemandResizeSpecification != nil {
+		if err := validateOnDemandResizingSpecification(v.OnDemandResizeSpecification); err != nil {
+			invalidParams.AddNested("OnDemandResizeSpecification", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {
@@ -1512,6 +1568,21 @@ func validateOnDemandProvisioningSpecification(v *types.OnDemandProvisioningSpec
 	invalidParams := smithy.InvalidParamsError{Context: "OnDemandProvisioningSpecification"}
 	if len(v.AllocationStrategy) == 0 {
 		invalidParams.Add(smithy.NewErrParamRequired("AllocationStrategy"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOnDemandResizingSpecification(v *types.OnDemandResizingSpecification) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "OnDemandResizingSpecification"}
+	if v.TimeoutDurationMinutes == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("TimeoutDurationMinutes"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1726,6 +1797,21 @@ func validateSpotProvisioningSpecification(v *types.SpotProvisioningSpecificatio
 	}
 	if len(v.TimeoutAction) == 0 {
 		invalidParams.Add(smithy.NewErrParamRequired("TimeoutAction"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateSpotResizingSpecification(v *types.SpotResizingSpecification) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "SpotResizingSpecification"}
+	if v.TimeoutDurationMinutes == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("TimeoutDurationMinutes"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -2101,6 +2187,24 @@ func validateOpGetAutoTerminationPolicyInput(v *GetAutoTerminationPolicyInput) e
 	invalidParams := smithy.InvalidParamsError{Context: "GetAutoTerminationPolicyInput"}
 	if v.ClusterId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("ClusterId"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpGetClusterSessionCredentialsInput(v *GetClusterSessionCredentialsInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "GetClusterSessionCredentialsInput"}
+	if v.ClusterId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ClusterId"))
+	}
+	if v.ExecutionRoleArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ExecutionRoleArn"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams

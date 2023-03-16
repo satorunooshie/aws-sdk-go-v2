@@ -201,9 +201,9 @@ func awsRestjson1_serializeOpDocumentCreateExperimentInput(v *CreateExperimentIn
 		ok.String(*v.RandomizationSalt)
 	}
 
-	if v.SamplingRate != 0 {
+	if v.SamplingRate != nil {
 		ok := object.Key("samplingRate")
-		ok.Long(v.SamplingRate)
+		ok.Long(*v.SamplingRate)
 	}
 
 	if v.Segment != nil {
@@ -523,6 +523,13 @@ func awsRestjson1_serializeOpHttpBindingsCreateProjectInput(v *CreateProjectInpu
 func awsRestjson1_serializeOpDocumentCreateProjectInput(v *CreateProjectInput, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
+
+	if v.AppConfigResource != nil {
+		ok := object.Key("appConfigResource")
+		if err := awsRestjson1_serializeDocumentProjectAppConfigResourceConfig(v.AppConfigResource, ok); err != nil {
+			return err
+		}
+	}
 
 	if v.DataDelivery != nil {
 		ok := object.Key("dataDelivery")
@@ -2707,9 +2714,9 @@ func awsRestjson1_serializeOpDocumentUpdateExperimentInput(v *UpdateExperimentIn
 		ok.Boolean(v.RemoveSegment)
 	}
 
-	if v.SamplingRate != 0 {
+	if v.SamplingRate != nil {
 		ok := object.Key("samplingRate")
-		ok.Long(v.SamplingRate)
+		ok.Long(*v.SamplingRate)
 	}
 
 	if v.Segment != nil {
@@ -3036,6 +3043,13 @@ func awsRestjson1_serializeOpHttpBindingsUpdateProjectInput(v *UpdateProjectInpu
 func awsRestjson1_serializeOpDocumentUpdateProjectInput(v *UpdateProjectInput, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
+
+	if v.AppConfigResource != nil {
+		ok := object.Key("appConfigResource")
+		if err := awsRestjson1_serializeDocumentProjectAppConfigResourceConfig(v.AppConfigResource, ok); err != nil {
+			return err
+		}
+	}
 
 	if v.Description != nil {
 		ok := object.Key("description")
@@ -3417,6 +3431,23 @@ func awsRestjson1_serializeDocumentOnlineAbConfig(v *types.OnlineAbConfig, value
 		if err := awsRestjson1_serializeDocumentTreatmentToWeightMap(v.TreatmentWeights, ok); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentProjectAppConfigResourceConfig(v *types.ProjectAppConfigResourceConfig, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.ApplicationId != nil {
+		ok := object.Key("applicationId")
+		ok.String(*v.ApplicationId)
+	}
+
+	if v.EnvironmentId != nil {
+		ok := object.Key("environmentId")
+		ok.String(*v.EnvironmentId)
 	}
 
 	return nil

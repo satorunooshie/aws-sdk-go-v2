@@ -478,6 +478,26 @@ func (DataFormat) Values() []DataFormat {
 	}
 }
 
+type DataQualityRuleResultStatus string
+
+// Enum values for DataQualityRuleResultStatus
+const (
+	DataQualityRuleResultStatusPass  DataQualityRuleResultStatus = "PASS"
+	DataQualityRuleResultStatusFail  DataQualityRuleResultStatus = "FAIL"
+	DataQualityRuleResultStatusError DataQualityRuleResultStatus = "ERROR"
+)
+
+// Values returns all known values for DataQualityRuleResultStatus. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (DataQualityRuleResultStatus) Values() []DataQualityRuleResultStatus {
+	return []DataQualityRuleResultStatus{
+		"PASS",
+		"FAIL",
+		"ERROR",
+	}
+}
+
 type DeleteBehavior string
 
 // Enum values for DeleteBehavior
@@ -495,6 +515,60 @@ func (DeleteBehavior) Values() []DeleteBehavior {
 		"LOG",
 		"DELETE_FROM_DATABASE",
 		"DEPRECATE_IN_DATABASE",
+	}
+}
+
+type DeltaTargetCompressionType string
+
+// Enum values for DeltaTargetCompressionType
+const (
+	DeltaTargetCompressionTypeUncompressed DeltaTargetCompressionType = "uncompressed"
+	DeltaTargetCompressionTypeSnappy       DeltaTargetCompressionType = "snappy"
+)
+
+// Values returns all known values for DeltaTargetCompressionType. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (DeltaTargetCompressionType) Values() []DeltaTargetCompressionType {
+	return []DeltaTargetCompressionType{
+		"uncompressed",
+		"snappy",
+	}
+}
+
+type DQStopJobOnFailureTiming string
+
+// Enum values for DQStopJobOnFailureTiming
+const (
+	DQStopJobOnFailureTimingImmediate     DQStopJobOnFailureTiming = "Immediate"
+	DQStopJobOnFailureTimingAfterDataLoad DQStopJobOnFailureTiming = "AfterDataLoad"
+)
+
+// Values returns all known values for DQStopJobOnFailureTiming. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (DQStopJobOnFailureTiming) Values() []DQStopJobOnFailureTiming {
+	return []DQStopJobOnFailureTiming{
+		"Immediate",
+		"AfterDataLoad",
+	}
+}
+
+type DQTransformOutput string
+
+// Enum values for DQTransformOutput
+const (
+	DQTransformOutputPrimaryInput      DQTransformOutput = "PrimaryInput"
+	DQTransformOutputEvaluationResults DQTransformOutput = "EvaluationResults"
+)
+
+// Values returns all known values for DQTransformOutput. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (DQTransformOutput) Values() []DQTransformOutput {
+	return []DQTransformOutput{
+		"PrimaryInput",
+		"EvaluationResults",
 	}
 }
 
@@ -702,6 +776,52 @@ func (GlueRecordType) Values() []GlueRecordType {
 	}
 }
 
+type HudiTargetCompressionType string
+
+// Enum values for HudiTargetCompressionType
+const (
+	HudiTargetCompressionTypeGzip         HudiTargetCompressionType = "gzip"
+	HudiTargetCompressionTypeLzo          HudiTargetCompressionType = "lzo"
+	HudiTargetCompressionTypeUncompressed HudiTargetCompressionType = "uncompressed"
+	HudiTargetCompressionTypeSnappy       HudiTargetCompressionType = "snappy"
+)
+
+// Values returns all known values for HudiTargetCompressionType. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (HudiTargetCompressionType) Values() []HudiTargetCompressionType {
+	return []HudiTargetCompressionType{
+		"gzip",
+		"lzo",
+		"uncompressed",
+		"snappy",
+	}
+}
+
+type JDBCConnectionType string
+
+// Enum values for JDBCConnectionType
+const (
+	JDBCConnectionTypeSqlserver  JDBCConnectionType = "sqlserver"
+	JDBCConnectionTypeMysql      JDBCConnectionType = "mysql"
+	JDBCConnectionTypeOracle     JDBCConnectionType = "oracle"
+	JDBCConnectionTypePostgresql JDBCConnectionType = "postgresql"
+	JDBCConnectionTypeRedshift   JDBCConnectionType = "redshift"
+)
+
+// Values returns all known values for JDBCConnectionType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (JDBCConnectionType) Values() []JDBCConnectionType {
+	return []JDBCConnectionType{
+		"sqlserver",
+		"mysql",
+		"oracle",
+		"postgresql",
+		"redshift",
+	}
+}
+
 type JDBCDataType string
 
 // Enum values for JDBCDataType
@@ -791,6 +911,24 @@ func (JDBCDataType) Values() []JDBCDataType {
 		"TINYINT",
 		"VARBINARY",
 		"VARCHAR",
+	}
+}
+
+type JdbcMetadataEntry string
+
+// Enum values for JdbcMetadataEntry
+const (
+	JdbcMetadataEntryComments JdbcMetadataEntry = "COMMENTS"
+	JdbcMetadataEntryRawtypes JdbcMetadataEntry = "RAWTYPES"
+)
+
+// Values returns all known values for JdbcMetadataEntry. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (JdbcMetadataEntry) Values() []JdbcMetadataEntry {
+	return []JdbcMetadataEntry{
+		"COMMENTS",
+		"RAWTYPES",
 	}
 }
 
@@ -978,6 +1116,34 @@ func (NodeType) Values() []NodeType {
 		"CRAWLER",
 		"JOB",
 		"TRIGGER",
+	}
+}
+
+type ParamType string
+
+// Enum values for ParamType
+const (
+	ParamTypeStr     ParamType = "str"
+	ParamTypeInt     ParamType = "int"
+	ParamTypeFloat   ParamType = "float"
+	ParamTypeComplex ParamType = "complex"
+	ParamTypeBool    ParamType = "bool"
+	ParamTypeList    ParamType = "list"
+	ParamTypeNull    ParamType = "null"
+)
+
+// Values returns all known values for ParamType. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (ParamType) Values() []ParamType {
+	return []ParamType{
+		"str",
+		"int",
+		"float",
+		"complex",
+		"bool",
+		"list",
+		"null",
 	}
 }
 
@@ -1401,6 +1567,42 @@ func (SortDirectionType) Values() []SortDirectionType {
 	}
 }
 
+type SourceControlAuthStrategy string
+
+// Enum values for SourceControlAuthStrategy
+const (
+	SourceControlAuthStrategyPersonalAccessToken SourceControlAuthStrategy = "PERSONAL_ACCESS_TOKEN"
+	SourceControlAuthStrategyAwsSecretsManager   SourceControlAuthStrategy = "AWS_SECRETS_MANAGER"
+)
+
+// Values returns all known values for SourceControlAuthStrategy. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (SourceControlAuthStrategy) Values() []SourceControlAuthStrategy {
+	return []SourceControlAuthStrategy{
+		"PERSONAL_ACCESS_TOKEN",
+		"AWS_SECRETS_MANAGER",
+	}
+}
+
+type SourceControlProvider string
+
+// Enum values for SourceControlProvider
+const (
+	SourceControlProviderGithub        SourceControlProvider = "GITHUB"
+	SourceControlProviderAwsCodeCommit SourceControlProvider = "AWS_CODE_COMMIT"
+)
+
+// Values returns all known values for SourceControlProvider. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (SourceControlProvider) Values() []SourceControlProvider {
+	return []SourceControlProvider{
+		"GITHUB",
+		"AWS_CODE_COMMIT",
+	}
+}
+
 type StartingPosition string
 
 // Enum values for StartingPosition
@@ -1456,6 +1658,8 @@ const (
 	TargetFormatAvro    TargetFormat = "avro"
 	TargetFormatOrc     TargetFormat = "orc"
 	TargetFormatParquet TargetFormat = "parquet"
+	TargetFormatHudi    TargetFormat = "hudi"
+	TargetFormatDelta   TargetFormat = "delta"
 )
 
 // Values returns all known values for TargetFormat. Note that this can be expanded
@@ -1468,6 +1672,8 @@ func (TargetFormat) Values() []TargetFormat {
 		"avro",
 		"orc",
 		"parquet",
+		"hudi",
+		"delta",
 	}
 }
 

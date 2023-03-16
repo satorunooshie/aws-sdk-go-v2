@@ -24,17 +24,29 @@ type Addon struct {
 	// The name of the cluster.
 	ClusterName *string
 
+	// The configuration values that you provided.
+	ConfigurationValues *string
+
 	// The date and time that the add-on was created.
 	CreatedAt *time.Time
 
 	// An object that represents the health of the add-on.
 	Health *AddonHealth
 
+	// Information about an Amazon EKS add-on from the Amazon Web Services Marketplace.
+	MarketplaceInformation *MarketplaceInformation
+
 	// The date and time that the add-on was last modified.
 	ModifiedAt *time.Time
 
-	// The Amazon Resource Name (ARN) of the IAM role that is bound to the Kubernetes
-	// service account used by the add-on.
+	// The owner of the add-on.
+	Owner *string
+
+	// The publisher of the add-on.
+	Publisher *string
+
+	// The Amazon Resource Name (ARN) of the IAM role that's bound to the Kubernetes
+	// service account that the add-on uses.
 	ServiceAccountRoleArn *string
 
 	// The status of the add-on.
@@ -51,7 +63,7 @@ type Addon struct {
 // The health of the add-on.
 type AddonHealth struct {
 
-	// An object that represents the add-on's health issues.
+	// An object representing the health issues for an add-on.
 	Issues []AddonIssue
 
 	noSmithyDocumentSerde
@@ -63,9 +75,18 @@ type AddonInfo struct {
 	// The name of the add-on.
 	AddonName *string
 
-	// An object that represents information about available add-on versions and
+	// An object representing information about available add-on versions and
 	// compatible Kubernetes versions.
 	AddonVersions []AddonVersionInfo
+
+	// Information about the add-on from the Amazon Web Services Marketplace.
+	MarketplaceInformation *MarketplaceInformation
+
+	// The owner of the add-on.
+	Owner *string
+
+	// The publisher of the add-on.
+	Publisher *string
 
 	// The type of the add-on.
 	Type *string
@@ -97,8 +118,11 @@ type AddonVersionInfo struct {
 	// The architectures that the version supports.
 	Architecture []string
 
-	// An object that represents the compatibilities of a version.
+	// An object representing the compatibilities of a version.
 	Compatibilities []Compatibility
+
+	// Whether the add-on requires configuration.
+	RequiresConfiguration bool
 
 	noSmithyDocumentSerde
 }
@@ -149,6 +173,16 @@ type Cluster struct {
 	// The endpoint for your Kubernetes API server.
 	Endpoint *string
 
+	// An object representing the health of your local Amazon EKS cluster on an Amazon
+	// Web Services Outpost. This object isn't available for clusters on the Amazon Web
+	// Services cloud.
+	Health *ClusterHealth
+
+	// The ID of your local Amazon EKS cluster on an Amazon Web Services Outpost. This
+	// property isn't available for an Amazon EKS cluster on the Amazon Web Services
+	// cloud.
+	Id *string
+
 	// The identity provider information for the cluster.
 	Identity *Identity
 
@@ -160,6 +194,11 @@ type Cluster struct {
 
 	// The name of the cluster.
 	Name *string
+
+	// An object representing the configuration of your local Amazon EKS cluster on an
+	// Amazon Web Services Outpost. This object isn't available for clusters on the
+	// Amazon Web Services cloud.
+	OutpostConfig *OutpostConfigResponse
 
 	// The platform version of your Amazon EKS cluster. For more information, see
 	// Platform Versions
@@ -192,6 +231,35 @@ type Cluster struct {
 
 	// The Kubernetes server version for the cluster.
 	Version *string
+
+	noSmithyDocumentSerde
+}
+
+// An object representing the health of your local Amazon EKS cluster on an Amazon
+// Web Services Outpost. You can't use this API with an Amazon EKS cluster on the
+// Amazon Web Services cloud.
+type ClusterHealth struct {
+
+	// An object representing the health issues of your local Amazon EKS cluster on an
+	// Amazon Web Services Outpost.
+	Issues []ClusterIssue
+
+	noSmithyDocumentSerde
+}
+
+// An issue with your local Amazon EKS cluster on an Amazon Web Services Outpost.
+// You can't use this API with an Amazon EKS cluster on the Amazon Web Services
+// cloud.
+type ClusterIssue struct {
+
+	// The error code of the issue.
+	Code ClusterIssueCode
+
+	// A description of the issue.
+	Message *string
+
+	// The resource IDs that the issue relates to.
+	ResourceIds []string
 
 	noSmithyDocumentSerde
 }
@@ -247,6 +315,33 @@ type ConnectorConfigResponse struct {
 	// The Amazon Resource Name (ARN) of the role to communicate with services from the
 	// connected Kubernetes cluster.
 	RoleArn *string
+
+	noSmithyDocumentSerde
+}
+
+// The placement configuration for all the control plane instances of your local
+// Amazon EKS cluster on an Amazon Web Services Outpost. For more information, see
+// Capacity considerations
+// (https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html)
+// in the Amazon EKS User Guide
+type ControlPlanePlacementRequest struct {
+
+	// The name of the placement group for the Kubernetes control plane instances. This
+	// setting can't be changed after cluster creation.
+	GroupName *string
+
+	noSmithyDocumentSerde
+}
+
+// The placement configuration for all the control plane instances of your local
+// Amazon EKS cluster on an Amazon Web Services Outpost. For more information, see
+// Capacity considerations
+// (https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html)
+// in the Amazon EKS User Guide.
+type ControlPlanePlacementResponse struct {
+
+	// The name of the placement group for the Kubernetes control plane instances.
+	GroupName *string
 
 	noSmithyDocumentSerde
 }
@@ -383,8 +478,7 @@ type IdentityProviderConfig struct {
 // The full description of your identity configuration.
 type IdentityProviderConfigResponse struct {
 
-	// An object that represents an OpenID Connect (OIDC) identity provider
-	// configuration.
+	// An object representing an OpenID Connect (OIDC) identity provider configuration.
 	Oidc *OidcIdentityProviderConfig
 
 	noSmithyDocumentSerde
@@ -546,7 +640,7 @@ type KubernetesNetworkConfigResponse struct {
 }
 
 // An object representing a node group launch template specification. The launch
-// template cannot include SubnetId
+// template can't include SubnetId
 // (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateNetworkInterface.html),
 // IamInstanceProfile
 // (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_IamInstanceProfile.html),
@@ -562,17 +656,20 @@ type KubernetesNetworkConfigResponse struct {
 // in the Amazon EC2 API Reference. For more information about using launch
 // templates with Amazon EKS, see Launch template support
 // (https://docs.aws.amazon.com/eks/latest/userguide/launch-templates.html) in the
-// Amazon EKS User Guide. Specify either name or id, but not both.
+// Amazon EKS User Guide. You must specify either the launch template ID or the
+// launch template name in the request, but not both.
 type LaunchTemplateSpecification struct {
 
-	// The ID of the launch template.
+	// The ID of the launch template. You must specify either the launch template ID or
+	// the launch template name in the request, but not both.
 	Id *string
 
-	// The name of the launch template.
+	// The name of the launch template. You must specify either the launch template
+	// name or the launch template ID in the request, but not both.
 	Name *string
 
-	// The version of the launch template to use. If no version is specified, then the
-	// template's default version is used.
+	// The version number of the launch template to use. If no version is specified,
+	// then the template's default version is used.
 	Version *string
 
 	noSmithyDocumentSerde
@@ -599,6 +696,18 @@ type LogSetup struct {
 
 	// The available cluster control plane log types.
 	Types []LogType
+
+	noSmithyDocumentSerde
+}
+
+// Information about an Amazon EKS add-on from the Amazon Web Services Marketplace.
+type MarketplaceInformation struct {
+
+	// The product ID from the Amazon Web Services Marketplace.
+	ProductId *string
+
+	// The product URL from the Amazon Web Services Marketplace.
+	ProductUrl *string
 
 	noSmithyDocumentSerde
 }
@@ -793,8 +902,8 @@ type OIDC struct {
 	noSmithyDocumentSerde
 }
 
-// An object that represents the configuration for an OpenID Connect (OIDC)
-// identity provider.
+// An object representing the configuration for an OpenID Connect (OIDC) identity
+// provider.
 type OidcIdentityProviderConfig struct {
 
 	// This is also known as audience. The ID of the client application that makes
@@ -906,6 +1015,68 @@ type OidcIdentityProviderConfigRequest struct {
 	noSmithyDocumentSerde
 }
 
+// The configuration of your local Amazon EKS cluster on an Amazon Web Services
+// Outpost. Before creating a cluster on an Outpost, review Creating a local
+// cluster on an Outpost
+// (https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-local-cluster-create.html)
+// in the Amazon EKS User Guide. This API isn't available for Amazon EKS clusters
+// on the Amazon Web Services cloud.
+type OutpostConfigRequest struct {
+
+	// The Amazon EC2 instance type that you want to use for your local Amazon EKS
+	// cluster on Outposts. Choose an instance type based on the number of nodes that
+	// your cluster will have. For more information, see Capacity considerations
+	// (https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html)
+	// in the Amazon EKS User Guide. The instance type that you specify is used for all
+	// Kubernetes control plane instances. The instance type can't be changed after
+	// cluster creation. The control plane is not automatically scaled by Amazon EKS.
+	//
+	// This member is required.
+	ControlPlaneInstanceType *string
+
+	// The ARN of the Outpost that you want to use for your local Amazon EKS cluster on
+	// Outposts. Only a single Outpost ARN is supported.
+	//
+	// This member is required.
+	OutpostArns []string
+
+	// An object representing the placement configuration for all the control plane
+	// instances of your local Amazon EKS cluster on an Amazon Web Services Outpost.
+	// For more information, see Capacity considerations
+	// (https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html)
+	// in the Amazon EKS User Guide.
+	ControlPlanePlacement *ControlPlanePlacementRequest
+
+	noSmithyDocumentSerde
+}
+
+// An object representing the configuration of your local Amazon EKS cluster on an
+// Amazon Web Services Outpost. This API isn't available for Amazon EKS clusters on
+// the Amazon Web Services cloud.
+type OutpostConfigResponse struct {
+
+	// The Amazon EC2 instance type used for the control plane. The instance type is
+	// the same for all control plane instances.
+	//
+	// This member is required.
+	ControlPlaneInstanceType *string
+
+	// The ARN of the Outpost that you specified for use with your local Amazon EKS
+	// cluster on Outposts.
+	//
+	// This member is required.
+	OutpostArns []string
+
+	// An object representing the placement configuration for all the control plane
+	// instances of your local Amazon EKS cluster on an Amazon Web Services Outpost.
+	// For more information, see Capacity considerations
+	// (https://docs.aws.amazon.com/eks/latest/userguide/eks-outposts-capacity-considerations.html)
+	// in the Amazon EKS User Guide.
+	ControlPlanePlacement *ControlPlanePlacementResponse
+
+	noSmithyDocumentSerde
+}
+
 // Identifies the Key Management Service (KMS) key used to encrypt the secrets.
 type Provider struct {
 
@@ -924,17 +1095,22 @@ type Provider struct {
 // group.
 type RemoteAccessConfig struct {
 
-	// The Amazon EC2 SSH key that provides access for SSH communication with the nodes
-	// in the managed node group. For more information, see Amazon EC2 key pairs and
-	// Linux instances
+	// The Amazon EC2 SSH key name that provides access for SSH communication with the
+	// nodes in the managed node group. For more information, see Amazon EC2 key pairs
+	// and Linux instances
 	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) in the
-	// Amazon Elastic Compute Cloud User Guide for Linux Instances.
+	// Amazon Elastic Compute Cloud User Guide for Linux Instances. For Windows, an
+	// Amazon EC2 SSH key is used to obtain the RDP password. For more information, see
+	// Amazon EC2 key pairs and Windows instances
+	// (https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/ec2-key-pairs.html) in
+	// the Amazon Elastic Compute Cloud User Guide for Windows Instances.
 	Ec2SshKey *string
 
-	// The security groups that are allowed SSH access (port 22) to the nodes. If you
-	// specify an Amazon EC2 SSH key but do not specify a source security group when
-	// you create a managed node group, then port 22 on the nodes is opened to the
-	// internet (0.0.0.0/0). For more information, see Security Groups for Your VPC
+	// The security group IDs that are allowed SSH access (port 22) to the nodes. For
+	// Windows, the port is 3389. If you specify an Amazon EC2 SSH key but don't
+	// specify a source security group when you create a managed node group, then the
+	// port on the nodes is opened to the internet (0.0.0.0/0). For more information,
+	// see Security Groups for Your VPC
 	// (https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html) in
 	// the Amazon Virtual Private Cloud User Guide.
 	SourceSecurityGroups []string
@@ -1015,7 +1191,7 @@ type UpdateTaintsPayload struct {
 	// Kubernetes taints to be added or updated.
 	AddOrUpdateTaints []Taint
 
-	// Kubernetes taints to be removed.
+	// Kubernetes taints to remove.
 	RemoveTaints []Taint
 
 	noSmithyDocumentSerde
@@ -1059,15 +1235,8 @@ type VpcConfigRequest struct {
 	// interfaces that Amazon EKS creates to use that allow communication between your
 	// nodes and the Kubernetes control plane. If you don't specify any security
 	// groups, then familiarize yourself with the difference between Amazon EKS
-	// defaults for clusters deployed with Kubernetes:
-	//
-	// * 1.14 Amazon EKS platform
-	// version eks.2 and earlier
-	//
-	// * 1.14 Amazon EKS platform version eks.3 and
-	// later
-	//
-	// For more information, see Amazon EKS security group considerations
+	// defaults for clusters deployed with Kubernetes. For more information, see Amazon
+	// EKS security group considerations
 	// (https://docs.aws.amazon.com/eks/latest/userguide/sec-group-reqs.html) in the
 	// Amazon EKS User Guide .
 	SecurityGroupIds []string

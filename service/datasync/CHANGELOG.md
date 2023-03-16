@@ -1,3 +1,78 @@
+# v1.23.1 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.0 (2023-02-22)
+
+* **Feature**: AWS DataSync has relaxed the minimum length constraint of AccessKey for Object Storage locations to 1.
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.22.2 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.1 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.22.0 (2023-02-14)
+
+* **Feature**: With this launch, we are giving customers the ability to use older SMB protocol versions, enabling them to use DataSync to copy data to and from their legacy storage arrays.
+
+# v1.21.2 (2023-02-08)
+
+* No change notes available for this release.
+
+# v1.21.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.20.0 (2022-12-16)
+
+* **Feature**: AWS DataSync now supports the use of tags with task executions. With this new feature, you can apply tags each time you execute a task, giving you greater control and management over your task executions.
+
+# v1.19.3 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.2 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.1 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.19.0 (2022-10-24)
+
+* **Feature**: Added support for self-signed certificates when using object storage locations; added BytesCompressed to the TaskExecution response.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.13 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.12 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.11 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.10 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.9 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.18.8 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

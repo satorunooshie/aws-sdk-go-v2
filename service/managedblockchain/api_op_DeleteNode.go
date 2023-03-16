@@ -10,8 +10,8 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Deletes a node that your AWS account owns. All data on the node is lost and
-// cannot be recovered. Applies to Hyperledger Fabric and Ethereum.
+// Deletes a node that your Amazon Web Services account owns. All data on the node
+// is lost and cannot be recovered. Applies to Hyperledger Fabric and Ethereum.
 func (c *Client) DeleteNode(ctx context.Context, params *DeleteNodeInput, optFns ...func(*Options)) (*DeleteNodeOutput, error) {
 	if params == nil {
 		params = &DeleteNodeInput{}
@@ -35,7 +35,9 @@ type DeleteNodeInput struct {
 	// * n-ethereum-mainnet
 	//
 	// *
-	// n-ethereum-rinkeby
+	// n-ethereum-goerli
+	//
+	// * n-ethereum-rinkeby
 	//
 	// * n-ethereum-ropsten
 	//

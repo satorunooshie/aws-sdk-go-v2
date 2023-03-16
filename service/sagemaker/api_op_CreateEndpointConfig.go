@@ -57,7 +57,7 @@ type CreateEndpointConfigInput struct {
 	// This member is required.
 	EndpointConfigName *string
 
-	// An list of ProductionVariant objects, one for each model that you want to host
+	// An array of ProductionVariant objects, one for each model that you want to host
 	// at this endpoint.
 	//
 	// This member is required.
@@ -71,6 +71,9 @@ type CreateEndpointConfigInput struct {
 
 	// Configuration to control how SageMaker captures inference data.
 	DataCaptureConfig *types.DataCaptureConfig
+
+	// A member of CreateEndpointConfig that enables explainers.
+	ExplainerConfig *types.ExplainerConfig
 
 	// The Amazon Resource Name (ARN) of a Amazon Web Services Key Management Service
 	// key that SageMaker uses to encrypt data on the storage volume attached to the ML
@@ -107,6 +110,13 @@ type CreateEndpointConfigInput struct {
 	// Store Volumes
 	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ssd-instance-store.html).
 	KmsKeyId *string
+
+	// An array of ProductionVariant objects, one for each model that you want to host
+	// at this endpoint in shadow mode with production traffic replicated from the
+	// model specified on ProductionVariants. If you use this field, you can only
+	// specify one variant for ProductionVariants and one variant for
+	// ShadowProductionVariants.
+	ShadowProductionVariants []types.ProductionVariant
 
 	// An array of key-value pairs. You can use tags to categorize your Amazon Web
 	// Services resources in different ways, for example, by purpose, owner, or

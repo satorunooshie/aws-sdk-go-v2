@@ -134,6 +134,28 @@ func (AutomationMode) Values() []AutomationMode {
 	}
 }
 
+type ClientPasswordAuthType string
+
+// Enum values for ClientPasswordAuthType
+const (
+	ClientPasswordAuthTypeMysqlNativePassword     ClientPasswordAuthType = "MYSQL_NATIVE_PASSWORD"
+	ClientPasswordAuthTypePostgresScramSha256     ClientPasswordAuthType = "POSTGRES_SCRAM_SHA_256"
+	ClientPasswordAuthTypePostgresMd5             ClientPasswordAuthType = "POSTGRES_MD5"
+	ClientPasswordAuthTypeSqlServerAuthentication ClientPasswordAuthType = "SQL_SERVER_AUTHENTICATION"
+)
+
+// Values returns all known values for ClientPasswordAuthType. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ClientPasswordAuthType) Values() []ClientPasswordAuthType {
+	return []ClientPasswordAuthType{
+		"MYSQL_NATIVE_PASSWORD",
+		"POSTGRES_SCRAM_SHA_256",
+		"POSTGRES_MD5",
+		"SQL_SERVER_AUTHENTICATION",
+	}
+}
+
 type CustomEngineVersionStatus string
 
 // Enum values for CustomEngineVersionStatus
@@ -236,6 +258,7 @@ type EngineFamily string
 const (
 	EngineFamilyMysql      EngineFamily = "MYSQL"
 	EngineFamilyPostgresql EngineFamily = "POSTGRESQL"
+	EngineFamilySqlserver  EngineFamily = "SQLSERVER"
 )
 
 // Values returns all known values for EngineFamily. Note that this can be expanded
@@ -245,6 +268,25 @@ func (EngineFamily) Values() []EngineFamily {
 	return []EngineFamily{
 		"MYSQL",
 		"POSTGRESQL",
+		"SQLSERVER",
+	}
+}
+
+type ExportSourceType string
+
+// Enum values for ExportSourceType
+const (
+	ExportSourceTypeSnapshot ExportSourceType = "SNAPSHOT"
+	ExportSourceTypeCluster  ExportSourceType = "CLUSTER"
+)
+
+// Values returns all known values for ExportSourceType. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ExportSourceType) Values() []ExportSourceType {
+	return []ExportSourceType{
+		"SNAPSHOT",
+		"CLUSTER",
 	}
 }
 
@@ -274,6 +316,7 @@ type IAMAuthMode string
 const (
 	IAMAuthModeDisabled IAMAuthMode = "DISABLED"
 	IAMAuthModeRequired IAMAuthMode = "REQUIRED"
+	IAMAuthModeEnabled  IAMAuthMode = "ENABLED"
 )
 
 // Values returns all known values for IAMAuthMode. Note that this can be expanded
@@ -283,6 +326,7 @@ func (IAMAuthMode) Values() []IAMAuthMode {
 	return []IAMAuthMode{
 		"DISABLED",
 		"REQUIRED",
+		"ENABLED",
 	}
 }
 
@@ -316,6 +360,7 @@ const (
 	SourceTypeDbClusterSnapshot   SourceType = "db-cluster-snapshot"
 	SourceTypeCustomEngineVersion SourceType = "custom-engine-version"
 	SourceTypeDbProxy             SourceType = "db-proxy"
+	SourceTypeBlueGreenDeployment SourceType = "blue-green-deployment"
 )
 
 // Values returns all known values for SourceType. Note that this can be expanded
@@ -331,6 +376,7 @@ func (SourceType) Values() []SourceType {
 		"db-cluster-snapshot",
 		"custom-engine-version",
 		"db-proxy",
+		"blue-green-deployment",
 	}
 }
 

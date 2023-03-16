@@ -458,6 +458,11 @@ func awsRestjson1_serializeOpDocumentCreateProfileInput(v *CreateProfileInput, v
 		ok.String(string(v.Gender))
 	}
 
+	if v.GenderString != nil {
+		ok := object.Key("GenderString")
+		ok.String(*v.GenderString)
+	}
+
 	if v.HomePhoneNumber != nil {
 		ok := object.Key("HomePhoneNumber")
 		ok.String(*v.HomePhoneNumber)
@@ -488,6 +493,11 @@ func awsRestjson1_serializeOpDocumentCreateProfileInput(v *CreateProfileInput, v
 	if len(v.PartyType) > 0 {
 		ok := object.Key("PartyType")
 		ok.String(string(v.PartyType))
+	}
+
+	if v.PartyTypeString != nil {
+		ok := object.Key("PartyTypeString")
+		ok.String(*v.PartyTypeString)
 	}
 
 	if v.PersonalEmailAddress != nil {
@@ -2863,9 +2873,21 @@ func awsRestjson1_serializeOpDocumentSearchProfilesInput(v *SearchProfilesInput,
 	object := value.Object()
 	defer object.Close()
 
+	if v.AdditionalSearchKeys != nil {
+		ok := object.Key("AdditionalSearchKeys")
+		if err := awsRestjson1_serializeDocumentAdditionalSearchKeysList(v.AdditionalSearchKeys, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.KeyName != nil {
 		ok := object.Key("KeyName")
 		ok.String(*v.KeyName)
+	}
+
+	if len(v.LogicalOperator) > 0 {
+		ok := object.Key("LogicalOperator")
+		ok.String(string(v.LogicalOperator))
 	}
 
 	if v.Values != nil {
@@ -3269,6 +3291,11 @@ func awsRestjson1_serializeOpDocumentUpdateProfileInput(v *UpdateProfileInput, v
 		ok.String(string(v.Gender))
 	}
 
+	if v.GenderString != nil {
+		ok := object.Key("GenderString")
+		ok.String(*v.GenderString)
+	}
+
 	if v.HomePhoneNumber != nil {
 		ok := object.Key("HomePhoneNumber")
 		ok.String(*v.HomePhoneNumber)
@@ -3301,6 +3328,11 @@ func awsRestjson1_serializeOpDocumentUpdateProfileInput(v *UpdateProfileInput, v
 		ok.String(string(v.PartyType))
 	}
 
+	if v.PartyTypeString != nil {
+		ok := object.Key("PartyTypeString")
+		ok.String(*v.PartyTypeString)
+	}
+
 	if v.PersonalEmailAddress != nil {
 		ok := object.Key("PersonalEmailAddress")
 		ok.String(*v.PersonalEmailAddress)
@@ -3323,6 +3355,38 @@ func awsRestjson1_serializeOpDocumentUpdateProfileInput(v *UpdateProfileInput, v
 		}
 	}
 
+	return nil
+}
+
+func awsRestjson1_serializeDocumentAdditionalSearchKey(v *types.AdditionalSearchKey, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.KeyName != nil {
+		ok := object.Key("KeyName")
+		ok.String(*v.KeyName)
+	}
+
+	if v.Values != nil {
+		ok := object.Key("Values")
+		if err := awsRestjson1_serializeDocumentRequestValueList(v.Values, ok); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func awsRestjson1_serializeDocumentAdditionalSearchKeysList(v []types.AdditionalSearchKey, value smithyjson.Value) error {
+	array := value.Array()
+	defer array.Close()
+
+	for i := range v {
+		av := array.Value()
+		if err := awsRestjson1_serializeDocumentAdditionalSearchKey(&v[i], av); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -4078,9 +4142,9 @@ func awsRestjson1_serializeDocumentScheduledTriggerProperties(v *types.Scheduled
 		ok.String(*v.ScheduleExpression)
 	}
 
-	if v.ScheduleOffset != 0 {
+	if v.ScheduleOffset != nil {
 		ok := object.Key("ScheduleOffset")
-		ok.Long(v.ScheduleOffset)
+		ok.Long(*v.ScheduleOffset)
 	}
 
 	if v.ScheduleStartTime != nil {

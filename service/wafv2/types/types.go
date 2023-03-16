@@ -11,7 +11,11 @@ import (
 type ActionCondition struct {
 
 	// The action setting that a log record must contain in order to meet the
-	// condition.
+	// condition. This is the action that WAF applied to the web request. For rule
+	// groups, this is either the configured rule action setting, or if you've applied
+	// a rule action override to the rule, it's the override action. The value
+	// EXCLUDED_AS_COUNT matches on excluded rules and also on rules that have a rule
+	// action override of Count.
 	//
 	// This member is required.
 	Action ActionValue
@@ -58,6 +62,51 @@ type AndStatement struct {
 	//
 	// This member is required.
 	Statements []Statement
+
+	noSmithyDocumentSerde
+}
+
+// Details for your use of the account takeover prevention managed rule group,
+// AWSManagedRulesATPRuleSet. This configuration is used in ManagedRuleGroupConfig.
+type AWSManagedRulesATPRuleSet struct {
+
+	// The path of the login endpoint for your application. For example, for the URL
+	// https://example.com/web/login, you would provide the path /web/login. The rule
+	// group inspects only HTTP POST requests to your specified login endpoint.
+	//
+	// This member is required.
+	LoginPath *string
+
+	// The criteria for inspecting login requests, used by the ATP rule group to
+	// validate credentials usage.
+	RequestInspection *RequestInspection
+
+	// The criteria for inspecting responses to login requests, used by the ATP rule
+	// group to track login failure rates. The ATP rule group evaluates the responses
+	// that your protected resources send back to client login attempts, keeping count
+	// of successful and failed attempts from each IP address and client session. Using
+	// this information, the rule group labels and mitigates requests from client
+	// sessions and IP addresses that submit too many failed login attempts in a short
+	// amount of time. Response inspection is available only in web ACLs that protect
+	// Amazon CloudFront distributions.
+	ResponseInspection *ResponseInspection
+
+	noSmithyDocumentSerde
+}
+
+// Details for your use of the Bot Control managed rule group,
+// AWSManagedRulesBotControlRuleSet. This configuration is used in
+// ManagedRuleGroupConfig.
+type AWSManagedRulesBotControlRuleSet struct {
+
+	// The inspection level to use for the Bot Control rule group. The common level is
+	// the least expensive. The targeted level includes all common level rules and adds
+	// rules with more advanced inspection criteria. For details, see WAF Bot Control
+	// rule group
+	// (https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-bot.html).
+	//
+	// This member is required.
+	InspectionLevel InspectionLevel
 
 	noSmithyDocumentSerde
 }
@@ -149,7 +198,7 @@ type ByteMatchStatement struct {
 
 	// A string value that you want WAF to search for. WAF searches only in the part of
 	// web requests that you designate for inspection in FieldToMatch. The maximum
-	// length of the value is 50 bytes. Valid values depend on the component that you
+	// length of the value is 200 bytes. Valid values depend on the component that you
 	// specify for inspection in FieldToMatch:
 	//
 	// * Method: The HTTP method that you want
@@ -162,7 +211,7 @@ type ByteMatchStatement struct {
 	// If SearchString includes alphabetic
 	// characters A-Z and a-z, note that the value is case sensitive. If you're using
 	// the WAF API Specify a base64-encoded version of the value. The maximum length of
-	// the value before you base64-encode it is 50 bytes. For example, suppose the
+	// the value before you base64-encode it is 200 bytes. For example, suppose the
 	// value of Type is HEADER and the value of Data is User-Agent. If you want to
 	// search the User-Agent header for the value BadBot, you base64-encode BadBot
 	// using MIME base64-encoding and include the resulting value, QmFkQm90, in the
@@ -188,12 +237,13 @@ type ByteMatchStatement struct {
 // Specifies that WAF should run a CAPTCHA check against the request:
 //
 // * If the
-// request includes a valid, unexpired CAPTCHA token, WAF allows the web request
-// inspection to proceed to the next rule, similar to a CountAction.
+// request includes a valid, unexpired CAPTCHA token, WAF applies any custom
+// request handling and labels that you've configured and then allows the web
+// request inspection to proceed to the next rule, similar to a CountAction.
 //
-// * If the
-// request doesn't include a valid, unexpired CAPTCHA token, WAF discontinues the
-// web ACL evaluation of the request and blocks it from going to its intended
+// * If
+// the request doesn't include a valid, unexpired token, WAF discontinues the web
+// ACL evaluation of the request and blocks it from going to its intended
 // destination. WAF generates a response that it sends back to the client, which
 // includes the following:
 //
@@ -204,16 +254,18 @@ type ByteMatchStatement struct {
 //
 // * If the request
 // contains an Accept header with a value of text/html, the response includes a
-// CAPTCHA challenge.
+// CAPTCHA JavaScript page interstitial.
 //
-// You can configure the expiration time in the
-// CaptchaConfigImmunityTimeProperty setting at the rule and web ACL level. The
+// You can configure the expiration time in
+// the CaptchaConfigImmunityTimeProperty setting at the rule and web ACL level. The
 // rule setting overrides the web ACL setting. This action option is available for
 // rules. It isn't available for web ACL default actions.
 type CaptchaAction struct {
 
-	// Defines custom handling for the web request. For information about customizing
-	// web requests and responses, see Customizing web requests and responses in WAF
+	// Defines custom handling for the web request, used when the CAPTCHA inspection
+	// determines that the request's token is valid and unexpired. For information
+	// about customizing web requests and responses, see Customizing web requests and
+	// responses in WAF
 	// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-custom-request-response.html)
 	// in the WAF Developer Guide
 	// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html).
@@ -226,8 +278,8 @@ type CaptchaAction struct {
 // web ACL level and in each rule.
 type CaptchaConfig struct {
 
-	// Determines how long a CAPTCHA token remains valid after the client successfully
-	// solves a CAPTCHA puzzle.
+	// Determines how long a CAPTCHA timestamp in the token remains valid after the
+	// client successfully solves a CAPTCHA puzzle.
 	ImmunityTimeProperty *ImmunityTimeProperty
 
 	noSmithyDocumentSerde
@@ -244,7 +296,85 @@ type CaptchaResponse struct {
 	// Not Allowed.
 	ResponseCode *int32
 
-	// The time that the CAPTCHA puzzle was solved for the supplied token.
+	// The time that the CAPTCHA was last solved for the supplied token.
+	SolveTimestamp *int64
+
+	noSmithyDocumentSerde
+}
+
+// Specifies that WAF should run a Challenge check against the request to verify
+// that the request is coming from a legitimate client session:
+//
+// * If the request
+// includes a valid, unexpired challenge token, WAF applies any custom request
+// handling and labels that you've configured and then allows the web request
+// inspection to proceed to the next rule, similar to a CountAction.
+//
+// * If the
+// request doesn't include a valid, unexpired challenge token, WAF discontinues the
+// web ACL evaluation of the request and blocks it from going to its intended
+// destination. WAF then generates a challenge response that it sends back to the
+// client, which includes the following:
+//
+// * The header x-amzn-waf-action with a
+// value of challenge.
+//
+// * The HTTP status code 202 Request Accepted.
+//
+// * If the
+// request contains an Accept header with a value of text/html, the response
+// includes a JavaScript page interstitial with a challenge script.
+//
+// Challenges run
+// silent browser interrogations in the background, and don't generally affect the
+// end user experience. A challenge enforces token acquisition using an
+// interstitial JavaScript challenge that inspects the client session for
+// legitimate behavior. The challenge blocks bots or at least increases the cost of
+// operating sophisticated bots. After the client session successfully responds to
+// the challenge, it receives a new token from WAF, which the challenge script uses
+// to resubmit the original request.
+//
+// You can configure the expiration time in the
+// ChallengeConfigImmunityTimeProperty setting at the rule and web ACL level. The
+// rule setting overrides the web ACL setting. This action option is available for
+// rules. It isn't available for web ACL default actions.
+type ChallengeAction struct {
+
+	// Defines custom handling for the web request, used when the challenge inspection
+	// determines that the request's token is valid and unexpired. For information
+	// about customizing web requests and responses, see Customizing web requests and
+	// responses in WAF
+	// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-custom-request-response.html)
+	// in the WAF Developer Guide
+	// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html).
+	CustomRequestHandling *CustomRequestHandling
+
+	noSmithyDocumentSerde
+}
+
+// Specifies how WAF should handle Challenge evaluations. This is available at the
+// web ACL level and in each rule.
+type ChallengeConfig struct {
+
+	// Determines how long a challenge timestamp in the token remains valid after the
+	// client successfully responds to a challenge.
+	ImmunityTimeProperty *ImmunityTimeProperty
+
+	noSmithyDocumentSerde
+}
+
+// The result from the inspection of the web request for a valid challenge token.
+type ChallengeResponse struct {
+
+	// The reason for failure, populated when the evaluation of the token fails.
+	FailureReason FailureReason
+
+	// The HTTP response code indicating the status of the challenge token in the web
+	// request. If the token is missing, invalid, or expired, this code is 202 Request
+	// Accepted.
+	ResponseCode *int32
+
+	// The time that the challenge was last solved for the supplied token.
 	SolveTimestamp *int64
 
 	noSmithyDocumentSerde
@@ -366,9 +496,10 @@ type CustomHTTPHeader struct {
 }
 
 // Custom request handling behavior that inserts custom headers into a web request.
-// You can add custom request handling for the rule actions allow and count. For
-// information about customizing web requests and responses, see Customizing web
-// requests and responses in WAF
+// You can add custom request handling for WAF to use when the rule action doesn't
+// block the request. For example, CaptchaAction for requests with valid t okens,
+// and AllowAction. For information about customizing web requests and responses,
+// see Customizing web requests and responses in WAF
 // (https://docs.aws.amazon.com/waf/latest/developerguide/waf-custom-request-response.html)
 // in the WAF Developer Guide
 // (https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html).
@@ -450,7 +581,7 @@ type CustomResponseBody struct {
 
 // In a WebACL, this is the action that you want WAF to perform when a web request
 // doesn't match any of the rules in the WebACL. The default action must be a
-// terminating action, so you can't use count.
+// terminating action.
 type DefaultAction struct {
 
 	// Specifies that WAF should allow requests by default.
@@ -463,9 +594,8 @@ type DefaultAction struct {
 }
 
 // Specifies a single rule in a rule group whose action you want to override to
-// Count. When you exclude a rule, WAF evaluates it exactly as it would if the rule
-// action setting were Count. This is a useful option for testing the rules in a
-// rule group without modifying how they handle your web traffic.
+// Count. Instead of this option, use RuleActionOverrides. It accepts any valid
+// action setting, including Count.
 type ExcludedRule struct {
 
 	// The name of the rule whose action you want to override to Count.
@@ -595,8 +725,8 @@ type FirewallManagerRuleGroup struct {
 	// RuleGroupReferenceStatement and ManagedRuleGroupStatement. This option is
 	// usually set to none. It does not affect how the rules in the rule group are
 	// evaluated. If you want the rules in the rule group to only count matches, do not
-	// use this and instead exclude those rules in your rule group reference statement
-	// settings.
+	// use this and instead use the rule action override option, with Count action, in
+	// your rule group reference statement settings.
 	//
 	// This member is required.
 	OverrideAction *OverrideAction
@@ -626,7 +756,11 @@ type FirewallManagerStatement struct {
 	// statement. You can retrieve the required names by calling
 	// ListAvailableManagedRuleGroups. You cannot nest a ManagedRuleGroupStatement, for
 	// example for use inside a NotStatement or OrStatement. It can only be referenced
-	// as a top-level statement within a rule.
+	// as a top-level statement within a rule. You are charged additional fees when you
+	// use the WAF Bot Control managed rule group AWSManagedRulesBotControlRuleSet or
+	// the WAF Fraud Control account takeover prevention (ATP) managed rule group
+	// AWSManagedRulesATPRuleSet. For more information, see WAF Pricing
+	// (http://aws.amazon.com/waf/pricing/).
 	ManagedRuleGroupStatement *ManagedRuleGroupStatement
 
 	// A rule statement used to run the rules that are defined in a RuleGroup. To use
@@ -674,11 +808,42 @@ type ForwardedIPConfig struct {
 	noSmithyDocumentSerde
 }
 
-// A rule statement used to identify web requests based on country of origin.
+// A rule statement that labels web requests by country and region and that matches
+// against web requests based on country code. A geo match rule labels every
+// request that it inspects regardless of whether it finds a match.
+//
+// * To manage
+// requests only by country, you can use this statement by itself and specify the
+// countries that you want to match against in the CountryCodes array.
+//
+// *
+// Otherwise, configure your geo match rule with Count action so that it only
+// labels requests. Then, add one or more label match rules to run after the geo
+// match rule and configure them to match against the geographic labels and handle
+// the requests as needed.
+//
+// WAF labels requests using the alpha-2 country and
+// region codes from the International Organization for Standardization (ISO) 3166
+// standard. WAF determines the codes using either the IP address in the web
+// request origin or, if you specify it, the address in the geo match
+// ForwardedIPConfig. If you use the web request origin, the label formats are
+// awswaf:clientip:geo:region:- and awswaf:clientip:geo:country:. If you use a
+// forwarded IP address, the label formats are awswaf:forwardedip:geo:region:- and
+// awswaf:forwardedip:geo:country:. For additional details, see Geographic match
+// rule statement
+// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-geo-match.html)
+// in the WAF Developer Guide
+// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html).
 type GeoMatchStatement struct {
 
-	// An array of two-character country codes, for example, [ "US", "CN" ], from the
-	// alpha-2 country ISO codes of the ISO 3166 international standard.
+	// An array of two-character country codes that you want to match against, for
+	// example, [ "US", "CN" ], from the alpha-2 country ISO codes of the ISO 3166
+	// international standard. When you use a geo match statement just for the region
+	// and country labels that it adds to requests, you still have to supply a country
+	// code for the rule to evaluate. In this case, you configure the rule to only
+	// count matching requests, but it will still generate logging and count metrics
+	// for any matches. You can reduce the logging and metrics that the rule produces
+	// by specifying a country that's unlikely to be a source of traffic to your site.
 	CountryCodes []CountryCode
 
 	// The configuration for inspecting IP addresses in an HTTP header that you
@@ -808,12 +973,14 @@ type HTTPRequest struct {
 	noSmithyDocumentSerde
 }
 
-// Determines how long a CAPTCHA token remains valid after the client successfully
-// solves a CAPTCHA puzzle.
+// Used for CAPTCHA and challenge token settings. Determines how long a CAPTCHA or
+// challenge timestamp remains valid after WAF updates it for a successful CAPTCHA
+// or challenge response.
 type ImmunityTimeProperty struct {
 
-	// The amount of time, in seconds, that a CAPTCHA token is valid. The default
-	// setting is 300.
+	// The amount of time, in seconds, that a CAPTCHA or challenge timestamp is
+	// considered valid by WAF. The default setting is 300. For the Challenge action,
+	// the minimum setting is 300.
 	//
 	// This member is required.
 	ImmunityTime *int64
@@ -836,20 +1003,20 @@ type IPSet struct {
 	ARN *string
 
 	// Contains an array of strings that specifies zero or more IP addresses or blocks
-	// of IP addresses in Classless Inter-Domain Routing (CIDR) notation. WAF supports
-	// all IPv4 and IPv6 CIDR ranges except for /0. Example address strings:
-	//
-	// * To
-	// configure WAF to allow, block, or count requests that originated from the IP
-	// address 192.0.2.44, specify 192.0.2.44/32.
-	//
-	// * To configure WAF to allow, block,
-	// or count requests that originated from IP addresses from 192.0.2.0 to
-	// 192.0.2.255, specify 192.0.2.0/24.
+	// of IP addresses. All addresses must be specified using Classless Inter-Domain
+	// Routing (CIDR) notation. WAF supports all IPv4 and IPv6 CIDR ranges except for
+	// /0. Example address strings:
 	//
 	// * To configure WAF to allow, block, or count
-	// requests that originated from the IP address
-	// 1111:0000:0000:0000:0000:0000:0000:0111, specify
+	// requests that originated from the IP address 192.0.2.44, specify
+	// 192.0.2.44/32.
+	//
+	// * To configure WAF to allow, block, or count requests that
+	// originated from IP addresses from 192.0.2.0 to 192.0.2.255, specify
+	// 192.0.2.0/24.
+	//
+	// * To configure WAF to allow, block, or count requests that
+	// originated from the IP address 1111:0000:0000:0000:0000:0000:0000:0111, specify
 	// 1111:0000:0000:0000:0000:0000:0000:0111/128.
 	//
 	// * To configure WAF to allow,
@@ -1119,15 +1286,15 @@ type Label struct {
 	noSmithyDocumentSerde
 }
 
-// A rule statement that defines a string match search against labels that have
-// been added to the web request by rules that have already run in the web ACL. The
-// label match statement provides the label or namespace string to search for. The
-// label string can represent a part or all of the fully qualified label name that
-// had been added to the web request. Fully qualified labels have a prefix,
-// optional namespaces, and label name. The prefix identifies the rule group or web
-// ACL context of the rule that added the label. If you do not provide the fully
-// qualified name in your label match string, WAF performs the search for labels
-// that were added in the same context as the label match statement.
+// A rule statement to match against labels that have been added to the web request
+// by rules that have already run in the web ACL. The label match statement
+// provides the label or namespace string to search for. The label string can
+// represent a part or all of the fully qualified label name that had been added to
+// the web request. Fully qualified labels have a prefix, optional namespaces, and
+// label name. The prefix identifies the rule group or web ACL context of the rule
+// that added the label. If you do not provide the fully qualified name in your
+// label match string, WAF performs the search for labels that were added in the
+// same context as the label match statement.
 type LabelMatchStatement struct {
 
 	// The string to match against. The setting you provide for this depends on the
@@ -1198,9 +1365,11 @@ type LabelSummary struct {
 //
 // * Create your logging destination. You can
 // use an Amazon CloudWatch Logs log group, an Amazon Simple Storage Service
-// (Amazon S3) bucket, or an Amazon Kinesis Data Firehose. For information about
-// configuring logging destinations and the permissions that are required for each,
-// see Logging web ACL traffic information
+// (Amazon S3) bucket, or an Amazon Kinesis Data Firehose. The name that you give
+// the destination must start with aws-waf-logs-. Depending on the type of
+// destination, you might need to configure additional settings or permissions. For
+// configuration requirements and pricing information for each destination type,
+// see Logging web ACL traffic
 // (https://docs.aws.amazon.com/waf/latest/developerguide/logging.html) in the WAF
 // Developer Guide.
 //
@@ -1241,9 +1410,9 @@ type LoggingConfiguration struct {
 	ManagedByFirewallManager bool
 
 	// The parts of the request that you want to keep out of the logs. For example, if
-	// you redact the SingleHeader field, the HEADER field in the logs will be xxx. You
-	// can specify only the following fields for redaction: UriPath, QueryString,
-	// SingleHeader, Method, and JsonBody.
+	// you redact the SingleHeader field, the HEADER field in the logs will be
+	// REDACTED. You can specify only the following fields for redaction: UriPath,
+	// QueryString, SingleHeader, Method, and JsonBody.
 	RedactedFields []FieldToMatch
 
 	noSmithyDocumentSerde
@@ -1269,29 +1438,64 @@ type LoggingFilter struct {
 	noSmithyDocumentSerde
 }
 
-// Additional information that's used by a managed rule group. Most managed rule
-// groups don't require this. Use this for the account takeover prevention managed
-// rule group AWSManagedRulesATPRuleSet, to provide information about the sign-in
-// page of your application. You can provide multiple individual
-// ManagedRuleGroupConfig objects for any rule group configuration, for example
-// UsernameField and PasswordField. The configuration that you provide depends on
-// the needs of the managed rule group. For the ATP managed rule group, you provide
-// the following individual configuration objects: LoginPath, PasswordField,
-// PayloadType and UsernameField. For example specifications, see the examples
-// section of CreateWebACL.
+// Additional information that's used by a managed rule group. Many managed rule
+// groups don't require this. Use the AWSManagedRulesATPRuleSet configuration
+// object for the account takeover prevention managed rule group, to provide
+// information such as the sign-in page of your application and the type of content
+// to accept or reject from the client. Use the AWSManagedRulesBotControlRuleSet
+// configuration object to configure the protection level that you want the Bot
+// Control rule group to use. For example specifications, see the examples section
+// of CreateWebACL.
 type ManagedRuleGroupConfig struct {
 
-	// The path of the login endpoint for your application. For example, for the URL
-	// https://example.com/web/login, you would provide the path /web/login.
+	// Additional configuration for using the account takeover prevention (ATP) managed
+	// rule group, AWSManagedRulesATPRuleSet. Use this to provide login request
+	// information to the rule group. For web ACLs that protect CloudFront
+	// distributions, use this to also provide the information about how your
+	// distribution responds to login requests. This configuration replaces the
+	// individual configuration fields in ManagedRuleGroupConfig and provides
+	// additional feature configuration. For information about using the ATP managed
+	// rule group, see WAF Fraud Control account takeover prevention (ATP) rule group
+	// (https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-atp.html)
+	// and WAF Fraud Control account takeover prevention (ATP)
+	// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-atp.html) in the WAF
+	// Developer Guide.
+	AWSManagedRulesATPRuleSet *AWSManagedRulesATPRuleSet
+
+	// Additional configuration for using the Bot Control managed rule group. Use this
+	// to specify the inspection level that you want to use. For information about
+	// using the Bot Control managed rule group, see WAF Bot Control rule group
+	// (https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-bot.html)
+	// and WAF Bot Control
+	// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-bot-control.html) in
+	// the WAF Developer Guide.
+	AWSManagedRulesBotControlRuleSet *AWSManagedRulesBotControlRuleSet
+
+	// Instead of this setting, provide your configuration under
+	// AWSManagedRulesATPRuleSet.
+	//
+	// Deprecated: Deprecated. Use AWSManagedRulesATPRuleSet LoginPath
 	LoginPath *string
 
-	// Details about your login page password field.
+	// Instead of this setting, provide your configuration under
+	// AWSManagedRulesATPRuleSetRequestInspection.
+	//
+	// Deprecated: Deprecated. Use AWSManagedRulesATPRuleSet RequestInspection
+	// PasswordField
 	PasswordField *PasswordField
 
-	// The payload type for your login endpoint, either JSON or form encoded.
+	// Instead of this setting, provide your configuration under
+	// AWSManagedRulesATPRuleSetRequestInspection.
+	//
+	// Deprecated: Deprecated. Use AWSManagedRulesATPRuleSet RequestInspection
+	// PayloadType
 	PayloadType PayloadType
 
-	// Details about your login page username field.
+	// Instead of this setting, provide your configuration under
+	// AWSManagedRulesATPRuleSetRequestInspection.
+	//
+	// Deprecated: Deprecated. Use AWSManagedRulesATPRuleSet RequestInspection
+	// UsernameField
 	UsernameField *UsernameField
 
 	noSmithyDocumentSerde
@@ -1302,7 +1506,11 @@ type ManagedRuleGroupConfig struct {
 // statement. You can retrieve the required names by calling
 // ListAvailableManagedRuleGroups. You cannot nest a ManagedRuleGroupStatement, for
 // example for use inside a NotStatement or OrStatement. It can only be referenced
-// as a top-level statement within a rule.
+// as a top-level statement within a rule. You are charged additional fees when you
+// use the WAF Bot Control managed rule group AWSManagedRulesBotControlRuleSet or
+// the WAF Fraud Control account takeover prevention (ATP) managed rule group
+// AWSManagedRulesATPRuleSet. For more information, see WAF Pricing
+// (http://aws.amazon.com/waf/pricing/).
 type ManagedRuleGroupStatement struct {
 
 	// The name of the managed rule group. You use this, along with the vendor name, to
@@ -1317,22 +1525,28 @@ type ManagedRuleGroupStatement struct {
 	// This member is required.
 	VendorName *string
 
-	// The rules in the referenced rule group whose actions are set to Count. When you
-	// exclude a rule, WAF evaluates it exactly as it would if the rule action setting
-	// were Count. This is a useful option for testing the rules in a rule group
-	// without modifying how they handle your web traffic.
+	// Rules in the referenced rule group whose actions are set to Count. Instead of
+	// this option, use RuleActionOverrides. It accepts any valid action setting,
+	// including Count.
 	ExcludedRules []ExcludedRule
 
-	// Additional information that's used by a managed rule group. Most managed rule
-	// groups don't require this. Use this for the account takeover prevention managed
-	// rule group AWSManagedRulesATPRuleSet, to provide information about the sign-in
-	// page of your application. You can provide multiple individual
-	// ManagedRuleGroupConfig objects for any rule group configuration, for example
-	// UsernameField and PasswordField. The configuration that you provide depends on
-	// the needs of the managed rule group. For the ATP managed rule group, you provide
-	// the following individual configuration objects: LoginPath, PasswordField,
-	// PayloadType and UsernameField.
+	// Additional information that's used by a managed rule group. Many managed rule
+	// groups don't require this. Use the AWSManagedRulesATPRuleSet configuration
+	// object for the account takeover prevention managed rule group, to provide
+	// information such as the sign-in page of your application and the type of content
+	// to accept or reject from the client. Use the AWSManagedRulesBotControlRuleSet
+	// configuration object to configure the protection level that you want the Bot
+	// Control rule group to use.
 	ManagedRuleGroupConfigs []ManagedRuleGroupConfig
+
+	// Action settings to use in the place of the rule actions that are configured
+	// inside the rule group. You specify one override for each rule whose action you
+	// want to change. You can use overrides for testing, for example you can override
+	// all of rule actions to Count and then monitor the resulting count metrics to
+	// understand how the rule group would handle your web traffic. You can also
+	// permanently override some or all actions, to modify how the rule group manages
+	// your web traffic.
+	RuleActionOverrides []RuleActionOverride
 
 	// An optional nested statement that narrows the scope of the web requests that are
 	// evaluated by the managed rule group. Requests are only evaluated by the rule
@@ -1549,9 +1763,9 @@ type Method struct {
 
 // Information for a release of the mobile SDK, including release notes and tags.
 // The mobile SDK is not generally available. Customers who have access to the
-// mobile SDK can use it to establish and manage Security Token Service (STS)
-// security tokens for use in HTTP(S) requests from a mobile device to WAF. For
-// more information, see WAF client application integration
+// mobile SDK can use it to establish and manage WAF tokens for use in HTTP(S)
+// requests from a mobile device to WAF. For more information, see WAF client
+// application integration
 // (https://docs.aws.amazon.com/waf/latest/developerguide/waf-application-integration.html)
 // in the WAF Developer Guide.
 type MobileSdkRelease struct {
@@ -1611,14 +1825,15 @@ type OrStatement struct {
 // RuleGroupReferenceStatement and ManagedRuleGroupStatement. This option is
 // usually set to none. It does not affect how the rules in the rule group are
 // evaluated. If you want the rules in the rule group to only count matches, do not
-// use this and instead exclude those rules in your rule group reference statement
-// settings.
+// use this and instead use the rule action override option, with Count action, in
+// your rule group reference statement settings.
 type OverrideAction struct {
 
 	// Override the rule group evaluation result to count only. This option is usually
 	// set to none. It does not affect how the rules in the rule group are evaluated.
 	// If you want the rules in the rule group to only count matches, do not use this
-	// and instead exclude those rules in your rule group reference statement settings.
+	// and instead use the rule action override option, with Count action, in your rule
+	// group reference statement settings.
 	Count *CountAction
 
 	// Don't override the rule group evaluation result. This is the most common
@@ -1628,7 +1843,8 @@ type OverrideAction struct {
 	noSmithyDocumentSerde
 }
 
-// Details about your login page password field, used in a ManagedRuleGroupConfig.
+// Details about your login page password field for request inspection, used in the
+// AWSManagedRulesATPRuleSetRequestInspection configuration.
 type PasswordField struct {
 
 	// The name of the password field. For example /form/password.
@@ -1666,7 +1882,7 @@ type QueryString struct {
 // rate-based rule with a nested AND rule statement that contains the following
 // nested statements:
 //
-// * An IP match statement with an IP set that specified the
+// * An IP match statement with an IP set that specifies the
 // address 192.0.2.44.
 //
 // * A string match statement that searches in the User-Agent
@@ -1870,6 +2086,205 @@ type ReleaseSummary struct {
 	noSmithyDocumentSerde
 }
 
+// The criteria for inspecting login requests, used by the ATP rule group to
+// validate credentials usage. This is part of the AWSManagedRulesATPRuleSet
+// configuration in ManagedRuleGroupConfig. In these settings, you specify how your
+// application accepts login attempts by providing the request payload type and the
+// names of the fields within the request body where the username and password are
+// provided.
+type RequestInspection struct {
+
+	// Details about your login page password field. How you specify this depends on
+	// the payload type.
+	//
+	// * For JSON payloads, specify the field name in JSON pointer
+	// syntax. For information about the JSON Pointer syntax, see the Internet
+	// Engineering Task Force (IETF) documentation JavaScript Object Notation (JSON)
+	// Pointer (https://tools.ietf.org/html/rfc6901). For example, for the JSON payload
+	// { "login": { "username": "THE_USERNAME", "password": "THE_PASSWORD" } }, the
+	// username field specification is /login/username and the password field
+	// specification is /login/password.
+	//
+	// * For form encoded payload types, use the
+	// HTML form names. For example, for an HTML form with input elements named
+	// username1 and password1, the username field specification is username1 and the
+	// password field specification is password1.
+	//
+	// This member is required.
+	PasswordField *PasswordField
+
+	// The payload type for your login endpoint, either JSON or form encoded.
+	//
+	// This member is required.
+	PayloadType PayloadType
+
+	// Details about your login page username field. How you specify this depends on
+	// the payload type.
+	//
+	// * For JSON payloads, specify the field name in JSON pointer
+	// syntax. For information about the JSON Pointer syntax, see the Internet
+	// Engineering Task Force (IETF) documentation JavaScript Object Notation (JSON)
+	// Pointer (https://tools.ietf.org/html/rfc6901). For example, for the JSON payload
+	// { "login": { "username": "THE_USERNAME", "password": "THE_PASSWORD" } }, the
+	// username field specification is /login/username and the password field
+	// specification is /login/password.
+	//
+	// * For form encoded payload types, use the
+	// HTML form names. For example, for an HTML form with input elements named
+	// username1 and password1, the username field specification is username1 and the
+	// password field specification is password1.
+	//
+	// This member is required.
+	UsernameField *UsernameField
+
+	noSmithyDocumentSerde
+}
+
+// The criteria for inspecting responses to login requests, used by the ATP rule
+// group to track login failure rates. The ATP rule group evaluates the responses
+// that your protected resources send back to client login attempts, keeping count
+// of successful and failed attempts from each IP address and client session. Using
+// this information, the rule group labels and mitigates requests from client
+// sessions and IP addresses that submit too many failed login attempts in a short
+// amount of time. Response inspection is available only in web ACLs that protect
+// Amazon CloudFront distributions. This is part of the AWSManagedRulesATPRuleSet
+// configuration in ManagedRuleGroupConfig. Enable login response inspection by
+// configuring exactly one component of the response to inspect. You can't
+// configure more than one. If you don't configure any of the response inspection
+// options, response inspection is disabled.
+type ResponseInspection struct {
+
+	// Configures inspection of the response body. WAF can inspect the first 65,536
+	// bytes (64 KB) of the response body.
+	BodyContains *ResponseInspectionBodyContains
+
+	// Configures inspection of the response header.
+	Header *ResponseInspectionHeader
+
+	// Configures inspection of the response JSON. WAF can inspect the first 65,536
+	// bytes (64 KB) of the response JSON.
+	Json *ResponseInspectionJson
+
+	// Configures inspection of the response status code.
+	StatusCode *ResponseInspectionStatusCode
+
+	noSmithyDocumentSerde
+}
+
+// Configures inspection of the response body. WAF can inspect the first 65,536
+// bytes (64 KB) of the response body. This is part of the ResponseInspection
+// configuration for AWSManagedRulesATPRuleSet. Response inspection is available
+// only in web ACLs that protect Amazon CloudFront distributions.
+type ResponseInspectionBodyContains struct {
+
+	// Strings in the body of the response that indicate a failed login attempt. To be
+	// counted as a failed login, the string can be anywhere in the body and must be an
+	// exact match, including case. Each string must be unique among the success and
+	// failure strings. JSON example: "FailureStrings": [ "Login failed" ]
+	//
+	// This member is required.
+	FailureStrings []string
+
+	// Strings in the body of the response that indicate a successful login attempt. To
+	// be counted as a successful login, the string can be anywhere in the body and
+	// must be an exact match, including case. Each string must be unique among the
+	// success and failure strings. JSON example: "SuccessStrings": [ "Login
+	// successful", "Welcome to our site!" ]
+	//
+	// This member is required.
+	SuccessStrings []string
+
+	noSmithyDocumentSerde
+}
+
+// Configures inspection of the response header. This is part of the
+// ResponseInspection configuration for AWSManagedRulesATPRuleSet. Response
+// inspection is available only in web ACLs that protect Amazon CloudFront
+// distributions.
+type ResponseInspectionHeader struct {
+
+	// Values in the response header with the specified name that indicate a failed
+	// login attempt. To be counted as a failed login, the value must be an exact
+	// match, including case. Each value must be unique among the success and failure
+	// values. JSON example: "FailureValues": [ "LoginFailed", "Failed login" ]
+	//
+	// This member is required.
+	FailureValues []string
+
+	// The name of the header to match against. The name must be an exact match,
+	// including case. JSON example: "Name": [ "LoginResult" ]
+	//
+	// This member is required.
+	Name *string
+
+	// Values in the response header with the specified name that indicate a successful
+	// login attempt. To be counted as a successful login, the value must be an exact
+	// match, including case. Each value must be unique among the success and failure
+	// values. JSON example: "SuccessValues": [ "LoginPassed", "Successful login" ]
+	//
+	// This member is required.
+	SuccessValues []string
+
+	noSmithyDocumentSerde
+}
+
+// Configures inspection of the response JSON. WAF can inspect the first 65,536
+// bytes (64 KB) of the response JSON. This is part of the ResponseInspection
+// configuration for AWSManagedRulesATPRuleSet. Response inspection is available
+// only in web ACLs that protect Amazon CloudFront distributions.
+type ResponseInspectionJson struct {
+
+	// Values for the specified identifier in the response JSON that indicate a failed
+	// login attempt. To be counted as a failed login, the value must be an exact
+	// match, including case. Each value must be unique among the success and failure
+	// values. JSON example: "FailureValues": [ "False", "Failed" ]
+	//
+	// This member is required.
+	FailureValues []string
+
+	// The identifier for the value to match against in the JSON. The identifier must
+	// be an exact match, including case. JSON example: "Identifier": [
+	// "/login/success" ]
+	//
+	// This member is required.
+	Identifier *string
+
+	// Values for the specified identifier in the response JSON that indicate a
+	// successful login attempt. To be counted as a successful login, the value must be
+	// an exact match, including case. Each value must be unique among the success and
+	// failure values. JSON example: "SuccessValues": [ "True", "Succeeded" ]
+	//
+	// This member is required.
+	SuccessValues []string
+
+	noSmithyDocumentSerde
+}
+
+// Configures inspection of the response status code. This is part of the
+// ResponseInspection configuration for AWSManagedRulesATPRuleSet. Response
+// inspection is available only in web ACLs that protect Amazon CloudFront
+// distributions.
+type ResponseInspectionStatusCode struct {
+
+	// Status codes in the response that indicate a failed login attempt. To be counted
+	// as a failed login, the response status code must match one of these. Each code
+	// must be unique among the success and failure status codes. JSON example:
+	// "FailureCodes": [ 400, 404 ]
+	//
+	// This member is required.
+	FailureCodes []int32
+
+	// Status codes in the response that indicate a successful login attempt. To be
+	// counted as a successful login, the response status code must match one of these.
+	// Each code must be unique among the success and failure status codes. JSON
+	// example: "SuccessCodes": [ 200, 201 ]
+	//
+	// This member is required.
+	SuccessCodes []int32
+
+	noSmithyDocumentSerde
+}
+
 // A single rule, which you can use in a WebACL or RuleGroup to identify web
 // requests that you want to allow, block, or count. Each rule includes one
 // top-level Statement that WAF uses to identify matching web requests, and
@@ -1919,6 +2334,10 @@ type Rule struct {
 	// WAF uses the CAPTCHA configuration that's defined for the web ACL.
 	CaptchaConfig *CaptchaConfig
 
+	// Specifies how WAF should handle Challenge evaluations. If you don't specify
+	// this, WAF uses the challenge configuration that's defined for the web ACL.
+	ChallengeConfig *ChallengeConfig
+
 	// The action to use in the place of the action that results from the rule group
 	// evaluation. Set the override action to none to leave the result of the rule
 	// group alone. Set it to count to override the result to count only. You can only
@@ -1926,8 +2345,8 @@ type Rule struct {
 	// RuleGroupReferenceStatement and ManagedRuleGroupStatement. This option is
 	// usually set to none. It does not affect how the rules in the rule group are
 	// evaluated. If you want the rules in the rule group to only count matches, do not
-	// use this and instead exclude those rules in your rule group reference statement
-	// settings.
+	// use this and instead use the rule action override option, with Count action, in
+	// your rule group reference statement settings.
 	OverrideAction *OverrideAction
 
 	// Labels to apply to web requests that match the rule match statement. WAF applies
@@ -1970,8 +2389,35 @@ type RuleAction struct {
 	// Instructs WAF to run a CAPTCHA check against the web request.
 	Captcha *CaptchaAction
 
-	// Instructs WAF to count the web request and allow it.
+	// Instructs WAF to run a Challenge check against the web request.
+	Challenge *ChallengeAction
+
+	// Instructs WAF to count the web request and then continue evaluating the request
+	// using the remaining rules in the web ACL.
 	Count *CountAction
+
+	noSmithyDocumentSerde
+}
+
+// Action setting to use in the place of a rule action that is configured inside
+// the rule group. You specify one override for each rule whose action you want to
+// change. You can use overrides for testing, for example you can override all of
+// rule actions to Count and then monitor the resulting count metrics to understand
+// how the rule group would handle your web traffic. You can also permanently
+// override some or all actions, to modify how the rule group manages your web
+// traffic.
+type RuleActionOverride struct {
+
+	// The override action to use, in place of the configured action of the rule in the
+	// rule group.
+	//
+	// This member is required.
+	ActionToUse *RuleAction
+
+	// The name of the rule to override.
+	//
+	// This member is required.
+	Name *string
 
 	noSmithyDocumentSerde
 }
@@ -2079,11 +2525,19 @@ type RuleGroupReferenceStatement struct {
 	// This member is required.
 	ARN *string
 
-	// The rules in the referenced rule group whose actions are set to Count. When you
-	// exclude a rule, WAF evaluates it exactly as it would if the rule action setting
-	// were Count. This is a useful option for testing the rules in a rule group
-	// without modifying how they handle your web traffic.
+	// Rules in the referenced rule group whose actions are set to Count. Instead of
+	// this option, use RuleActionOverrides. It accepts any valid action setting,
+	// including Count.
 	ExcludedRules []ExcludedRule
+
+	// Action settings to use in the place of the rule actions that are configured
+	// inside the rule group. You specify one override for each rule whose action you
+	// want to change. You can use overrides for testing, for example you can override
+	// all of rule actions to Count and then monitor the resulting count metrics to
+	// understand how the rule group would handle your web traffic. You can also
+	// permanently override some or all actions, to modify how the rule group manages
+	// your web traffic.
+	RuleActionOverrides []RuleActionOverride
 
 	noSmithyDocumentSerde
 }
@@ -2155,11 +2609,14 @@ type SampledHTTPRequest struct {
 	// This member is required.
 	Weight int64
 
-	// The action for the Rule that the request matched: Allow, Block, or Count.
+	// The action that WAF applied to the request.
 	Action *string
 
 	// The CAPTCHA response for the request.
 	CaptchaResponse *CaptchaResponse
+
+	// The Challenge response for the request.
+	ChallengeResponse *ChallengeResponse
 
 	// Labels applied to the web request by matching rules. WAF applies fully qualified
 	// labels to matching web requests. A fully qualified label is the concatenation of
@@ -2168,6 +2625,12 @@ type SampledHTTPRequest struct {
 	// awswaf:111122223333:myRuleGroup:testRules:testNS1:testNS2:labelNameA or
 	// awswaf:managed:aws:managed-rule-set:header:encoding:utf8.
 	Labels []Label
+
+	// Used only for rule group rules that have a rule action override in place in the
+	// web ACL. This is the action that the rule group rule is configured for, and not
+	// the action that was applied to the request. The action that WAF applied is the
+	// Action value.
+	OverriddenAction *string
 
 	// Custom request headers inserted by WAF into the request, according to the custom
 	// request configuration for the matching rule action.
@@ -2305,7 +2768,32 @@ type Statement struct {
 	// statement.
 	ByteMatchStatement *ByteMatchStatement
 
-	// A rule statement used to identify web requests based on country of origin.
+	// A rule statement that labels web requests by country and region and that matches
+	// against web requests based on country code. A geo match rule labels every
+	// request that it inspects regardless of whether it finds a match.
+	//
+	// * To manage
+	// requests only by country, you can use this statement by itself and specify the
+	// countries that you want to match against in the CountryCodes array.
+	//
+	// *
+	// Otherwise, configure your geo match rule with Count action so that it only
+	// labels requests. Then, add one or more label match rules to run after the geo
+	// match rule and configure them to match against the geographic labels and handle
+	// the requests as needed.
+	//
+	// WAF labels requests using the alpha-2 country and
+	// region codes from the International Organization for Standardization (ISO) 3166
+	// standard. WAF determines the codes using either the IP address in the web
+	// request origin or, if you specify it, the address in the geo match
+	// ForwardedIPConfig. If you use the web request origin, the label formats are
+	// awswaf:clientip:geo:region:- and awswaf:clientip:geo:country:. If you use a
+	// forwarded IP address, the label formats are awswaf:forwardedip:geo:region:- and
+	// awswaf:forwardedip:geo:country:. For additional details, see Geographic match
+	// rule statement
+	// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-geo-match.html)
+	// in the WAF Developer Guide
+	// (https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html).
 	GeoMatchStatement *GeoMatchStatement
 
 	// A rule statement used to detect web requests coming from particular IP addresses
@@ -2317,15 +2805,15 @@ type Statement struct {
 	// automatically updates all rules that reference it.
 	IPSetReferenceStatement *IPSetReferenceStatement
 
-	// A rule statement that defines a string match search against labels that have
-	// been added to the web request by rules that have already run in the web ACL. The
-	// label match statement provides the label or namespace string to search for. The
-	// label string can represent a part or all of the fully qualified label name that
-	// had been added to the web request. Fully qualified labels have a prefix,
-	// optional namespaces, and label name. The prefix identifies the rule group or web
-	// ACL context of the rule that added the label. If you do not provide the fully
-	// qualified name in your label match string, WAF performs the search for labels
-	// that were added in the same context as the label match statement.
+	// A rule statement to match against labels that have been added to the web request
+	// by rules that have already run in the web ACL. The label match statement
+	// provides the label or namespace string to search for. The label string can
+	// represent a part or all of the fully qualified label name that had been added to
+	// the web request. Fully qualified labels have a prefix, optional namespaces, and
+	// label name. The prefix identifies the rule group or web ACL context of the rule
+	// that added the label. If you do not provide the fully qualified name in your
+	// label match string, WAF performs the search for labels that were added in the
+	// same context as the label match statement.
 	LabelMatchStatement *LabelMatchStatement
 
 	// A rule statement used to run the rules that are defined in a managed rule group.
@@ -2333,7 +2821,11 @@ type Statement struct {
 	// statement. You can retrieve the required names by calling
 	// ListAvailableManagedRuleGroups. You cannot nest a ManagedRuleGroupStatement, for
 	// example for use inside a NotStatement or OrStatement. It can only be referenced
-	// as a top-level statement within a rule.
+	// as a top-level statement within a rule. You are charged additional fees when you
+	// use the WAF Bot Control managed rule group AWSManagedRulesBotControlRuleSet or
+	// the WAF Fraud Control account takeover prevention (ATP) managed rule group
+	// AWSManagedRulesATPRuleSet. For more information, see WAF Pricing
+	// (http://aws.amazon.com/waf/pricing/).
 	ManagedRuleGroupStatement *ManagedRuleGroupStatement
 
 	// A logical rule statement used to negate the results of another rule statement.
@@ -2363,7 +2855,7 @@ type Statement struct {
 	// rate-based rule with a nested AND rule statement that contains the following
 	// nested statements:
 	//
-	// * An IP match statement with an IP set that specified the
+	// * An IP match statement with an IP set that specifies the
 	// address 192.0.2.44.
 	//
 	// * A string match statement that searches in the User-Agent
@@ -2634,7 +3126,8 @@ type UriPath struct {
 	noSmithyDocumentSerde
 }
 
-// Details about your login page username field, used in a ManagedRuleGroupConfig.
+// Details about your login page username field for request inspection, used in the
+// AWSManagedRulesATPRuleSetRequestInspection configuration.
 type UsernameField struct {
 
 	// The name of the username field. For example /form/username.
@@ -2675,10 +3168,10 @@ type VisibilityConfig struct {
 	// This member is required.
 	CloudWatchMetricsEnabled bool
 
-	// A name of the Amazon CloudWatch metric. The name can contain only the
+	// A name of the Amazon CloudWatch metric dimension. The name can contain only the
 	// characters: A-Z, a-z, 0-9, - (hyphen), and _ (underscore). The name can be from
-	// one to 128 characters long. It can't contain whitespace or metric names reserved
-	// for WAF, for example All and Default_Action.
+	// one to 128 characters long. It can't contain whitespace or metric names that are
+	// reserved for WAF, for example All and Default_Action.
 	//
 	// This member is required.
 	MetricName *string
@@ -2700,7 +3193,7 @@ type VisibilityConfig struct {
 // and managed rule group. You can associate a web ACL with one or more Amazon Web
 // Services resources to protect. The resources can be an Amazon CloudFront
 // distribution, an Amazon API Gateway REST API, an Application Load Balancer, an
-// AppSync GraphQL API, or an Amazon Cognito user pool.
+// AppSync GraphQL API, Amazon Cognito user pool, or an App Runner service.
 type WebACL struct {
 
 	// The Amazon Resource Name (ARN) of the web ACL that you want to associate with
@@ -2746,6 +3239,11 @@ type WebACL struct {
 	// their own CaptchaConfig settings. If you don't specify this, WAF uses its
 	// default settings for CaptchaConfig.
 	CaptchaConfig *CaptchaConfig
+
+	// Specifies how WAF should handle challenge evaluations for rules that don't have
+	// their own ChallengeConfig settings. If you don't specify this, WAF uses its
+	// default settings for ChallengeConfig.
+	ChallengeConfig *ChallengeConfig
 
 	// A map of custom response keys and content bodies. When you create a rule with a
 	// block action, you can send a custom response to the web request. You define
@@ -2804,6 +3302,15 @@ type WebACL struct {
 	// block, or count. Each rule includes one top-level statement that WAF uses to
 	// identify matching web requests, and parameters that govern how WAF handles them.
 	Rules []Rule
+
+	// Specifies the domains that WAF should accept in a web request token. This
+	// enables the use of tokens across multiple protected websites. When WAF provides
+	// a token, it uses the domain of the Amazon Web Services resource that the web ACL
+	// is protecting. If you don't specify a list of token domains, WAF accepts tokens
+	// only for the domain of the protected resource. With a token domain list, WAF
+	// accepts the resource's host domain plus all domains in the token domain list,
+	// including their prefixed subdomains.
+	TokenDomains []string
 
 	noSmithyDocumentSerde
 }

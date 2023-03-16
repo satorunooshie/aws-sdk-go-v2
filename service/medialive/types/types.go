@@ -199,6 +199,9 @@ type AudioCodecSettings struct {
 	// Ac3 Settings
 	Ac3Settings *Ac3Settings
 
+	// Eac3 Atmos Settings
+	Eac3AtmosSettings *Eac3AtmosSettings
+
 	// Eac3 Settings
 	Eac3Settings *Eac3Settings
 
@@ -269,6 +272,22 @@ type AudioDescription struct {
 	// Used for MS Smooth and Apple HLS outputs. Indicates the name displayed by the
 	// player (eg. English, or Director Commentary).
 	StreamName *string
+
+	noSmithyDocumentSerde
+}
+
+// Audio Dolby EDecode
+type AudioDolbyEDecode struct {
+
+	// Applies only to Dolby E. Enter the program ID (according to the metadata in the
+	// audio) of the Dolby E program to extract from the specified track. One program
+	// extracted per audio selector. To select multiple programs, create multiple
+	// selectors with the same Track and different Program numbers. “All channels”
+	// means to ignore the program IDs and include all the channels in this selector;
+	// useful if metadata is known to be incorrect.
+	//
+	// This member is required.
+	ProgramSelection DolbyEProgramSelection
 
 	noSmithyDocumentSerde
 }
@@ -442,6 +461,10 @@ type AudioTrackSelection struct {
 	// This member is required.
 	Tracks []AudioTrack
 
+	// Configure decoding options for Dolby E streams - these should be Dolby E frames
+	// carried in PCM streams tagged with SMPTE-337
+	DolbyEDecode *AudioDolbyEDecode
+
 	noSmithyDocumentSerde
 }
 
@@ -497,7 +520,10 @@ type AvailBlanking struct {
 // Avail Configuration
 type AvailConfiguration struct {
 
-	// Ad avail settings.
+	// Controls how SCTE-35 messages create cues. Splice Insert mode treats all
+	// segmentation signals traditionally. With Time Signal APOS mode only Time Signal
+	// Placement Opportunity and Break messages create segment breaks. With ESAM mode,
+	// signals are forwarded to an ESAM server for possible update.
 	AvailSettings *AvailSettings
 
 	noSmithyDocumentSerde
@@ -506,10 +532,15 @@ type AvailConfiguration struct {
 // Avail Settings
 type AvailSettings struct {
 
-	// Scte35 Splice Insert
+	// Esam
+	Esam *Esam
+
+	// Typical configuration that applies breaks on splice inserts in addition to time
+	// signal placement opportunities, breaks, and advertisements.
 	Scte35SpliceInsert *Scte35SpliceInsert
 
-	// Scte35 Time Signal Apos
+	// Atypical configuration that applies segment breaks only on SCTE-35 time signal
+	// placement opportunities and breaks.
 	Scte35TimeSignalApos *Scte35TimeSignalApos
 
 	noSmithyDocumentSerde
@@ -875,8 +906,7 @@ type CaptionRectangle struct {
 	noSmithyDocumentSerde
 }
 
-// Output groups for this Live Event. Output groups contain information about where
-// streams should be distributed.
+// Caption Selector
 type CaptionSelector struct {
 
 	// Name identifier for a caption selector. This name is used to associate this
@@ -1066,6 +1096,11 @@ type ColorSpacePassthroughSettings struct {
 	noSmithyDocumentSerde
 }
 
+// Dolby Vision81 Settings
+type DolbyVision81Settings struct {
+	noSmithyDocumentSerde
+}
+
 // DVB Network Information Table (NIT)
 type DvbNitSettings struct {
 
@@ -1241,6 +1276,39 @@ type DvbTdtSettings struct {
 	// The number of milliseconds between instances of this table in the output
 	// transport stream.
 	RepInterval int32
+
+	noSmithyDocumentSerde
+}
+
+// Eac3 Atmos Settings
+type Eac3AtmosSettings struct {
+
+	// Average bitrate in bits/second. Valid bitrates depend on the coding mode. // *
+	// @affectsRightSizing true
+	Bitrate float64
+
+	// Dolby Digital Plus with Dolby Atmos coding mode. Determines number of channels.
+	CodingMode Eac3AtmosCodingMode
+
+	// Sets the dialnorm for the output. Default 23.
+	Dialnorm int32
+
+	// Sets the Dolby dynamic range compression profile.
+	DrcLine Eac3AtmosDrcLine
+
+	// Sets the profile for heavy Dolby dynamic range compression, ensures that the
+	// instantaneous signal peaks do not exceed specified levels.
+	DrcRf Eac3AtmosDrcRf
+
+	// Height dimensional trim. Sets the maximum amount to attenuate the height
+	// channels when the downstream player isn??t configured to handle Dolby Digital
+	// Plus with Dolby Atmos and must remix the channels.
+	HeightTrim float64
+
+	// Surround dimensional trim. Sets the maximum amount to attenuate the surround
+	// channels when the downstream player isn't configured to handle Dolby Digital
+	// Plus with Dolby Atmos and must remix the channels.
+	SurroundTrim float64
 
 	noSmithyDocumentSerde
 }
@@ -1455,6 +1523,39 @@ type EncoderSettings struct {
 	noSmithyDocumentSerde
 }
 
+// Esam
+type Esam struct {
+
+	// Sent as acquisitionPointIdentity to identify the MediaLive channel to the POIS.
+	//
+	// This member is required.
+	AcquisitionPointId *string
+
+	// The URL of the signal conditioner endpoint on the Placement Opportunity
+	// Information System (POIS). MediaLive sends SignalProcessingEvents here when
+	// SCTE-35 messages are read.
+	//
+	// This member is required.
+	PoisEndpoint *string
+
+	// When specified, this offset (in milliseconds) is added to the input Ad Avail PTS
+	// time. This only applies to embedded SCTE 104/35 messages and does not apply to
+	// OOB messages.
+	AdAvailOffset int32
+
+	// Documentation update needed
+	PasswordParam *string
+
+	// Documentation update needed
+	Username *string
+
+	// Optional data sent as zoneIdentity to identify the MediaLive channel to the
+	// POIS.
+	ZoneIdentity *string
+
+	noSmithyDocumentSerde
+}
+
 // Failover Condition settings. There can be multiple failover conditions inside
 // AutomaticInputFailoverSettings.
 type FailoverCondition struct {
@@ -1631,6 +1732,9 @@ type FrameCaptureSettings struct {
 
 	// Unit for the frame capture interval.
 	CaptureIntervalUnits FrameCaptureIntervalUnit
+
+	// Timecode burn-in settings
+	TimecodeBurninSettings *TimecodeBurninSettings
 
 	noSmithyDocumentSerde
 }
@@ -1932,6 +2036,9 @@ type H264Settings struct {
 	// and doesn't apply temporal AQ.
 	TemporalAq H264TemporalAq
 
+	// Timecode burn-in settings
+	TimecodeBurninSettings *TimecodeBurninSettings
+
 	// Determines how timecodes should be inserted into the video elementary stream.
 	//
 	// *
@@ -1949,6 +2056,9 @@ type H265ColorSpaceSettings struct {
 
 	// Passthrough applies no color space conversion to the output
 	ColorSpacePassthroughSettings *ColorSpacePassthroughSettings
+
+	// Dolby Vision81 Settings
+	DolbyVision81Settings *DolbyVision81Settings
 
 	// Hdr10 Settings
 	Hdr10Settings *Hdr10Settings
@@ -2106,6 +2216,9 @@ type H265Settings struct {
 	// H.265 Tier.
 	Tier H265Tier
 
+	// Timecode burn-in settings
+	TimecodeBurninSettings *TimecodeBurninSettings
+
 	// Determines how timecodes should be inserted into the video elementary stream.
 	//
 	// *
@@ -2148,7 +2261,8 @@ type HlsAkamaiSettings struct {
 	HttpTransferMode HlsAkamaiHttpTransferMode
 
 	// Number of retry attempts that will be made before the Live Event is put into an
-	// error state.
+	// error state. Applies only if the CDN destination URI begins with "s3" or
+	// "mediastore". For other URIs, the value is always 3.
 	NumRetries int32
 
 	// If a streaming output fails, number of seconds to wait until a restart is
@@ -2175,7 +2289,8 @@ type HlsBasicPutSettings struct {
 	FilecacheDuration int32
 
 	// Number of retry attempts that will be made before the Live Event is put into an
-	// error state.
+	// error state. Applies only if the CDN destination URI begins with "s3" or
+	// "mediastore". For other URIs, the value is always 3.
 	NumRetries int32
 
 	// If a streaming output fails, number of seconds to wait until a restart is
@@ -2356,8 +2471,9 @@ type HlsGroupSettings struct {
 	// values for segment duration.
 	ManifestDurationFormat HlsManifestDurationFormat
 
-	// When set, minimumSegmentLength is enforced by looking ahead and back within the
-	// specified range for a nearby avail and extending the segment size if needed.
+	// Minimum length of MPEG-2 Transport Stream segments in seconds. When set, minimum
+	// segment length is enforced by looking ahead and back within the specified range
+	// for a nearby avail and extending the segment size if needed.
 	MinSegmentLength int32
 
 	// If "vod", all segments are indexed and kept permanently in the destination and
@@ -2403,9 +2519,9 @@ type HlsGroupSettings struct {
 	// manifest from MediaLive is irrelevant.
 	RedundantManifest HlsRedundantManifest
 
-	// Length of MPEG-2 Transport Stream segments to create (in seconds). Note that
-	// segments will end on the next keyframe after this number of seconds, so actual
-	// segment length may be longer.
+	// Length of MPEG-2 Transport Stream segments to create in seconds. Note that
+	// segments will end on the next keyframe after this duration, so actual segment
+	// length may be longer.
 	SegmentLength int32
 
 	// useInputSegmentation has been deprecated. The configured segment size is always
@@ -2500,7 +2616,8 @@ type HlsMediaStoreSettings struct {
 	MediaStoreStorageClass HlsMediaStoreStorageClass
 
 	// Number of retry attempts that will be made before the Live Event is put into an
-	// error state.
+	// error state. Applies only if the CDN destination URI begins with "s3" or
+	// "mediastore". For other URIs, the value is always 3.
 	NumRetries int32
 
 	// If a streaming output fails, number of seconds to wait until a restart is
@@ -2586,7 +2703,8 @@ type HlsWebdavSettings struct {
 	HttpTransferMode HlsWebdavHttpTransferMode
 
 	// Number of retry attempts that will be made before the Live Event is put into an
-	// error state.
+	// error state. Applies only if the CDN destination URI begins with "s3" or
+	// "mediastore". For other URIs, the value is always 3.
 	NumRetries int32
 
 	// If a streaming output fails, number of seconds to wait until a restart is
@@ -2774,6 +2892,9 @@ type InputDeviceConfigurableSettings struct {
 	// you want to use a specific source, specify the source.
 	ConfiguredInput InputDeviceConfiguredInput
 
+	// The Link device's buffer size (latency) in milliseconds (ms).
+	LatencyMs int32
+
 	// The maximum bitrate in bits per second. Set a value here to throttle the bitrate
 	// of the source video.
 	MaxBitrate int32
@@ -2801,6 +2922,10 @@ type InputDeviceHdSettings struct {
 
 	// The height of the video source, in pixels.
 	Height int32
+
+	// The Link device's buffer size (latency) in milliseconds (ms). You can specify
+	// this value.
+	LatencyMs int32
 
 	// The current maximum bitrate for ingesting this source, in bits per second. You
 	// can specify this maximum.
@@ -2921,6 +3046,10 @@ type InputDeviceUhdSettings struct {
 
 	// The height of the video source, in pixels.
 	Height int32
+
+	// The Link device's buffer size (latency) in milliseconds (ms). You can specify
+	// this value.
+	LatencyMs int32
 
 	// The current maximum bitrate for ingesting this source, in bits per second. You
 	// can specify this maximum.
@@ -3399,6 +3528,14 @@ type M2tsSettings struct {
 	// (or 0x1ff6).
 	Scte35Pid *string
 
+	// Defines the amount SCTE-35 preroll will be increased (in milliseconds) on the
+	// output. Preroll is the amount of time between the presence of a SCTE-35
+	// indication in a transport stream and the PTS of the video frame it references.
+	// Zero means don't add pullup (it doesn't mean set the preroll to zero). Negative
+	// pullup is not supported, which means that you can't make the preroll shorter. Be
+	// aware that latency in the output will increase by the pullup amount.
+	Scte35PrerollPullupMilliseconds float64
+
 	// Inserts segmentation markers at each segmentationTime period. raiSegstart sets
 	// the Random Access Indicator bit in the adaptation field. raiAdapt sets the RAI
 	// bit and adds the current timecode in the private data bytes. psiSegstart inserts
@@ -3777,6 +3914,9 @@ type Mpeg2Settings struct {
 	// DYNAMIC: Let MediaLive optimize the number of B-frames in each sub-GOP, to
 	// improve visual quality.
 	SubgopLength Mpeg2SubGopLength
+
+	// Timecode burn-in settings
+	TimecodeBurninSettings *TimecodeBurninSettings
 
 	// Determines how MediaLive inserts timecodes in the output video. For detailed
 	// information about setting up the input and the output for a timecode, see the
@@ -4286,6 +4426,10 @@ type NielsenNaesIiNw struct {
 	//
 	// This member is required.
 	Sid float64
+
+	// Choose the timezone for the time stamps in the watermark. If not provided, the
+	// timestamps will be in Coordinated Universal Time (UTC)
+	Timezone NielsenWatermarkTimezones
 
 	noSmithyDocumentSerde
 }
@@ -4816,6 +4960,9 @@ type ScheduleActionSettings struct {
 	// Action to pause or unpause one or both channel pipelines
 	PauseStateSettings *PauseStateScheduleActionSettings
 
+	// Action to specify scte35 input
+	Scte35InputSettings *Scte35InputScheduleActionSettings
+
 	// Action to insert SCTE-35 return_to_network message
 	Scte35ReturnToNetworkSettings *Scte35ReturnToNetworkScheduleActionSettings
 
@@ -4953,6 +5100,21 @@ type Scte35DescriptorSettings struct {
 	noSmithyDocumentSerde
 }
 
+// Scte35Input Schedule Action Settings
+type Scte35InputScheduleActionSettings struct {
+
+	// Whether the SCTE-35 input should be the active input or a fixed input.
+	//
+	// This member is required.
+	Mode Scte35InputMode
+
+	// In fixed mode, enter the name of the input attachment that you want to use as a
+	// SCTE-35 input. (Don't enter the ID of the input.)"
+	InputAttachmentNameReference *string
+
+	noSmithyDocumentSerde
+}
+
 // Settings for a SCTE-35 return_to_network message.
 type Scte35ReturnToNetworkScheduleActionSettings struct {
 
@@ -5025,7 +5187,8 @@ type Scte35SegmentationDescriptor struct {
 	noSmithyDocumentSerde
 }
 
-// Scte35 Splice Insert
+// Typical configuration that applies breaks on splice inserts in addition to time
+// signal placement opportunities, breaks, and advertisements.
 type Scte35SpliceInsert struct {
 
 	// When specified, this offset (in milliseconds) is added to the input Ad Avail PTS
@@ -5063,7 +5226,8 @@ type Scte35SpliceInsertScheduleActionSettings struct {
 	noSmithyDocumentSerde
 }
 
-// Scte35 Time Signal Apos
+// Atypical configuration that applies segment breaks only on SCTE-35 time signal
+// placement opportunities and breaks.
 type Scte35TimeSignalApos struct {
 
 	// When specified, this offset (in milliseconds) is added to the input Ad Avail PTS
@@ -5259,6 +5423,25 @@ type TemporalFilterSettings struct {
 	// Choose a filter strength. We recommend a strength of 1 or 2. A higher strength
 	// might take out good information, resulting in an image that is overly soft.
 	Strength TemporalFilterStrength
+
+	noSmithyDocumentSerde
+}
+
+// Timecode Burnin Settings
+type TimecodeBurninSettings struct {
+
+	// Choose a timecode burn-in font size
+	//
+	// This member is required.
+	FontSize TimecodeBurninFontSize
+
+	// Choose a timecode burn-in output position
+	//
+	// This member is required.
+	Position TimecodeBurninPosition
+
+	// Create a timecode burn-in prefix (optional)
+	Prefix *string
 
 	noSmithyDocumentSerde
 }

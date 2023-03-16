@@ -1,3 +1,80 @@
+# v1.13.0 (2023-03-13)
+
+* **Feature**: This release extends Wisdom CreateKnowledgeBase API to support SharePoint connector type by removing the @required trait for objectField
+
+# v1.12.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.12.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.12.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.11.0 (2022-12-29)
+
+* **Feature**: This release extends Wisdom CreateContent and StartContentUpload APIs to support PDF and MicrosoftWord docx document uploading.
+
+# v1.10.5 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.4 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.3 (2022-10-25)
+
+* No change notes available for this release.
+
+# v1.10.2 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.1 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.0 (2022-10-13)
+
+* **Feature**: This release updates the GetRecommendations API to include a trigger event list for classifying and grouping recommendations.
+
+# v1.9.6 (2022-10-07)
+
+* No change notes available for this release.
+
+# v1.9.5 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.4 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.3 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.2 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.9.1 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

@@ -1,3 +1,72 @@
+# v1.12.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.12.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.12.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.11.0 (2022-12-27)
+
+* **Feature**: This release adds support for MemoryDB Reserved nodes which provides a significant discount compared to on-demand node pricing. Reserved nodes are not physical nodes, but rather a billing discount applied to the use of on-demand nodes in your account.
+
+# v1.10.3 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.2 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.10.1 (2022-11-15)
+
+* No change notes available for this release.
+
+# v1.10.0 (2022-11-03)
+
+* **Feature**: Adding support for r6gd instances for MemoryDB Redis with data tiering. In a cluster with data tiering enabled, when available memory capacity is exhausted, the least recently used data is automatically tiered to solid state drives for cost-effective capacity scaling with minimal performance impact.
+
+# v1.9.20 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.19 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.18 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.17 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.16 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.9.15 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.9.14 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

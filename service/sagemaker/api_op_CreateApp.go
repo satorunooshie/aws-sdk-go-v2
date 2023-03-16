@@ -11,11 +11,10 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Creates a running app for the specified UserProfile. Supported apps are
-// JupyterServer and KernelGateway. This operation is automatically invoked by
-// Amazon SageMaker Studio upon access to the associated Domain, and when new
-// kernel configurations are selected by the user. A user may have multiple Apps
-// active simultaneously.
+// Creates a running app for the specified UserProfile. This operation is
+// automatically invoked by Amazon SageMaker Studio upon access to the associated
+// Domain, and when new kernel configurations are selected by the user. A user may
+// have multiple Apps active simultaneously.
 func (c *Client) CreateApp(ctx context.Context, params *CreateAppInput, optFns ...func(*Options)) (*CreateAppOutput, error) {
 	if params == nil {
 		params = &CreateAppInput{}
@@ -38,8 +37,7 @@ type CreateAppInput struct {
 	// This member is required.
 	AppName *string
 
-	// The type of app. Supported apps are JupyterServer and KernelGateway. TensorBoard
-	// is not supported.
+	// The type of app.
 	//
 	// This member is required.
 	AppType types.AppType
@@ -49,11 +47,6 @@ type CreateAppInput struct {
 	// This member is required.
 	DomainId *string
 
-	// The user profile name.
-	//
-	// This member is required.
-	UserProfileName *string
-
 	// The instance type and the Amazon Resource Name (ARN) of the SageMaker image
 	// created on the instance. The value of InstanceType passed as part of the
 	// ResourceSpec in the CreateApp call overrides the value passed as part of the
@@ -62,9 +55,16 @@ type CreateAppInput struct {
 	// the CreateApp call fails with a request validation error.
 	ResourceSpec *types.ResourceSpec
 
+	// The name of the space. If this value is not set, then UserProfileName must be
+	// set.
+	SpaceName *string
+
 	// Each tag consists of a key and an optional value. Tag keys must be unique per
 	// resource.
 	Tags []types.Tag
+
+	// The user profile name. If this value is not set, then SpaceName must be set.
+	UserProfileName *string
 
 	noSmithyDocumentSerde
 }

@@ -49,6 +49,9 @@ type CreateMetricSetInput struct {
 	// This member is required.
 	MetricSource *types.MetricSource
 
+	// A list of filters that specify which data is kept for anomaly detection.
+	DimensionFilterList []types.MetricSetDimensionFilter
+
 	// A list of the fields you want to treat as dimensions.
 	DimensionList []string
 
@@ -61,7 +64,7 @@ type CreateMetricSetInput struct {
 	// After an interval ends, the amount of seconds that the detector waits before
 	// importing data. Offset is only supported for S3, Redshift, Athena and
 	// datasources.
-	Offset int32
+	Offset *int32
 
 	// A list of tags
 	// (https://docs.aws.amazon.com/lookoutmetrics/latest/dev/detectors-tags.html) to

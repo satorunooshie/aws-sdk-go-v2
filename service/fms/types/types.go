@@ -160,6 +160,25 @@ type ComplianceViolator struct {
 	noSmithyDocumentSerde
 }
 
+// A resource in the organization that's available to be associated with a Firewall
+// Manager resource set.
+type DiscoveredResource struct {
+
+	// The Amazon Web Services account ID associated with the discovered resource.
+	AccountId *string
+
+	// The name of the discovered resource.
+	Name *string
+
+	// The type of the discovered resource.
+	Type *string
+
+	// The universal resource identifier (URI) of the discovered resource.
+	URI *string
+
+	noSmithyDocumentSerde
+}
+
 // A DNS Firewall rule group that Firewall Manager tried to associate with a VPC is
 // already associated with the VPC and can't be associated again.
 type DnsDuplicateRuleGroupViolation struct {
@@ -425,6 +444,19 @@ type ExpectedRoute struct {
 
 	// Information about the route table ID.
 	RouteTableId *string
+
+	noSmithyDocumentSerde
+}
+
+// Details of a resource that failed when trying to update it's association to a
+// resource set.
+type FailedItem struct {
+
+	// The reason the resource's association could not be updated.
+	Reason FailedItemReason
+
+	// The univeral resource indicator (URI) of the resource that failed.
+	URI *string
 
 	noSmithyDocumentSerde
 }
@@ -767,6 +799,17 @@ type NetworkFirewallPolicyModifiedViolation struct {
 	noSmithyDocumentSerde
 }
 
+// The setting that allows the policy owner to change the behavior of the rule
+// group within a policy.
+type NetworkFirewallStatefulRuleGroupOverride struct {
+
+	// The action that changes the rule group from DROP to ALERT. This only applies to
+	// managed rule groups.
+	Action NetworkFirewallOverrideAction
+
+	noSmithyDocumentSerde
+}
+
 // Violation detail for an unexpected route that's present in a route table.
 type NetworkFirewallUnexpectedFirewallRoutesViolation struct {
 
@@ -922,6 +965,9 @@ type Policy struct {
 	// “ouid112”]}.
 	IncludeMap map[string][]string
 
+	// The definition of the Network Firewall firewall policy.
+	PolicyDescription *string
+
 	// The ID of the Firewall Manager policy.
 	PolicyId *string
 
@@ -930,6 +976,9 @@ type Policy struct {
 	// of the current policy version. To get the PolicyUpdateToken of the current
 	// policy version, use a GetPolicy request.
 	PolicyUpdateToken *string
+
+	// The unique identifiers of the resource sets used by the policy.
+	ResourceSetIds []string
 
 	// An array of ResourceTag objects.
 	ResourceTags []ResourceTag
@@ -1185,6 +1234,87 @@ type RemediationActionWithOrder struct {
 
 	// Information about an action you can take to remediate a violation.
 	RemediationAction *RemediationAction
+
+	noSmithyDocumentSerde
+}
+
+// Details of a resource that is associated to an Firewall Manager resource set.
+type Resource struct {
+
+	// The resource's universal resource indicator (URI).
+	//
+	// This member is required.
+	URI *string
+
+	// The Amazon Web Services account ID that the associated resource belongs to.
+	AccountId *string
+
+	noSmithyDocumentSerde
+}
+
+// A set of resources to include in a policy.
+type ResourceSet struct {
+
+	// The descriptive name of the resource set. You can't change the name of a
+	// resource set after you create it.
+	//
+	// This member is required.
+	Name *string
+
+	// Determines the resources that can be associated to the resource set. Depending
+	// on your setting for max results and the number of resource sets, a single call
+	// might not return the full list.
+	//
+	// This member is required.
+	ResourceTypeList []string
+
+	// A description of the resource set.
+	Description *string
+
+	// A unique identifier for the resource set. This ID is returned in the responses
+	// to create and list commands. You provide it to operations like update and
+	// delete.
+	Id *string
+
+	// The last time that the resource set was changed.
+	LastUpdateTime *time.Time
+
+	// An optional token that you can use for optimistic locking. Firewall Manager
+	// returns a token to your requests that access the resource set. The token marks
+	// the state of the resource set resource at the time of the request. Update tokens
+	// are not allowed when creating a resource set. After creation, each subsequent
+	// update call to the resource set requires the update token. To make an
+	// unconditional change to the resource set, omit the token in your update request.
+	// Without the token, Firewall Manager performs your updates regardless of whether
+	// the resource set has changed since you last retrieved it. To make a conditional
+	// change to the resource set, provide the token in your update request. Firewall
+	// Manager uses the token to ensure that the resource set hasn't changed since you
+	// last retrieved it. If it has changed, the operation fails with an
+	// InvalidTokenException. If this happens, retrieve the resource set again to get a
+	// current copy of it with a new token. Reapply your changes as needed, then try
+	// the operation again using the new token.
+	UpdateToken *string
+
+	noSmithyDocumentSerde
+}
+
+// Summarizes the resource sets used in a policy.
+type ResourceSetSummary struct {
+
+	// A description of the resource set.
+	Description *string
+
+	// A unique identifier for the resource set. This ID is returned in the responses
+	// to create and list commands. You provide it to operations like update and
+	// delete.
+	Id *string
+
+	// The last time that the resource set was changed.
+	LastUpdateTime *time.Time
+
+	// The descriptive name of the resource set. You can't change the name of a
+	// resource set after you create it.
+	Name *string
 
 	noSmithyDocumentSerde
 }
@@ -1486,40 +1616,6 @@ type SecurityServicePolicyData struct {
 	// "availabilityZoneName":"${AvailabilityZone}" } ] } }, "allowedIPV4CidrList":[ ]
 	// } } } }"
 	//
-	// * Specification for SHIELD_ADVANCED for Amazon CloudFront
-	// distributions "{\"type\":\"SHIELD_ADVANCED\",\"automaticResponseConfiguration\":
-	// {\"automaticResponseStatus\":\"ENABLED|IGNORED|DISABLED\",
-	// \"automaticResponseAction\":\"BLOCK|COUNT\"},
-	// \"overrideCustomerWebaclClassic\":true|false}" For example:
-	// "{\"type\":\"SHIELD_ADVANCED\",\"automaticResponseConfiguration\":
-	// {\"automaticResponseStatus\":\"ENABLED\",
-	// \"automaticResponseAction\":\"COUNT\"}}" The default value for
-	// automaticResponseStatus is IGNORED. The value for automaticResponseAction is
-	// only required when automaticResponseStatus is set to ENABLED. The default value
-	// for overrideCustomerWebaclClassic is false. For other resource types that you
-	// can protect with a Shield Advanced policy, this ManagedServiceData configuration
-	// is an empty string.
-	//
-	// * Example:
-	// WAFV2"{\"type\":\"WAFV2\",\"preProcessRuleGroups\":[{\"ruleGroupArn\":null,\"overrideAction\":{\"type\":\"NONE\"},\"managedRuleGroupIdentifier\":{\"version\":null,\"vendorName\":\"AWS\",\"managedRuleGroupName\":\"AWSManagedRulesAmazonIpReputationList\"},\"ruleGroupType\":\"ManagedRuleGroup\",\"excludeRules\":[{\"name\":\"NoUserAgent_HEADER\"}]}],\"postProcessRuleGroups\":[],\"defaultAction\":{\"type\":\"ALLOW\"},\"overrideCustomerWebACLAssociation\":false,\"loggingConfiguration\":{\"logDestinationConfigs\":[\"arn:aws:firehose:us-west-2:12345678912:deliverystream/aws-waf-logs-fms-admin-destination\"],\"redactedFields\":[{\"redactedFieldType\":\"SingleHeader\",\"redactedFieldValue\":\"Cookies\"},{\"redactedFieldType\":\"Method\"}]}}"
-	// In the loggingConfiguration, you can specify one logDestinationConfigs, you can
-	// optionally provide up to 20 redactedFields, and the RedactedFieldType must be
-	// one of URI, QUERY_STRING, HEADER, or METHOD.
-	//
-	// * Example: WAF Classic"{\"type\":
-	// \"WAF\", \"ruleGroups\": [{\"id\":\"12345678-1bcd-9012-efga-0987654321ab\",
-	// \"overrideAction\" : {\"type\": \"COUNT\"}}], \"defaultAction\": {\"type\":
-	// \"BLOCK\"}}"
-	//
-	// * Example: WAFV2 - Firewall Manager support for WAF managed rule
-	// group versioning
-	// "{\"type\":\"WAFV2\",\"preProcessRuleGroups\":[{\"ruleGroupArn\":null,\"overrideAction\":{\"type\":\"NONE\"},\"managedRuleGroupIdentifier\":{\"versionEnabled\":true,\"version\":\"Version_2.0\",\"vendorName\":\"AWS\",\"managedRuleGroupName\":\"AWSManagedRulesCommonRuleSet\"},\"ruleGroupType\":\"ManagedRuleGroup\",\"excludeRules\":[{\"name\":\"NoUserAgent_HEADER\"}]}],\"postProcessRuleGroups\":[],\"defaultAction\":{\"type\":\"ALLOW\"},\"overrideCustomerWebACLAssociation\":false,\"loggingConfiguration\":{\"logDestinationConfigs\":[\"arn:aws:firehose:us-west-2:12345678912:deliverystream/aws-waf-logs-fms-admin-destination\"],\"redactedFields\":[{\"redactedFieldType\":\"SingleHeader\",\"redactedFieldValue\":\"Cookies\"},{\"redactedFieldType\":\"Method\"}]}}"
-	// To use a specific version of a WAF managed rule group in your Firewall Manager
-	// policy, you must set versionEnabled to true, and set version to the version
-	// you'd like to use. If you don't set versionEnabled to true, or if you omit
-	// versionEnabled, then Firewall Manager uses the default version of the WAF
-	// managed rule group.
-	//
 	// * Example:
 	// SECURITY_GROUPS_COMMON"{\"type\":\"SECURITY_GROUPS_COMMON\",\"revertManualSecurityGroupChanges\":false,\"exclusiveResourceSecurityGroupManagement\":false,
 	// \"applyToAllEC2InstanceENIs\":false,\"securityGroups\":[{\"id\":\"
@@ -1554,6 +1650,40 @@ type SecurityServicePolicyData struct {
 	//
 	// * Example:
 	// SECURITY_GROUPS_USAGE_AUDIT"{\"type\":\"SECURITY_GROUPS_USAGE_AUDIT\",\"deleteUnusedSecurityGroups\":true,\"coalesceRedundantSecurityGroups\":true}"
+	//
+	// *
+	// Specification for SHIELD_ADVANCED for Amazon CloudFront distributions
+	// "{\"type\":\"SHIELD_ADVANCED\",\"automaticResponseConfiguration\":
+	// {\"automaticResponseStatus\":\"ENABLED|IGNORED|DISABLED\",
+	// \"automaticResponseAction\":\"BLOCK|COUNT\"},
+	// \"overrideCustomerWebaclClassic\":true|false}" For example:
+	// "{\"type\":\"SHIELD_ADVANCED\",\"automaticResponseConfiguration\":
+	// {\"automaticResponseStatus\":\"ENABLED\",
+	// \"automaticResponseAction\":\"COUNT\"}}" The default value for
+	// automaticResponseStatus is IGNORED. The value for automaticResponseAction is
+	// only required when automaticResponseStatus is set to ENABLED. The default value
+	// for overrideCustomerWebaclClassic is false. For other resource types that you
+	// can protect with a Shield Advanced policy, this ManagedServiceData configuration
+	// is an empty string.
+	//
+	// * Example:
+	// WAFV2"{\"type\":\"WAFV2\",\"preProcessRuleGroups\":[{\"ruleGroupArn\":null,\"overrideAction\":{\"type\":\"NONE\"},\"managedRuleGroupIdentifier\":{\"version\":null,\"vendorName\":\"AWS\",\"managedRuleGroupName\":\"AWSManagedRulesAmazonIpReputationList\"},\"ruleGroupType\":\"ManagedRuleGroup\",\"excludeRules\":[{\"name\":\"NoUserAgent_HEADER\"}]}],\"postProcessRuleGroups\":[],\"defaultAction\":{\"type\":\"ALLOW\"},\"overrideCustomerWebACLAssociation\":false,\"loggingConfiguration\":{\"logDestinationConfigs\":[\"arn:aws:firehose:us-west-2:12345678912:deliverystream/aws-waf-logs-fms-admin-destination\"],\"redactedFields\":[{\"redactedFieldType\":\"SingleHeader\",\"redactedFieldValue\":\"Cookies\"},{\"redactedFieldType\":\"Method\"}]}}"
+	// In the loggingConfiguration, you can specify one logDestinationConfigs, you can
+	// optionally provide up to 20 redactedFields, and the RedactedFieldType must be
+	// one of URI, QUERY_STRING, HEADER, or METHOD.
+	//
+	// * Example: WAFV2 - Firewall
+	// Manager support for WAF managed rule group versioning
+	// "{\"type\":\"WAFV2\",\"preProcessRuleGroups\":[{\"ruleGroupArn\":null,\"overrideAction\":{\"type\":\"NONE\"},\"managedRuleGroupIdentifier\":{\"versionEnabled\":true,\"version\":\"Version_2.0\",\"vendorName\":\"AWS\",\"managedRuleGroupName\":\"AWSManagedRulesCommonRuleSet\"},\"ruleGroupType\":\"ManagedRuleGroup\",\"excludeRules\":[{\"name\":\"NoUserAgent_HEADER\"}]}],\"postProcessRuleGroups\":[],\"defaultAction\":{\"type\":\"ALLOW\"},\"overrideCustomerWebACLAssociation\":false,\"loggingConfiguration\":{\"logDestinationConfigs\":[\"arn:aws:firehose:us-west-2:12345678912:deliverystream/aws-waf-logs-fms-admin-destination\"],\"redactedFields\":[{\"redactedFieldType\":\"SingleHeader\",\"redactedFieldValue\":\"Cookies\"},{\"redactedFieldType\":\"Method\"}]}}"
+	// To use a specific version of a WAF managed rule group in your Firewall Manager
+	// policy, you must set versionEnabled to true, and set version to the version
+	// you'd like to use. If you don't set versionEnabled to true, or if you omit
+	// versionEnabled, then Firewall Manager uses the default version of the WAF
+	// managed rule group.
+	//
+	// * Example: WAF Classic"{\"type\": \"WAF\", \"ruleGroups\":
+	// [{\"id\":\"12345678-1bcd-9012-efga-0987654321ab\", \"overrideAction\" :
+	// {\"type\": \"COUNT\"}}], \"defaultAction\": {\"type\": \"BLOCK\"}}"
 	ManagedServiceData *string
 
 	// Contains the Network Firewall firewall policy options to configure a centralized
@@ -1581,6 +1711,10 @@ type StatefulEngineOptions struct {
 // Network Firewall stateful rule group, used in a
 // NetworkFirewallPolicyDescription.
 type StatefulRuleGroup struct {
+
+	// The action that allows the policy owner to override the behavior of the rule
+	// group within a policy.
+	Override *NetworkFirewallStatefulRuleGroupOverride
 
 	// An integer setting that indicates the order in which to run the stateful rule
 	// groups in a single Network Firewall firewall policy. This setting only applies

@@ -12,9 +12,9 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Creates a managed endpoint. A managed endpoint is a gateway that connects EMR
-// Studio to Amazon EMR on EKS so that EMR Studio can communicate with your virtual
-// cluster.
+// Creates a managed endpoint. A managed endpoint is a gateway that connects Amazon
+// EMR Studio to Amazon EMR on EKS so that Amazon EMR Studio can communicate with
+// your virtual cluster.
 func (c *Client) CreateManagedEndpoint(ctx context.Context, params *CreateManagedEndpointInput, optFns ...func(*Options)) (*CreateManagedEndpointOutput, error) {
 	if params == nil {
 		params = &CreateManagedEndpointInput{}
@@ -62,7 +62,7 @@ type CreateManagedEndpointInput struct {
 	// This member is required.
 	VirtualClusterId *string
 
-	// The certificate ARN provided by users for the managed endpoint. This fiedd is
+	// The certificate ARN provided by users for the managed endpoint. This field is
 	// under deprecation and will be removed in future releases.
 	//
 	// Deprecated: Customer provided certificate-arn is deprecated and would be removed

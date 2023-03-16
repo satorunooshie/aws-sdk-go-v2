@@ -11,7 +11,7 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Updates Audit Manager settings for the current user account.
+// Updates Audit Manager settings for the current account.
 func (c *Client) UpdateSettings(ctx context.Context, params *UpdateSettingsInput, optFns ...func(*Options)) (*UpdateSettingsOutput, error) {
 	if params == nil {
 		params = &UpdateSettingsInput{}
@@ -34,6 +34,22 @@ type UpdateSettingsInput struct {
 
 	// A list of the default audit owners.
 	DefaultProcessOwners []types.Role
+
+	// The deregistration policy for your Audit Manager data. You can use this
+	// attribute to determine how your data is handled when you deregister Audit
+	// Manager.
+	DeregistrationPolicy *types.DeregistrationPolicy
+
+	// Specifies whether the evidence finder feature is enabled. Change this attribute
+	// to enable or disable evidence finder. When you use this attribute to disable
+	// evidence finder, Audit Manager deletes the event data store that’s used to query
+	// your evidence data. As a result, you can’t re-enable evidence finder and use the
+	// feature again. Your only alternative is to deregister
+	// (https://docs.aws.amazon.com/audit-manager/latest/APIReference/API_DeregisterAccount.html)
+	// and then re-register
+	// (https://docs.aws.amazon.com/audit-manager/latest/APIReference/API_RegisterAccount.html)
+	// Audit Manager.
+	EvidenceFinderEnabled *bool
 
 	// The KMS key details.
 	KmsKey *string

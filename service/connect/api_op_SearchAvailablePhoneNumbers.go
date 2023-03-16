@@ -13,7 +13,9 @@ import (
 )
 
 // Searches for available phone numbers that you can claim to your Amazon Connect
-// instance.
+// instance or traffic distribution group. If the provided TargetArn is a traffic
+// distribution group, you can call this API in both Amazon Web Services Regions
+// associated with the traffic distribution group.
 func (c *Client) SearchAvailablePhoneNumbers(ctx context.Context, params *SearchAvailablePhoneNumbersInput, optFns ...func(*Options)) (*SearchAvailablePhoneNumbersOutput, error) {
 	if params == nil {
 		params = &SearchAvailablePhoneNumbersInput{}
@@ -41,14 +43,14 @@ type SearchAvailablePhoneNumbersInput struct {
 	// This member is required.
 	PhoneNumberType types.PhoneNumberType
 
-	// The Amazon Resource Name (ARN) for Amazon Connect instances that phone numbers
-	// are claimed to.
+	// The Amazon Resource Name (ARN) for Amazon Connect instances or traffic
+	// distribution groups that phone numbers are claimed to.
 	//
 	// This member is required.
 	TargetArn *string
 
 	// The maximum number of results to return per page.
-	MaxResults int32
+	MaxResults *int32
 
 	// The token for the next set of results. Use the value returned in the previous
 	// response in the next request to retrieve the next set of results.
@@ -63,8 +65,8 @@ type SearchAvailablePhoneNumbersInput struct {
 
 type SearchAvailablePhoneNumbersOutput struct {
 
-	// A list of available phone numbers that you can claim for your Amazon Connect
-	// instance.
+	// A list of available phone numbers that you can claim to your Amazon Connect
+	// instance or traffic distribution group.
 	AvailableNumbersList []types.AvailableNumberSummary
 
 	// If there are additional results, this is the token for the next set of results.
@@ -176,8 +178,8 @@ func NewSearchAvailablePhoneNumbersPaginator(client SearchAvailablePhoneNumbersA
 	}
 
 	options := SearchAvailablePhoneNumbersPaginatorOptions{}
-	if params.MaxResults != 0 {
-		options.Limit = params.MaxResults
+	if params.MaxResults != nil {
+		options.Limit = *params.MaxResults
 	}
 
 	for _, fn := range optFns {
@@ -207,7 +209,11 @@ func (p *SearchAvailablePhoneNumbersPaginator) NextPage(ctx context.Context, opt
 	params := *p.params
 	params.NextToken = p.nextToken
 
-	params.MaxResults = p.options.Limit
+	var limit *int32
+	if p.options.Limit > 0 {
+		limit = &p.options.Limit
+	}
+	params.MaxResults = limit
 
 	result, err := p.client.SearchAvailablePhoneNumbers(ctx, &params, optFns...)
 	if err != nil {

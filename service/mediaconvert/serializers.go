@@ -2932,6 +2932,24 @@ func awsRestjson1_serializeDocumentAudioNormalizationSettings(v *types.AudioNorm
 		}
 	}
 
+	if v.TruePeakLimiterThreshold != 0 {
+		ok := object.Key("truePeakLimiterThreshold")
+		switch {
+		case math.IsNaN(v.TruePeakLimiterThreshold):
+			ok.String("NaN")
+
+		case math.IsInf(v.TruePeakLimiterThreshold, 1):
+			ok.String("Infinity")
+
+		case math.IsInf(v.TruePeakLimiterThreshold, -1):
+			ok.String("-Infinity")
+
+		default:
+			ok.Double(v.TruePeakLimiterThreshold)
+
+		}
+	}
+
 	return nil
 }
 
@@ -3307,6 +3325,23 @@ func awsRestjson1_serializeDocumentAvcIntraUhdSettings(v *types.AvcIntraUhdSetti
 	return nil
 }
 
+func awsRestjson1_serializeDocumentBandwidthReductionFilter(v *types.BandwidthReductionFilter, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if len(v.Sharpening) > 0 {
+		ok := object.Key("sharpening")
+		ok.String(string(v.Sharpening))
+	}
+
+	if len(v.Strength) > 0 {
+		ok := object.Key("strength")
+		ok.String(string(v.Strength))
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentBurninDestinationSettings(v *types.BurninDestinationSettings, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -3673,6 +3708,33 @@ func awsRestjson1_serializeDocumentChannelMapping(v *types.ChannelMapping, value
 	return nil
 }
 
+func awsRestjson1_serializeDocumentClipLimits(v *types.ClipLimits, value smithyjson.Value) error {
+	object := value.Object()
+	defer object.Close()
+
+	if v.MaximumRGBTolerance != 0 {
+		ok := object.Key("maximumRGBTolerance")
+		ok.Integer(v.MaximumRGBTolerance)
+	}
+
+	if v.MaximumYUV != 0 {
+		ok := object.Key("maximumYUV")
+		ok.Integer(v.MaximumYUV)
+	}
+
+	if v.MinimumRGBTolerance != 0 {
+		ok := object.Key("minimumRGBTolerance")
+		ok.Integer(v.MinimumRGBTolerance)
+	}
+
+	if v.MinimumYUV != 0 {
+		ok := object.Key("minimumYUV")
+		ok.Integer(v.MinimumYUV)
+	}
+
+	return nil
+}
+
 func awsRestjson1_serializeDocumentCmafAdditionalManifest(v *types.CmafAdditionalManifest, value smithyjson.Value) error {
 	object := value.Object()
 	defer object.Close()
@@ -3759,6 +3821,11 @@ func awsRestjson1_serializeDocumentCmafGroupSettings(v *types.CmafGroupSettings,
 		ok.String(string(v.CodecSpecification))
 	}
 
+	if len(v.DashManifestStyle) > 0 {
+		ok := object.Key("dashManifestStyle")
+		ok.String(string(v.DashManifestStyle))
+	}
+
 	if v.Destination != nil {
 		ok := object.Key("destination")
 		ok.String(*v.Destination)
@@ -3828,6 +3895,11 @@ func awsRestjson1_serializeDocumentCmafGroupSettings(v *types.CmafGroupSettings,
 		}
 	}
 
+	if len(v.MpdManifestBandwidthType) > 0 {
+		ok := object.Key("mpdManifestBandwidthType")
+		ok.String(string(v.MpdManifestBandwidthType))
+	}
+
 	if len(v.MpdProfile) > 0 {
 		ok := object.Key("mpdProfile")
 		ok.String(string(v.MpdProfile))
@@ -3861,6 +3933,11 @@ func awsRestjson1_serializeDocumentCmafGroupSettings(v *types.CmafGroupSettings,
 	if len(v.TargetDurationCompatibilityMode) > 0 {
 		ok := object.Key("targetDurationCompatibilityMode")
 		ok.String(string(v.TargetDurationCompatibilityMode))
+	}
+
+	if len(v.VideoCompositionOffsets) > 0 {
+		ok := object.Key("videoCompositionOffsets")
+		ok.String(string(v.VideoCompositionOffsets))
 	}
 
 	if len(v.WriteDashManifest) > 0 {
@@ -3970,6 +4047,11 @@ func awsRestjson1_serializeDocumentCmfcSettings(v *types.CmfcSettings, value smi
 		ok.String(string(v.KlvMetadata))
 	}
 
+	if len(v.ManifestMetadataSignaling) > 0 {
+		ok := object.Key("manifestMetadataSignaling")
+		ok.String(string(v.ManifestMetadataSignaling))
+	}
+
 	if len(v.Scte35Esam) > 0 {
 		ok := object.Key("scte35Esam")
 		ok.String(string(v.Scte35Esam))
@@ -3985,6 +4067,21 @@ func awsRestjson1_serializeDocumentCmfcSettings(v *types.CmfcSettings, value smi
 		ok.String(string(v.TimedMetadata))
 	}
 
+	if len(v.TimedMetadataBoxVersion) > 0 {
+		ok := object.Key("timedMetadataBoxVersion")
+		ok.String(string(v.TimedMetadataBoxVersion))
+	}
+
+	if v.TimedMetadataSchemeIdUri != nil {
+		ok := object.Key("timedMetadataSchemeIdUri")
+		ok.String(*v.TimedMetadataSchemeIdUri)
+	}
+
+	if v.TimedMetadataValue != nil {
+		ok := object.Key("timedMetadataValue")
+		ok.String(*v.TimedMetadataValue)
+	}
+
 	return nil
 }
 
@@ -3995,6 +4092,13 @@ func awsRestjson1_serializeDocumentColorCorrector(v *types.ColorCorrector, value
 	if v.Brightness != 0 {
 		ok := object.Key("brightness")
 		ok.Integer(v.Brightness)
+	}
+
+	if v.ClipLimits != nil {
+		ok := object.Key("clipLimits")
+		if err := awsRestjson1_serializeDocumentClipLimits(v.ClipLimits, ok); err != nil {
+			return err
+		}
 	}
 
 	if len(v.ColorSpaceConversion) > 0 {
@@ -4014,6 +4118,11 @@ func awsRestjson1_serializeDocumentColorCorrector(v *types.ColorCorrector, value
 		}
 	}
 
+	if len(v.HdrToSdrToneMapper) > 0 {
+		ok := object.Key("hdrToSdrToneMapper")
+		ok.String(string(v.HdrToSdrToneMapper))
+	}
+
 	if v.Hue != 0 {
 		ok := object.Key("hue")
 		ok.Integer(v.Hue)
@@ -4027,6 +4136,11 @@ func awsRestjson1_serializeDocumentColorCorrector(v *types.ColorCorrector, value
 	if v.Saturation != 0 {
 		ok := object.Key("saturation")
 		ok.Integer(v.Saturation)
+	}
+
+	if v.SdrReferenceWhiteLevel != 0 {
+		ok := object.Key("sdrReferenceWhiteLevel")
+		ok.Integer(v.SdrReferenceWhiteLevel)
 	}
 
 	return nil
@@ -4159,6 +4273,11 @@ func awsRestjson1_serializeDocumentDashIsoGroupSettings(v *types.DashIsoGroupSet
 		ok.String(*v.BaseUrl)
 	}
 
+	if len(v.DashManifestStyle) > 0 {
+		ok := object.Key("dashManifestStyle")
+		ok.String(string(v.DashManifestStyle))
+	}
+
 	if v.Destination != nil {
 		ok := object.Key("destination")
 		ok.String(*v.Destination)
@@ -4223,6 +4342,11 @@ func awsRestjson1_serializeDocumentDashIsoGroupSettings(v *types.DashIsoGroupSet
 		}
 	}
 
+	if len(v.MpdManifestBandwidthType) > 0 {
+		ok := object.Key("mpdManifestBandwidthType")
+		ok.String(string(v.MpdManifestBandwidthType))
+	}
+
 	if len(v.MpdProfile) > 0 {
 		ok := object.Key("mpdProfile")
 		ok.String(string(v.MpdProfile))
@@ -4246,6 +4370,11 @@ func awsRestjson1_serializeDocumentDashIsoGroupSettings(v *types.DashIsoGroupSet
 	if len(v.SegmentLengthControl) > 0 {
 		ok := object.Key("segmentLengthControl")
 		ok.String(string(v.SegmentLengthControl))
+	}
+
+	if len(v.VideoCompositionOffsets) > 0 {
+		ok := object.Key("videoCompositionOffsets")
+		ok.String(string(v.VideoCompositionOffsets))
 	}
 
 	if len(v.WriteSegmentTimelineInRepresentation) > 0 {
@@ -5175,6 +5304,13 @@ func awsRestjson1_serializeDocumentH264Settings(v *types.H264Settings, value smi
 		ok.String(string(v.AdaptiveQuantization))
 	}
 
+	if v.BandwidthReductionFilter != nil {
+		ok := object.Key("bandwidthReductionFilter")
+		if err := awsRestjson1_serializeDocumentBandwidthReductionFilter(v.BandwidthReductionFilter, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.Bitrate != 0 {
 		ok := object.Key("bitrate")
 		ok.Integer(v.Bitrate)
@@ -5261,6 +5397,11 @@ func awsRestjson1_serializeDocumentH264Settings(v *types.H264Settings, value smi
 	if len(v.GopSizeUnits) > 0 {
 		ok := object.Key("gopSizeUnits")
 		ok.String(string(v.GopSizeUnits))
+	}
+
+	if v.HrdBufferFinalFillPercentage != 0 {
+		ok := object.Key("hrdBufferFinalFillPercentage")
+		ok.Integer(v.HrdBufferFinalFillPercentage)
 	}
 
 	if v.HrdBufferInitialFillPercentage != 0 {
@@ -5513,6 +5654,11 @@ func awsRestjson1_serializeDocumentH265Settings(v *types.H265Settings, value smi
 	if len(v.GopSizeUnits) > 0 {
 		ok := object.Key("gopSizeUnits")
 		ok.String(string(v.GopSizeUnits))
+	}
+
+	if v.HrdBufferFinalFillPercentage != 0 {
+		ok := object.Key("hrdBufferFinalFillPercentage")
+		ok.Integer(v.HrdBufferFinalFillPercentage)
 	}
 
 	if v.HrdBufferInitialFillPercentage != 0 {
@@ -6170,6 +6316,11 @@ func awsRestjson1_serializeDocumentImageInserter(v *types.ImageInserter, value s
 		if err := awsRestjson1_serializeDocument__listOfInsertableImage(v.InsertableImages, ok); err != nil {
 			return err
 		}
+	}
+
+	if v.SdrReferenceWhiteLevel != 0 {
+		ok := object.Key("sdrReferenceWhiteLevel")
+		ok.Integer(v.SdrReferenceWhiteLevel)
 	}
 
 	return nil
@@ -7450,6 +7601,11 @@ func awsRestjson1_serializeDocumentMpdSettings(v *types.MpdSettings, value smith
 		ok.String(string(v.KlvMetadata))
 	}
 
+	if len(v.ManifestMetadataSignaling) > 0 {
+		ok := object.Key("manifestMetadataSignaling")
+		ok.String(string(v.ManifestMetadataSignaling))
+	}
+
 	if len(v.Scte35Esam) > 0 {
 		ok := object.Key("scte35Esam")
 		ok.String(string(v.Scte35Esam))
@@ -7463,6 +7619,21 @@ func awsRestjson1_serializeDocumentMpdSettings(v *types.MpdSettings, value smith
 	if len(v.TimedMetadata) > 0 {
 		ok := object.Key("timedMetadata")
 		ok.String(string(v.TimedMetadata))
+	}
+
+	if len(v.TimedMetadataBoxVersion) > 0 {
+		ok := object.Key("timedMetadataBoxVersion")
+		ok.String(string(v.TimedMetadataBoxVersion))
+	}
+
+	if v.TimedMetadataSchemeIdUri != nil {
+		ok := object.Key("timedMetadataSchemeIdUri")
+		ok.String(*v.TimedMetadataSchemeIdUri)
+	}
+
+	if v.TimedMetadataValue != nil {
+		ok := object.Key("timedMetadataValue")
+		ok.String(*v.TimedMetadataValue)
 	}
 
 	return nil
@@ -7543,6 +7714,11 @@ func awsRestjson1_serializeDocumentMpeg2Settings(v *types.Mpeg2Settings, value s
 	if len(v.GopSizeUnits) > 0 {
 		ok := object.Key("gopSizeUnits")
 		ok.String(string(v.GopSizeUnits))
+	}
+
+	if v.HrdBufferFinalFillPercentage != 0 {
+		ok := object.Key("hrdBufferFinalFillPercentage")
+		ok.Integer(v.HrdBufferFinalFillPercentage)
 	}
 
 	if v.HrdBufferInitialFillPercentage != 0 {

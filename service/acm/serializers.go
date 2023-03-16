@@ -1136,6 +1136,16 @@ func awsAwsjson11_serializeOpDocumentListCertificatesInput(v *ListCertificatesIn
 		ok.String(*v.NextToken)
 	}
 
+	if len(v.SortBy) > 0 {
+		ok := object.Key("SortBy")
+		ok.String(string(v.SortBy))
+	}
+
+	if len(v.SortOrder) > 0 {
+		ok := object.Key("SortOrder")
+		ok.String(string(v.SortOrder))
+	}
+
 	return nil
 }
 
@@ -1225,6 +1235,11 @@ func awsAwsjson11_serializeOpDocumentRequestCertificateInput(v *RequestCertifica
 	if v.IdempotencyToken != nil {
 		ok := object.Key("IdempotencyToken")
 		ok.String(*v.IdempotencyToken)
+	}
+
+	if len(v.KeyAlgorithm) > 0 {
+		ok := object.Key("KeyAlgorithm")
+		ok.String(string(v.KeyAlgorithm))
 	}
 
 	if v.Options != nil {

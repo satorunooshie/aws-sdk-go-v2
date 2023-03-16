@@ -1,3 +1,72 @@
+# v1.15.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.15.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+* **Dependency Update**: Upgrade smithy to 1.27.2 and correct empty query list serialization.
+
+# v1.15.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.15.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.14.25 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.24 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.23 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.14.22 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.14.21 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.14.20 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.19 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.18 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.17 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.16 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.14.15 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.14.14 (2022-08-30)
 
 * No change notes available for this release.

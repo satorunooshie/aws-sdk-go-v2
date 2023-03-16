@@ -30,6 +30,18 @@ type AclConfiguration struct {
 	noSmithyDocumentSerde
 }
 
+// Contains the application runtime IDs and their supported DPU sizes.
+type ApplicationDPUSizes struct {
+
+	// The name of the supported application runtime (for example, Jupyter 1.0).
+	ApplicationRuntimeId *string
+
+	// A list of the supported DPU sizes that the application runtime supports.
+	SupportedDPUSizes []int32
+
+	noSmithyDocumentSerde
+}
+
 // Provides information about an Athena query error. The AthenaError feature
 // provides standardized error information to help you understand failed queries
 // and take steps after a query failure occurs. AthenaError includes an
@@ -53,6 +65,86 @@ type AthenaError struct {
 
 	// True if the query might succeed if resubmitted.
 	Retryable bool
+
+	noSmithyDocumentSerde
+}
+
+// Contains configuration information for the calculation.
+type CalculationConfiguration struct {
+
+	// A string that contains the code for the calculation.
+	CodeBlock *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains information about an application-specific calculation result.
+type CalculationResult struct {
+
+	// The Amazon S3 location of the folder for the calculation results.
+	ResultS3Uri *string
+
+	// The data format of the calculation result.
+	ResultType *string
+
+	// The Amazon S3 location of the stderr error messages file for the calculation.
+	StdErrorS3Uri *string
+
+	// The Amazon S3 location of the stdout file for the calculation.
+	StdOutS3Uri *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains statistics for a notebook calculation.
+type CalculationStatistics struct {
+
+	// The data processing unit execution time in milliseconds for the calculation.
+	DpuExecutionInMillis *int64
+
+	// The progress of the calculation.
+	Progress *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains information about the status of a notebook calculation.
+type CalculationStatus struct {
+
+	// The date and time the calculation completed processing.
+	CompletionDateTime *time.Time
+
+	// The state of the calculation execution. A description of each state follows.
+	// CREATING - The calculation is in the process of being created. CREATED - The
+	// calculation has been created and is ready to run. QUEUED - The calculation has
+	// been queued for processing. RUNNING - The calculation is running. CANCELING - A
+	// request to cancel the calculation has been received and the system is working to
+	// stop it. CANCELED - The calculation is no longer running as the result of a
+	// cancel request. COMPLETED - The calculation has completed without error. FAILED
+	// - The calculation failed and is no longer running.
+	State CalculationExecutionState
+
+	// The reason for the calculation state change (for example, the calculation was
+	// canceled because the session was terminated).
+	StateChangeReason *string
+
+	// The date and time the calculation was submitted for processing.
+	SubmissionDateTime *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Summary information for a notebook calculation.
+type CalculationSummary struct {
+
+	// The calculation execution UUID.
+	CalculationExecutionId *string
+
+	// A description of the calculation.
+	Description *string
+
+	// Contains information about the status of the calculation.
+	Status *CalculationStatus
 
 	noSmithyDocumentSerde
 }
@@ -116,6 +208,17 @@ type ColumnInfo struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies the KMS key that is used to encrypt the user's data stores in Athena.
+type CustomerContentEncryptionConfiguration struct {
+
+	// The KMS key that is used to encrypt the user's data stores in Athena.
+	//
+	// This member is required.
+	KmsKey *string
+
+	noSmithyDocumentSerde
+}
+
 // Contains metadata information for a database in a data catalog.
 type Database struct {
 
@@ -133,7 +236,9 @@ type Database struct {
 	noSmithyDocumentSerde
 }
 
-// Contains information about a data catalog in an Amazon Web Services account.
+// Contains information about a data catalog in an Amazon Web Services account. In
+// the Athena console, data catalogs are listed as "data sources" on the Data
+// sources page under the Data source name column.
 type DataCatalog struct {
 
 	// The name of the data catalog. The catalog name must be unique for the Amazon Web
@@ -233,7 +338,36 @@ type EncryptionConfiguration struct {
 	noSmithyDocumentSerde
 }
 
-// The Athena engine version for running queries.
+// Contains data processing unit (DPU) configuration settings and parameter
+// mappings for a notebook engine.
+type EngineConfiguration struct {
+
+	// The maximum number of DPUs that can run concurrently.
+	//
+	// This member is required.
+	MaxConcurrentDpus int32
+
+	// Contains additional notebook engine MAP parameter mappings in the form of
+	// key-value pairs. To specify an Amazon S3 URI that the Jupyter server will
+	// download and serve, specify a value for the StartSessionRequest$NotebookVersion
+	// field, and then add a key named NotebookFileURI to AdditionalConfigs that has
+	// value of the Amazon S3 URI.
+	AdditionalConfigs map[string]string
+
+	// The number of DPUs to use for the coordinator. A coordinator is a special
+	// executor that orchestrates processing work and manages other executors in a
+	// notebook session.
+	CoordinatorDpuSize int32
+
+	// The default number of DPUs to use for executors. An executor is the smallest
+	// unit of compute that a notebook session can request from Athena.
+	DefaultExecutorDpuSize int32
+
+	noSmithyDocumentSerde
+}
+
+// The Athena engine version for running queries, or the PySpark engine version for
+// running sessions.
 type EngineVersion struct {
 
 	// Read only. The engine version on which the query runs. If the user requests a
@@ -245,8 +379,50 @@ type EngineVersion struct {
 	EffectiveEngineVersion *string
 
 	// The engine version requested by the user. Possible values are determined by the
-	// output of ListEngineVersions, including Auto. The default is Auto.
+	// output of ListEngineVersions, including AUTO. The default is AUTO.
 	SelectedEngineVersion *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains summary information about an executor.
+type ExecutorsSummary struct {
+
+	// The UUID of the executor.
+	//
+	// This member is required.
+	ExecutorId *string
+
+	// The smallest unit of compute that a session can request from Athena. Size is
+	// measured in data processing unit (DPU) values, a relative measure of processing
+	// power.
+	ExecutorSize *int64
+
+	// The processing state of the executor. A description of each state follows.
+	// CREATING - The executor is being started, including acquiring resources. CREATED
+	// - The executor has been started. REGISTERED - The executor has been registered.
+	// TERMINATING - The executor is in the process of shutting down. TERMINATED - The
+	// executor is no longer running. FAILED - Due to a failure, the executor is no
+	// longer running.
+	ExecutorState ExecutorState
+
+	// The type of executor used for the application (COORDINATOR, GATEWAY, or WORKER).
+	ExecutorType ExecutorType
+
+	// The date and time that the executor started.
+	StartDateTime *int64
+
+	// The date and time that the executor was terminated.
+	TerminationDateTime *int64
+
+	noSmithyDocumentSerde
+}
+
+// A string for searching notebook names.
+type FilterDefinition struct {
+
+	// The name of the notebook to search for.
+	Name *string
 
 	noSmithyDocumentSerde
 }
@@ -277,6 +453,43 @@ type NamedQuery struct {
 
 	// The name of the workgroup that contains the named query.
 	WorkGroup *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains metadata for notebook, including the notebook name, ID, workgroup, and
+// time created.
+type NotebookMetadata struct {
+
+	// The time when the notebook was created.
+	CreationTime *time.Time
+
+	// The time when the notebook was last modified.
+	LastModifiedTime *time.Time
+
+	// The name of the notebook.
+	Name *string
+
+	// The notebook ID.
+	NotebookId *string
+
+	// The type of notebook. Currently, the only valid type is IPYNB.
+	Type NotebookType
+
+	// The name of the Spark enabled workgroup to which the notebook belongs.
+	WorkGroup *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains the notebook session ID and notebook session creation time.
+type NotebookSessionSummary struct {
+
+	// The time when the notebook session was created.
+	CreationTime *time.Time
+
+	// The notebook session ID.
+	SessionId *string
 
 	noSmithyDocumentSerde
 }
@@ -341,6 +554,9 @@ type QueryExecution struct {
 	// are specified for the workgroup.
 	ResultConfiguration *ResultConfiguration
 
+	// Specifies the query result reuse behavior that was used for the query.
+	ResultReuseConfiguration *ResultReuseConfiguration
+
 	// The type of query statement that was run. DDL indicates DDL query statements.
 	// DML indicates DML (Data Manipulation Language) query statements, such as CREATE
 	// TABLE AS SELECT. UTILITY indicates query statements other than DDL and DML, such
@@ -354,6 +570,9 @@ type QueryExecution struct {
 	// The completion date, current state, submission time, and state change reason (if
 	// applicable) for the query execution.
 	Status *QueryExecutionStatus
+
+	// The kind of query statement that was run.
+	SubstatementType *string
 
 	// The name of the workgroup in which the query ran.
 	WorkGroup *string
@@ -404,6 +623,10 @@ type QueryExecutionStatistics struct {
 	// resources. Note that if transient errors occur, Athena might automatically add
 	// the query back to the queue.
 	QueryQueueTimeInMillis *int64
+
+	// Contains information about whether previous query results were reused for the
+	// query.
+	ResultReuseInformation *ResultReuseInformation
 
 	// The number of milliseconds that Athena took to finalize and publish the query
 	// results after the query engine finished running the query.
@@ -695,6 +918,45 @@ type ResultConfigurationUpdates struct {
 	noSmithyDocumentSerde
 }
 
+// Specifies whether previous query results are reused, and if so, their maximum
+// age.
+type ResultReuseByAgeConfiguration struct {
+
+	// True if previous query results can be reused when the query is run; otherwise,
+	// false. The default is false.
+	//
+	// This member is required.
+	Enabled bool
+
+	// Specifies, in minutes, the maximum age of a previous query result that Athena
+	// should consider for reuse. The default is 60.
+	MaxAgeInMinutes *int32
+
+	noSmithyDocumentSerde
+}
+
+// Specifies the query result reuse behavior for the query.
+type ResultReuseConfiguration struct {
+
+	// Specifies whether previous query results are reused, and if so, their maximum
+	// age.
+	ResultReuseByAgeConfiguration *ResultReuseByAgeConfiguration
+
+	noSmithyDocumentSerde
+}
+
+// Contains information about whether the result of a previous query was reused.
+type ResultReuseInformation struct {
+
+	// True if a previous query result was reused; false if the result was generated
+	// from a new run of the query.
+	//
+	// This member is required.
+	ReusedPreviousResult bool
+
+	noSmithyDocumentSerde
+}
+
 // The metadata and rows that make up a query result set. The metadata describes
 // the column structure and data types. To return a ResultSet object, use
 // GetQueryResults.
@@ -725,6 +987,88 @@ type Row struct {
 
 	// The data that populates a row in a query result table.
 	Data []Datum
+
+	noSmithyDocumentSerde
+}
+
+// Contains session configuration information.
+type SessionConfiguration struct {
+
+	// If query results are encrypted in Amazon S3, indicates the encryption option
+	// used (for example, SSE_KMS or CSE_KMS) and key information.
+	EncryptionConfiguration *EncryptionConfiguration
+
+	// The ARN of the execution role used for the session.
+	ExecutionRole *string
+
+	// The idle timeout in seconds for the session.
+	IdleTimeoutSeconds *int64
+
+	// The Amazon S3 location that stores information for the notebook.
+	WorkingDirectory *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains statistics for a notebook session.
+type SessionStatistics struct {
+
+	// The data processing unit execution time for a session in milliseconds.
+	DpuExecutionInMillis *int64
+
+	noSmithyDocumentSerde
+}
+
+// Contains information about the status of a notebook session.
+type SessionStatus struct {
+
+	// The date and time that the session ended.
+	EndDateTime *time.Time
+
+	// The date and time starting at which the session became idle. Can be empty if the
+	// session is not currently idle.
+	IdleSinceDateTime *time.Time
+
+	// The most recent date and time that the session was modified.
+	LastModifiedDateTime *time.Time
+
+	// The date and time that the session started.
+	StartDateTime *time.Time
+
+	// The state of the session. A description of each state follows. CREATING - The
+	// session is being started, including acquiring resources. CREATED - The session
+	// has been started. IDLE - The session is able to accept a calculation. BUSY - The
+	// session is processing another task and is unable to accept a calculation.
+	// TERMINATING - The session is in the process of shutting down. TERMINATED - The
+	// session and its resources are no longer running. DEGRADED - The session has no
+	// healthy coordinators. FAILED - Due to a failure, the session and its resources
+	// are no longer running.
+	State SessionState
+
+	// The reason for the session state change (for example, canceled because the
+	// session was terminated).
+	StateChangeReason *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains summary information about a notebook session.
+type SessionSummary struct {
+
+	// The session description.
+	Description *string
+
+	// The engine version used by the session (for example, PySpark engine version 3).
+	EngineVersion *EngineVersion
+
+	// The notebook version.
+	NotebookVersion *string
+
+	// The session ID.
+	SessionId *string
+
+	// Contains information about the session status.
+	Status *SessionStatus
 
 	noSmithyDocumentSerde
 }
@@ -894,9 +1238,15 @@ type WorkGroup struct {
 // WorkGroupConfiguration$EnforceWorkGroupConfiguration.
 type WorkGroupConfiguration struct {
 
+	// Specifies a user defined JSON string that is passed to the notebook engine.
+	AdditionalConfiguration *string
+
 	// The upper data usage limit (cutoff) for the amount of bytes a single query in a
 	// workgroup is allowed to scan.
 	BytesScannedCutoffPerQuery *int64
+
+	// Specifies the KMS key that is used to encrypt the user's data stores in Athena.
+	CustomerContentEncryptionConfiguration *CustomerContentEncryptionConfiguration
 
 	// If set to "true", the settings for the workgroup override client-side settings.
 	// If set to "false", client-side settings are used. For more information, see
@@ -908,6 +1258,9 @@ type WorkGroupConfiguration struct {
 	// AmazonAthenaPreviewFunctionality workgroup run on the preview engine regardless
 	// of this setting.
 	EngineVersion *EngineVersion
+
+	// Role used in a notebook session for accessing the user's resources.
+	ExecutionRole *string
 
 	// Indicates that the Amazon CloudWatch metrics are enabled for the workgroup.
 	PublishCloudWatchMetricsEnabled *bool
@@ -942,9 +1295,15 @@ type WorkGroupConfiguration struct {
 // scanned per query, if it is specified.
 type WorkGroupConfigurationUpdates struct {
 
+	// Contains a user defined string in JSON format for a Spark-enabled workgroup.
+	AdditionalConfiguration *string
+
 	// The upper limit (cutoff) for the amount of bytes a single query in a workgroup
 	// is allowed to scan.
 	BytesScannedCutoffPerQuery *int64
+
+	// Specifies the KMS key that is used to encrypt the user's data stores in Athena.
+	CustomerContentEncryptionConfiguration *CustomerContentEncryptionConfiguration
 
 	// If set to "true", the settings for the workgroup override client-side settings.
 	// If set to "false" client-side settings are used. For more information, see
@@ -959,6 +1318,9 @@ type WorkGroupConfigurationUpdates struct {
 	// of this setting.
 	EngineVersion *EngineVersion
 
+	// Contains the ARN of the execution role for the workgroup
+	ExecutionRole *string
+
 	// Indicates whether this workgroup enables publishing metrics to Amazon
 	// CloudWatch.
 	PublishCloudWatchMetricsEnabled *bool
@@ -966,6 +1328,9 @@ type WorkGroupConfigurationUpdates struct {
 	// Indicates that the data usage control limit per query is removed.
 	// WorkGroupConfiguration$BytesScannedCutoffPerQuery
 	RemoveBytesScannedCutoffPerQuery *bool
+
+	// Removes content encryption configuration for a workgroup.
+	RemoveCustomerContentEncryptionConfiguration *bool
 
 	// If set to true, allows members assigned to a workgroup to specify Amazon S3
 	// Requester Pays buckets in queries. If set to false, workgroup members cannot

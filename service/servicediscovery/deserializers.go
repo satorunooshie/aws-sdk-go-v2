@@ -87,9 +87,9 @@ func awsAwsjson11_deserializeOpErrorCreateHttpNamespace(response *smithyhttp.Res
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -98,7 +98,7 @@ func awsAwsjson11_deserializeOpErrorCreateHttpNamespace(response *smithyhttp.Res
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -110,8 +110,8 @@ func awsAwsjson11_deserializeOpErrorCreateHttpNamespace(response *smithyhttp.Res
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -126,6 +126,9 @@ func awsAwsjson11_deserializeOpErrorCreateHttpNamespace(response *smithyhttp.Res
 
 	case strings.EqualFold("NamespaceAlreadyExists", errorCode):
 		return awsAwsjson11_deserializeErrorNamespaceAlreadyExists(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceLimitExceeded", errorCode):
 		return awsAwsjson11_deserializeErrorResourceLimitExceeded(response, errorBody)
@@ -210,9 +213,9 @@ func awsAwsjson11_deserializeOpErrorCreatePrivateDnsNamespace(response *smithyht
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -221,7 +224,7 @@ func awsAwsjson11_deserializeOpErrorCreatePrivateDnsNamespace(response *smithyht
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -233,8 +236,8 @@ func awsAwsjson11_deserializeOpErrorCreatePrivateDnsNamespace(response *smithyht
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -249,6 +252,9 @@ func awsAwsjson11_deserializeOpErrorCreatePrivateDnsNamespace(response *smithyht
 
 	case strings.EqualFold("NamespaceAlreadyExists", errorCode):
 		return awsAwsjson11_deserializeErrorNamespaceAlreadyExists(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceLimitExceeded", errorCode):
 		return awsAwsjson11_deserializeErrorResourceLimitExceeded(response, errorBody)
@@ -333,9 +339,9 @@ func awsAwsjson11_deserializeOpErrorCreatePublicDnsNamespace(response *smithyhtt
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -344,7 +350,7 @@ func awsAwsjson11_deserializeOpErrorCreatePublicDnsNamespace(response *smithyhtt
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -356,8 +362,8 @@ func awsAwsjson11_deserializeOpErrorCreatePublicDnsNamespace(response *smithyhtt
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -372,6 +378,9 @@ func awsAwsjson11_deserializeOpErrorCreatePublicDnsNamespace(response *smithyhtt
 
 	case strings.EqualFold("NamespaceAlreadyExists", errorCode):
 		return awsAwsjson11_deserializeErrorNamespaceAlreadyExists(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceLimitExceeded", errorCode):
 		return awsAwsjson11_deserializeErrorResourceLimitExceeded(response, errorBody)
@@ -456,9 +465,9 @@ func awsAwsjson11_deserializeOpErrorCreateService(response *smithyhttp.Response,
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -467,7 +476,7 @@ func awsAwsjson11_deserializeOpErrorCreateService(response *smithyhttp.Response,
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -479,8 +488,8 @@ func awsAwsjson11_deserializeOpErrorCreateService(response *smithyhttp.Response,
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -492,6 +501,9 @@ func awsAwsjson11_deserializeOpErrorCreateService(response *smithyhttp.Response,
 
 	case strings.EqualFold("NamespaceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorNamespaceNotFound(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceLimitExceeded", errorCode):
 		return awsAwsjson11_deserializeErrorResourceLimitExceeded(response, errorBody)
@@ -579,9 +591,9 @@ func awsAwsjson11_deserializeOpErrorDeleteNamespace(response *smithyhttp.Respons
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -590,7 +602,7 @@ func awsAwsjson11_deserializeOpErrorDeleteNamespace(response *smithyhttp.Respons
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -602,8 +614,8 @@ func awsAwsjson11_deserializeOpErrorDeleteNamespace(response *smithyhttp.Respons
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -618,6 +630,9 @@ func awsAwsjson11_deserializeOpErrorDeleteNamespace(response *smithyhttp.Respons
 
 	case strings.EqualFold("NamespaceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorNamespaceNotFound(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceInUse", errorCode):
 		return awsAwsjson11_deserializeErrorResourceInUse(response, errorBody)
@@ -699,9 +714,9 @@ func awsAwsjson11_deserializeOpErrorDeleteService(response *smithyhttp.Response,
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -710,7 +725,7 @@ func awsAwsjson11_deserializeOpErrorDeleteService(response *smithyhttp.Response,
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -722,8 +737,8 @@ func awsAwsjson11_deserializeOpErrorDeleteService(response *smithyhttp.Response,
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -732,6 +747,9 @@ func awsAwsjson11_deserializeOpErrorDeleteService(response *smithyhttp.Response,
 	switch {
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceInUse", errorCode):
 		return awsAwsjson11_deserializeErrorResourceInUse(response, errorBody)
@@ -816,9 +834,9 @@ func awsAwsjson11_deserializeOpErrorDeregisterInstance(response *smithyhttp.Resp
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -827,7 +845,7 @@ func awsAwsjson11_deserializeOpErrorDeregisterInstance(response *smithyhttp.Resp
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -839,8 +857,8 @@ func awsAwsjson11_deserializeOpErrorDeregisterInstance(response *smithyhttp.Resp
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -855,6 +873,9 @@ func awsAwsjson11_deserializeOpErrorDeregisterInstance(response *smithyhttp.Resp
 
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceInUse", errorCode):
 		return awsAwsjson11_deserializeErrorResourceInUse(response, errorBody)
@@ -939,9 +960,9 @@ func awsAwsjson11_deserializeOpErrorDiscoverInstances(response *smithyhttp.Respo
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -950,7 +971,7 @@ func awsAwsjson11_deserializeOpErrorDiscoverInstances(response *smithyhttp.Respo
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -962,8 +983,8 @@ func awsAwsjson11_deserializeOpErrorDiscoverInstances(response *smithyhttp.Respo
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -1059,9 +1080,9 @@ func awsAwsjson11_deserializeOpErrorGetInstance(response *smithyhttp.Response, m
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -1070,7 +1091,7 @@ func awsAwsjson11_deserializeOpErrorGetInstance(response *smithyhttp.Response, m
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -1082,8 +1103,8 @@ func awsAwsjson11_deserializeOpErrorGetInstance(response *smithyhttp.Response, m
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -1095,6 +1116,9 @@ func awsAwsjson11_deserializeOpErrorGetInstance(response *smithyhttp.Response, m
 
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ServiceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorServiceNotFound(response, errorBody)
@@ -1176,9 +1200,9 @@ func awsAwsjson11_deserializeOpErrorGetInstancesHealthStatus(response *smithyhtt
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -1187,7 +1211,7 @@ func awsAwsjson11_deserializeOpErrorGetInstancesHealthStatus(response *smithyhtt
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -1199,8 +1223,8 @@ func awsAwsjson11_deserializeOpErrorGetInstancesHealthStatus(response *smithyhtt
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -1212,6 +1236,9 @@ func awsAwsjson11_deserializeOpErrorGetInstancesHealthStatus(response *smithyhtt
 
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ServiceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorServiceNotFound(response, errorBody)
@@ -1293,9 +1320,9 @@ func awsAwsjson11_deserializeOpErrorGetNamespace(response *smithyhttp.Response, 
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -1304,7 +1331,7 @@ func awsAwsjson11_deserializeOpErrorGetNamespace(response *smithyhttp.Response, 
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -1316,8 +1343,8 @@ func awsAwsjson11_deserializeOpErrorGetNamespace(response *smithyhttp.Response, 
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -1407,9 +1434,9 @@ func awsAwsjson11_deserializeOpErrorGetOperation(response *smithyhttp.Response, 
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -1418,7 +1445,7 @@ func awsAwsjson11_deserializeOpErrorGetOperation(response *smithyhttp.Response, 
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -1430,8 +1457,8 @@ func awsAwsjson11_deserializeOpErrorGetOperation(response *smithyhttp.Response, 
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -1443,6 +1470,9 @@ func awsAwsjson11_deserializeOpErrorGetOperation(response *smithyhttp.Response, 
 
 	case strings.EqualFold("OperationNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorOperationNotFound(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	default:
 		genericError := &smithy.GenericAPIError{
@@ -1521,9 +1551,9 @@ func awsAwsjson11_deserializeOpErrorGetService(response *smithyhttp.Response, me
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -1532,7 +1562,7 @@ func awsAwsjson11_deserializeOpErrorGetService(response *smithyhttp.Response, me
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -1544,8 +1574,8 @@ func awsAwsjson11_deserializeOpErrorGetService(response *smithyhttp.Response, me
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -1554,6 +1584,9 @@ func awsAwsjson11_deserializeOpErrorGetService(response *smithyhttp.Response, me
 	switch {
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ServiceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorServiceNotFound(response, errorBody)
@@ -1635,9 +1668,9 @@ func awsAwsjson11_deserializeOpErrorListInstances(response *smithyhttp.Response,
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -1646,7 +1679,7 @@ func awsAwsjson11_deserializeOpErrorListInstances(response *smithyhttp.Response,
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -1658,8 +1691,8 @@ func awsAwsjson11_deserializeOpErrorListInstances(response *smithyhttp.Response,
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -1668,6 +1701,9 @@ func awsAwsjson11_deserializeOpErrorListInstances(response *smithyhttp.Response,
 	switch {
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ServiceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorServiceNotFound(response, errorBody)
@@ -1749,9 +1785,9 @@ func awsAwsjson11_deserializeOpErrorListNamespaces(response *smithyhttp.Response
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -1760,7 +1796,7 @@ func awsAwsjson11_deserializeOpErrorListNamespaces(response *smithyhttp.Response
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -1772,8 +1808,8 @@ func awsAwsjson11_deserializeOpErrorListNamespaces(response *smithyhttp.Response
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -1782,6 +1818,9 @@ func awsAwsjson11_deserializeOpErrorListNamespaces(response *smithyhttp.Response
 	switch {
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	default:
 		genericError := &smithy.GenericAPIError{
@@ -1860,9 +1899,9 @@ func awsAwsjson11_deserializeOpErrorListOperations(response *smithyhttp.Response
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -1871,7 +1910,7 @@ func awsAwsjson11_deserializeOpErrorListOperations(response *smithyhttp.Response
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -1883,8 +1922,8 @@ func awsAwsjson11_deserializeOpErrorListOperations(response *smithyhttp.Response
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -1893,6 +1932,9 @@ func awsAwsjson11_deserializeOpErrorListOperations(response *smithyhttp.Response
 	switch {
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	default:
 		genericError := &smithy.GenericAPIError{
@@ -1971,9 +2013,9 @@ func awsAwsjson11_deserializeOpErrorListServices(response *smithyhttp.Response, 
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -1982,7 +2024,7 @@ func awsAwsjson11_deserializeOpErrorListServices(response *smithyhttp.Response, 
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -1994,8 +2036,8 @@ func awsAwsjson11_deserializeOpErrorListServices(response *smithyhttp.Response, 
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -2004,6 +2046,9 @@ func awsAwsjson11_deserializeOpErrorListServices(response *smithyhttp.Response, 
 	switch {
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	default:
 		genericError := &smithy.GenericAPIError{
@@ -2082,9 +2127,9 @@ func awsAwsjson11_deserializeOpErrorListTagsForResource(response *smithyhttp.Res
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -2093,7 +2138,7 @@ func awsAwsjson11_deserializeOpErrorListTagsForResource(response *smithyhttp.Res
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -2105,8 +2150,8 @@ func awsAwsjson11_deserializeOpErrorListTagsForResource(response *smithyhttp.Res
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -2115,6 +2160,9 @@ func awsAwsjson11_deserializeOpErrorListTagsForResource(response *smithyhttp.Res
 	switch {
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceNotFoundException", errorCode):
 		return awsAwsjson11_deserializeErrorResourceNotFoundException(response, errorBody)
@@ -2196,9 +2244,9 @@ func awsAwsjson11_deserializeOpErrorRegisterInstance(response *smithyhttp.Respon
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -2207,7 +2255,7 @@ func awsAwsjson11_deserializeOpErrorRegisterInstance(response *smithyhttp.Respon
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -2219,8 +2267,8 @@ func awsAwsjson11_deserializeOpErrorRegisterInstance(response *smithyhttp.Respon
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -2232,6 +2280,9 @@ func awsAwsjson11_deserializeOpErrorRegisterInstance(response *smithyhttp.Respon
 
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceInUse", errorCode):
 		return awsAwsjson11_deserializeErrorResourceInUse(response, errorBody)
@@ -2319,9 +2370,9 @@ func awsAwsjson11_deserializeOpErrorTagResource(response *smithyhttp.Response, m
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -2330,7 +2381,7 @@ func awsAwsjson11_deserializeOpErrorTagResource(response *smithyhttp.Response, m
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -2342,8 +2393,8 @@ func awsAwsjson11_deserializeOpErrorTagResource(response *smithyhttp.Response, m
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -2352,6 +2403,9 @@ func awsAwsjson11_deserializeOpErrorTagResource(response *smithyhttp.Response, m
 	switch {
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceNotFoundException", errorCode):
 		return awsAwsjson11_deserializeErrorResourceNotFoundException(response, errorBody)
@@ -2436,9 +2490,9 @@ func awsAwsjson11_deserializeOpErrorUntagResource(response *smithyhttp.Response,
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -2447,7 +2501,7 @@ func awsAwsjson11_deserializeOpErrorUntagResource(response *smithyhttp.Response,
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -2459,8 +2513,8 @@ func awsAwsjson11_deserializeOpErrorUntagResource(response *smithyhttp.Response,
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -2469,6 +2523,9 @@ func awsAwsjson11_deserializeOpErrorUntagResource(response *smithyhttp.Response,
 	switch {
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceNotFoundException", errorCode):
 		return awsAwsjson11_deserializeErrorResourceNotFoundException(response, errorBody)
@@ -2550,9 +2607,9 @@ func awsAwsjson11_deserializeOpErrorUpdateHttpNamespace(response *smithyhttp.Res
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -2561,7 +2618,7 @@ func awsAwsjson11_deserializeOpErrorUpdateHttpNamespace(response *smithyhttp.Res
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -2573,8 +2630,8 @@ func awsAwsjson11_deserializeOpErrorUpdateHttpNamespace(response *smithyhttp.Res
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -2589,6 +2646,9 @@ func awsAwsjson11_deserializeOpErrorUpdateHttpNamespace(response *smithyhttp.Res
 
 	case strings.EqualFold("NamespaceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorNamespaceNotFound(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceInUse", errorCode):
 		return awsAwsjson11_deserializeErrorResourceInUse(response, errorBody)
@@ -2648,9 +2708,9 @@ func awsAwsjson11_deserializeOpErrorUpdateInstanceCustomHealthStatus(response *s
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -2659,7 +2719,7 @@ func awsAwsjson11_deserializeOpErrorUpdateInstanceCustomHealthStatus(response *s
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -2671,8 +2731,8 @@ func awsAwsjson11_deserializeOpErrorUpdateInstanceCustomHealthStatus(response *s
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -2687,6 +2747,9 @@ func awsAwsjson11_deserializeOpErrorUpdateInstanceCustomHealthStatus(response *s
 
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ServiceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorServiceNotFound(response, errorBody)
@@ -2768,9 +2831,9 @@ func awsAwsjson11_deserializeOpErrorUpdatePrivateDnsNamespace(response *smithyht
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -2779,7 +2842,7 @@ func awsAwsjson11_deserializeOpErrorUpdatePrivateDnsNamespace(response *smithyht
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -2791,8 +2854,8 @@ func awsAwsjson11_deserializeOpErrorUpdatePrivateDnsNamespace(response *smithyht
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -2807,6 +2870,9 @@ func awsAwsjson11_deserializeOpErrorUpdatePrivateDnsNamespace(response *smithyht
 
 	case strings.EqualFold("NamespaceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorNamespaceNotFound(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceInUse", errorCode):
 		return awsAwsjson11_deserializeErrorResourceInUse(response, errorBody)
@@ -2888,9 +2954,9 @@ func awsAwsjson11_deserializeOpErrorUpdatePublicDnsNamespace(response *smithyhtt
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -2899,7 +2965,7 @@ func awsAwsjson11_deserializeOpErrorUpdatePublicDnsNamespace(response *smithyhtt
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -2911,8 +2977,8 @@ func awsAwsjson11_deserializeOpErrorUpdatePublicDnsNamespace(response *smithyhtt
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -2927,6 +2993,9 @@ func awsAwsjson11_deserializeOpErrorUpdatePublicDnsNamespace(response *smithyhtt
 
 	case strings.EqualFold("NamespaceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorNamespaceNotFound(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ResourceInUse", errorCode):
 		return awsAwsjson11_deserializeErrorResourceInUse(response, errorBody)
@@ -3008,9 +3077,9 @@ func awsAwsjson11_deserializeOpErrorUpdateService(response *smithyhttp.Response,
 	errorCode := "UnknownError"
 	errorMessage := errorCode
 
-	code := response.Header.Get("X-Amzn-ErrorType")
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	headerCode := response.Header.Get("X-Amzn-ErrorType")
+	if len(headerCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(headerCode)
 	}
 
 	var buff [1024]byte
@@ -3019,7 +3088,7 @@ func awsAwsjson11_deserializeOpErrorUpdateService(response *smithyhttp.Response,
 	body := io.TeeReader(errorBody, ringBuffer)
 	decoder := json.NewDecoder(body)
 	decoder.UseNumber()
-	code, message, err := restjson.GetErrorInfo(decoder)
+	jsonCode, message, err := restjson.GetErrorInfo(decoder)
 	if err != nil {
 		var snapshot bytes.Buffer
 		io.Copy(&snapshot, ringBuffer)
@@ -3031,8 +3100,8 @@ func awsAwsjson11_deserializeOpErrorUpdateService(response *smithyhttp.Response,
 	}
 
 	errorBody.Seek(0, io.SeekStart)
-	if len(code) != 0 {
-		errorCode = restjson.SanitizeErrorCode(code)
+	if len(headerCode) == 0 && len(jsonCode) != 0 {
+		errorCode = restjson.SanitizeErrorCode(jsonCode)
 	}
 	if len(message) != 0 {
 		errorMessage = message
@@ -3044,6 +3113,9 @@ func awsAwsjson11_deserializeOpErrorUpdateService(response *smithyhttp.Response,
 
 	case strings.EqualFold("InvalidInput", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidInput(response, errorBody)
+
+	case strings.EqualFold("RequestLimitExceeded", errorCode):
+		return awsAwsjson11_deserializeErrorRequestLimitExceeded(response, errorBody)
 
 	case strings.EqualFold("ServiceNotFound", errorCode):
 		return awsAwsjson11_deserializeErrorServiceNotFound(response, errorBody)

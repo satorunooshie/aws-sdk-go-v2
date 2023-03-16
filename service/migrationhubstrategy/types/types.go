@@ -7,6 +7,90 @@ import (
 	"time"
 )
 
+// A combination of existing analysis statuses.
+//
+// The following types satisfy this interface:
+//
+//	AnalysisStatusUnionMemberRuntimeAnalysisStatus
+//	AnalysisStatusUnionMemberSrcCodeOrDbAnalysisStatus
+type AnalysisStatusUnion interface {
+	isAnalysisStatusUnion()
+}
+
+// The status of the analysis.
+type AnalysisStatusUnionMemberRuntimeAnalysisStatus struct {
+	Value RuntimeAnalysisStatus
+
+	noSmithyDocumentSerde
+}
+
+func (*AnalysisStatusUnionMemberRuntimeAnalysisStatus) isAnalysisStatusUnion() {}
+
+// The status of the source code or database analysis.
+type AnalysisStatusUnionMemberSrcCodeOrDbAnalysisStatus struct {
+	Value SrcCodeOrDbAnalysisStatus
+
+	noSmithyDocumentSerde
+}
+
+func (*AnalysisStatusUnionMemberSrcCodeOrDbAnalysisStatus) isAnalysisStatusUnion() {}
+
+// The combination of the existing analyzers.
+//
+// The following types satisfy this interface:
+//
+//	AnalyzerNameUnionMemberBinaryAnalyzerName
+//	AnalyzerNameUnionMemberRunTimeAnalyzerName
+//	AnalyzerNameUnionMemberSourceCodeAnalyzerName
+type AnalyzerNameUnion interface {
+	isAnalyzerNameUnion()
+}
+
+// The binary analyzer names.
+type AnalyzerNameUnionMemberBinaryAnalyzerName struct {
+	Value BinaryAnalyzerName
+
+	noSmithyDocumentSerde
+}
+
+func (*AnalyzerNameUnionMemberBinaryAnalyzerName) isAnalyzerNameUnion() {}
+
+// The assessment analyzer names.
+type AnalyzerNameUnionMemberRunTimeAnalyzerName struct {
+	Value RunTimeAnalyzerName
+
+	noSmithyDocumentSerde
+}
+
+func (*AnalyzerNameUnionMemberRunTimeAnalyzerName) isAnalyzerNameUnion() {}
+
+// The source code analyzer names.
+type AnalyzerNameUnionMemberSourceCodeAnalyzerName struct {
+	Value SourceCodeAnalyzerName
+
+	noSmithyDocumentSerde
+}
+
+func (*AnalyzerNameUnionMemberSourceCodeAnalyzerName) isAnalyzerNameUnion() {}
+
+// The anti-pattern report result.
+type AntipatternReportResult struct {
+
+	// The analyzer name.
+	AnalyzerName AnalyzerNameUnion
+
+	// Contains the S3 bucket name and the Amazon S3 key name.
+	AntiPatternReportS3Object *S3Object
+
+	// The status of the anti-pattern report generation.
+	AntipatternReportStatus AntipatternReportStatus
+
+	// The status message for the anti-pattern.
+	AntipatternReportStatusMessage *string
+
+	noSmithyDocumentSerde
+}
+
 // Contains the summary of anti-patterns and their severity.
 type AntipatternSeveritySummary struct {
 
@@ -37,6 +121,9 @@ type ApplicationComponentDetail struct {
 
 	// The type of application component.
 	AppType AppType
+
+	// The error in the analysis of the source code or database.
+	AppUnitError *AppUnitError
 
 	// The ID of the server that the application component is running on.
 	AssociatedServerId *string
@@ -76,12 +163,34 @@ type ApplicationComponentDetail struct {
 	// The application component subtype.
 	ResourceSubType ResourceSubType
 
+	// A list of the analysis results.
+	ResultList []Result
+
+	// The status of the application unit.
+	RuntimeStatus RuntimeAnalysisStatus
+
+	// The status message for the application unit.
+	RuntimeStatusMessage *string
+
 	// Details about the source code repository associated with the application
 	// component.
 	SourceCodeRepositories []SourceCodeRepository
 
 	// A detailed description of the analysis status and any failure message.
 	StatusMessage *string
+
+	noSmithyDocumentSerde
+}
+
+// Summary of the analysis status of the application component.
+type ApplicationComponentStatusSummary struct {
+
+	// The number of application components successfully analyzed, partially successful
+	// or failed analysis.
+	Count *int32
+
+	// The status of database analysis.
+	SrcCodeOrDbAnalysisStatus SrcCodeOrDbAnalysisStatus
 
 	noSmithyDocumentSerde
 }
@@ -123,6 +232,15 @@ type ApplicationPreferences struct {
 	noSmithyDocumentSerde
 }
 
+// Error in the analysis of the application unit.
+type AppUnitError struct {
+
+	// The category of the error.
+	AppUnitErrorCategory AppUnitErrorCategory
+
+	noSmithyDocumentSerde
+}
+
 // Contains the summary of the assessment results.
 type AssessmentSummary struct {
 
@@ -141,17 +259,44 @@ type AssessmentSummary struct {
 	// List of AntipatternSeveritySummary.
 	ListAntipatternSeveritySummary []AntipatternSeveritySummary
 
+	// List of status summaries of the analyzed application components.
+	ListApplicationComponentStatusSummary []ApplicationComponentStatusSummary
+
 	// List of ApplicationComponentStrategySummary.
 	ListApplicationComponentStrategySummary []StrategySummary
 
 	// List of ApplicationComponentSummary.
 	ListApplicationComponentSummary []ApplicationComponentSummary
 
+	// List of status summaries of the analyzed servers.
+	ListServerStatusSummary []ServerStatusSummary
+
 	// List of ServerStrategySummary.
 	ListServerStrategySummary []StrategySummary
 
 	// List of ServerSummary.
 	ListServerSummary []ServerSummary
+
+	noSmithyDocumentSerde
+}
+
+// Defines the criteria of assessment.
+type AssessmentTarget struct {
+
+	// Condition of an assessment.
+	//
+	// This member is required.
+	Condition Condition
+
+	// Name of an assessment.
+	//
+	// This member is required.
+	Name *string
+
+	// Values of an assessment.
+	//
+	// This member is required.
+	Values []string
 
 	noSmithyDocumentSerde
 }
@@ -213,6 +358,9 @@ type Collector struct {
 	// specify.
 	CollectorVersion *string
 
+	// Summary of the collector configuration.
+	ConfigurationSummary *ConfigurationSummary
+
 	// Hostname of the server that is hosting the collector.
 	HostName *string
 
@@ -224,6 +372,27 @@ type Collector struct {
 
 	// Time when the collector registered with the service.
 	RegisteredTimeStamp *string
+
+	noSmithyDocumentSerde
+}
+
+// Summary of the collector configuration.
+type ConfigurationSummary struct {
+
+	// IP address based configurations.
+	IpAddressBasedRemoteInfoList []IPAddressBasedRemoteInfo
+
+	// The list of pipeline info configurations.
+	PipelineInfoList []PipelineInfo
+
+	// Info about the remote server source code configuration.
+	RemoteSourceCodeAnalysisServerInfo *RemoteSourceCodeAnalysisServerInfo
+
+	// The list of vCenter configurations.
+	VcenterBasedRemoteInfoList []VcenterBasedRemoteInfo
+
+	// The list of the version control configurations.
+	VersionControlInfoList []VersionControlInfo
 
 	noSmithyDocumentSerde
 }
@@ -312,6 +481,9 @@ type DataCollectionDetails struct {
 	// The status of the assessment.
 	Status AssessmentStatus
 
+	// The status message of the assessment.
+	StatusMessage *string
+
 	// The number of successful servers in the assessment.
 	Success *int32
 
@@ -387,6 +559,21 @@ type ImportFileTaskInformation struct {
 	// The Amazon S3 key name for status report of import task. The report contains
 	// details about whether each record imported successfully or why it did not.
 	StatusReportS3Key *string
+
+	noSmithyDocumentSerde
+}
+
+// IP address based configurations.
+type IPAddressBasedRemoteInfo struct {
+
+	// The type of authorization.
+	AuthType AuthType
+
+	// The time stamp of the configuration.
+	IpAddressConfigurationTimeStamp *string
+
+	// The type of the operating system.
+	OsType OSType
 
 	noSmithyDocumentSerde
 }
@@ -493,6 +680,18 @@ type OSInfo struct {
 	noSmithyDocumentSerde
 }
 
+// Detailed information of the pipeline.
+type PipelineInfo struct {
+
+	// The time when the pipeline info was configured.
+	PipelineConfigurationTimeStamp *string
+
+	// The type of pipeline.
+	PipelineType PipelineType
+
+	noSmithyDocumentSerde
+}
+
 // Rank of business goals based on priority.
 type PrioritizeBusinessGoals struct {
 
@@ -537,6 +736,33 @@ type RecommendationSet struct {
 
 	// The target destination for the recommendation set.
 	TransformationTool *TransformationTool
+
+	noSmithyDocumentSerde
+}
+
+// Information about the server configured for source code analysis.
+type RemoteSourceCodeAnalysisServerInfo struct {
+
+	// The time when the remote source code server was configured.
+	RemoteSourceCodeAnalysisServerConfigurationTimestamp *string
+
+	noSmithyDocumentSerde
+}
+
+// The error in server analysis.
+type Result struct {
+
+	// The error in server analysis.
+	AnalysisStatus AnalysisStatusUnion
+
+	// The error in server analysis.
+	AnalysisType AnalysisType
+
+	// The error in server analysis.
+	AntipatternReportResultList []AntipatternReportResult
+
+	// The error in server analysis.
+	StatusMessage *string
 
 	noSmithyDocumentSerde
 }
@@ -597,6 +823,9 @@ type ServerDetail struct {
 	// A set of recommendations.
 	RecommendationSet *RecommendationSet
 
+	// The error in server analysis.
+	ServerError *ServerError
+
 	// The type of server.
 	ServerType *string
 
@@ -606,6 +835,28 @@ type ServerDetail struct {
 
 	// System information about the server.
 	SystemInfo *SystemInfo
+
+	noSmithyDocumentSerde
+}
+
+// The error in server analysis.
+type ServerError struct {
+
+	// The error category of server analysis.
+	ServerErrorCategory ServerErrorCategory
+
+	noSmithyDocumentSerde
+}
+
+// The status summary of the server analysis.
+type ServerStatusSummary struct {
+
+	// The number of servers successfully analyzed, partially successful or failed
+	// analysis.
+	Count *int32
+
+	// The status of the run time.
+	RunTimeAssessmentStatus RunTimeAssessmentStatus
 
 	noSmithyDocumentSerde
 }
@@ -649,6 +900,9 @@ type SourceCode struct {
 	// The repository name for the source code.
 	Location *string
 
+	// The name of the project.
+	ProjectName *string
+
 	// The branch of the source code.
 	SourceVersion *string
 
@@ -664,6 +918,9 @@ type SourceCodeRepository struct {
 
 	// The branch of the source code.
 	Branch *string
+
+	// The name of the project.
+	ProjectName *string
 
 	// The repository name for the source code.
 	Repository *string
@@ -741,6 +998,30 @@ type TransformationTool struct {
 	noSmithyDocumentSerde
 }
 
+// Details about the server in vCenter.
+type VcenterBasedRemoteInfo struct {
+
+	// The type of the operating system.
+	OsType OSType
+
+	// The time when the remote server based on vCenter was last configured.
+	VcenterConfigurationTimeStamp *string
+
+	noSmithyDocumentSerde
+}
+
+// Details about the version control configuration.
+type VersionControlInfo struct {
+
+	// The time when the version control system was last configured.
+	VersionControlConfigurationTimeStamp *string
+
+	// The type of version control.
+	VersionControlType VersionControlType
+
+	noSmithyDocumentSerde
+}
+
 type noSmithyDocumentSerde = smithydocument.NoSerde
 
 // UnknownUnionMember is returned when a union member is returned over the wire,
@@ -752,5 +1033,7 @@ type UnknownUnionMember struct {
 	noSmithyDocumentSerde
 }
 
+func (*UnknownUnionMember) isAnalysisStatusUnion()         {}
+func (*UnknownUnionMember) isAnalyzerNameUnion()           {}
 func (*UnknownUnionMember) isDatabaseMigrationPreference() {}
 func (*UnknownUnionMember) isManagementPreference()        {}

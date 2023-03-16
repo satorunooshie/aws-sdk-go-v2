@@ -16,12 +16,12 @@ import (
 // with the volumes parameter. For more information about task definition
 // parameters and defaults, see Amazon ECS Task Definitions
 // (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_defintions.html)
-// in the Amazon Elastic Container Service Developer Guide. You can specify an IAM
-// role for your task with the taskRoleArn parameter. When you specify an IAM role
-// for a task, its containers can then use the latest versions of the CLI or SDKs
-// to make API requests to the Amazon Web Services services that are specified in
-// the IAM policy that's associated with the role. For more information, see IAM
-// Roles for Tasks
+// in the Amazon Elastic Container Service Developer Guide. You can specify a role
+// for your task with the taskRoleArn parameter. When you specify a role for a
+// task, its containers can then use the latest versions of the CLI or SDKs to make
+// API requests to the Amazon Web Services services that are specified in the
+// policy that's associated with the role. For more information, see IAM Roles for
+// Tasks
 // (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html)
 // in the Amazon Elastic Container Service Developer Guide. You can specify a
 // Docker networking mode for the containers in your task definition with the
@@ -72,28 +72,35 @@ type RegisterTaskDefinitionInput struct {
 	// and memory parameters are ignored for Windows containers. We recommend
 	// specifying container-level resources for Windows containers. If you're using the
 	// EC2 launch type, this field is optional. Supported values are between 128 CPU
-	// units (0.125 vCPUs) and 10240 CPU units (10 vCPUs). If you're using the Fargate
-	// launch type, this field is required and you must use one of the following
-	// values, which determines your range of supported values for the memory
-	// parameter: The CPU units cannot be less than 1 vCPU when you use Windows
-	// containers on Fargate.
+	// units (0.125 vCPUs) and 10240 CPU units (10 vCPUs). If you do not specify a
+	// value, the parameter is ignored. If you're using the Fargate launch type, this
+	// field is required and you must use one of the following values, which determines
+	// your range of supported values for the memory parameter: The CPU units cannot be
+	// less than 1 vCPU when you use Windows containers on Fargate.
 	//
-	// * 256 (.25 vCPU) - Available memory values: 512 (0.5
-	// GB), 1024 (1 GB), 2048 (2 GB)
+	// * 256 (.25 vCPU) -
+	// Available memory values: 512 (0.5 GB), 1024 (1 GB), 2048 (2 GB)
 	//
-	// * 512 (.5 vCPU) - Available memory values: 1024
-	// (1 GB), 2048 (2 GB), 3072 (3 GB), 4096 (4 GB)
+	// * 512 (.5 vCPU)
+	// - Available memory values: 1024 (1 GB), 2048 (2 GB), 3072 (3 GB), 4096 (4 GB)
 	//
-	// * 1024 (1 vCPU) - Available
-	// memory values: 2048 (2 GB), 3072 (3 GB), 4096 (4 GB), 5120 (5 GB), 6144 (6 GB),
-	// 7168 (7 GB), 8192 (8 GB)
+	// *
+	// 1024 (1 vCPU) - Available memory values: 2048 (2 GB), 3072 (3 GB), 4096 (4 GB),
+	// 5120 (5 GB), 6144 (6 GB), 7168 (7 GB), 8192 (8 GB)
 	//
-	// * 2048 (2 vCPU) - Available memory values: Between
-	// 4096 (4 GB) and 16384 (16 GB) in increments of 1024 (1 GB)
+	// * 2048 (2 vCPU) - Available
+	// memory values: 4096 (4 GB) and 16384 (16 GB) in increments of 1024 (1 GB)
 	//
-	// * 4096 (4 vCPU) -
-	// Available memory values: Between 8192 (8 GB) and 30720 (30 GB) in increments of
-	// 1024 (1 GB)
+	// *
+	// 4096 (4 vCPU) - Available memory values: 8192 (8 GB) and 30720 (30 GB) in
+	// increments of 1024 (1 GB)
+	//
+	// * 8192 (8 vCPU) - Available memory values: 16 GB and
+	// 60 GB in 4 GB increments This option requires Linux platform 1.4.0 or later.
+	//
+	// *
+	// 16384 (16vCPU) - Available memory values: 32GB and 120 GB in 8 GB increments
+	// This option requires Linux platform 1.4.0 or later.
 	Cpu *string
 
 	// The amount of ephemeral storage to allocate for the task. This parameter is used
@@ -106,8 +113,6 @@ type RegisterTaskDefinitionInput struct {
 	//
 	// * Linux platform
 	// version 1.4.0 or later.
-	//
-	// * Windows platform version 1.0.0 or later.
 	EphemeralStorage *types.EphemeralStorage
 
 	// The Amazon Resource Name (ARN) of the task execution role that grants the Amazon
@@ -178,6 +183,13 @@ type RegisterTaskDefinitionInput struct {
 	// * Between 8192
 	// (8 GB) and 30720 (30 GB) in increments of 1024 (1 GB) - Available cpu values:
 	// 4096 (4 vCPU)
+	//
+	// * Between 16 GB and 60 GB in 4 GB increments - Available cpu
+	// values: 8192 (8 vCPU) This option requires Linux platform 1.4.0 or later.
+	//
+	// *
+	// Between 32GB and 120 GB in 8 GB increments - Available cpu values: 16384 (16
+	// vCPU) This option requires Linux platform 1.4.0 or later.
 	Memory *string
 
 	// The Docker networking mode to use for the containers in the task. The valid

@@ -1,3 +1,84 @@
+# v1.19.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.19.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.3 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+* **Dependency Update**: Upgrade smithy to 1.27.2 and correct empty query list serialization.
+
+# v1.19.2 (2023-02-02)
+
+* **Documentation**: The GWLB Flex Health Check project updates the default values of healthy-threshold-count from 3 to 5 and unhealthy-threshold-count from 3 to 2
+
+# v1.19.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.19.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.18.28 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.27 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.26 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.18.25 (2022-11-17)
+
+* **Documentation**: Provides new target group attributes to turn on/off cross zone load balancing and configure target group health for Network Load Balancers and Application Load Balancers. Provides improvements to health check configuration for Network Load Balancers.
+
+# v1.18.24 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.18.23 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.18.22 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.21 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.20 (2022-10-07)
+
+* **Documentation**: Gateway Load Balancer adds a new feature (target_failover) for customers to rebalance existing flows to a healthy target after marked unhealthy or deregistered. This allows graceful patching/upgrades of target appliances during maintenance windows, and helps reduce unhealthy target failover time.
+
+# v1.18.19 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.18 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.17 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.16 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.18.15 (2022-08-30)
 
 * No change notes available for this release.

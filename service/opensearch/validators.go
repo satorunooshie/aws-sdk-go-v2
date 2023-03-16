@@ -70,6 +70,26 @@ func (m *validateOpAssociatePackage) HandleInitialize(ctx context.Context, in mi
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpAuthorizeVpcEndpointAccess struct {
+}
+
+func (*validateOpAuthorizeVpcEndpointAccess) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpAuthorizeVpcEndpointAccess) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*AuthorizeVpcEndpointAccessInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpAuthorizeVpcEndpointAccessInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpCancelServiceSoftwareUpdate struct {
 }
 
@@ -150,6 +170,26 @@ func (m *validateOpCreatePackage) HandleInitialize(ctx context.Context, in middl
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpCreateVpcEndpoint struct {
+}
+
+func (*validateOpCreateVpcEndpoint) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpCreateVpcEndpoint) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*CreateVpcEndpointInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpCreateVpcEndpointInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpDeleteDomain struct {
 }
 
@@ -225,6 +265,26 @@ func (m *validateOpDeletePackage) HandleInitialize(ctx context.Context, in middl
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpDeletePackageInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpDeleteVpcEndpoint struct {
+}
+
+func (*validateOpDeleteVpcEndpoint) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDeleteVpcEndpoint) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DeleteVpcEndpointInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDeleteVpcEndpointInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -330,6 +390,26 @@ func (m *validateOpDescribeDomains) HandleInitialize(ctx context.Context, in mid
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpDescribeDryRunProgress struct {
+}
+
+func (*validateOpDescribeDryRunProgress) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDescribeDryRunProgress) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DescribeDryRunProgressInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDescribeDryRunProgressInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpDescribeInstanceTypeLimits struct {
 }
 
@@ -345,6 +425,26 @@ func (m *validateOpDescribeInstanceTypeLimits) HandleInitialize(ctx context.Cont
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpDescribeInstanceTypeLimitsInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpDescribeVpcEndpoints struct {
+}
+
+func (*validateOpDescribeVpcEndpoints) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDescribeVpcEndpoints) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DescribeVpcEndpointsInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDescribeVpcEndpointsInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -490,6 +590,26 @@ func (m *validateOpListPackagesForDomain) HandleInitialize(ctx context.Context, 
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpListScheduledActions struct {
+}
+
+func (*validateOpListScheduledActions) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpListScheduledActions) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*ListScheduledActionsInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpListScheduledActionsInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpListTags struct {
 }
 
@@ -505,6 +625,46 @@ func (m *validateOpListTags) HandleInitialize(ctx context.Context, in middleware
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpListTagsInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpListVpcEndpointAccess struct {
+}
+
+func (*validateOpListVpcEndpointAccess) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpListVpcEndpointAccess) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*ListVpcEndpointAccessInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpListVpcEndpointAccessInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpListVpcEndpointsForDomain struct {
+}
+
+func (*validateOpListVpcEndpointsForDomain) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpListVpcEndpointsForDomain) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*ListVpcEndpointsForDomainInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpListVpcEndpointsForDomainInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -570,6 +730,26 @@ func (m *validateOpRemoveTags) HandleInitialize(ctx context.Context, in middlewa
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpRevokeVpcEndpointAccess struct {
+}
+
+func (*validateOpRevokeVpcEndpointAccess) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpRevokeVpcEndpointAccess) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*RevokeVpcEndpointAccessInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpRevokeVpcEndpointAccessInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpStartServiceSoftwareUpdate struct {
 }
 
@@ -630,6 +810,46 @@ func (m *validateOpUpdatePackage) HandleInitialize(ctx context.Context, in middl
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpUpdateScheduledAction struct {
+}
+
+func (*validateOpUpdateScheduledAction) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpUpdateScheduledAction) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*UpdateScheduledActionInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpUpdateScheduledActionInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpUpdateVpcEndpoint struct {
+}
+
+func (*validateOpUpdateVpcEndpoint) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpUpdateVpcEndpoint) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*UpdateVpcEndpointInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpUpdateVpcEndpointInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpUpgradeDomain struct {
 }
 
@@ -662,6 +882,10 @@ func addOpAssociatePackageValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpAssociatePackage{}, middleware.After)
 }
 
+func addOpAuthorizeVpcEndpointAccessValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpAuthorizeVpcEndpointAccess{}, middleware.After)
+}
+
 func addOpCancelServiceSoftwareUpdateValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpCancelServiceSoftwareUpdate{}, middleware.After)
 }
@@ -678,6 +902,10 @@ func addOpCreatePackageValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpCreatePackage{}, middleware.After)
 }
 
+func addOpCreateVpcEndpointValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpCreateVpcEndpoint{}, middleware.After)
+}
+
 func addOpDeleteDomainValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDeleteDomain{}, middleware.After)
 }
@@ -692,6 +920,10 @@ func addOpDeleteOutboundConnectionValidationMiddleware(stack *middleware.Stack) 
 
 func addOpDeletePackageValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDeletePackage{}, middleware.After)
+}
+
+func addOpDeleteVpcEndpointValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDeleteVpcEndpoint{}, middleware.After)
 }
 
 func addOpDescribeDomainAutoTunesValidationMiddleware(stack *middleware.Stack) error {
@@ -714,8 +946,16 @@ func addOpDescribeDomainsValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDescribeDomains{}, middleware.After)
 }
 
+func addOpDescribeDryRunProgressValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDescribeDryRunProgress{}, middleware.After)
+}
+
 func addOpDescribeInstanceTypeLimitsValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDescribeInstanceTypeLimits{}, middleware.After)
+}
+
+func addOpDescribeVpcEndpointsValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDescribeVpcEndpoints{}, middleware.After)
 }
 
 func addOpDissociatePackageValidationMiddleware(stack *middleware.Stack) error {
@@ -746,8 +986,20 @@ func addOpListPackagesForDomainValidationMiddleware(stack *middleware.Stack) err
 	return stack.Initialize.Add(&validateOpListPackagesForDomain{}, middleware.After)
 }
 
+func addOpListScheduledActionsValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpListScheduledActions{}, middleware.After)
+}
+
 func addOpListTagsValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpListTags{}, middleware.After)
+}
+
+func addOpListVpcEndpointAccessValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpListVpcEndpointAccess{}, middleware.After)
+}
+
+func addOpListVpcEndpointsForDomainValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpListVpcEndpointsForDomain{}, middleware.After)
 }
 
 func addOpPurchaseReservedInstanceOfferingValidationMiddleware(stack *middleware.Stack) error {
@@ -762,6 +1014,10 @@ func addOpRemoveTagsValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpRemoveTags{}, middleware.After)
 }
 
+func addOpRevokeVpcEndpointAccessValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpRevokeVpcEndpointAccess{}, middleware.After)
+}
+
 func addOpStartServiceSoftwareUpdateValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpStartServiceSoftwareUpdate{}, middleware.After)
 }
@@ -772,6 +1028,14 @@ func addOpUpdateDomainConfigValidationMiddleware(stack *middleware.Stack) error 
 
 func addOpUpdatePackageValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpUpdatePackage{}, middleware.After)
+}
+
+func addOpUpdateScheduledActionValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpUpdateScheduledAction{}, middleware.After)
+}
+
+func addOpUpdateVpcEndpointValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpUpdateVpcEndpoint{}, middleware.After)
 }
 
 func addOpUpgradeDomainValidationMiddleware(stack *middleware.Stack) error {
@@ -859,6 +1123,40 @@ func validateDomainInformationContainer(v *types.DomainInformationContainer) err
 	}
 }
 
+func validateOffPeakWindow(v *types.OffPeakWindow) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "OffPeakWindow"}
+	if v.WindowStartTime != nil {
+		if err := validateWindowStartTime(v.WindowStartTime); err != nil {
+			invalidParams.AddNested("WindowStartTime", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOffPeakWindowOptions(v *types.OffPeakWindowOptions) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "OffPeakWindowOptions"}
+	if v.OffPeakWindow != nil {
+		if err := validateOffPeakWindow(v.OffPeakWindow); err != nil {
+			invalidParams.AddNested("OffPeakWindow", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateSAMLIdp(v *types.SAMLIdp) error {
 	if v == nil {
 		return nil
@@ -929,6 +1227,18 @@ func validateTagList(v []types.Tag) error {
 	}
 }
 
+func validateWindowStartTime(v *types.WindowStartTime) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "WindowStartTime"}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpAcceptInboundConnectionInput(v *AcceptInboundConnectionInput) error {
 	if v == nil {
 		return nil
@@ -984,6 +1294,24 @@ func validateOpAssociatePackageInput(v *AssociatePackageInput) error {
 	}
 }
 
+func validateOpAuthorizeVpcEndpointAccessInput(v *AuthorizeVpcEndpointAccessInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "AuthorizeVpcEndpointAccessInput"}
+	if v.DomainName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DomainName"))
+	}
+	if v.Account == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Account"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpCancelServiceSoftwareUpdateInput(v *CancelServiceSoftwareUpdateInput) error {
 	if v == nil {
 		return nil
@@ -1020,6 +1348,11 @@ func validateOpCreateDomainInput(v *CreateDomainInput) error {
 	if v.TagList != nil {
 		if err := validateTagList(v.TagList); err != nil {
 			invalidParams.AddNested("TagList", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.OffPeakWindowOptions != nil {
+		if err := validateOffPeakWindowOptions(v.OffPeakWindowOptions); err != nil {
+			invalidParams.AddNested("OffPeakWindowOptions", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {
@@ -1071,6 +1404,24 @@ func validateOpCreatePackageInput(v *CreatePackageInput) error {
 	}
 	if v.PackageSource == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("PackageSource"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpCreateVpcEndpointInput(v *CreateVpcEndpointInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "CreateVpcEndpointInput"}
+	if v.DomainArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DomainArn"))
+	}
+	if v.VpcOptions == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("VpcOptions"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1131,6 +1482,21 @@ func validateOpDeletePackageInput(v *DeletePackageInput) error {
 	invalidParams := smithy.InvalidParamsError{Context: "DeletePackageInput"}
 	if v.PackageID == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("PackageID"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpDeleteVpcEndpointInput(v *DeleteVpcEndpointInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DeleteVpcEndpointInput"}
+	if v.VpcEndpointId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("VpcEndpointId"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1214,6 +1580,21 @@ func validateOpDescribeDomainsInput(v *DescribeDomainsInput) error {
 	}
 }
 
+func validateOpDescribeDryRunProgressInput(v *DescribeDryRunProgressInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DescribeDryRunProgressInput"}
+	if v.DomainName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DomainName"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpDescribeInstanceTypeLimitsInput(v *DescribeInstanceTypeLimitsInput) error {
 	if v == nil {
 		return nil
@@ -1224,6 +1605,21 @@ func validateOpDescribeInstanceTypeLimitsInput(v *DescribeInstanceTypeLimitsInpu
 	}
 	if v.EngineVersion == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("EngineVersion"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpDescribeVpcEndpointsInput(v *DescribeVpcEndpointsInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DescribeVpcEndpointsInput"}
+	if v.VpcEndpointIds == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("VpcEndpointIds"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1340,6 +1736,21 @@ func validateOpListPackagesForDomainInput(v *ListPackagesForDomainInput) error {
 	}
 }
 
+func validateOpListScheduledActionsInput(v *ListScheduledActionsInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ListScheduledActionsInput"}
+	if v.DomainName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DomainName"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpListTagsInput(v *ListTagsInput) error {
 	if v == nil {
 		return nil
@@ -1347,6 +1758,36 @@ func validateOpListTagsInput(v *ListTagsInput) error {
 	invalidParams := smithy.InvalidParamsError{Context: "ListTagsInput"}
 	if v.ARN == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("ARN"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpListVpcEndpointAccessInput(v *ListVpcEndpointAccessInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ListVpcEndpointAccessInput"}
+	if v.DomainName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DomainName"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpListVpcEndpointsForDomainInput(v *ListVpcEndpointsForDomainInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ListVpcEndpointsForDomainInput"}
+	if v.DomainName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DomainName"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1406,6 +1847,24 @@ func validateOpRemoveTagsInput(v *RemoveTagsInput) error {
 	}
 }
 
+func validateOpRevokeVpcEndpointAccessInput(v *RevokeVpcEndpointAccessInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "RevokeVpcEndpointAccessInput"}
+	if v.DomainName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DomainName"))
+	}
+	if v.Account == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Account"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpStartServiceSoftwareUpdateInput(v *StartServiceSoftwareUpdateInput) error {
 	if v == nil {
 		return nil
@@ -1439,6 +1898,11 @@ func validateOpUpdateDomainConfigInput(v *UpdateDomainConfigInput) error {
 			invalidParams.AddNested("AdvancedSecurityOptions", err.(smithy.InvalidParamsError))
 		}
 	}
+	if v.OffPeakWindowOptions != nil {
+		if err := validateOffPeakWindowOptions(v.OffPeakWindowOptions); err != nil {
+			invalidParams.AddNested("OffPeakWindowOptions", err.(smithy.InvalidParamsError))
+		}
+	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	} else {
@@ -1456,6 +1920,48 @@ func validateOpUpdatePackageInput(v *UpdatePackageInput) error {
 	}
 	if v.PackageSource == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("PackageSource"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpUpdateScheduledActionInput(v *UpdateScheduledActionInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "UpdateScheduledActionInput"}
+	if v.DomainName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DomainName"))
+	}
+	if v.ActionID == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ActionID"))
+	}
+	if len(v.ActionType) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("ActionType"))
+	}
+	if len(v.ScheduleAt) == 0 {
+		invalidParams.Add(smithy.NewErrParamRequired("ScheduleAt"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpUpdateVpcEndpointInput(v *UpdateVpcEndpointInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "UpdateVpcEndpointInput"}
+	if v.VpcEndpointId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("VpcEndpointId"))
+	}
+	if v.VpcOptions == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("VpcOptions"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams

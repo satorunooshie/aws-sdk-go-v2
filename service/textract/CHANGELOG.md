@@ -1,3 +1,76 @@
+# v1.20.5 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.4 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+
+# v1.20.3 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.2 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.20.1 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.20.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.19.2 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.1 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.19.0 (2022-11-28)
+
+* **Feature**: This release adds support for classifying and splitting lending documents by type, and extracting information by using the Analyze Lending APIs. This release also includes support for summarized information of the processed lending document package, in addition to per document results.
+
+# v1.18.0 (2022-11-17)
+
+* **Feature**: This release adds support for specifying and extracting information from documents using the Signatures feature within Analyze Document API
+
+# v1.17.0 (2022-11-01)
+
+* **Feature**: Add ocr results in AnalyzeIDResponse as blocks
+
+# v1.16.0 (2022-10-31)
+
+* **Feature**: This release introduces additional support for 30+ normalized fields such as vendor address and currency. It also includes OCR output in the response and accuracy improvements for the already supported fields in previous version
+
+# v1.15.16 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.15 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.14 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.13 (2022-09-14)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.12 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.15.11 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.15.10 (2022-08-29)
 
 * **Dependency Update**: Updated to the latest SDK module versions

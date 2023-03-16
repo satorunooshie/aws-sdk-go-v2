@@ -330,6 +330,26 @@ func (m *validateOpUpdateConnectorProfile) HandleInitialize(ctx context.Context,
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpUpdateConnectorRegistration struct {
+}
+
+func (*validateOpUpdateConnectorRegistration) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpUpdateConnectorRegistration) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*UpdateConnectorRegistrationInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpUpdateConnectorRegistrationInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpUpdateFlow struct {
 }
 
@@ -414,6 +434,10 @@ func addOpUpdateConnectorProfileValidationMiddleware(stack *middleware.Stack) er
 	return stack.Initialize.Add(&validateOpUpdateConnectorProfile{}, middleware.After)
 }
 
+func addOpUpdateConnectorRegistrationValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpUpdateConnectorRegistration{}, middleware.After)
+}
+
 func addOpUpdateFlowValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpUpdateFlow{}, middleware.After)
 }
@@ -496,9 +520,7 @@ func validateConnectorProfileConfig(v *types.ConnectorProfileConfig) error {
 			invalidParams.AddNested("ConnectorProfileProperties", err.(smithy.InvalidParamsError))
 		}
 	}
-	if v.ConnectorProfileCredentials == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("ConnectorProfileCredentials"))
-	} else if v.ConnectorProfileCredentials != nil {
+	if v.ConnectorProfileCredentials != nil {
 		if err := validateConnectorProfileCredentials(v.ConnectorProfileCredentials); err != nil {
 			invalidParams.AddNested("ConnectorProfileCredentials", err.(smithy.InvalidParamsError))
 		}
@@ -543,11 +565,6 @@ func validateConnectorProfileCredentials(v *types.ConnectorProfileCredentials) e
 	if v.Marketo != nil {
 		if err := validateMarketoConnectorProfileCredentials(v.Marketo); err != nil {
 			invalidParams.AddNested("Marketo", err.(smithy.InvalidParamsError))
-		}
-	}
-	if v.Redshift != nil {
-		if err := validateRedshiftConnectorProfileCredentials(v.Redshift); err != nil {
-			invalidParams.AddNested("Redshift", err.(smithy.InvalidParamsError))
 		}
 	}
 	if v.ServiceNow != nil {
@@ -1017,6 +1034,27 @@ func validateEventBridgeDestinationProperties(v *types.EventBridgeDestinationPro
 	}
 }
 
+func validateGlueDataCatalogConfig(v *types.GlueDataCatalogConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "GlueDataCatalogConfig"}
+	if v.RoleArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("RoleArn"))
+	}
+	if v.DatabaseName == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("DatabaseName"))
+	}
+	if v.TablePrefix == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("TablePrefix"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateGoogleAnalyticsConnectorProfileCredentials(v *types.GoogleAnalyticsConnectorProfileCredentials) error {
 	if v == nil {
 		return nil
@@ -1197,6 +1235,23 @@ func validateMarketoSourceProperties(v *types.MarketoSourceProperties) error {
 	}
 }
 
+func validateMetadataCatalogConfig(v *types.MetadataCatalogConfig) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "MetadataCatalogConfig"}
+	if v.GlueDataCatalog != nil {
+		if err := validateGlueDataCatalogConfig(v.GlueDataCatalog); err != nil {
+			invalidParams.AddNested("GlueDataCatalog", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOAuth2Properties(v *types.OAuth2Properties) error {
 	if v == nil {
 		return nil
@@ -1254,16 +1309,13 @@ func validateOAuthProperties(v *types.OAuthProperties) error {
 	}
 }
 
-func validateRedshiftConnectorProfileCredentials(v *types.RedshiftConnectorProfileCredentials) error {
+func validatePardotSourceProperties(v *types.PardotSourceProperties) error {
 	if v == nil {
 		return nil
 	}
-	invalidParams := smithy.InvalidParamsError{Context: "RedshiftConnectorProfileCredentials"}
-	if v.Username == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("Username"))
-	}
-	if v.Password == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("Password"))
+	invalidParams := smithy.InvalidParamsError{Context: "PardotSourceProperties"}
+	if v.Object == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Object"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1277,9 +1329,6 @@ func validateRedshiftConnectorProfileProperties(v *types.RedshiftConnectorProfil
 		return nil
 	}
 	invalidParams := smithy.InvalidParamsError{Context: "RedshiftConnectorProfileProperties"}
-	if v.DatabaseUrl == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("DatabaseUrl"))
-	}
 	if v.BucketName == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("BucketName"))
 	}
@@ -1403,6 +1452,9 @@ func validateSAPODataConnectorProfileProperties(v *types.SAPODataConnectorProfil
 	}
 	if v.ApplicationServicePath == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("ApplicationServicePath"))
+	}
+	if v.PortNumber == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("PortNumber"))
 	}
 	if v.ClientNumber == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("ClientNumber"))
@@ -1710,6 +1762,11 @@ func validateSourceConnectorProperties(v *types.SourceConnectorProperties) error
 	if v.CustomConnector != nil {
 		if err := validateCustomConnectorSourceProperties(v.CustomConnector); err != nil {
 			invalidParams.AddNested("CustomConnector", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.Pardot != nil {
+		if err := validatePardotSourceProperties(v.Pardot); err != nil {
+			invalidParams.AddNested("Pardot", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {
@@ -2055,6 +2112,11 @@ func validateOpCreateFlowInput(v *CreateFlowInput) error {
 			invalidParams.AddNested("Tasks", err.(smithy.InvalidParamsError))
 		}
 	}
+	if v.MetadataCatalogConfig != nil {
+		if err := validateMetadataCatalogConfig(v.MetadataCatalogConfig); err != nil {
+			invalidParams.AddNested("MetadataCatalogConfig", err.(smithy.InvalidParamsError))
+		}
+	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	} else {
@@ -2290,6 +2352,26 @@ func validateOpUpdateConnectorProfileInput(v *UpdateConnectorProfileInput) error
 	}
 }
 
+func validateOpUpdateConnectorRegistrationInput(v *UpdateConnectorRegistrationInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "UpdateConnectorRegistrationInput"}
+	if v.ConnectorLabel == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ConnectorLabel"))
+	}
+	if v.ConnectorProvisioningConfig != nil {
+		if err := validateConnectorProvisioningConfig(v.ConnectorProvisioningConfig); err != nil {
+			invalidParams.AddNested("ConnectorProvisioningConfig", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpUpdateFlowInput(v *UpdateFlowInput) error {
 	if v == nil {
 		return nil
@@ -2324,6 +2406,11 @@ func validateOpUpdateFlowInput(v *UpdateFlowInput) error {
 	} else if v.Tasks != nil {
 		if err := validateTasks(v.Tasks); err != nil {
 			invalidParams.AddNested("Tasks", err.(smithy.InvalidParamsError))
+		}
+	}
+	if v.MetadataCatalogConfig != nil {
+		if err := validateMetadataCatalogConfig(v.MetadataCatalogConfig); err != nil {
+			invalidParams.AddNested("MetadataCatalogConfig", err.(smithy.InvalidParamsError))
 		}
 	}
 	if invalidParams.Len() > 0 {

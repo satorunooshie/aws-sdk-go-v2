@@ -64,7 +64,8 @@ type AddOnType string
 
 // Enum values for AddOnType
 const (
-	AddOnTypeAutoSnapshot AddOnType = "AutoSnapshot"
+	AddOnTypeAutoSnapshot       AddOnType = "AutoSnapshot"
+	AddOnTypeStopInstanceOnIdle AddOnType = "StopInstanceOnIdle"
 )
 
 // Values returns all known values for AddOnType. Note that this can be expanded in
@@ -73,6 +74,7 @@ const (
 func (AddOnType) Values() []AddOnType {
 	return []AddOnType{
 		"AutoSnapshot",
+		"StopInstanceOnIdle",
 	}
 }
 
@@ -93,6 +95,44 @@ func (AlarmState) Values() []AlarmState {
 		"OK",
 		"ALARM",
 		"INSUFFICIENT_DATA",
+	}
+}
+
+type AppCategory string
+
+// Enum values for AppCategory
+const (
+	AppCategoryLfR AppCategory = "LfR"
+)
+
+// Values returns all known values for AppCategory. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (AppCategory) Values() []AppCategory {
+	return []AppCategory{
+		"LfR",
+	}
+}
+
+type AutoMountStatus string
+
+// Enum values for AutoMountStatus
+const (
+	AutoMountStatusFailed     AutoMountStatus = "Failed"
+	AutoMountStatusPending    AutoMountStatus = "Pending"
+	AutoMountStatusMounted    AutoMountStatus = "Mounted"
+	AutoMountStatusNotMounted AutoMountStatus = "NotMounted"
+)
+
+// Values returns all known values for AutoMountStatus. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (AutoMountStatus) Values() []AutoMountStatus {
+	return []AutoMountStatus{
+		"Failed",
+		"Pending",
+		"Mounted",
+		"NotMounted",
 	}
 }
 
@@ -191,6 +231,27 @@ func (BucketMetricName) Values() []BucketMetricName {
 	return []BucketMetricName{
 		"BucketSizeBytes",
 		"NumberOfObjects",
+	}
+}
+
+type CertificateDomainValidationStatus string
+
+// Enum values for CertificateDomainValidationStatus
+const (
+	CertificateDomainValidationStatusPendingValidation CertificateDomainValidationStatus = "PENDING_VALIDATION"
+	CertificateDomainValidationStatusFailed            CertificateDomainValidationStatus = "FAILED"
+	CertificateDomainValidationStatusSuccess           CertificateDomainValidationStatus = "SUCCESS"
+)
+
+// Values returns all known values for CertificateDomainValidationStatus. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (CertificateDomainValidationStatus) Values() []CertificateDomainValidationStatus {
+	return []CertificateDomainValidationStatus{
+		"PENDING_VALIDATION",
+		"FAILED",
+		"SUCCESS",
 	}
 }
 
@@ -466,6 +527,22 @@ func (ContainerServiceStateDetailCode) Values() []ContainerServiceStateDetailCod
 	}
 }
 
+type Currency string
+
+// Enum values for Currency
+const (
+	CurrencyUsd Currency = "USD"
+)
+
+// Values returns all known values for Currency. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (Currency) Values() []Currency {
+	return []Currency{
+		"USD",
+	}
+}
+
 type DiskSnapshotState string
 
 // Enum values for DiskSnapshotState
@@ -535,6 +612,26 @@ func (DistributionMetricName) Values() []DistributionMetricName {
 		"TotalErrorRate",
 		"Http4xxErrorRate",
 		"Http5xxErrorRate",
+	}
+}
+
+type DnsRecordCreationStateCode string
+
+// Enum values for DnsRecordCreationStateCode
+const (
+	DnsRecordCreationStateCodeSucceeded DnsRecordCreationStateCode = "SUCCEEDED"
+	DnsRecordCreationStateCodeStarted   DnsRecordCreationStateCode = "STARTED"
+	DnsRecordCreationStateCodeFailed    DnsRecordCreationStateCode = "FAILED"
+)
+
+// Values returns all known values for DnsRecordCreationStateCode. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (DnsRecordCreationStateCode) Values() []DnsRecordCreationStateCode {
+	return []DnsRecordCreationStateCode{
+		"SUCCEEDED",
+		"STARTED",
+		"FAILED",
 	}
 }
 
@@ -621,6 +718,60 @@ func (HeaderEnum) Values() []HeaderEnum {
 	}
 }
 
+type HttpEndpoint string
+
+// Enum values for HttpEndpoint
+const (
+	HttpEndpointDisabled HttpEndpoint = "disabled"
+	HttpEndpointEnabled  HttpEndpoint = "enabled"
+)
+
+// Values returns all known values for HttpEndpoint. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (HttpEndpoint) Values() []HttpEndpoint {
+	return []HttpEndpoint{
+		"disabled",
+		"enabled",
+	}
+}
+
+type HttpProtocolIpv6 string
+
+// Enum values for HttpProtocolIpv6
+const (
+	HttpProtocolIpv6Disabled HttpProtocolIpv6 = "disabled"
+	HttpProtocolIpv6Enabled  HttpProtocolIpv6 = "enabled"
+)
+
+// Values returns all known values for HttpProtocolIpv6. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (HttpProtocolIpv6) Values() []HttpProtocolIpv6 {
+	return []HttpProtocolIpv6{
+		"disabled",
+		"enabled",
+	}
+}
+
+type HttpTokens string
+
+// Enum values for HttpTokens
+const (
+	HttpTokensOptional HttpTokens = "optional"
+	HttpTokensRequired HttpTokens = "required"
+)
+
+// Values returns all known values for HttpTokens. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (HttpTokens) Values() []HttpTokens {
+	return []HttpTokens{
+		"optional",
+		"required",
+	}
+}
+
 type InstanceAccessProtocol string
 
 // Enum values for InstanceAccessProtocol
@@ -701,6 +852,24 @@ func (InstanceHealthState) Values() []InstanceHealthState {
 	}
 }
 
+type InstanceMetadataState string
+
+// Enum values for InstanceMetadataState
+const (
+	InstanceMetadataStatePending InstanceMetadataState = "pending"
+	InstanceMetadataStateApplied InstanceMetadataState = "applied"
+)
+
+// Values returns all known values for InstanceMetadataState. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (InstanceMetadataState) Values() []InstanceMetadataState {
+	return []InstanceMetadataState{
+		"pending",
+		"applied",
+	}
+}
+
 type InstanceMetricName string
 
 // Enum values for InstanceMetricName
@@ -713,6 +882,7 @@ const (
 	InstanceMetricNameStatusCheckFailedSystem   InstanceMetricName = "StatusCheckFailed_System"
 	InstanceMetricNameBurstCapacityTime         InstanceMetricName = "BurstCapacityTime"
 	InstanceMetricNameBurstCapacityPercentage   InstanceMetricName = "BurstCapacityPercentage"
+	InstanceMetricNameMetadataNoToken           InstanceMetricName = "MetadataNoToken"
 )
 
 // Values returns all known values for InstanceMetricName. Note that this can be
@@ -728,6 +898,7 @@ func (InstanceMetricName) Values() []InstanceMetricName {
 		"StatusCheckFailed_System",
 		"BurstCapacityTime",
 		"BurstCapacityPercentage",
+		"MetadataNoToken",
 	}
 }
 
@@ -888,6 +1059,27 @@ func (LoadBalancerState) Values() []LoadBalancerState {
 		"active_impaired",
 		"failed",
 		"unknown",
+	}
+}
+
+type LoadBalancerTlsCertificateDnsRecordCreationStateCode string
+
+// Enum values for LoadBalancerTlsCertificateDnsRecordCreationStateCode
+const (
+	LoadBalancerTlsCertificateDnsRecordCreationStateCodeSucceeded LoadBalancerTlsCertificateDnsRecordCreationStateCode = "SUCCEEDED"
+	LoadBalancerTlsCertificateDnsRecordCreationStateCodeStarted   LoadBalancerTlsCertificateDnsRecordCreationStateCode = "STARTED"
+	LoadBalancerTlsCertificateDnsRecordCreationStateCodeFailed    LoadBalancerTlsCertificateDnsRecordCreationStateCode = "FAILED"
+)
+
+// Values returns all known values for
+// LoadBalancerTlsCertificateDnsRecordCreationStateCode. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (LoadBalancerTlsCertificateDnsRecordCreationStateCode) Values() []LoadBalancerTlsCertificateDnsRecordCreationStateCode {
+	return []LoadBalancerTlsCertificateDnsRecordCreationStateCode{
+		"SUCCEEDED",
+		"STARTED",
+		"FAILED",
 	}
 }
 
@@ -1182,6 +1374,28 @@ func (MetricUnit) Values() []MetricUnit {
 	}
 }
 
+type NameServersUpdateStateCode string
+
+// Enum values for NameServersUpdateStateCode
+const (
+	NameServersUpdateStateCodeSucceeded NameServersUpdateStateCode = "SUCCEEDED"
+	NameServersUpdateStateCodePending   NameServersUpdateStateCode = "PENDING"
+	NameServersUpdateStateCodeFailed    NameServersUpdateStateCode = "FAILED"
+	NameServersUpdateStateCodeStarted   NameServersUpdateStateCode = "STARTED"
+)
+
+// Values returns all known values for NameServersUpdateStateCode. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (NameServersUpdateStateCode) Values() []NameServersUpdateStateCode {
+	return []NameServersUpdateStateCode{
+		"SUCCEEDED",
+		"PENDING",
+		"FAILED",
+		"STARTED",
+	}
+}
+
 type NetworkProtocol string
 
 // Enum values for NetworkProtocol
@@ -1311,6 +1525,9 @@ const (
 	OperationTypeUpdateBucketBundle                   OperationType = "UpdateBucketBundle"
 	OperationTypeUpdateBucket                         OperationType = "UpdateBucket"
 	OperationTypeSetResourceAccessForBucket           OperationType = "SetResourceAccessForBucket"
+	OperationTypeUpdateInstanceMetadataOptions        OperationType = "UpdateInstanceMetadataOptions"
+	OperationTypeStartGUISession                      OperationType = "StartGUISession"
+	OperationTypeStopGUISession                       OperationType = "StopGUISession"
 )
 
 // Values returns all known values for OperationType. Note that this can be
@@ -1397,6 +1614,9 @@ func (OperationType) Values() []OperationType {
 		"UpdateBucketBundle",
 		"UpdateBucket",
 		"SetResourceAccessForBucket",
+		"UpdateInstanceMetadataOptions",
+		"StartGUISession",
+		"StopGUISession",
 	}
 }
 
@@ -1473,6 +1693,53 @@ func (PortState) Values() []PortState {
 	return []PortState{
 		"open",
 		"closed",
+	}
+}
+
+type PricingUnit string
+
+// Enum values for PricingUnit
+const (
+	PricingUnitGb      PricingUnit = "GB"
+	PricingUnitHrs     PricingUnit = "Hrs"
+	PricingUnitGBMo    PricingUnit = "GB-Mo"
+	PricingUnitBundles PricingUnit = "Bundles"
+	PricingUnitQueries PricingUnit = "Queries"
+)
+
+// Values returns all known values for PricingUnit. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (PricingUnit) Values() []PricingUnit {
+	return []PricingUnit{
+		"GB",
+		"Hrs",
+		"GB-Mo",
+		"Bundles",
+		"Queries",
+	}
+}
+
+type R53HostedZoneDeletionStateCode string
+
+// Enum values for R53HostedZoneDeletionStateCode
+const (
+	R53HostedZoneDeletionStateCodeSucceeded R53HostedZoneDeletionStateCode = "SUCCEEDED"
+	R53HostedZoneDeletionStateCodePending   R53HostedZoneDeletionStateCode = "PENDING"
+	R53HostedZoneDeletionStateCodeFailed    R53HostedZoneDeletionStateCode = "FAILED"
+	R53HostedZoneDeletionStateCodeStarted   R53HostedZoneDeletionStateCode = "STARTED"
+)
+
+// Values returns all known values for R53HostedZoneDeletionStateCode. Note that
+// this can be expanded in the future, and so it is only as up to date as the
+// client. The ordering of this slice is not guaranteed to be stable across
+// updates.
+func (R53HostedZoneDeletionStateCode) Values() []R53HostedZoneDeletionStateCode {
+	return []R53HostedZoneDeletionStateCode{
+		"SUCCEEDED",
+		"PENDING",
+		"FAILED",
+		"STARTED",
 	}
 }
 
@@ -1694,6 +1961,40 @@ func (ResourceType) Values() []ResourceType {
 		"Distribution",
 		"Certificate",
 		"Bucket",
+	}
+}
+
+type Status string
+
+// Enum values for Status
+const (
+	StatusStartExpired             Status = "startExpired"
+	StatusNotStarted               Status = "notStarted"
+	StatusStarted                  Status = "started"
+	StatusStarting                 Status = "starting"
+	StatusStopped                  Status = "stopped"
+	StatusStopping                 Status = "stopping"
+	StatusSettingUpInstance        Status = "settingUpInstance"
+	StatusFailedInstanceCreation   Status = "failedInstanceCreation"
+	StatusFailedStartingGUISession Status = "failedStartingGUISession"
+	StatusFailedStoppingGUISession Status = "failedStoppingGUISession"
+)
+
+// Values returns all known values for Status. Note that this can be expanded in
+// the future, and so it is only as up to date as the client. The ordering of this
+// slice is not guaranteed to be stable across updates.
+func (Status) Values() []Status {
+	return []Status{
+		"startExpired",
+		"notStarted",
+		"started",
+		"starting",
+		"stopped",
+		"stopping",
+		"settingUpInstance",
+		"failedInstanceCreation",
+		"failedStartingGUISession",
+		"failedStoppingGUISession",
 	}
 }
 

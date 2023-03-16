@@ -31,13 +31,13 @@ type GetFunctionUrlConfigInput struct {
 
 	// The name of the Lambda function. Name formats
 	//
-	// * Function name - my-function.
+	// * Function name – my-function.
 	//
 	// *
-	// Function ARN - arn:aws:lambda:us-west-2:123456789012:function:my-function.
+	// Function ARN – arn:aws:lambda:us-west-2:123456789012:function:my-function.
 	//
 	// *
-	// Partial ARN - 123456789012:function:my-function.
+	// Partial ARN – 123456789012:function:my-function.
 	//
 	// The length constraint applies
 	// only to the full ARN. If you specify only the function name, it is limited to 64
@@ -55,9 +55,9 @@ type GetFunctionUrlConfigInput struct {
 type GetFunctionUrlConfigOutput struct {
 
 	// The type of authentication that your function URL uses. Set to AWS_IAM if you
-	// want to restrict access to authenticated IAM users only. Set to NONE if you want
-	// to bypass IAM authentication to create a public endpoint. For more information,
-	// see  Security and auth model for Lambda function URLs
+	// want to restrict access to authenticated users only. Set to NONE if you want to
+	// bypass IAM authentication to create a public endpoint. For more information, see
+	// Security and auth model for Lambda function URLs
 	// (https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
 	//
 	// This member is required.

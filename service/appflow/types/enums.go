@@ -58,6 +58,22 @@ func (AuthenticationType) Values() []AuthenticationType {
 	}
 }
 
+type CatalogType string
+
+// Enum values for CatalogType
+const (
+	CatalogTypeGlue CatalogType = "GLUE"
+)
+
+// Values returns all known values for CatalogType. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (CatalogType) Values() []CatalogType {
+	return []CatalogType{
+		"GLUE",
+	}
+}
+
 type ConnectionMode string
 
 // Enum values for ConnectionMode
@@ -119,6 +135,7 @@ const (
 	ConnectorTypeCustomerprofiles ConnectorType = "CustomerProfiles"
 	ConnectorTypeSapodata         ConnectorType = "SAPOData"
 	ConnectorTypeCustomconnector  ConnectorType = "CustomConnector"
+	ConnectorTypePardot           ConnectorType = "Pardot"
 )
 
 // Values returns all known values for ConnectorType. Note that this can be
@@ -149,6 +166,7 @@ func (ConnectorType) Values() []ConnectorType {
 		"CustomerProfiles",
 		"SAPOData",
 		"CustomConnector",
+		"Pardot",
 	}
 }
 
@@ -544,6 +562,8 @@ const (
 	OperatorPropertiesKeysConcatFormat             OperatorPropertiesKeys = "CONCAT_FORMAT"
 	OperatorPropertiesKeysSubfieldCategoryMap      OperatorPropertiesKeys = "SUBFIELD_CATEGORY_MAP"
 	OperatorPropertiesKeysExcludeSourceFieldsList  OperatorPropertiesKeys = "EXCLUDE_SOURCE_FIELDS_LIST"
+	OperatorPropertiesKeysIncludeNewFields         OperatorPropertiesKeys = "INCLUDE_NEW_FIELDS"
+	OperatorPropertiesKeysOrderedPartitionKeysList OperatorPropertiesKeys = "ORDERED_PARTITION_KEYS_LIST"
 )
 
 // Values returns all known values for OperatorPropertiesKeys. Note that this can
@@ -566,6 +586,8 @@ func (OperatorPropertiesKeys) Values() []OperatorPropertiesKeys {
 		"CONCAT_FORMAT",
 		"SUBFIELD_CATEGORY_MAP",
 		"EXCLUDE_SOURCE_FIELDS_LIST",
+		"INCLUDE_NEW_FIELDS",
+		"ORDERED_PARTITION_KEYS_LIST",
 	}
 }
 
@@ -622,6 +644,66 @@ func (Operators) Values() []Operators {
 		"VALIDATE_NON_NEGATIVE",
 		"VALIDATE_NUMERIC",
 		"NO_OP",
+	}
+}
+
+type PardotConnectorOperator string
+
+// Enum values for PardotConnectorOperator
+const (
+	PardotConnectorOperatorProjection          PardotConnectorOperator = "PROJECTION"
+	PardotConnectorOperatorEqualTo             PardotConnectorOperator = "EQUAL_TO"
+	PardotConnectorOperatorNoOp                PardotConnectorOperator = "NO_OP"
+	PardotConnectorOperatorAddition            PardotConnectorOperator = "ADDITION"
+	PardotConnectorOperatorMultiplication      PardotConnectorOperator = "MULTIPLICATION"
+	PardotConnectorOperatorDivision            PardotConnectorOperator = "DIVISION"
+	PardotConnectorOperatorSubtraction         PardotConnectorOperator = "SUBTRACTION"
+	PardotConnectorOperatorMaskAll             PardotConnectorOperator = "MASK_ALL"
+	PardotConnectorOperatorMaskFirstN          PardotConnectorOperator = "MASK_FIRST_N"
+	PardotConnectorOperatorMaskLastN           PardotConnectorOperator = "MASK_LAST_N"
+	PardotConnectorOperatorValidateNonNull     PardotConnectorOperator = "VALIDATE_NON_NULL"
+	PardotConnectorOperatorValidateNonZero     PardotConnectorOperator = "VALIDATE_NON_ZERO"
+	PardotConnectorOperatorValidateNonNegative PardotConnectorOperator = "VALIDATE_NON_NEGATIVE"
+	PardotConnectorOperatorValidateNumeric     PardotConnectorOperator = "VALIDATE_NUMERIC"
+)
+
+// Values returns all known values for PardotConnectorOperator. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (PardotConnectorOperator) Values() []PardotConnectorOperator {
+	return []PardotConnectorOperator{
+		"PROJECTION",
+		"EQUAL_TO",
+		"NO_OP",
+		"ADDITION",
+		"MULTIPLICATION",
+		"DIVISION",
+		"SUBTRACTION",
+		"MASK_ALL",
+		"MASK_FIRST_N",
+		"MASK_LAST_N",
+		"VALIDATE_NON_NULL",
+		"VALIDATE_NON_ZERO",
+		"VALIDATE_NON_NEGATIVE",
+		"VALIDATE_NUMERIC",
+	}
+}
+
+type PathPrefix string
+
+// Enum values for PathPrefix
+const (
+	PathPrefixExecutionId   PathPrefix = "EXECUTION_ID"
+	PathPrefixSchemaVersion PathPrefix = "SCHEMA_VERSION"
+)
+
+// Values returns all known values for PathPrefix. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (PathPrefix) Values() []PathPrefix {
+	return []PathPrefix{
+		"EXECUTION_ID",
+		"SCHEMA_VERSION",
 	}
 }
 
@@ -840,6 +922,26 @@ func (SalesforceConnectorOperator) Values() []SalesforceConnectorOperator {
 		"VALIDATE_NON_NEGATIVE",
 		"VALIDATE_NUMERIC",
 		"NO_OP",
+	}
+}
+
+type SalesforceDataTransferApi string
+
+// Enum values for SalesforceDataTransferApi
+const (
+	SalesforceDataTransferApiAutomatic SalesforceDataTransferApi = "AUTOMATIC"
+	SalesforceDataTransferApiBulkv2    SalesforceDataTransferApi = "BULKV2"
+	SalesforceDataTransferApiRestSync  SalesforceDataTransferApi = "REST_SYNC"
+)
+
+// Values returns all known values for SalesforceDataTransferApi. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (SalesforceDataTransferApi) Values() []SalesforceDataTransferApi {
+	return []SalesforceDataTransferApi{
+		"AUTOMATIC",
+		"BULKV2",
+		"REST_SYNC",
 	}
 }
 
@@ -1088,6 +1190,7 @@ const (
 	TaskTypePassthrough TaskType = "Passthrough"
 	TaskTypeTruncate    TaskType = "Truncate"
 	TaskTypeValidate    TaskType = "Validate"
+	TaskTypePartition   TaskType = "Partition"
 )
 
 // Values returns all known values for TaskType. Note that this can be expanded in
@@ -1104,6 +1207,7 @@ func (TaskType) Values() []TaskType {
 		"Passthrough",
 		"Truncate",
 		"Validate",
+		"Partition",
 	}
 }
 

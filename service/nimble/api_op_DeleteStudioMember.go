@@ -29,7 +29,7 @@ func (c *Client) DeleteStudioMember(ctx context.Context, params *DeleteStudioMem
 
 type DeleteStudioMemberInput struct {
 
-	// The principal ID. This currently supports a Amazon Web Services SSO UserId.
+	// The principal ID. This currently supports a IAM Identity Center UserId.
 	//
 	// This member is required.
 	PrincipalId *string
@@ -40,8 +40,9 @@ type DeleteStudioMemberInput struct {
 	StudioId *string
 
 	// Unique, case-sensitive identifier that you provide to ensure the idempotency of
-	// the request. If you don’t specify a client token, the AWS SDK automatically
-	// generates a client token and uses it for the request to ensure idempotency.
+	// the request. If you don’t specify a client token, the Amazon Web Services SDK
+	// automatically generates a client token and uses it for the request to ensure
+	// idempotency.
 	ClientToken *string
 
 	noSmithyDocumentSerde

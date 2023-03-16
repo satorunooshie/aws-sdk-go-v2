@@ -110,6 +110,26 @@ func (m *validateOpCreateLogStream) HandleInitialize(ctx context.Context, in mid
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpDeleteDataProtectionPolicy struct {
+}
+
+func (*validateOpDeleteDataProtectionPolicy) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDeleteDataProtectionPolicy) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DeleteDataProtectionPolicyInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDeleteDataProtectionPolicyInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpDeleteDestination struct {
 }
 
@@ -250,26 +270,6 @@ func (m *validateOpDeleteSubscriptionFilter) HandleInitialize(ctx context.Contex
 	return next.HandleInitialize(ctx, in)
 }
 
-type validateOpDescribeLogStreams struct {
-}
-
-func (*validateOpDescribeLogStreams) ID() string {
-	return "OperationInputValidation"
-}
-
-func (m *validateOpDescribeLogStreams) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
-	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
-) {
-	input, ok := in.Parameters.(*DescribeLogStreamsInput)
-	if !ok {
-		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
-	}
-	if err := validateOpDescribeLogStreamsInput(input); err != nil {
-		return out, metadata, err
-	}
-	return next.HandleInitialize(ctx, in)
-}
-
 type validateOpDescribeSubscriptionFilters struct {
 }
 
@@ -310,21 +310,21 @@ func (m *validateOpDisassociateKmsKey) HandleInitialize(ctx context.Context, in 
 	return next.HandleInitialize(ctx, in)
 }
 
-type validateOpFilterLogEvents struct {
+type validateOpGetDataProtectionPolicy struct {
 }
 
-func (*validateOpFilterLogEvents) ID() string {
+func (*validateOpGetDataProtectionPolicy) ID() string {
 	return "OperationInputValidation"
 }
 
-func (m *validateOpFilterLogEvents) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+func (m *validateOpGetDataProtectionPolicy) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
 	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
 ) {
-	input, ok := in.Parameters.(*FilterLogEventsInput)
+	input, ok := in.Parameters.(*GetDataProtectionPolicyInput)
 	if !ok {
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
-	if err := validateOpFilterLogEventsInput(input); err != nil {
+	if err := validateOpGetDataProtectionPolicyInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -345,26 +345,6 @@ func (m *validateOpGetLogEvents) HandleInitialize(ctx context.Context, in middle
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpGetLogEventsInput(input); err != nil {
-		return out, metadata, err
-	}
-	return next.HandleInitialize(ctx, in)
-}
-
-type validateOpGetLogGroupFields struct {
-}
-
-func (*validateOpGetLogGroupFields) ID() string {
-	return "OperationInputValidation"
-}
-
-func (m *validateOpGetLogGroupFields) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
-	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
-) {
-	input, ok := in.Parameters.(*GetLogGroupFieldsInput)
-	if !ok {
-		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
-	}
-	if err := validateOpGetLogGroupFieldsInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -410,6 +390,26 @@ func (m *validateOpGetQueryResults) HandleInitialize(ctx context.Context, in mid
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpListTagsForResource struct {
+}
+
+func (*validateOpListTagsForResource) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpListTagsForResource) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*ListTagsForResourceInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpListTagsForResourceInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpListTagsLogGroup struct {
 }
 
@@ -425,6 +425,26 @@ func (m *validateOpListTagsLogGroup) HandleInitialize(ctx context.Context, in mi
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpListTagsLogGroupInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpPutDataProtectionPolicy struct {
+}
+
+func (*validateOpPutDataProtectionPolicy) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpPutDataProtectionPolicy) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*PutDataProtectionPolicyInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpPutDataProtectionPolicyInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -630,6 +650,26 @@ func (m *validateOpTagLogGroup) HandleInitialize(ctx context.Context, in middlew
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpTagResource struct {
+}
+
+func (*validateOpTagResource) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpTagResource) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*TagResourceInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpTagResourceInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpTestMetricFilter struct {
 }
 
@@ -670,6 +710,26 @@ func (m *validateOpUntagLogGroup) HandleInitialize(ctx context.Context, in middl
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpUntagResource struct {
+}
+
+func (*validateOpUntagResource) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpUntagResource) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*UntagResourceInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpUntagResourceInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 func addOpAssociateKmsKeyValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpAssociateKmsKey{}, middleware.After)
 }
@@ -688,6 +748,10 @@ func addOpCreateLogGroupValidationMiddleware(stack *middleware.Stack) error {
 
 func addOpCreateLogStreamValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpCreateLogStream{}, middleware.After)
+}
+
+func addOpDeleteDataProtectionPolicyValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDeleteDataProtectionPolicy{}, middleware.After)
 }
 
 func addOpDeleteDestinationValidationMiddleware(stack *middleware.Stack) error {
@@ -718,10 +782,6 @@ func addOpDeleteSubscriptionFilterValidationMiddleware(stack *middleware.Stack) 
 	return stack.Initialize.Add(&validateOpDeleteSubscriptionFilter{}, middleware.After)
 }
 
-func addOpDescribeLogStreamsValidationMiddleware(stack *middleware.Stack) error {
-	return stack.Initialize.Add(&validateOpDescribeLogStreams{}, middleware.After)
-}
-
 func addOpDescribeSubscriptionFiltersValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDescribeSubscriptionFilters{}, middleware.After)
 }
@@ -730,16 +790,12 @@ func addOpDisassociateKmsKeyValidationMiddleware(stack *middleware.Stack) error 
 	return stack.Initialize.Add(&validateOpDisassociateKmsKey{}, middleware.After)
 }
 
-func addOpFilterLogEventsValidationMiddleware(stack *middleware.Stack) error {
-	return stack.Initialize.Add(&validateOpFilterLogEvents{}, middleware.After)
+func addOpGetDataProtectionPolicyValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpGetDataProtectionPolicy{}, middleware.After)
 }
 
 func addOpGetLogEventsValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpGetLogEvents{}, middleware.After)
-}
-
-func addOpGetLogGroupFieldsValidationMiddleware(stack *middleware.Stack) error {
-	return stack.Initialize.Add(&validateOpGetLogGroupFields{}, middleware.After)
 }
 
 func addOpGetLogRecordValidationMiddleware(stack *middleware.Stack) error {
@@ -750,8 +806,16 @@ func addOpGetQueryResultsValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpGetQueryResults{}, middleware.After)
 }
 
+func addOpListTagsForResourceValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpListTagsForResource{}, middleware.After)
+}
+
 func addOpListTagsLogGroupValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpListTagsLogGroup{}, middleware.After)
+}
+
+func addOpPutDataProtectionPolicyValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpPutDataProtectionPolicy{}, middleware.After)
 }
 
 func addOpPutDestinationValidationMiddleware(stack *middleware.Stack) error {
@@ -794,12 +858,20 @@ func addOpTagLogGroupValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpTagLogGroup{}, middleware.After)
 }
 
+func addOpTagResourceValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpTagResource{}, middleware.After)
+}
+
 func addOpTestMetricFilterValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpTestMetricFilter{}, middleware.After)
 }
 
 func addOpUntagLogGroupValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpUntagLogGroup{}, middleware.After)
+}
+
+func addOpUntagResourceValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpUntagResource{}, middleware.After)
 }
 
 func validateInputLogEvent(v *types.InputLogEvent) error {
@@ -965,6 +1037,21 @@ func validateOpCreateLogStreamInput(v *CreateLogStreamInput) error {
 	}
 }
 
+func validateOpDeleteDataProtectionPolicyInput(v *DeleteDataProtectionPolicyInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DeleteDataProtectionPolicyInput"}
+	if v.LogGroupIdentifier == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("LogGroupIdentifier"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpDeleteDestinationInput(v *DeleteDestinationInput) error {
 	if v == nil {
 		return nil
@@ -1079,21 +1166,6 @@ func validateOpDeleteSubscriptionFilterInput(v *DeleteSubscriptionFilterInput) e
 	}
 }
 
-func validateOpDescribeLogStreamsInput(v *DescribeLogStreamsInput) error {
-	if v == nil {
-		return nil
-	}
-	invalidParams := smithy.InvalidParamsError{Context: "DescribeLogStreamsInput"}
-	if v.LogGroupName == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("LogGroupName"))
-	}
-	if invalidParams.Len() > 0 {
-		return invalidParams
-	} else {
-		return nil
-	}
-}
-
 func validateOpDescribeSubscriptionFiltersInput(v *DescribeSubscriptionFiltersInput) error {
 	if v == nil {
 		return nil
@@ -1124,13 +1196,13 @@ func validateOpDisassociateKmsKeyInput(v *DisassociateKmsKeyInput) error {
 	}
 }
 
-func validateOpFilterLogEventsInput(v *FilterLogEventsInput) error {
+func validateOpGetDataProtectionPolicyInput(v *GetDataProtectionPolicyInput) error {
 	if v == nil {
 		return nil
 	}
-	invalidParams := smithy.InvalidParamsError{Context: "FilterLogEventsInput"}
-	if v.LogGroupName == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("LogGroupName"))
+	invalidParams := smithy.InvalidParamsError{Context: "GetDataProtectionPolicyInput"}
+	if v.LogGroupIdentifier == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("LogGroupIdentifier"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1144,26 +1216,8 @@ func validateOpGetLogEventsInput(v *GetLogEventsInput) error {
 		return nil
 	}
 	invalidParams := smithy.InvalidParamsError{Context: "GetLogEventsInput"}
-	if v.LogGroupName == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("LogGroupName"))
-	}
 	if v.LogStreamName == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("LogStreamName"))
-	}
-	if invalidParams.Len() > 0 {
-		return invalidParams
-	} else {
-		return nil
-	}
-}
-
-func validateOpGetLogGroupFieldsInput(v *GetLogGroupFieldsInput) error {
-	if v == nil {
-		return nil
-	}
-	invalidParams := smithy.InvalidParamsError{Context: "GetLogGroupFieldsInput"}
-	if v.LogGroupName == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("LogGroupName"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1202,6 +1256,21 @@ func validateOpGetQueryResultsInput(v *GetQueryResultsInput) error {
 	}
 }
 
+func validateOpListTagsForResourceInput(v *ListTagsForResourceInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "ListTagsForResourceInput"}
+	if v.ResourceArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ResourceArn"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpListTagsLogGroupInput(v *ListTagsLogGroupInput) error {
 	if v == nil {
 		return nil
@@ -1209,6 +1278,24 @@ func validateOpListTagsLogGroupInput(v *ListTagsLogGroupInput) error {
 	invalidParams := smithy.InvalidParamsError{Context: "ListTagsLogGroupInput"}
 	if v.LogGroupName == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("LogGroupName"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpPutDataProtectionPolicyInput(v *PutDataProtectionPolicyInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "PutDataProtectionPolicyInput"}
+	if v.LogGroupIdentifier == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("LogGroupIdentifier"))
+	}
+	if v.PolicyDocument == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("PolicyDocument"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -1423,6 +1510,24 @@ func validateOpTagLogGroupInput(v *TagLogGroupInput) error {
 	}
 }
 
+func validateOpTagResourceInput(v *TagResourceInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "TagResourceInput"}
+	if v.ResourceArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ResourceArn"))
+	}
+	if v.Tags == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Tags"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpTestMetricFilterInput(v *TestMetricFilterInput) error {
 	if v == nil {
 		return nil
@@ -1451,6 +1556,24 @@ func validateOpUntagLogGroupInput(v *UntagLogGroupInput) error {
 	}
 	if v.Tags == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("Tags"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpUntagResourceInput(v *UntagResourceInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "UntagResourceInput"}
+	if v.ResourceArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ResourceArn"))
+	}
+	if v.TagKeys == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("TagKeys"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams

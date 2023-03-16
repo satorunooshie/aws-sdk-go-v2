@@ -1917,9 +1917,6 @@ func validateOpCreateEnvironmentAccountConnectionInput(v *CreateEnvironmentAccou
 	if v.ManagementAccountId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("ManagementAccountId"))
 	}
-	if v.RoleArn == nil {
-		invalidParams.Add(smithy.NewErrParamRequired("RoleArn"))
-	}
 	if v.EnvironmentName == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("EnvironmentName"))
 	}
@@ -2782,9 +2779,6 @@ func validateOpNotifyResourceDeploymentStatusChangeInput(v *NotifyResourceDeploy
 	invalidParams := smithy.InvalidParamsError{Context: "NotifyResourceDeploymentStatusChangeInput"}
 	if v.ResourceArn == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("ResourceArn"))
-	}
-	if len(v.Status) == 0 {
-		invalidParams.Add(smithy.NewErrParamRequired("Status"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams

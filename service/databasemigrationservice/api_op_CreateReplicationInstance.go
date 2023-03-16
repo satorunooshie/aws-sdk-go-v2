@@ -68,7 +68,12 @@ type CreateReplicationInstanceInput struct {
 
 	// A value that indicates whether minor engine upgrades are applied automatically
 	// to the replication instance during the maintenance window. This parameter
-	// defaults to true. Default: true
+	// defaults to true. Default: true When AutoMinorVersionUpgrade is enabled, DMS
+	// uses the current default engine version when you create a replication instance.
+	// For example, if you set EngineVersion to a lower version number than the current
+	// default version, DMS uses the default version. If AutoMinorVersionUpgrade isn’t
+	// enabled when you create a replication instance, DMS uses the engine version
+	// specified by the EngineVersion parameter.
 	AutoMinorVersionUpgrade *bool
 
 	// The Availability Zone where the replication instance will be created. The
@@ -98,6 +103,11 @@ type CreateReplicationInstanceInput struct {
 	// Specifies whether the replication instance is a Multi-AZ deployment. You can't
 	// set the AvailabilityZone parameter if the Multi-AZ parameter is set to true.
 	MultiAZ *bool
+
+	// The type of IP address protocol used by a replication instance, such as IPv4
+	// only or Dual-stack that supports both IPv4 and IPv6 addressing. IPv6 only is not
+	// yet supported.
+	NetworkType *string
 
 	// The weekly time range during which system maintenance can occur, in Universal
 	// Coordinated Time (UTC). Format: ddd:hh24:mi-ddd:hh24:mi Default: A 30-minute

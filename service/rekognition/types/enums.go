@@ -162,6 +162,24 @@ func (DatasetType) Values() []DatasetType {
 	}
 }
 
+type DetectLabelsFeatureName string
+
+// Enum values for DetectLabelsFeatureName
+const (
+	DetectLabelsFeatureNameGeneralLabels   DetectLabelsFeatureName = "GENERAL_LABELS"
+	DetectLabelsFeatureNameImageProperties DetectLabelsFeatureName = "IMAGE_PROPERTIES"
+)
+
+// Values returns all known values for DetectLabelsFeatureName. Note that this can
+// be expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (DetectLabelsFeatureName) Values() []DetectLabelsFeatureName {
+	return []DetectLabelsFeatureName{
+		"GENERAL_LABELS",
+		"IMAGE_PROPERTIES",
+	}
+}
+
 type EmotionName string
 
 // Enum values for EmotionName
@@ -267,6 +285,40 @@ func (KnownGenderType) Values() []KnownGenderType {
 		"Female",
 		"Nonbinary",
 		"Unlisted",
+	}
+}
+
+type LabelDetectionAggregateBy string
+
+// Enum values for LabelDetectionAggregateBy
+const (
+	LabelDetectionAggregateByTimestamps LabelDetectionAggregateBy = "TIMESTAMPS"
+	LabelDetectionAggregateBySegments   LabelDetectionAggregateBy = "SEGMENTS"
+)
+
+// Values returns all known values for LabelDetectionAggregateBy. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (LabelDetectionAggregateBy) Values() []LabelDetectionAggregateBy {
+	return []LabelDetectionAggregateBy{
+		"TIMESTAMPS",
+		"SEGMENTS",
+	}
+}
+
+type LabelDetectionFeatureName string
+
+// Enum values for LabelDetectionFeatureName
+const (
+	LabelDetectionFeatureNameGeneralLabels LabelDetectionFeatureName = "GENERAL_LABELS"
+)
+
+// Values returns all known values for LabelDetectionFeatureName. Note that this
+// can be expanded in the future, and so it is only as up to date as the client.
+// The ordering of this slice is not guaranteed to be stable across updates.
+func (LabelDetectionFeatureName) Values() []LabelDetectionFeatureName {
+	return []LabelDetectionFeatureName{
+		"GENERAL_LABELS",
 	}
 }
 

@@ -64,7 +64,7 @@ type ActivityScheduledEventDetails struct {
 	Resource *string
 
 	// The maximum allowed duration between two heartbeats for the activity task.
-	HeartbeatInSeconds int64
+	HeartbeatInSeconds *int64
 
 	// The JSON data input to the activity task. Length constraints apply to the
 	// payload size, and are expressed as bytes in UTF-8 encoding.
@@ -74,7 +74,7 @@ type ActivityScheduledEventDetails struct {
 	InputDetails *HistoryEventExecutionDataDetails
 
 	// The maximum allowed duration of the activity task.
-	TimeoutInSeconds int64
+	TimeoutInSeconds *int64
 
 	noSmithyDocumentSerde
 }
@@ -226,6 +226,17 @@ type ExecutionListItem struct {
 	// This member is required.
 	Status ExecutionStatus
 
+	// The total number of items processed in a child workflow execution. This field is
+	// returned only if mapRunArn was specified in the ListExecutions API action. If
+	// stateMachineArn was specified in ListExecutions, the itemCount field isn't
+	// returned.
+	ItemCount *int32
+
+	// The Amazon Resource Name (ARN) of a Map Run. This field is returned only if
+	// mapRunArn was specified in the ListExecutions API action. If stateMachineArn was
+	// specified in ListExecutions, the mapRunArn isn't returned.
+	MapRunArn *string
+
 	// If the execution already ended, the date the execution stopped.
 	StopDate *time.Time
 
@@ -242,8 +253,7 @@ type ExecutionStartedEventDetails struct {
 	// Contains details about the input for an execution history event.
 	InputDetails *HistoryEventExecutionDataDetails
 
-	// The Amazon Resource Name (ARN) of the IAM role used for executing AWS Lambda
-	// tasks.
+	// The Amazon Resource Name (ARN) of the IAM role used for executing Lambda tasks.
 	RoleArn *string
 
 	noSmithyDocumentSerde
@@ -327,25 +337,25 @@ type HistoryEvent struct {
 	// Contains details about the execution timeout that occurred during the execution.
 	ExecutionTimedOutEventDetails *ExecutionTimedOutEventDetails
 
-	// Contains details about a lambda function that failed during an execution.
+	// Contains details about a Lambda function that failed during an execution.
 	LambdaFunctionFailedEventDetails *LambdaFunctionFailedEventDetails
 
-	// Contains details about a failed lambda function schedule event that occurred
+	// Contains details about a failed Lambda function schedule event that occurred
 	// during an execution.
 	LambdaFunctionScheduleFailedEventDetails *LambdaFunctionScheduleFailedEventDetails
 
-	// Contains details about a lambda function scheduled during an execution.
+	// Contains details about a Lambda function scheduled during an execution.
 	LambdaFunctionScheduledEventDetails *LambdaFunctionScheduledEventDetails
 
 	// Contains details about a lambda function that failed to start during an
 	// execution.
 	LambdaFunctionStartFailedEventDetails *LambdaFunctionStartFailedEventDetails
 
-	// Contains details about a lambda function that terminated successfully during an
+	// Contains details about a Lambda function that terminated successfully during an
 	// execution.
 	LambdaFunctionSucceededEventDetails *LambdaFunctionSucceededEventDetails
 
-	// Contains details about a lambda function timeout that occurred during an
+	// Contains details about a Lambda function timeout that occurred during an
 	// execution.
 	LambdaFunctionTimedOutEventDetails *LambdaFunctionTimedOutEventDetails
 
@@ -360,6 +370,13 @@ type HistoryEvent struct {
 
 	// Contains details about an iteration of a Map state that succeeded.
 	MapIterationSucceededEventDetails *MapIterationEventDetails
+
+	// Contains error and cause details about a Map Run that failed.
+	MapRunFailedEventDetails *MapRunFailedEventDetails
+
+	// Contains details, such as mapRunArn, and the start date and time of a Map Run.
+	// mapRunArn is the Amazon Resource Name (ARN) of the Map Run that was started.
+	MapRunStartedEventDetails *MapRunStartedEventDetails
 
 	// Contains details about Map state that was started.
 	MapStateStartedEventDetails *MapStateStartedEventDetails
@@ -410,7 +427,7 @@ type HistoryEventExecutionDataDetails struct {
 	noSmithyDocumentSerde
 }
 
-// Contains details about a lambda function that failed during an execution.
+// Contains details about a Lambda function that failed during an execution.
 type LambdaFunctionFailedEventDetails struct {
 
 	// A more detailed explanation of the cause of the failure.
@@ -422,28 +439,31 @@ type LambdaFunctionFailedEventDetails struct {
 	noSmithyDocumentSerde
 }
 
-// Contains details about a lambda function scheduled during an execution.
+// Contains details about a Lambda function scheduled during an execution.
 type LambdaFunctionScheduledEventDetails struct {
 
-	// The Amazon Resource Name (ARN) of the scheduled lambda function.
+	// The Amazon Resource Name (ARN) of the scheduled Lambda function.
 	//
 	// This member is required.
 	Resource *string
 
-	// The JSON data input to the lambda function. Length constraints apply to the
+	// The JSON data input to the Lambda function. Length constraints apply to the
 	// payload size, and are expressed as bytes in UTF-8 encoding.
 	Input *string
 
 	// Contains details about input for an execution history event.
 	InputDetails *HistoryEventExecutionDataDetails
 
-	// The maximum allowed duration of the lambda function.
-	TimeoutInSeconds int64
+	// The credentials that Step Functions uses for the task.
+	TaskCredentials *TaskCredentials
+
+	// The maximum allowed duration of the Lambda function.
+	TimeoutInSeconds *int64
 
 	noSmithyDocumentSerde
 }
 
-// Contains details about a failed lambda function schedule event that occurred
+// Contains details about a failed Lambda function schedule event that occurred
 // during an execution.
 type LambdaFunctionScheduleFailedEventDetails struct {
 
@@ -469,11 +489,11 @@ type LambdaFunctionStartFailedEventDetails struct {
 	noSmithyDocumentSerde
 }
 
-// Contains details about a lambda function that successfully terminated during an
+// Contains details about a Lambda function that successfully terminated during an
 // execution.
 type LambdaFunctionSucceededEventDetails struct {
 
-	// The JSON data output by the lambda function. Length constraints apply to the
+	// The JSON data output by the Lambda function. Length constraints apply to the
 	// payload size, and are expressed as bytes in UTF-8 encoding.
 	Output *string
 
@@ -483,7 +503,7 @@ type LambdaFunctionSucceededEventDetails struct {
 	noSmithyDocumentSerde
 }
 
-// Contains details about a lambda function timeout that occurred during an
+// Contains details about a Lambda function timeout that occurred during an
 // execution.
 type LambdaFunctionTimedOutEventDetails struct {
 
@@ -501,7 +521,7 @@ type LogDestination struct {
 	// An object describing a CloudWatch log group. For more information, see
 	// AWS::Logs::LogGroup
 	// (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html)
-	// in the AWS CloudFormation User Guide.
+	// in the CloudFormation User Guide.
 	CloudWatchLogsLogGroup *CloudWatchLogsLogGroup
 
 	noSmithyDocumentSerde
@@ -532,6 +552,172 @@ type MapIterationEventDetails struct {
 
 	// The name of the iteration’s parent Map state.
 	Name *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains details about all of the child workflow executions started by a Map
+// Run.
+type MapRunExecutionCounts struct {
+
+	// The total number of child workflow executions that were started by a Map Run and
+	// were running, but were either stopped by the user or by Step Functions because
+	// the Map Run failed.
+	//
+	// This member is required.
+	Aborted int64
+
+	// The total number of child workflow executions that were started by a Map Run,
+	// but have failed.
+	//
+	// This member is required.
+	Failed int64
+
+	// The total number of child workflow executions that were started by a Map Run,
+	// but haven't started executing yet.
+	//
+	// This member is required.
+	Pending int64
+
+	// Returns the count of child workflow executions whose results were written by
+	// ResultWriter. For more information, see ResultWriter
+	// (https://docs.aws.amazon.com/step-functions/latest/dg/input-output-resultwriter.html)
+	// in the Step Functions Developer Guide.
+	//
+	// This member is required.
+	ResultsWritten int64
+
+	// The total number of child workflow executions that were started by a Map Run and
+	// are currently in-progress.
+	//
+	// This member is required.
+	Running int64
+
+	// The total number of child workflow executions that were started by a Map Run and
+	// have completed successfully.
+	//
+	// This member is required.
+	Succeeded int64
+
+	// The total number of child workflow executions that were started by a Map Run and
+	// have timed out.
+	//
+	// This member is required.
+	TimedOut int64
+
+	// The total number of child workflow executions that were started by a Map Run.
+	//
+	// This member is required.
+	Total int64
+
+	noSmithyDocumentSerde
+}
+
+// Contains details about a Map Run failure event that occurred during a state
+// machine execution.
+type MapRunFailedEventDetails struct {
+
+	// A more detailed explanation of the cause of the failure.
+	Cause *string
+
+	// The error code of the Map Run failure.
+	Error *string
+
+	noSmithyDocumentSerde
+}
+
+// Contains details about items that were processed in all of the child workflow
+// executions that were started by a Map Run.
+type MapRunItemCounts struct {
+
+	// The total number of items processed in child workflow executions that were
+	// either stopped by the user or by Step Functions, because the Map Run failed.
+	//
+	// This member is required.
+	Aborted int64
+
+	// The total number of items processed in child workflow executions that have
+	// failed.
+	//
+	// This member is required.
+	Failed int64
+
+	// The total number of items to process in child workflow executions that haven't
+	// started running yet.
+	//
+	// This member is required.
+	Pending int64
+
+	// Returns the count of items whose results were written by ResultWriter. For more
+	// information, see ResultWriter
+	// (https://docs.aws.amazon.com/step-functions/latest/dg/input-output-resultwriter.html)
+	// in the Step Functions Developer Guide.
+	//
+	// This member is required.
+	ResultsWritten int64
+
+	// The total number of items being processed in child workflow executions that are
+	// currently in-progress.
+	//
+	// This member is required.
+	Running int64
+
+	// The total number of items processed in child workflow executions that have
+	// completed successfully.
+	//
+	// This member is required.
+	Succeeded int64
+
+	// The total number of items processed in child workflow executions that have timed
+	// out.
+	//
+	// This member is required.
+	TimedOut int64
+
+	// The total number of items processed in all the child workflow executions started
+	// by a Map Run.
+	//
+	// This member is required.
+	Total int64
+
+	noSmithyDocumentSerde
+}
+
+// Contains details about a specific Map Run.
+type MapRunListItem struct {
+
+	// The executionArn of the execution from which the Map Run was started.
+	//
+	// This member is required.
+	ExecutionArn *string
+
+	// The Amazon Resource Name (ARN) of the Map Run.
+	//
+	// This member is required.
+	MapRunArn *string
+
+	// The date on which the Map Run started.
+	//
+	// This member is required.
+	StartDate *time.Time
+
+	// The Amazon Resource Name (ARN) of the executed state machine.
+	//
+	// This member is required.
+	StateMachineArn *string
+
+	// The date on which the Map Run stopped.
+	StopDate *time.Time
+
+	noSmithyDocumentSerde
+}
+
+// Contains details about a Map Run that was started during a state machine
+// execution.
+type MapRunStartedEventDetails struct {
+
+	// The Amazon Resource Name (ARN) of a Map Run that was started.
+	MapRunArn *string
 
 	noSmithyDocumentSerde
 }
@@ -642,8 +828,8 @@ type StateMachineListItem struct {
 // machines and activities. An array of key-value pairs. For more information, see
 // Using Cost Allocation Tags
 // (https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/cost-alloc-tags.html)
-// in the AWS Billing and Cost Management User Guide, and Controlling Access Using
-// IAM Tags
+// in the Amazon Web Services Billing and Cost Management User Guide, and
+// Controlling Access Using IAM Tags
 // (https://docs.aws.amazon.com/IAM/latest/UserGuide/access_iam-tags.html). Tags
 // may only contain Unicode letters, digits, white space, or these symbols: _ . : /
 // = + - @.
@@ -658,15 +844,25 @@ type Tag struct {
 	noSmithyDocumentSerde
 }
 
+// Contains details about the credentials that Step Functions uses for a task.
+type TaskCredentials struct {
+
+	// The ARN of an IAM role that Step Functions assumes for the task. The role can
+	// allow cross-account access to resources.
+	RoleArn *string
+
+	noSmithyDocumentSerde
+}
+
 // Contains details about a task failure event.
 type TaskFailedEventDetails struct {
 
-	// The service name of the resource in a task state.
+	// The action of the resource called by a task state.
 	//
 	// This member is required.
 	Resource *string
 
-	// The action of the resource called by a task state.
+	// The service name of the resource in a task state.
 	//
 	// This member is required.
 	ResourceType *string
@@ -695,21 +891,24 @@ type TaskScheduledEventDetails struct {
 	// This member is required.
 	Region *string
 
-	// The service name of the resource in a task state.
+	// The action of the resource called by a task state.
 	//
 	// This member is required.
 	Resource *string
 
-	// The action of the resource called by a task state.
+	// The service name of the resource in a task state.
 	//
 	// This member is required.
 	ResourceType *string
 
 	// The maximum allowed duration between two heartbeats for the task.
-	HeartbeatInSeconds int64
+	HeartbeatInSeconds *int64
+
+	// The credentials that Step Functions uses for the task.
+	TaskCredentials *TaskCredentials
 
 	// The maximum allowed duration of the task.
-	TimeoutInSeconds int64
+	TimeoutInSeconds *int64
 
 	noSmithyDocumentSerde
 }
@@ -717,12 +916,12 @@ type TaskScheduledEventDetails struct {
 // Contains details about the start of a task during an execution.
 type TaskStartedEventDetails struct {
 
-	// The service name of the resource in a task state.
+	// The action of the resource called by a task state.
 	//
 	// This member is required.
 	Resource *string
 
-	// The action of the resource called by a task state.
+	// The service name of the resource in a task state.
 	//
 	// This member is required.
 	ResourceType *string
@@ -733,12 +932,12 @@ type TaskStartedEventDetails struct {
 // Contains details about a task that failed to start during an execution.
 type TaskStartFailedEventDetails struct {
 
-	// The service name of the resource in a task state.
+	// The action of the resource called by a task state.
 	//
 	// This member is required.
 	Resource *string
 
-	// The action of the resource called by a task state.
+	// The service name of the resource in a task state.
 	//
 	// This member is required.
 	ResourceType *string
@@ -755,12 +954,12 @@ type TaskStartFailedEventDetails struct {
 // Contains details about a task that failed to submit during an execution.
 type TaskSubmitFailedEventDetails struct {
 
-	// The service name of the resource in a task state.
+	// The action of the resource called by a task state.
 	//
 	// This member is required.
 	Resource *string
 
-	// The action of the resource called by a task state.
+	// The service name of the resource in a task state.
 	//
 	// This member is required.
 	ResourceType *string
@@ -777,12 +976,12 @@ type TaskSubmitFailedEventDetails struct {
 // Contains details about a task submitted to a resource .
 type TaskSubmittedEventDetails struct {
 
-	// The service name of the resource in a task state.
+	// The action of the resource called by a task state.
 	//
 	// This member is required.
 	Resource *string
 
-	// The action of the resource called by a task state.
+	// The service name of the resource in a task state.
 	//
 	// This member is required.
 	ResourceType *string
@@ -800,12 +999,12 @@ type TaskSubmittedEventDetails struct {
 // Contains details about the successful completion of a task state.
 type TaskSucceededEventDetails struct {
 
-	// The service name of the resource in a task state.
+	// The action of the resource called by a task state.
 	//
 	// This member is required.
 	Resource *string
 
-	// The action of the resource called by a task state.
+	// The service name of the resource in a task state.
 	//
 	// This member is required.
 	ResourceType *string
@@ -824,12 +1023,12 @@ type TaskSucceededEventDetails struct {
 // Contains details about a resource timeout that occurred during an execution.
 type TaskTimedOutEventDetails struct {
 
-	// The service name of the resource in a task state.
+	// The action of the resource called by a task state.
 	//
 	// This member is required.
 	Resource *string
 
-	// The action of the resource called by a task state.
+	// The service name of the resource in a task state.
 	//
 	// This member is required.
 	ResourceType *string
@@ -843,11 +1042,11 @@ type TaskTimedOutEventDetails struct {
 	noSmithyDocumentSerde
 }
 
-// Selects whether or not the state machine's AWS X-Ray tracing is enabled. Default
-// is false
+// Selects whether or not the state machine's X-Ray tracing is enabled. Default is
+// false
 type TracingConfiguration struct {
 
-	// When set to true, AWS X-Ray tracing is enabled.
+	// When set to true, X-Ray tracing is enabled.
 	Enabled bool
 
 	noSmithyDocumentSerde

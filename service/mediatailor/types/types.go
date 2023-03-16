@@ -37,7 +37,7 @@ type AccessConfiguration struct {
 // Ad break configuration parameters.
 type AdBreak struct {
 
-	// The SCTE-35 ad insertion type. Accepted value: SPLICE_INSERT.
+	// The SCTE-35 ad insertion type. Accepted value: SPLICE_INSERT, TIME_SIGNAL.
 	MessageType MessageType
 
 	// How long (in milliseconds) after the beginning of the program that an ad starts.
@@ -52,6 +52,13 @@ type AdBreak struct {
 	// information about using splice_insert(), see the SCTE-35 specficiaiton, section
 	// 9.7.3.1.
 	SpliceInsertMessage *SpliceInsertMessage
+
+	// Defines the SCTE-35 time_signal message inserted around the ad. Programs on a
+	// channel's schedule can be configured with one or more ad breaks. You can attach
+	// a splice_insert SCTE-35 message to the ad break. This message provides basic
+	// metadata about the ad break. See section 9.7.4 of the 2022 SCTE-35 specification
+	// for more information.
+	TimeSignalMessage *TimeSignalMessage
 
 	noSmithyDocumentSerde
 }
@@ -181,8 +188,8 @@ type CdnConfiguration struct {
 	// A non-default content delivery network (CDN) to serve ad segments. By default,
 	// AWS Elemental MediaTailor uses Amazon CloudFront with default cache settings as
 	// its CDN for ad segments. To set up an alternate CDN, create a rule in your CDN
-	// for the origin ads.mediatailor.&lt;region>.amazonaws.com. Then specify the
-	// rule's name in this AdSegmentUrlPrefix. When AWS Elemental MediaTailor serves a
+	// for the origin ads.mediatailor.<region>.amazonaws.com. Then specify the rule's
+	// name in this AdSegmentUrlPrefix. When AWS Elemental MediaTailor serves a
 	// manifest, it reports your CDN as the source for ad segments.
 	AdSegmentUrlPrefix *string
 
@@ -196,7 +203,10 @@ type CdnConfiguration struct {
 	noSmithyDocumentSerde
 }
 
-// The configuration parameters for a channel.
+// The configuration parameters for a channel. For information about MediaTailor
+// channels, see Working with channels
+// (https://docs.aws.amazon.com/mediatailor/latest/ug/channel-assembly-channels.html)
+// in the MediaTailor User Guide.
 type Channel struct {
 
 	// The ARN of the channel.
@@ -213,6 +223,11 @@ type Channel struct {
 	//
 	// This member is required.
 	ChannelState *string
+
+	// The log configuration.
+	//
+	// This member is required.
+	LogConfiguration *LogConfigurationForChannel
 
 	// The channel's output properties.
 	//
@@ -236,15 +251,30 @@ type Channel struct {
 	CreationTime *time.Time
 
 	// The slate used to fill gaps between programs in the schedule. You must configure
-	// filler slate if your channel uses the LINEAR PlaybackMode. MediaTailor doesn't
-	// support filler slate for channels using the LOOP PlaybackMode.
+	// filler slate if your channel uses the LINEARPlaybackMode. MediaTailor doesn't
+	// support filler slate for channels using the LOOPPlaybackMode.
 	FillerSlate *SlateSource
 
 	// The timestamp of when the channel was last modified.
 	LastModifiedTime *time.Time
 
-	// The tags to assign to the channel.
+	// The tags to assign to the channel. Tags are key-value pairs that you can
+	// associate with Amazon resources to help with organization, access control, and
+	// cost tracking. For more information, see Tagging AWS Elemental MediaTailor
+	// Resources (https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html).
 	Tags map[string]string
+
+	noSmithyDocumentSerde
+}
+
+// Clip range configuration for the VOD source associated with the program.
+type ClipRange struct {
+
+	// The end offset of the clip range, in milliseconds, starting from the beginning
+	// of the VOD source associated with the program.
+	//
+	// This member is required.
+	EndOffsetMillis int64
 
 	noSmithyDocumentSerde
 }
@@ -438,7 +468,10 @@ type LiveSource struct {
 	// The timestamp that indicates when the live source was last modified.
 	LastModifiedTime *time.Time
 
-	// The tags assigned to the live source.
+	// The tags assigned to the live source. Tags are key-value pairs that you can
+	// associate with Amazon resources to help with organization, access control, and
+	// cost tracking. For more information, see Tagging AWS Elemental MediaTailor
+	// Resources (https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html).
 	Tags map[string]string
 
 	noSmithyDocumentSerde
@@ -462,6 +495,15 @@ type LogConfiguration struct {
 	noSmithyDocumentSerde
 }
 
+// The log configuration for the channel.
+type LogConfigurationForChannel struct {
+
+	// The log types.
+	LogTypes []LogType
+
+	noSmithyDocumentSerde
+}
+
 // The configuration for manifest processing rules. Manifest processing rules
 // enable customization of the personalized manifests created by MediaTailor.
 type ManifestProcessingRules struct {
@@ -476,8 +518,8 @@ type ManifestProcessingRules struct {
 	noSmithyDocumentSerde
 }
 
-// Creates a playback configuration. For information about MediaTailor
-// configurations, see Working with configurations in AWS Elemental MediaTailor
+// A playback configuration. For information about MediaTailor configurations, see
+// Working with configurations in AWS Elemental MediaTailor
 // (https://docs.aws.amazon.com/mediatailor/latest/ug/configurations.html).
 type PlaybackConfiguration struct {
 
@@ -555,7 +597,11 @@ type PlaybackConfiguration struct {
 	// asset that contains both audio and video.
 	SlateAdUrl *string
 
-	// The tags to assign to the playback configuration.
+	// The tags to assign to the playback configuration. Tags are key-value pairs that
+	// you can associate with Amazon resources to help with organization, access
+	// control, and cost tracking. For more information, see Tagging AWS Elemental
+	// MediaTailor Resources
+	// (https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html).
 	Tags map[string]string
 
 	// The name that is used to associate this playback configuration with a custom
@@ -608,7 +654,7 @@ type PrefetchRetrieval struct {
 	EndTime *time.Time
 
 	// The dynamic variables to use for substitution during prefetch requests to the ad
-	// decision server (ADS). You intially configure dynamic variables
+	// decision server (ADS). You initially configure dynamic variables
 	// (https://docs.aws.amazon.com/mediatailor/latest/ug/variables.html) for the ADS
 	// URL when you set up your playback configuration. When you specify
 	// DynamicVariables for prefetch retrieval, MediaTailor includes the dynamic
@@ -624,7 +670,11 @@ type PrefetchRetrieval struct {
 	noSmithyDocumentSerde
 }
 
-// A complex type that contains prefetch schedule information.
+// A prefetch schedule allows you to tell MediaTailor to fetch and prepare certain
+// ads before an ad break happens. For more information about ad prefetching, see
+// Using ad prefetching
+// (https://docs.aws.amazon.com/mediatailor/latest/ug/prefetching-ads.html) in the
+// MediaTailor User Guide.
 type PrefetchSchedule struct {
 
 	// The Amazon Resource Name (ARN) of the prefetch schedule.
@@ -687,7 +737,7 @@ type RequestOutputItem struct {
 	noSmithyDocumentSerde
 }
 
-// This response includes only the "property" : "type" property.
+// The output item response.
 type ResponseOutputItem struct {
 
 	// The name of the manifest for the channel that will appear in the channel
@@ -743,6 +793,9 @@ type ScheduleConfiguration struct {
 	// This member is required.
 	Transition *Transition
 
+	// Program clip range configuration.
+	ClipRange *ClipRange
+
 	noSmithyDocumentSerde
 }
 
@@ -781,7 +834,7 @@ type ScheduleEntry struct {
 	// The schedule's ad break properties.
 	ScheduleAdBreaks []ScheduleAdBreak
 
-	// The type of schedule entry. Valid values: PROGRAM or FILLER_SLATE.
+	// The type of schedule entry.
 	ScheduleEntryType ScheduleEntryType
 
 	// The name of the VOD source.
@@ -813,11 +866,63 @@ type SecretsManagerAccessTokenConfiguration struct {
 	noSmithyDocumentSerde
 }
 
-// The base URL of the host or path of the segment delivery server that you're
-// using to serve segments. This is typically a content delivery network (CDN). The
-// URL can be absolute or relative. To use an absolute URL include the protocol,
-// such as https://example.com/some/path. To use a relative URL specify the
-// relative path, such as /some/path*.
+// The segmentation_descriptor message can contain advanced metadata fields, like
+// content identifiers, to convey a wide range of information about the ad break.
+// MediaTailor writes the ad metadata in the egress manifest as part of the
+// EXT-X-DATERANGE or EventStream ad marker's SCTE-35 data. segmentation_descriptor
+// messages must be sent with the time_signal message type. See the
+// segmentation_descriptor() table of the 2022 SCTE-35 specification for more
+// information.
+type SegmentationDescriptor struct {
+
+	// The segment number to assign to the segmentation_descriptor.segment_num message,
+	// as defined in section 10.3.3.1 of the 2022 SCTE-35 specification Values must be
+	// between 0 and 256, inclusive. The default value is 0.
+	SegmentNum *int32
+
+	// The Event Identifier to assign to the
+	// segmentation_descriptor.segmentation_event_id message, as defined in section
+	// 10.3.3.1 of the 2022 SCTE-35 specification. The default value is 1.
+	SegmentationEventId *int32
+
+	// The Type Identifier to assign to the
+	// segmentation_descriptor.segmentation_type_id message, as defined in section
+	// 10.3.3.1 of the 2022 SCTE-35 specification. Values must be between 0 and 256,
+	// inclusive. The default value is 48.
+	SegmentationTypeId *int32
+
+	// The Upid to assign to the segmentation_descriptor.segmentation_upid message, as
+	// defined in section 10.3.3.1 of the 2022 SCTE-35 specification. The value must be
+	// a hexadecimal string containing only the characters 0 though 9 and A through F.
+	// The default value is "" (an empty string).
+	SegmentationUpid *string
+
+	// The Upid Type to assign to the segmentation_descriptor.segmentation_upid_type
+	// message, as defined in section 10.3.3.1 of the 2022 SCTE-35 specification.
+	// Values must be between 0 and 256, inclusive. The default value is 14.
+	SegmentationUpidType *int32
+
+	// The number of segments expected, which is assigned to the
+	// segmentation_descriptor.segments_expectedS message, as defined in section
+	// 10.3.3.1 of the 2022 SCTE-35 specification Values must be between 0 and 256,
+	// inclusive. The default value is 0.
+	SegmentsExpected *int32
+
+	// The sub-segment number to assign to the segmentation_descriptor.sub_segment_num
+	// message, as defined in section 10.3.3.1 of the 2022 SCTE-35 specification.
+	// Values must be between 0 and 256, inclusive. The defualt value is null.
+	SubSegmentNum *int32
+
+	// The number of sub-segments expected, which is assigned to the
+	// segmentation_descriptor.sub_segments_expected message, as defined in section
+	// 10.3.3.1 of the 2022 SCTE-35 specification. Values must be between 0 and 256,
+	// inclusive. The default value is null.
+	SubSegmentsExpected *int32
+
+	noSmithyDocumentSerde
+}
+
+// The segment delivery configuration settings.
 type SegmentDeliveryConfiguration struct {
 
 	// The base URL of the host or path of the segment delivery server that you're
@@ -847,7 +952,10 @@ type SlateSource struct {
 	noSmithyDocumentSerde
 }
 
-// This response includes only the "type" : "object" property.
+// A source location is a container for sources. For more information about source
+// locations, see Working with source locations
+// (https://docs.aws.amazon.com/mediatailor/latest/ug/channel-assembly-source-locations.html)
+// in the MediaTailor User Guide.
 type SourceLocation struct {
 
 	// The ARN of the SourceLocation.
@@ -880,7 +988,10 @@ type SourceLocation struct {
 	// The segment delivery configurations for the source location.
 	SegmentDeliveryConfigurations []SegmentDeliveryConfiguration
 
-	// The tags assigned to the source location.
+	// The tags assigned to the source location. Tags are key-value pairs that you can
+	// associate with Amazon resources to help with organization, access control, and
+	// cost tracking. For more information, see Tagging AWS Elemental MediaTailor
+	// Resources (https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html).
 	Tags map[string]string
 
 	noSmithyDocumentSerde
@@ -911,6 +1022,22 @@ type SpliceInsertMessage struct {
 	noSmithyDocumentSerde
 }
 
+// The SCTE-35 time_signal message can be sent with one or more
+// segmentation_descriptor messages. A time_signal message can be sent only if a
+// single segmentation_descriptor message is sent. The time_signal message contains
+// only the splice_time field which is constructed using a given presentation
+// timestamp. When sending a time_signal message, the splice_command_type field in
+// the splice_info_section message is set to 6 (0x06). See the time_signal() table
+// of the 2022 SCTE-35 specification for more information.
+type TimeSignalMessage struct {
+
+	// The configurations for the SCTE-35 segmentation_descriptor message(s) sent with
+	// the time_signal message.
+	SegmentationDescriptors []SegmentationDescriptor
+
+	noSmithyDocumentSerde
+}
+
 // Program transition configuration.
 type Transition struct {
 
@@ -922,7 +1049,7 @@ type Transition struct {
 
 	// Defines when the program plays in the schedule. You can set the value to
 	// ABSOLUTE or RELATIVE. ABSOLUTE - The program plays at a specific wall clock
-	// time. This setting can only be used for channels using the LINEAR PlaybackMode.
+	// time. This setting can only be used for channels using the LINEARPlaybackMode.
 	// Note the following considerations when using ABSOLUTE transitions: If the
 	// preceding program in the schedule has a duration that extends past the wall
 	// clock time, MediaTailor truncates the preceding program on a common segment
@@ -939,6 +1066,30 @@ type Transition struct {
 	// The name of the program that this program will be inserted next to, as defined
 	// by RelativePosition.
 	RelativeProgram *string
+
+	// The date and time that the program is scheduled to start, in epoch milliseconds.
+	ScheduledStartTimeMillis int64
+
+	noSmithyDocumentSerde
+}
+
+// Schedule configuration parameters.
+type UpdateProgramScheduleConfiguration struct {
+
+	// Program clip range configuration.
+	ClipRange *ClipRange
+
+	// Program transition configuration.
+	Transition *UpdateProgramTransition
+
+	noSmithyDocumentSerde
+}
+
+// Program transition configuration.
+type UpdateProgramTransition struct {
+
+	// The duration of the live program in seconds.
+	DurationMillis int64
 
 	// The date and time that the program is scheduled to start, in epoch milliseconds.
 	ScheduledStartTimeMillis int64
@@ -975,7 +1126,10 @@ type VodSource struct {
 	// The timestamp that indicates when the VOD source was last modified.
 	LastModifiedTime *time.Time
 
-	// The tags assigned to the VOD source.
+	// The tags assigned to the VOD source. Tags are key-value pairs that you can
+	// associate with Amazon resources to help with organization, access control, and
+	// cost tracking. For more information, see Tagging AWS Elemental MediaTailor
+	// Resources (https://docs.aws.amazon.com/mediatailor/latest/ug/tagging.html).
 	Tags map[string]string
 
 	noSmithyDocumentSerde

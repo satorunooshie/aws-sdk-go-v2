@@ -3306,6 +3306,11 @@ func awsAwsjson11_serializeOpDocumentCreateLocationObjectStorageInput(v *CreateL
 		ok.String(*v.SecretKey)
 	}
 
+	if v.ServerCertificate != nil {
+		ok := object.Key("ServerCertificate")
+		ok.Base64EncodeBytes(v.ServerCertificate)
+	}
+
 	if v.ServerHostname != nil {
 		ok := object.Key("ServerHostname")
 		ok.String(*v.ServerHostname)
@@ -3820,6 +3825,13 @@ func awsAwsjson11_serializeOpDocumentStartTaskExecutionInput(v *StartTaskExecuti
 		}
 	}
 
+	if v.Tags != nil {
+		ok := object.Key("Tags")
+		if err := awsAwsjson11_serializeDocumentInputTagList(v.Tags, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.TaskArn != nil {
 		ok := object.Key("TaskArn")
 		ok.String(*v.TaskArn)
@@ -4016,6 +4028,11 @@ func awsAwsjson11_serializeOpDocumentUpdateLocationObjectStorageInput(v *UpdateL
 	if v.SecretKey != nil {
 		ok := object.Key("SecretKey")
 		ok.String(*v.SecretKey)
+	}
+
+	if v.ServerCertificate != nil {
+		ok := object.Key("ServerCertificate")
+		ok.Base64EncodeBytes(v.ServerCertificate)
 	}
 
 	if v.ServerPort != nil {

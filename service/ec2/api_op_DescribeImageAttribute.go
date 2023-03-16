@@ -67,6 +67,15 @@ type DescribeImageAttributeOutput struct {
 	// The ID of the AMI.
 	ImageId *string
 
+	// If v2.0, it indicates that IMDSv2 is specified in the AMI. Instances launched
+	// from this AMI will have HttpTokens automatically set to required so that, by
+	// default, the instance requires that IMDSv2 is used when requesting instance
+	// metadata. In addition, HttpPutResponseHopLimit is set to 2. For more
+	// information, see Configure the AMI
+	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-IMDS-new-instances.html#configure-IMDS-new-instances-ami-configuration)
+	// in the Amazon EC2 User Guide.
+	ImdsSupport *types.AttributeValue
+
 	// The kernel ID.
 	KernelId *types.AttributeValue
 
@@ -100,7 +109,7 @@ type DescribeImageAttributeOutput struct {
 	// tool (https://github.com/awslabs/python-uefivars) on GitHub. For more
 	// information, see UEFI Secure Boot
 	// (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/uefi-secure-boot.html) in
-	// the Amazon Elastic Compute Cloud User Guide.
+	// the Amazon EC2 User Guide.
 	UefiData *types.AttributeValue
 
 	// Metadata pertaining to the operation's result.

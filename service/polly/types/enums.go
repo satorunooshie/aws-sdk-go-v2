@@ -75,6 +75,9 @@ const (
 	LanguageCodeEnZa    LanguageCode = "en-ZA"
 	LanguageCodeCaEs    LanguageCode = "ca-ES"
 	LanguageCodeDeAt    LanguageCode = "de-AT"
+	LanguageCodeYueCn   LanguageCode = "yue-CN"
+	LanguageCodeArAe    LanguageCode = "ar-AE"
+	LanguageCodeFiFi    LanguageCode = "fi-FI"
 )
 
 // Values returns all known values for LanguageCode. Note that this can be expanded
@@ -115,6 +118,9 @@ func (LanguageCode) Values() []LanguageCode {
 		"en-ZA",
 		"ca-ES",
 		"de-AT",
+		"yue-CN",
+		"ar-AE",
+		"fi-FI",
 	}
 }
 
@@ -278,6 +284,22 @@ const (
 	VoiceIdLiam      VoiceId = "Liam"
 	VoiceIdPedro     VoiceId = "Pedro"
 	VoiceIdKajal     VoiceId = "Kajal"
+	VoiceIdHiujin    VoiceId = "Hiujin"
+	VoiceIdLaura     VoiceId = "Laura"
+	VoiceIdElin      VoiceId = "Elin"
+	VoiceIdIda       VoiceId = "Ida"
+	VoiceIdSuvi      VoiceId = "Suvi"
+	VoiceIdOla       VoiceId = "Ola"
+	VoiceIdHala      VoiceId = "Hala"
+	VoiceIdAndres    VoiceId = "Andres"
+	VoiceIdSergio    VoiceId = "Sergio"
+	VoiceIdRemi      VoiceId = "Remi"
+	VoiceIdAdriano   VoiceId = "Adriano"
+	VoiceIdThiago    VoiceId = "Thiago"
+	VoiceIdRuth      VoiceId = "Ruth"
+	VoiceIdStephen   VoiceId = "Stephen"
+	VoiceIdKazuha    VoiceId = "Kazuha"
+	VoiceIdTomoko    VoiceId = "Tomoko"
 )
 
 // Values returns all known values for VoiceId. Note that this can be expanded in
@@ -357,5 +379,21 @@ func (VoiceId) Values() []VoiceId {
 		"Liam",
 		"Pedro",
 		"Kajal",
+		"Hiujin",
+		"Laura",
+		"Elin",
+		"Ida",
+		"Suvi",
+		"Ola",
+		"Hala",
+		"Andres",
+		"Sergio",
+		"Remi",
+		"Adriano",
+		"Thiago",
+		"Ruth",
+		"Stephen",
+		"Kazuha",
+		"Tomoko",
 	}
 }
